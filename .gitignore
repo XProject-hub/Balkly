@@ -1,0 +1,75 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+vendor/
+
+# Build
+.next/
+dist/
+build/
+out/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.fleet/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Cache
+.cache/
+*.cache
+
+# Temporary
+tmp/
+temp/
+
+# Docker volumes
+mysql_data/
+redis_data/
+minio_data/
+meilisearch_data/
+
+# Laravel
+balkly-api/storage/framework/cache/*
+balkly-api/storage/framework/sessions/*
+balkly-api/storage/framework/views/*
+balkly-api/storage/logs/*
+!balkly-api/storage/framework/.gitkeep
+!balkly-api/storage/logs/.gitkeep
+
+# Public storage
+balkly-api/public/storage
+balkly-api/public/hot
+
+# Next.js
+balkly-web/.next/
+balkly-web/out/
+balkly-web/.cache/
+
+# Generated files
+*.pid
+*.seed
+*.pid.lock
+

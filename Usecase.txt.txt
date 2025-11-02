@@ -1,0 +1,618 @@
+# Balkly — Full Use‑Cases, Workflows, and Build Guide (v1.0)
+
+*Last updated: 2 Nov 2025*
+
+---
+
+## 0) Kid‑level summary (like explaining to a 6‑year‑old)
+
+Ubuntu 22
+* **Balkly** is a big online town.
+* There are **shops** (people post things to sell like cars and homes), a **notice board** (forum to chat), and an **events hall** (tickets for concerts and sports).
+* People can **look**, **search**, **chat**, and **buy**.
+* If you want to **post your own ad**, you **pay a small fee**. If you want your post to be at the **top**, you pay **a bit more**.
+* **Helpers** (AI) check pictures and words to be safe and nice, write better titles, and translate.
+* **Grown‑up things** like payments, invoices, and rules are built‑in so the town runs smoothly.
+
+---
+
+## 1) Vision & Goals
+
+**Vision:** Build a modern, elegant marketplace + forum + events hub tailored for Balkly’s brand: fast, trustworthy, multilingual, and AI‑assisted.
+
+**Primary goals**
+
+1. A **paid listings marketplace** (Auto, Real Estate, Events, + extensible categories).
+2. A **forum** with buy/sell areas where users can **pay to stick/feature** posts.
+3. An **events section** that supports (A) **affiliate/partner tickets** (redirect and track commission) and (B) Balkly’s own **ticketing** with QR check‑in.
+4. **AI assistants** for content creation, moderation, deduplication, and support.
+5. **Stunning UI** that makes users say “wow”.
+
+**Non‑goals (for MVP):** native mobile apps (we ship PWA first), auctions, crypto payments (can be phase 2).
+
+---
+
+## 2) Personas
+
+* **Guest**: Browses, searches, saves favorites, reads forum.
+* **Registered Buyer**: Buys items/tickets, messages sellers, leaves reviews.
+* **Seller**: Creates listings (pays fee), manages inventory/messages, requests payouts (for on‑platform sales).
+* **Event Organizer**: Creates events, sets ticket types/quantities, checks in attendees with QR.
+* **Forum User**: Posts, comments, can pay to feature/sticky.
+* **Moderator**: Reviews flags, handles disputes, bans, edits.
+* **Admin**: Full control: categories, pricing, payouts, analytics.
+* **Affiliate/Partner**: Provides event feeds or receives traffic with tracking.
+* **Accountant**: Reconciles payouts, VAT, invoices.
+
+---
+
+## 3) Core Use‑Cases (High Level)
+
+### Marketplace
+
+1. **Browse listings** by category, filters (price, location, attributes).
+2. **Search** with autosuggest and synonyms (AI‑assist).
+3. **View listing** (gallery, specs, seller profile, safety tips, schema.org markup).
+4. **Message seller** (realtime chat with file/image attachments).
+5. **Create listing** (AI title/description, image cleanup, category classifier).
+6. **Pay to publish** + **upsells**: Featured, Top of category, Homepage hero.
+7. **Manage listings** (edit, pause, boost, renew, analytics).
+8. **Report listing** (moderation queue; AI pre‑screening).
+
+### Forum
+
+1. **Browse categories**; sort by newest, top, featured.
+2. **Create post** (markdown + images); **pay to sticky/feature**.
+3. **Moderation**: flag posts/comments; AI toxicity & spam filter.
+
+### Events
+
+1. **Affiliate events**: browse/search → land on partner with tracking → commission report.
+2. **Own ticketing**: organizer creates event/tickets; users buy; QR code issued; check‑in app verifies.
+3. **Refunds/cancellations** (policy‑based, admin approval).
+
+### Account/Payments
+
+1. **Sign up/login** (email, social, passkey). 2FA optional.
+2. **Wallet & payouts** (Stripe/Checkout.com/Mollie etc.).
+3. **Invoices/receipts** with VAT rules (EU/UAE aware).
+4. **Subscriptions** for sellers (monthly plans) + one‑off boosts.
+
+### AI Assistants
+
+1. **Listing Copilot**: generate title/description, auto‑translate (EN/BS/DE), fix images.
+2. **Classifier**: auto‑tag category and attributes.
+3. **Moderation**: NSFW, spam, duplicates, fraud signals.
+4. **Support bot**: FAQ, refunds policy, how‑to.
+
+---
+
+## 4) Detailed Workflows (Step‑by‑step)
+
+### 4.1 Seller creates a listing
+
+1. **Start**: Click “Post listing” → choose **Category** (Auto/Real Estate/Events/Other).
+2. **Wizard**
+
+   * Step A: Title + photos/video → **AI suggests better title** + cleans photos.
+   * Step B: Attributes form (e.g., car: make/model/year; real estate: type/m²/rooms).
+   * Step C: Description → **AI improves & translates**.
+   * Step D: Price & location (map picker; privacy toggle to blur exact address).
+3. **Preview**: See SEO snippet + schema.org JSON‑LD preview.
+4. **Choose plan**: Free (if enabled), **Standard**, **Featured**, **Top placement** (duration/prices).
+5. **Checkout**: Pay → generate **invoice** → status = `pending_review`.
+6. **Moderation**: AI score; if risky → human moderator; else auto‑approve.
+7. **Live**: Listing visible; **share** buttons; view counter.
+
+### 4.2 Buyer contacts seller & purchases (if on‑platform)
+
+1. On listing page, click **Message seller** → realtime chat.
+2. Optional **Offer/Counteroffer** flow.
+3. If category supports on‑platform checkout (e.g., event tickets):
+
+   * Add to cart → Checkout → Pay → Confirmation + **e‑ticket**.
+
+### 4.3 Forum post with paid sticky
+
+1. Create post → choose category → content + images.
+2. Toggle **“Make sticky/featured”** → pick duration → pay.
+3. Post published; **pinned** according to duration; badge “Featured”.
+
+### 4.4 Events — affiliate flow
+
+1. User browses Events → clicks a partner event.
+2. We **redirect** with tracking parameters.
+3. Partner pays **commission** on completed sales (reported via webhook or periodic CSV/API import).
+
+### 4.5 Events — own ticketing flow
+
+1. Organizer onboarding (KYC if needed) → connect payout account.
+2. Create event → add venue, schedule, ticket types (General/VIP), capacity, fees.
+3. Publish → users buy → **QR e‑tickets** issued by email + wallet pass.
+4. At venue: **Check‑in app** scans QR → validates against API (one‑time use; offline fallback list).
+
+### 4.6 Disputes & refunds
+
+1. Buyer requests refund → policy check (time window; status).
+2. AI suggests decision; moderator approves/denies.
+3. Payment provider refund executed; logs and email notifications.
+
+---
+
+## 5) Information Architecture (Navigation)
+
+* **Home**: Hero categories (Auto / Real Estate / Events), featured listings, trending forum, featured events.
+* **Categories**: Grid cards, filters sidebar, map toggle.
+* **Listing detail**: Gallery, attributes, seller card, chat, report, related items.
+* **Events**: Tabs → Affiliate / Balkly Tickets; calendar view.
+* **Forum**: Categories → threads with badges; composer; sticky purchase CTA.
+* **Dashboard**:
+
+  * Seller: Listings, orders, messages, payouts, insights.
+  * Organizer: Events, tickets, sales, scan app link, payouts.
+  * Account: Profile, identity, payment methods, invoices.
+  * Admin: Users, content, pricing, payouts, disputes, settings, logs, analytics.
+
+---
+
+## 6) Data Model (Core Tables)
+
+> **DB:** MySQL 8 (InnoDB), UTF8MB4, strict mode. Redis for cache/queues. S3‑compatible object storage for media.
+
+* `users` (id, email, password_hash, name, locale, role, twofa_secret, created_at)
+* `profiles` (user_id FK, avatar_url, phone, company_name, vat_id, address, city, country)
+* `roles`, `permissions`, `role_user`, `permission_role`
+* `categories` (id, parent_id, slug, name, schema_preset)
+* `attributes` (id, category_id, name, type, options_json)
+* `listings` (id, user_id, category_id, title, slug, description, price, currency, location_geo, status [draft/pending_review/active/paused/rejected/expired], expires_at)
+* `listing_attributes` (listing_id, attribute_id, value)
+* `media` (id, owner_type, owner_id, url, type [image/video], ai_tags_json)
+* `plans` (id, name, price, duration_days, perks_json)
+* `orders` (id, buyer_id, total, currency, status [pending/paid/failed/refunded], provider, provider_ref, invoice_id)
+* `order_items` (order_id, item_type [listing_plan/ticket/...], item_id, qty, unit_price)
+* `invoices` (id, user_id, order_id, pdf_url, vat_country, vat_rate, totals_json)
+* `messages` (id, chat_id, sender_id, body, attachments_json)
+* `chats` (id, listing_id, buyer_id, seller_id, last_message_at)
+* `reports` (id, reporter_id, target_type, target_id, reason, status)
+* `forum_categories` / `forum_topics` / `forum_posts` (with `is_sticky`, `sticky_until`)
+* `events` (id, organizer_id, type [affiliate/own], title, venue, start_at, end_at, city, country, partner_ref, status)
+* `tickets` (id, event_id, name, price, currency, capacity, sold)
+* `ticket_orders` (id, buyer_id, event_id, total, status, provider, provider_ref)
+* `ticket_qr_codes` (id, ticket_order_id, code, status [valid/used/void], issued_at, used_at)
+* `affiliates` (id, name, tracking_params_json, payout_terms_json)
+* `affiliate_clicks` (id, affiliate_id, event_id, user_id?, click_at, utm_json)
+* `affiliate_conversions` (id, affiliate_id, event_id, order_ref, amount, status, reported_at)
+* `payout_accounts` (user_id, provider, account_ref, status)
+* `payouts` (id, user_id, amount, currency, status, executed_at)
+* `moderation_queue` (id, target_type, target_id, ai_score, status, reviewer_id)
+* `webhooks` (id, source, event_type, payload_json, processed_at)
+* `audit_logs` (id, actor_id, action, target_type, target_id, meta_json, created_at)
+
+> Indexes: fulltext on listings(title, description); geo index on location; composite on events(start_at, city);
+
+---
+
+## 7) API Design (REST + Webhooks)
+
+**Prefix:** `/api/v1` (JWT or session cookies; CSRF on browser; rate‑limits)
+
+* `POST /auth/register`, `POST /auth/login`, `POST /auth/logout`, `POST /auth/2fa/verify`
+* `GET /categories`, `GET /categories/:id/attributes`
+* `GET /listings`, `POST /listings`, `PATCH /listings/:id`, `POST /listings/:id/publish`
+* `POST /listings/:id/boost` (body: plan_id)
+* `GET /listings/:id`, `DELETE /listings/:id`
+* `GET /search?q=` (unified search: listings, events, forum)
+* `POST /chats/:listing_id`, `GET /chats`, `POST /messages`
+* `POST /orders` (cart checkout), `POST /orders/:id/pay`, `POST /orders/:id/refund`
+* `GET /invoices/:id` (auth‑gated signed URL)
+* `GET /forum/categories`, `POST /forum/posts`, `POST /forum/posts/:id/sticky`
+* `GET /events`, `POST /events` (organizer), `POST /events/:id/tickets`, `POST /ticket_orders/:id/pay`
+* `POST /ticket/scan` (check‑in; idempotent)
+* `POST /reports` (abuse)
+* `POST /ai/listing_helper` (function‑call to AI service)
+* `POST /webhooks/:provider` (Stripe/Checkout.com etc.)
+
+**Webhooks out**
+
+* `order.created`, `order.paid`, `refund.processed`, `ticket.scanned`, `listing.flagged`, `affiliate.conversion`.
+
+---
+
+## 8) Tech Stack & Architecture
+
+**Frontend**: Next.js 14 (App Router, Server Actions), TypeScript, Tailwind + shadcn/ui, Zustand, react‑hook‑form, PWA. Map: Leaflet/MapLibre.
+
+**Backend**: Laravel 11 (PHP 8.3) *or* NestJS 10 (TypeScript). Given existing LAMP expertise, pick **Laravel 11** + Horizon queues.
+
+**Services**:
+
+* MySQL 8 (RDS or self‑hosted), Redis 7 (cache/queues), MinIO/BunnyCDN for media, Meilisearch/Elasticsearch for search.
+* Realtime: Laravel WebSockets or Socket.IO via Node gateway.
+* Payments: Stripe, Checkout.com, Mollie/Adyen (pluggable provider interface).
+* Emails: Postmark/SendGrid. SMS/OTP: Twilio/MessageBird.
+* Analytics: PostHog (self‑host) or Plausible.
+
+**AI**: GPT‑5 (via API) for generation/classification/moderation; optional local models (Ollama) for cost‑saving.
+
+**Infra**: Docker, Nginx, systemd; environments: dev/staging/prod; CI/CD GitHub Actions; logging via Loki/Grafana; Sentry for errors; backups nightly; WAF/Fail2ban.
+
+**Security**: OWASP ASVS, password hashing (Argon2id), 2FA TOTP, rate‑limits (per IP/session), signed URLs for media, CSP, CSRF, input validation, audit logs, GDPR tooling (data export/delete), consent banner.
+
+---
+
+## 9) Monetization Model
+
+* **Listing fees** (per category):
+
+  * Standard: €4.99 / 30 days
+  * Featured: €14.99 / 30 days (homepage + category top)
+  * Top/Boost: €4.99 for 7 days bump
+* **Forum sticky/featured**: €2.99 / 7 days; €9.99 / 30 days
+* **Organizer ticketing**: 7.5% + €0.35 per ticket (tiered)
+* **Affiliate events**: CPA/CPS per partner agreement
+* **Subscriptions for sellers** (optional): Basic €19, Pro €49, Business €99 (includes N listings + boosts)
+* **Ads**: limited, tasteful (phase 2)
+
+> Prices are placeholders; configure per market.
+
+---
+
+## 10) Admin & Moderation
+
+* **Queues**: content pending review; fraud risk; dispute cases.
+* **Bulk tools**: approve/reject many; merge duplicates; reassign categories.
+* **Pricing manager**: per category/region; promotion calendar.
+* **Payouts**: generated weekly; KYC flags; negative balance prevention.
+* **Audit & reports**: GMV, take‑rate, churn, LTV, CAC, funnel drop‑offs.
+
+---
+
+## 11) AI Designs (Prompts & Flows)
+
+### 11.1 Listing Copilot (function‑call)
+
+**Inputs:** title, raw description, photos (URLs), category hint, locale.
+**Outputs:** improved title (≤70 chars), bullet specs, long description (≤600 words), tags (≤8), translations (EN/BS/DE), safety red‑flags.
+**System prompt (sketch):**
+
+* “You are Balkly’s listing editor. Output JSON with fields … Keep claims factual; no prohibited items; remove phone numbers; translate.”
+
+### 11.2 Classifier
+
+* Few‑shot prompts per category (Auto/Real Estate/Events). Returns category_id + attribute map.
+
+### 11.3 Moderation
+
+* Route all text/images through moderation endpoint; confidence thresholds; human review on gray zone.
+
+### 11.4 Support bot
+
+* RAG over Help Center articles (Markdown in S3), multilingual.
+
+---
+
+## 12) UI/UX Principles
+
+* **Modern & elegant**: glassmorphism hints, soft shadows (rounded‑2xl), ample whitespace.
+* **Dark & light themes**; WCAG AA contrast.
+* **Micro‑interactions**: hover states, framer‑motion entrance.
+* **Mobile‑first**: responsive cards, sticky filter bar.
+* **Trust**: verified badges, last‑seen, response rate.
+
+---
+
+## 13) SEO & Growth
+
+* **SSR** pages with unique metadata; OpenGraph/Twitter cards.
+* **schema.org**: `Product`, `Offer`, `Place`, `Event` on relevant pages.
+* **Sitemaps**: dynamic; per‑locale.
+* **Clean URLs**: `/cars/bmw-m3-2019-berlin-12345`.
+* **Email capture**: saved searches alerts.
+* **Shareable**: WhatsApp/Telegram deep links.
+
+---
+
+## 14) Legal & Compliance (high‑level)
+
+* **Terms/Privacy/Refund** policies; clear event organizer agreement.
+* **KYC** for organizers with payouts.
+* **VAT** handling for EU; UAE tax where applicable.
+* **Copyright & TOS**: no scraping partners; use approved affiliate APIs/feeds.
+* **GDPR**: data export/delete; DPA with processors.
+
+---
+
+## 15) DevOps Blueprint
+
+**Docker Compose (services)**: web (Next), api (Laravel), queue (Horizon), websocket, mysql, redis, minio, nginx.
+
+**CI/CD**:
+
+* Lint/test → build images → run migrations → deploy to staging → manual prod approval.
+
+**Observability**:
+
+* Uptime checks; Alerts (CPU/mem/queue depth); Sentry errors to Slack/Telegram.
+
+**Backups**: nightly DB + weekly media; 30‑day retention.
+
+---
+
+## 16) Implementation Plan (Phased)
+
+**Phase 0 — Scaffold (1–2 weeks)**
+
+* Repos, CI/CD, auth, RBAC, categories, basic listing model, payments integration skeleton, forum skeleton.
+
+**Phase 1 — Marketplace MVP (3–4 weeks)**
+
+* Listing wizard, plans/checkout, moderation, search, chat.
+
+**Phase 2 — Forum monetization (1–2 weeks)**
+
+* Sticky/featured payments; moderation tools.
+
+**Phase 3 — Events (affiliate) (2–3 weeks)**
+
+* Events catalog, redirects, click/conversion tracking, partner CSV/API import.
+
+**Phase 4 — Own ticketing (3–5 weeks)**
+
+* Organizer onboarding, ticket types, QR issuance, scan app, refunds.
+
+**Phase 5 — Polish & growth (ongoing)**
+
+* SEO, emails, analytics, AB tests, referral program.
+
+---
+
+## 17) Concrete Acceptance Criteria (MVP)
+
+* A user can sign up, verify email, login, enable 2FA.
+* A seller can create and pay for a listing; it goes live after moderation.
+* Search returns relevant results with filters; map view works.
+* Buyer can message seller; receive notifications; upload attachments.
+* Admin can set category pricing and manually approve/ban content.
+* Forum users can create posts and pay to sticky; sticky badge/timebox enforced.
+* Events page lists affiliate events and tracks outbound clicks.
+* All paid actions produce an invoice PDF and appear in transaction history.
+
+---
+
+## 18) Example Commands & Scaffolding (Cursor‑ready)
+
+### 18.1 Frontend (Next.js)
+
+```bash
+# Create app
+npx create-next-app@latest balkly-web --ts --eslint --src-dir --app --tailwind --import-alias "@/*"
+cd balkly-web
+
+# UI kit & deps
+npm i @radix-ui/react-icons class-variance-authority clsx lucide-react react-hook-form zod zustand framer-motion axios jotai
+
+# shadcn/ui
+npx shadcn@latest init
+npx shadcn@latest add button card input textarea badge dialog dropdown-menu sheet toast navigation-menu form sonner
+
+# i18n
+npm i next-intl
+```
+
+### 18.2 Backend (Laravel 11)
+
+```bash
+composer create-project laravel/laravel balkly-api "^11.0"
+cd balkly-api
+composer require spatie/laravel-permission stripe/stripe-php laravel/cashier predis/predis league/flysystem-aws-s3-v3 laravel/scout meilisearch/meilisearch-php laravel/horizon fruitcake/laravel-cors barryvdh/laravel-dompdf beyondcode/laravel-websockets
+php artisan key:generate
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+php artisan migrate
+```
+
+### 18.3 Docker Compose (excerpt)
+
+```yaml
+version: "3.9"
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: balkly
+    volumes: ["mysql:/var/lib/mysql"]
+  redis:
+    image: redis:7
+  minio:
+    image: quay.io/minio/minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: balkly
+      MINIO_ROOT_PASSWORD: changeme
+    volumes: ["minio:/data"]
+  api:
+    build: ./balkly-api
+    env_file: .env
+    depends_on: [mysql, redis, minio]
+  web:
+    build: ./balkly-web
+    depends_on: [api]
+  nginx:
+    image: nginx:stable
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+volumes: { mysql: {}, minio: {} }
+```
+
+### 18.4 Nginx site (excerpt)
+
+```nginx
+server {
+  listen 80;
+  server_name balkly.local;
+
+  location /api/ {
+    proxy_pass http://api:8000/;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+
+  location / {
+    proxy_pass http://web:3000/;
+  }
+}
+```
+
+### 18.5 Laravel models (skeletal)
+
+```php
+// Listing.php
+class Listing extends Model {
+  protected $fillable = ['user_id','category_id','title','slug','description','price','currency','status','expires_at'];
+  public function user(){ return $this->belongsTo(User::class);}    
+  public function category(){ return $this->belongsTo(Category::class);}
+  public function media(){ return $this->morphMany(Media::class,'owner');}
+}
+```
+
+---
+
+## 19) Admin Pricing & Plans Example
+
+* **Auto**: Standard €5/30d, Featured €15/30d, Top €5/7d
+* **Real Estate**: Standard €9/30d, Featured €25/30d, Top €7/7d
+* **Forum sticky**: €3/7d, €10/30d
+* **Events affiliate**: free to list, earn per conversion
+
+---
+
+## 20) Event Affiliate Integration (safe pattern)
+
+* **Partners provide**: API/CSV/ICS with events + tracking link template.
+* **We store**: `affiliates`, `events` (type=affiliate), `affiliate_clicks`.
+* **Conversion reporting**: partner webhook → `affiliate_conversions` (validate HMAC/shared secret) or periodic CSV import.
+* **No scraping.** Respect each partner’s TOS; sign affiliate contracts.
+
+---
+
+## 21) Own Ticketing: QR & Scan App
+
+* **QR format**: `balkly:tkt:{ticket_order_id}:{nonce}` (signed)
+* **Scan API**: `POST /api/v1/ticket/scan { code }` → returns `valid/used/void` + attendee name; idempotent.
+* **Offline fallback**: encrypted daily export of valid codes for the event (scan app can cache & sync later).
+
+---
+
+## 22) Notifications
+
+* **Email**: order confirmations, messages, moderation decisions, expiry reminders.
+* **Push (PWA)**: new chat message, price drop, saved search match.
+* **Telegram (optional)**: organizer sales alerts via bot token.
+
+---
+
+## 23) Analytics & KPIs
+
+* **Funnel**: visit → search → view → message → checkout → paid.
+* **Supply**: active listings per category, sell‑through, average time to sale.
+* **Forum**: posts/day, sticky take‑rate.
+* **Events**: clicks → conversions → commission.
+* **Health**: error rate, latency, queue depth, moderation SLA.
+
+---
+
+## 24) Test Plan (MVP)
+
+* **Unit tests**: models, policies, payment flows (mocked), QR scanner validation.
+* **Integration**: listing wizard end‑to‑end; forum sticky payment; affiliate click tracking.
+* **E2E (Playwright)**: user signup/login, create & pay listing, admin approve, search & view.
+* **Load**: 100 RPS search; 10k listings; chat burst.
+* **Security**: auth bypass, IDOR, XSS, CSRF, rate limits.
+
+---
+
+## 25) Risk & Mitigation
+
+* **Fraud/spam** → AI + rate limits + deposits/KYC for high‑risk categories.
+* **Chargebacks** → clear refund policy; dispute tooling; reserve on payouts.
+* **Content violations** → strong TOS, fast moderation response.
+* **Scaling** → caching, pagination, async image processing with queues.
+
+---
+
+## 26) Roadmap Ideas (Post‑MVP)
+
+* **Mobile apps** (React Native).
+* **Escrow for high‑value items**.
+* **Verified dealers** program.
+* **Geo‑fenced promos**.
+* **Price intelligence** with AI (suggested price range).
+
+---
+
+## 27) Ready‑to‑use Cursor Tasks (copy/paste)
+
+**Task: Create Laravel models/migrations for listings**
+
+> Create migrations for tables `listings`, `listing_attributes`, `media` as per Section 6. Add Eloquent models with relations. Seed categories Auto/Real Estate/Events with sample attributes.
+
+**Task: Build listing wizard in Next.js**
+
+> Create a 4‑step wizard with react‑hook‑form + zod. Steps: media upload, attributes, description, pricing. Connect to `/api/v1/listings`. Add AI helper button that calls `/api/v1/ai/listing_helper` and fills title/description.
+
+**Task: Implement payments**
+
+> Add Stripe checkout for plan purchase. Webhook `/api/v1/webhooks/stripe` updates `orders` → `paid`, creates `invoices` (PDF), sets listing `active`.
+
+**Task: Forum sticky**
+
+> Add `is_sticky`, `sticky_until`. Create pricing page. Implement purchase flow and badge display.
+
+**Task: Events affiliate**
+
+> Build importer that reads CSV with fields (title, venue, city, start_at, end_at, partner_url_template, image_url). Render cards; on click, record `affiliate_clicks` and redirect.
+
+**Task: Ticketing & QR**
+
+> Implement events/tickets CRUD for organizer; checkout; QR issue; `/ticket/scan` endpoint with idempotency.
+
+---
+
+## 28) Glossary
+
+* **Sticky**: paid pinning to top of a list.
+* **Affiliate**: partner who pays per sale or click.
+* **PWA**: Progressive Web App (installable website).
+* **RAG**: Retrieval‑Augmented Generation (AI answers with your docs).
+
+---
+
+## 29) Quick Visual Wireframes (text)
+
+* **Home**: [Hero] [Search bar] [3 big category cards] [Featured listings grid] [Trending forum] [Upcoming events].
+* **Category**: [Breadcrumbs] [Filters left] [Grid right] [Map toggle].
+* **Listing**: [Carousel] [Title + price] [Specs] [Seller card] [Chat CTA] [Similar].
+* **Forum**: [Tabs] [New post button] [Sticky posts area] [List].
+* **Events**: [Toggle Affiliate/Own] [Calendar] [Cards].
+
+---
+
+## 30) What to build first (checklist)
+
+* [ ] Repos + CI/CD + Docker
+* [ ] Auth + RBAC
+* [ ] Categories + attributes seed
+* [ ] Listings CRUD + media upload (S3)
+* [ ] Plans + payments + invoices
+* [ ] Search + filters + map
+* [ ] Chat
+* [ ] Forum + sticky payments
+* [ ] Events (affiliate) + tracking
+* [ ] Admin panel
+* [ ] AI helpers (basic)
+
+---
+
+**End of v1.0.**

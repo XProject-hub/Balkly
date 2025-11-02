@@ -1,0 +1,164 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: balkly_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: balkly_secret
+      MYSQL_DATABASE: balkly
+      MYSQL_USER: balkly
+      MYSQL_PASSWORD: balkly_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    networks:
+      - balkly_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: balkly_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - balkly_network
+
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: balkly_minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: balkly
+      MINIO_ROOT_PASSWORD: balkly_minio_pass
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - balkly_network
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.5
+    container_name: balkly_meilisearch
+    environment:
+      MEILI_MASTER_KEY: balkly_meili_master_key
+      MEILI_ENV: development
+    ports:
+      - "7700:7700"
+    volumes:
+      - meilisearch_data:/meili_data
+    networks:
+      - balkly_network
+
+  api:
+    build:
+      context: ./balkly-api
+      dockerfile: Dockerfile
+    container_name: balkly_api
+    working_dir: /var/www
+    volumes:
+      - ./balkly-api:/var/www
+    ports:
+      - "8000:8000"
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: balkly
+      DB_USERNAME: balkly
+      DB_PASSWORD: balkly_pass
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      FILESYSTEM_DISK: s3
+      AWS_ENDPOINT: http://minio:9000
+      AWS_ACCESS_KEY_ID: balkly
+      AWS_SECRET_ACCESS_KEY: balkly_minio_pass
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_BUCKET: balkly-media
+      AWS_USE_PATH_STYLE_ENDPOINT: true
+      SCOUT_DRIVER: meilisearch
+      MEILISEARCH_HOST: http://meilisearch:7700
+      MEILISEARCH_KEY: balkly_meili_master_key
+    depends_on:
+      - mysql
+      - redis
+      - minio
+      - meilisearch
+    networks:
+      - balkly_network
+    command: php artisan serve --host=0.0.0.0 --port=8000
+
+  queue:
+    build:
+      context: ./balkly-api
+      dockerfile: Dockerfile
+    container_name: balkly_queue
+    working_dir: /var/www
+    volumes:
+      - ./balkly-api:/var/www
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: balkly
+      DB_USERNAME: balkly
+      DB_PASSWORD: balkly_pass
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - balkly_network
+    command: php artisan horizon
+
+  web:
+    build:
+      context: ./balkly-web
+      dockerfile: Dockerfile
+    container_name: balkly_web
+    working_dir: /app
+    volumes:
+      - ./balkly-web:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+      NODE_ENV: development
+    depends_on:
+      - api
+    networks:
+      - balkly_network
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: balkly_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - api
+      - web
+    networks:
+      - balkly_network
+
+volumes:
+  mysql_data:
+  redis_data:
+  minio_data:
+  meilisearch_data:
+
+networks:
+  balkly_network:
+    driver: bridge
+
