@@ -273,8 +273,11 @@ export default function CreateListingPage() {
                   className="w-full"
                 >
                   <Sparkles className="mr-2 h-4 w-4" />
-                  {aiLoading ? "Improving with AI..." : "Improve with AI Helper"}
+                  {aiLoading ? "Enhancing..." : "✨ Auto-Enhance Listing"}
                 </Button>
+                <p className="text-xs text-muted-foreground text-center">
+                  Improve your title and description automatically
+                </p>
 
                 <div>
                   <label className="block text-sm font-medium mb-2">Photos</label>
