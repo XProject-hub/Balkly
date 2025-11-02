@@ -78,11 +78,17 @@ Route::prefix('v1')->group(function () {
         Route::post('/chats/{listing_id}', [ChatController::class, 'start']);
         Route::post('/messages', [ChatController::class, 'sendMessage']);
         
-        // Orders
-        Route::post('/orders', [OrderController::class, 'create']);
-        Route::post('/orders/{id}/pay', [OrderController::class, 'pay']);
+        // Orders & Payments
+        Route::get('/orders', [OrderController::class, 'index']);
+        Route::get('/orders/{id}', [OrderController::class, 'show']);
+        Route::post('/orders/listings', [OrderController::class, 'createListingOrder']);
+        Route::post('/orders/sticky', [OrderController::class, 'createStickyOrder']);
+        Route::post('/orders/tickets', [OrderController::class, 'createTicketOrder']);
         Route::post('/orders/{id}/refund', [OrderController::class, 'refund']);
+        
+        // Invoices
         Route::get('/invoices/{id}', [OrderController::class, 'invoice']);
+        Route::get('/invoices/{id}/download', [OrderController::class, 'downloadInvoice']);
         
         // AI Helpers
         Route::post('/ai/listing_helper', [AIController::class, 'listingHelper']);
