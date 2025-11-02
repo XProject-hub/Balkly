@@ -56,7 +56,20 @@ class ListingController extends Controller
         // Increment views
         $listing->increment('views_count');
 
-        return response()->json(['listing' => $listing]);
+        // Get similar/related listings
+        $similarListings = Listing::where('category_id', $listing->category_id)
+            ->where('id', '!=', $listing->id)
+            ->where('status', 'active')
+            ->with(['media'])
+            ->inRandomOrder()
+            ->take(6)
+            ->get();
+
+        return response()->json([
+            'listing' => $listing,
+            'similar_listings' => $similarListings,
+            'schema' => $this->generateSchema($listing),
+        ]);
     }
 
     public function store(Request $request)
@@ -137,8 +150,7 @@ class ListingController extends Controller
     {
         $listing = Listing::where('user_id', auth()->id())->findOrFail($id);
 
-        // TODO: Check if user has selected a plan and paid
-        // For now, just set to pending_review
+        // Set to pending review for moderation
         $listing->update([
             'status' => 'pending_review',
         ]);
@@ -157,10 +169,11 @@ class ListingController extends Controller
 
         $listing = Listing::where('user_id', auth()->id())->findOrFail($id);
 
-        // TODO: Implement boost payment flow
+        // Boost payment handled by OrderController
 
         return response()->json([
-            'message' => 'Boost feature pending payment implementation',
+            'message' => 'Ready for boost checkout',
+            'listing' => $listing,
         ]);
     }
 
@@ -187,5 +200,32 @@ class ListingController extends Controller
             'message' => 'Report submitted successfully',
         ], 201);
     }
-}
 
+    /**
+     * Generate Schema.org JSON-LD for listing
+     */
+    protected function generateSchema($listing)
+    {
+        $images = $listing->media->pluck('url')->toArray();
+
+        return [
+            '@context' => 'https://schema.org',
+            '@type' => 'Product',
+            'name' => $listing->title,
+            'description' => $listing->description,
+            'image' => $images,
+            'offers' => [
+                '@type' => 'Offer',
+                'price' => $listing->price,
+                'priceCurrency' => $listing->currency,
+                'availability' => 'https://schema.org/InStock',
+                'url' => config('app.url') . '/listings/' . $listing->id,
+                'seller' => [
+                    '@type' => 'Person',
+                    'name' => $listing->user->name,
+                ],
+            ],
+            'category' => $listing->category->name,
+        ];
+    }
+}

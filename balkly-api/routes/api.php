@@ -24,6 +24,9 @@ Route::prefix('v1')->group(function () {
     Route::post('/auth/register', [AuthController::class, 'register']);
     Route::post('/auth/login', [AuthController::class, 'login']);
     Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('/auth/reset-password', [AuthController::class, 'resetPassword']);
+    Route::get('/auth/verify-email/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
+    Route::post('/auth/social-login', [AuthController::class, 'socialLogin']);
     
     // Categories
     Route::get('/categories', [CategoryController::class, 'index']);
@@ -49,8 +52,15 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         // Auth
         Route::post('/auth/logout', [AuthController::class, 'logout']);
-        Route::post('/auth/2fa/verify', [AuthController::class, 'verify2FA']);
         Route::get('/auth/me', [AuthController::class, 'me']);
+        Route::post('/auth/send-verification', [AuthController::class, 'sendVerificationEmail']);
+        
+        // 2FA Routes
+        Route::post('/auth/2fa/enable', [AuthController::class, 'enable2FA']);
+        Route::post('/auth/2fa/confirm', [AuthController::class, 'confirm2FA']);
+        Route::post('/auth/2fa/verify', [AuthController::class, 'verify2FA']);
+        Route::post('/auth/2fa/disable', [AuthController::class, 'disable2FA']);
+        Route::get('/auth/2fa/recovery-codes', [AuthController::class, 'get2FARecoveryCodes']);
         
         // Listings
         Route::post('/listings', [ListingController::class, 'store']);
@@ -58,6 +68,11 @@ Route::prefix('v1')->group(function () {
         Route::delete('/listings/{id}', [ListingController::class, 'destroy']);
         Route::post('/listings/{id}/publish', [ListingController::class, 'publish']);
         Route::post('/listings/{id}/boost', [ListingController::class, 'boost']);
+        
+        // Media
+        Route::post('/media/upload', [\App\Http\Controllers\Api\MediaController::class, 'upload']);
+        Route::delete('/media/{id}', [\App\Http\Controllers\Api\MediaController::class, 'destroy']);
+        Route::post('/media/reorder', [\App\Http\Controllers\Api\MediaController::class, 'reorder']);
         
         // Forum
         Route::post('/forum/topics', [ForumController::class, 'createTopic']);
@@ -97,6 +112,17 @@ Route::prefix('v1')->group(function () {
         
         // Reports
         Route::post('/reports', [ListingController::class, 'report']);
+        
+        // Admin Routes (role-protected)
+        Route::middleware('role:admin')->prefix('admin')->group(function () {
+            Route::get('/dashboard', [\App\Http\Controllers\Api\AdminController::class, 'dashboard']);
+            Route::get('/moderation', [\App\Http\Controllers\Api\AdminController::class, 'moderationQueue']);
+            Route::post('/approve', [\App\Http\Controllers\Api\AdminController::class, 'approve']);
+            Route::post('/reject', [\App\Http\Controllers\Api\AdminController::class, 'reject']);
+            Route::get('/analytics', [\App\Http\Controllers\Api\AdminController::class, 'analytics']);
+            Route::get('/users', [\App\Http\Controllers\Api\AdminController::class, 'users']);
+            Route::post('/users/{id}/ban', [\App\Http\Controllers\Api\AdminController::class, 'banUser']);
+        });
     });
     
     // Webhooks (no auth, verified by signature)

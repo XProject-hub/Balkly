@@ -280,24 +280,53 @@ export default function CreateListingPage() {
                 </p>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Photos</label>
-                  <div className="border-2 border-dashed rounded-lg p-8 text-center">
+                  <label className="block text-sm font-medium mb-2">Photos & Videos</label>
+                  <div className="border-2 border-dashed rounded-lg p-8 text-center hover:border-primary transition-colors">
                     <p className="text-muted-foreground mb-2">
-                      Drag & drop photos here or click to browse
+                      Drag & drop photos and videos here
+                    </p>
+                    <p className="text-xs text-muted-foreground mb-4">
+                      Max 10 files • Images: JPG, PNG, WebP • Videos: MP4, MOV
                     </p>
                     <input
                       type="file"
                       multiple
-                      accept="image/*"
+                      accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,video/mp4,video/quicktime"
                       className="hidden"
                       id="photos"
+                      onChange={(e) => {
+                        if (e.target.files) {
+                          const filesArray = Array.from(e.target.files);
+                          setFormData({ ...formData, images: filesArray });
+                        }
+                      }}
                     />
                     <label htmlFor="photos">
-                      <Button variant="outline" asChild>
-                        <span>Choose Files</span>
+                      <Button variant="outline" type="button" asChild>
+                        <span>Choose Files ({formData.images.length}/10)</span>
                       </Button>
                     </label>
                   </div>
+                  {formData.images.length > 0 && (
+                    <div className="grid grid-cols-3 gap-2 mt-4">
+                      {formData.images.map((file, index) => (
+                        <div key={index} className="relative group">
+                          <div className="aspect-square bg-muted rounded-lg overflow-hidden">
+                            <img
+                              src={URL.createObjectURL(file)}
+                              alt={`Upload ${index + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          {index === 0 && (
+                            <div className="absolute top-2 left-2 bg-primary text-primary-foreground px-2 py-1 rounded text-xs font-bold">
+                              COVER
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}

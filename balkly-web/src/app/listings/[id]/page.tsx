@@ -275,6 +275,49 @@ export default function ListingDetailPage() {
             </Card>
           </div>
         </div>
+
+        {/* Schema.org Structured Data */}
+        {listing && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Product",
+                "name": listing.title,
+                "description": listing.description,
+                "image": listing.media?.map((m: any) => m.url) || [],
+                "offers": {
+                  "@type": "Offer",
+                  "price": listing.price,
+                  "priceCurrency": listing.currency,
+                  "availability": "https://schema.org/InStock",
+                  "url": typeof window !== 'undefined' ? window.location.href : '',
+                  "seller": {
+                    "@type": "Person",
+                    "name": listing.user?.name,
+                  },
+                },
+              }),
+            }}
+          />
+        )}
+
+        {/* Related/Similar Listings */}
+        <div className="container mx-auto px-4 py-12 bg-muted/30">
+          <h2 className="text-3xl font-bold mb-8">Similar Listings</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <Card key={i} className="hover:shadow-lg transition-shadow">
+                <div className="aspect-video bg-muted" />
+                <CardContent className="p-4">
+                  <p className="font-medium line-clamp-1">Similar Item {i}</p>
+                  <p className="text-primary font-bold">€XX,XXX</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

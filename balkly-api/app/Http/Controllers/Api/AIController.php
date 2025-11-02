@@ -3,33 +3,43 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\AIService;
 use Illuminate\Http\Request;
 
 class AIController extends Controller
 {
+    protected $aiService;
+
+    public function __construct(AIService $aiService)
+    {
+        $this->aiService = $aiService;
+    }
+
+    /**
+     * Listing helper - improve title and description
+     */
     public function listingHelper(Request $request)
     {
         $validated = $request->validate([
             'title' => 'nullable|string',
             'description' => 'nullable|string',
             'category' => 'nullable|string',
-            'images' => 'nullable|array',
+            'locale' => 'nullable|string|in:en,bs,de',
         ]);
 
-        // TODO: Integrate with OpenAI API to generate improved content
-        return response()->json([
-            'improved_title' => 'AI-enhanced: ' . ($validated['title'] ?? 'Amazing Product'),
-            'improved_description' => 'AI-enhanced description with key features and benefits.',
-            'translations' => [
-                'en' => 'English translation',
-                'bs' => 'Bosnian translation',
-                'de' => 'German translation',
-            ],
-            'tags' => ['tag1', 'tag2', 'tag3'],
-            'message' => 'AI listing helper pending OpenAI integration',
-        ]);
+        $result = $this->aiService->improveListing(
+            $validated['title'] ?? '',
+            $validated['description'] ?? '',
+            $validated['category'] ?? null,
+            $validated['locale'] ?? 'en'
+        );
+
+        return response()->json($result);
     }
 
+    /**
+     * Classify listing into category
+     */
     public function classify(Request $request)
     {
         $validated = $request->validate([
@@ -37,29 +47,30 @@ class AIController extends Controller
             'description' => 'required|string',
         ]);
 
-        // TODO: Implement AI classification
-        return response()->json([
-            'category_id' => 1,
-            'confidence' => 0.95,
-            'attributes' => [],
-            'message' => 'AI classification pending implementation',
-        ]);
+        $result = $this->aiService->classifyListing(
+            $validated['title'],
+            $validated['description']
+        );
+
+        return response()->json($result);
     }
 
+    /**
+     * Moderate content for safety
+     */
     public function moderate(Request $request)
     {
         $validated = $request->validate([
             'content' => 'required|string',
-            'type' => 'required|in:text,image',
+            'type' => 'nullable|in:text,image',
         ]);
 
-        // TODO: Implement AI moderation
-        return response()->json([
-            'safe' => true,
-            'score' => 0.05,
-            'flags' => [],
-            'message' => 'AI moderation pending implementation',
-        ]);
+        $result = $this->aiService->moderateContent(
+            $validated['content'],
+            $validated['type'] ?? 'text'
+        );
+
+        return response()->json($result);
     }
 }
 
