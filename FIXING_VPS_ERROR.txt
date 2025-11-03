@@ -1,0 +1,64 @@
+================================================================
+     FIXING VPS INSTALLATION ERROR
+================================================================
+
+ERROR MESSAGE:
+--------------
+services.api.environment.AWS_USE_PATH_STYLE_ENDPOINT contains true, 
+which is an invalid type, it should be a string, number, or a null
+
+
+ISSUE:
+------
+Docker Compose requires environment variables to be strings,
+but boolean values (true/false) were used.
+
+
+FIXED IN:
+---------
+✅ docker-compose.yml
+   Changed: AWS_USE_PATH_STYLE_ENDPOINT: true
+   To:      AWS_USE_PATH_STYLE_ENDPOINT: "true"
+
+
+SOLUTION:
+---------
+The file has been fixed in the repository.
+
+When you pull/clone again, it will work!
+
+
+FOR IMMEDIATE FIX ON YOUR VPS:
+-------------------------------
+cd /var/www/balkly
+nano docker-compose.yml
+
+Find line with:
+  AWS_USE_PATH_STYLE_ENDPOINT: true
+
+Change to:
+  AWS_USE_PATH_STYLE_ENDPOINT: "true"
+
+Save and run:
+  docker-compose up -d
+
+
+OR:
+---
+Delete and reinstall:
+  rm -rf /var/www/balkly
+  curl -fsSL https://raw.githubusercontent.com/XProject-hub/Balkly/main/install-vps.sh | sudo bash
+
+
+STATUS:
+-------
+✅ Fixed in repository
+✅ Will work on next installation
+✅ Can continue with deployment
+
+================================================================
+
+Platform is ready - just needed a quote around "true"!
+
+================================================================
+
