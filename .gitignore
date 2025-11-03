@@ -80,6 +80,14 @@ backups/
 *.sql
 *.bak
 
+# Large files (videos, etc.)
+*.mov
+*.mp4
+*.avi
+*.mkv
+balkly-web/public/videos/*.mov
+balkly-web/public/videos/*.mp4
+
 # macOS
 .DS_Store
 
