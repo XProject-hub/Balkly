@@ -101,11 +101,7 @@ services:
       - meilisearch
     networks:
       - balkly_network
-    entrypoint: ["/bin/sh", "-c"]
-    command: 
-      - |
-        php-fpm -D
-        php artisan serve --host=0.0.0.0 --port=8000
+    command: php artisan serve --host=0.0.0.0 --port=8000
 
   queue:
     build:

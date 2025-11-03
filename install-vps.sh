@@ -231,17 +231,23 @@ else
 fi
 echo ""
 
-echo -e "${BLUE}Step 8/10:${NC} Starting Docker services..."
-docker-compose up -d
+echo -e "${BLUE}Step 8/10:${NC} Cleaning up old containers (if any)..."
+docker-compose down --remove-orphans 2>/dev/null || true
+docker system prune -f 2>/dev/null || true
+echo -e "${GREEN}✓${NC} Cleanup complete"
+echo ""
+
+echo -e "${BLUE}Step 9/10:${NC} Starting Docker services..."
+docker-compose up -d --remove-orphans
 echo -e "${GREEN}✓${NC} All Docker services started"
 echo ""
 
-echo -e "${BLUE}Step 9/10:${NC} Waiting for services to initialize..."
-sleep 15
+echo -e "${BLUE}Step 10/10:${NC} Waiting for services to initialize..."
+sleep 20
 echo -e "${GREEN}✓${NC} Services ready"
 echo ""
 
-echo -e "${BLUE}Step 10/12:${NC} Checking API container status..."
+echo -e "${BLUE}Step 11/15:${NC} Checking API container status..."
 # Wait for API container to be healthy
 for i in {1..30}; do
     if docker ps | grep -q balkly_api; then
@@ -262,7 +268,7 @@ if ! docker ps | grep -q balkly_api; then
     sleep 5
 fi
 
-echo -e "${BLUE}Step 11/12:${NC} Installing backend dependencies..."
+echo -e "${BLUE}Step 12/15:${NC} Installing backend dependencies..."
 docker exec balkly_api bash -c "composer install --no-interaction --optimize-autoloader" || {
     echo -e "${YELLOW}⚠️  Composer install failed, trying alternative method...${NC}"
     docker exec -w /var/www balkly_api composer install --no-interaction --optimize-autoloader
@@ -270,7 +276,7 @@ docker exec balkly_api bash -c "composer install --no-interaction --optimize-aut
 echo -e "${GREEN}✓${NC} Composer dependencies installed"
 echo ""
 
-echo -e "${BLUE}Step 12/14:${NC} Setting up Laravel backend..."
+echo -e "${BLUE}Step 13/15:${NC} Setting up Laravel backend..."
 docker exec balkly_api bash -c "php artisan key:generate --force" || echo -e "${YELLOW}⚠️  Key generation warning (may already exist)${NC}"
 docker exec balkly_api bash -c "php artisan migrate --force" || echo -e "${RED}❌ Migration failed${NC}"
 docker exec balkly_api bash -c "php artisan db:seed --force" || echo -e "${YELLOW}⚠️  Seeding warning (may already exist)${NC}"
@@ -280,12 +286,12 @@ docker exec balkly_api bash -c "php artisan storage:link" || echo -e "${YELLOW}�
 echo -e "${GREEN}✓${NC} Laravel backend configured"
 echo ""
 
-echo -e "${BLUE}Step 13/14:${NC} Setting up Next.js frontend..."
+echo -e "${BLUE}Step 14/15:${NC} Setting up Next.js frontend..."
 docker exec balkly_web sh -c "npm install" || echo -e "${YELLOW}⚠️  npm install warning${NC}"
 echo -e "${GREEN}✓${NC} Frontend dependencies installed"
 echo ""
 
-echo -e "${BLUE}Step 14/14:${NC} Restarting services..."
+echo -e "${BLUE}Step 15/15:${NC} Restarting services..."
 docker-compose restart web api
 echo -e "${GREEN}✓${NC} All services restarted"
 echo ""
