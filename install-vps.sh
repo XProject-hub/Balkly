@@ -269,10 +269,9 @@ if ! docker ps | grep -q balkly_api; then
 fi
 
 echo -e "${BLUE}Step 12/15:${NC} Installing backend dependencies..."
-docker exec balkly_api bash -c "composer install --no-interaction --optimize-autoloader" || {
-    echo -e "${YELLOW}⚠️  Composer install failed, trying alternative method...${NC}"
-    docker exec -w /var/www balkly_api composer install --no-interaction --optimize-autoloader
-}
+# Wait a bit more for container to stabilize
+sleep 5
+docker exec balkly_api bash -c "composer install --no-interaction --optimize-autoloader"
 echo -e "${GREEN}✓${NC} Composer dependencies installed"
 echo ""
 
@@ -291,9 +290,12 @@ docker exec balkly_web sh -c "npm install" || echo -e "${YELLOW}⚠️  npm inst
 echo -e "${GREEN}✓${NC} Frontend dependencies installed"
 echo ""
 
-echo -e "${BLUE}Step 15/15:${NC} Restarting services..."
-docker-compose restart web api
-echo -e "${GREEN}✓${NC} All services restarted"
+echo -e "${BLUE}Step 15/15:${NC} Starting Laravel server..."
+# Change API container command to run artisan serve
+docker exec -d balkly_api bash -c "php artisan serve --host=0.0.0.0 --port=8000"
+sleep 2
+docker-compose restart web
+echo -e "${GREEN}✓${NC} All services ready"
 echo ""
 
 # Final health check
