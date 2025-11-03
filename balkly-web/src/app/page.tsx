@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Car, Home, Calendar, MessageCircle, Search, TrendingUp, Star, MapPin, Eye, Package } from "lucide-react";
 import { listingsAPI, eventsAPI, forumAPI } from "@/lib/api";
+import AdBanner from "@/components/AdBanner";
 
 export default function HomePage() {
   const router = useRouter();
@@ -103,6 +104,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Ad Banner - Homepage Top */}
+      <AdBanner position="homepage_top" className="container mx-auto px-4 py-4" />
 
       {/* Categories Section */}
       <section className="py-20 bg-gradient-to-b from-background to-muted/30">

@@ -12,8 +12,12 @@ import {
   Flag,
   MessageCircle,
   ArrowLeft,
+  DollarSign,
+  Star,
 } from "lucide-react";
 import { listingsAPI } from "@/lib/api";
+import FavoriteButton from "@/components/FavoriteButton";
+import VerifiedBadge from "@/components/VerifiedBadge";
 
 export default function ListingDetailPage() {
   const params = useParams();
@@ -23,6 +27,11 @@ export default function ListingDetailPage() {
   const [listing, setListing] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [showOfferModal, setShowOfferModal] = useState(false);
+  const [offerAmount, setOfferAmount] = useState("");
+  const [offerMessage, setOfferMessage] = useState("");
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [avgRating, setAvgRating] = useState(0);
 
   useEffect(() => {
     if (listingId) {
@@ -35,10 +44,44 @@ export default function ListingDetailPage() {
     try {
       const response = await listingsAPI.getOne(listingId);
       setListing(response.data.listing);
+      
+      // Load seller reviews
+      if (response.data.listing?.user_id) {
+        const reviewsResponse = await fetch(`/api/v1/reviews/user/${response.data.listing.user_id}`);
+        const reviewsData = await reviewsResponse.json();
+        setReviews(reviewsData.reviews?.data || []);
+        setAvgRating(reviewsData.average_rating || 0);
+      }
     } catch (error) {
       console.error("Failed to load listing:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleMakeOffer = async () => {
+    if (!offerAmount) return;
+
+    try {
+      await fetch("/api/v1/offers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({
+          listing_id: listingId,
+          amount: parseFloat(offerAmount),
+          message: offerMessage,
+        }),
+      });
+      
+      setShowOfferModal(false);
+      setOfferAmount("");
+      setOfferMessage("");
+      alert("Offer sent to seller!");
+    } catch (error) {
+      alert("Failed to send offer. Please login first.");
     }
   };
 
@@ -167,6 +210,7 @@ export default function ListingDetailPage() {
                     </CardDescription>
                   </div>
                   <div className="flex gap-2">
+                    <FavoriteButton type="App\\Models\\Listing" id={parseInt(listingId)} size="sm" />
                     <Button size="sm" variant="outline" onClick={handleShare}>
                       <Share2 className="h-4 w-4" />
                     </Button>
@@ -218,7 +262,8 @@ export default function ListingDetailPage() {
                   <MessageCircle className="mr-2 h-5 w-5" />
                   Contact Seller
                 </Button>
-                <Button variant="outline" className="w-full" size="lg">
+                <Button variant="outline" className="w-full" size="lg" onClick={() => setShowOfferModal(true)}>
+                  <DollarSign className="mr-2 h-5 w-5" />
                   Make an Offer
                 </Button>
               </CardContent>
@@ -234,11 +279,21 @@ export default function ListingDetailPage() {
                   <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg">
                     {listing.user?.name?.[0]?.toUpperCase()}
                   </div>
-                  <div>
-                    <p className="font-medium">{listing.user?.name}</p>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{listing.user?.name}</p>
+                      <VerifiedBadge isVerified={listing.user?.is_verified_seller} size="sm" />
+                    </div>
                     <p className="text-sm text-muted-foreground">
                       Member since {new Date(listing.user?.created_at).getFullYear()}
                     </p>
+                    {avgRating > 0 && (
+                      <div className="flex items-center gap-1 mt-1">
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <span className="font-bold">{avgRating.toFixed(1)}</span>
+                        <span className="text-xs text-muted-foreground">({reviews.length} reviews)</span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="space-y-2 text-sm">
@@ -275,6 +330,52 @@ export default function ListingDetailPage() {
             </Card>
           </div>
         </div>
+
+        {/* Make Offer Modal */}
+        {showOfferModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-md">
+              <CardHeader>
+                <CardTitle>Make an Offer</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Original price: €{listing.price?.toFixed(2)}
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Your Offer (€)</label>
+                  <input
+                    type="number"
+                    value={offerAmount}
+                    onChange={(e) => setOfferAmount(e.target.value)}
+                    placeholder="Enter your offer"
+                    className="w-full px-4 py-2 border rounded-lg"
+                    step="0.01"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Message (optional)</label>
+                  <textarea
+                    value={offerMessage}
+                    onChange={(e) => setOfferMessage(e.target.value)}
+                    placeholder="Add a message to the seller..."
+                    className="w-full px-4 py-2 border rounded-lg h-24"
+                  />
+                </div>
+
+                <div className="flex gap-2">
+                  <Button onClick={handleMakeOffer} className="flex-1">
+                    Send Offer
+                  </Button>
+                  <Button variant="outline" onClick={() => setShowOfferModal(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Schema.org Structured Data */}
         {listing && (

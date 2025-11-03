@@ -169,17 +169,65 @@ export default function AdminDashboardPage() {
             </Card>
           </Link>
 
-          <Link href="/admin/analytics">
+          <Link href="/admin/analytics-full">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <TrendingUp className="mr-2 h-5 w-5" />
-                  Analytics
+                  Advanced Analytics
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  View platform metrics and insights
+                  Traffic, time on site, devices, conversions
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/admin/banners">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <TrendingUp className="mr-2 h-5 w-5" />
+                  Ad Banners
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Manage advertising banners and campaigns
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/admin/verifications">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Settings className="mr-2 h-5 w-5" />
+                  Seller Verifications
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Approve verified seller badges
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/admin/content">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Settings className="mr-2 h-5 w-5" />
+                  Blog & Knowledge Base
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Manage blog posts and help articles
                 </p>
               </CardContent>
             </Card>

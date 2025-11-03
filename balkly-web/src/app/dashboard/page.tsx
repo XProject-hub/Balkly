@@ -55,7 +55,7 @@ export default function DashboardPage() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
           <Button size="lg" asChild className="h-auto py-4">
             <Link href="/listings/create">
               <Plus className="mr-2 h-5 w-5" />
@@ -78,6 +78,18 @@ export default function DashboardPage() {
             <Link href="/dashboard/orders">
               <DollarSign className="mr-2 h-5 w-5" />
               <span>Orders</span>
+            </Link>
+          </Button>
+          <Button size="lg" variant="outline" asChild className="h-auto py-4">
+            <Link href="/dashboard/favorites">
+              <Package className="mr-2 h-5 w-5" />
+              <span>Favorites</span>
+            </Link>
+          </Button>
+          <Button size="lg" variant="outline" asChild className="h-auto py-4">
+            <Link href="/dashboard/offers">
+              <DollarSign className="mr-2 h-5 w-5" />
+              <span>My Offers</span>
             </Link>
           </Button>
         </div>

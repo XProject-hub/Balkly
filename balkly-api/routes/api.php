@@ -113,17 +113,89 @@ Route::prefix('v1')->group(function () {
         // Reports
         Route::post('/reports', [ListingController::class, 'report']);
         
+        // Reviews
+        Route::get('/reviews/user/{userId}', [\App\Http\Controllers\Api\ReviewController::class, 'getUserReviews']);
+        Route::post('/reviews', [\App\Http\Controllers\Api\ReviewController::class, 'store']);
+        
+        // Favorites
+        Route::get('/favorites', [\App\Http\Controllers\Api\FavoriteController::class, 'index']);
+        Route::post('/favorites', [\App\Http\Controllers\Api\FavoriteController::class, 'store']);
+        Route::delete('/favorites/{id}', [\App\Http\Controllers\Api\FavoriteController::class, 'destroy']);
+        Route::post('/favorites/check', [\App\Http\Controllers\Api\FavoriteController::class, 'check']);
+        
+        // Saved Searches
+        Route::get('/saved-searches', [\App\Http\Controllers\Api\SavedSearchController::class, 'index']);
+        Route::post('/saved-searches', [\App\Http\Controllers\Api\SavedSearchController::class, 'store']);
+        Route::patch('/saved-searches/{id}', [\App\Http\Controllers\Api\SavedSearchController::class, 'update']);
+        Route::delete('/saved-searches/{id}', [\App\Http\Controllers\Api\SavedSearchController::class, 'destroy']);
+        
+        // Offers
+        Route::get('/offers/my', [\App\Http\Controllers\Api\OfferController::class, 'getMyOffers']);
+        Route::get('/offers/listing/{listingId}', [\App\Http\Controllers\Api\OfferController::class, 'getListingOffers']);
+        Route::post('/offers', [\App\Http\Controllers\Api\OfferController::class, 'store']);
+        Route::post('/offers/{id}/accept', [\App\Http\Controllers\Api\OfferController::class, 'accept']);
+        Route::post('/offers/{id}/reject', [\App\Http\Controllers\Api\OfferController::class, 'reject']);
+        Route::post('/offers/{id}/counter', [\App\Http\Controllers\Api\OfferController::class, 'counter']);
+        
+        // Price Alerts
+        Route::get('/price-alerts', [\App\Http\Controllers\Api\PriceAlertController::class, 'index']);
+        Route::post('/price-alerts', [\App\Http\Controllers\Api\PriceAlertController::class, 'store']);
+        Route::delete('/price-alerts/{id}', [\App\Http\Controllers\Api\PriceAlertController::class, 'destroy']);
+        
+        // Seller Verification
+        Route::post('/verification/request', [\App\Http\Controllers\Api\VerificationController::class, 'requestVerification']);
+        
+        // Analytics tracking
+        Route::post('/analytics/track', [\App\Http\Controllers\Api\AnalyticsController::class, 'trackVisit']);
+        
+        // KB Article Feedback
+        Route::post('/kb/{id}/feedback', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'feedback']);
+        
         // Admin Routes (role-protected)
         Route::middleware('role:admin')->prefix('admin')->group(function () {
             Route::get('/dashboard', [\App\Http\Controllers\Api\AdminController::class, 'dashboard']);
             Route::get('/moderation', [\App\Http\Controllers\Api\AdminController::class, 'moderationQueue']);
             Route::post('/approve', [\App\Http\Controllers\Api\AdminController::class, 'approve']);
             Route::post('/reject', [\App\Http\Controllers\Api\AdminController::class, 'reject']);
-            Route::get('/analytics', [\App\Http\Controllers\Api\AdminController::class, 'analytics']);
+            Route::get('/analytics', [\App\Http\Controllers\Api\AnalyticsController::class, 'getAnalytics']);
             Route::get('/users', [\App\Http\Controllers\Api\AdminController::class, 'users']);
             Route::post('/users/{id}/ban', [\App\Http\Controllers\Api\AdminController::class, 'banUser']);
+            
+            // Ad Banner Management
+            Route::get('/banners', [\App\Http\Controllers\Api\AdBannerController::class, 'index']);
+            Route::post('/banners', [\App\Http\Controllers\Api\AdBannerController::class, 'store']);
+            Route::patch('/banners/{id}', [\App\Http\Controllers\Api\AdBannerController::class, 'update']);
+            Route::delete('/banners/{id}', [\App\Http\Controllers\Api\AdBannerController::class, 'destroy']);
+            
+            // Seller Verification Management
+            Route::get('/verification/pending', [\App\Http\Controllers\Api\VerificationController::class, 'pending']);
+            Route::post('/verification/{userId}/approve', [\App\Http\Controllers\Api\VerificationController::class, 'approve']);
+            
+            // Blog Management
+            Route::post('/blog', [\App\Http\Controllers\Api\BlogController::class, 'store']);
+            Route::patch('/blog/{id}', [\App\Http\Controllers\Api\BlogController::class, 'update']);
+            Route::delete('/blog/{id}', [\App\Http\Controllers\Api\BlogController::class, 'destroy']);
+            
+            // Knowledge Base Management
+            Route::post('/kb/articles', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'store']);
+            Route::patch('/kb/articles/{id}', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'update']);
+            Route::delete('/kb/articles/{id}', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'destroy']);
         });
     });
+    
+    // Public banner endpoints
+    Route::get('/banners/{position}', [\App\Http\Controllers\Api\AdBannerController::class, 'getByPosition']);
+    Route::post('/banners/{id}/impression', [\App\Http\Controllers\Api\AdBannerController::class, 'trackImpression']);
+    Route::post('/banners/{id}/click', [\App\Http\Controllers\Api\AdBannerController::class, 'trackClick']);
+    
+    // Blog (public)
+    Route::get('/blog', [\App\Http\Controllers\Api\BlogController::class, 'index']);
+    Route::get('/blog/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'show']);
+    
+    // Knowledge Base (public)
+    Route::get('/kb/categories', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'categories']);
+    Route::get('/kb/search', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'search']);
+    Route::get('/kb/{slug}', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'show']);
     
     // Webhooks (no auth, verified by signature)
     Route::post('/webhooks/stripe', [OrderController::class, 'stripeWebhook']);

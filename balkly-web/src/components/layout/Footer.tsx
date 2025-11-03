@@ -60,8 +60,18 @@ export default function Footer() {
             <h4 className="font-bold mb-4">Support</h4>
             <ul className="space-y-2 text-sm">
               <li>
+                <Link href="/knowledge-base" className="text-muted-foreground hover:text-primary transition-colors">
+                  Knowledge Base
+                </Link>
+              </li>
+              <li>
                 <Link href="/help" className="text-muted-foreground hover:text-primary transition-colors">
                   Help Center
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog" className="text-muted-foreground hover:text-primary transition-colors">
+                  Blog & News
                 </Link>
               </li>
               <li>
@@ -72,11 +82,6 @@ export default function Footer() {
               <li>
                 <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
                   Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/faq" className="text-muted-foreground hover:text-primary transition-colors">
-                  FAQ
                 </Link>
               </li>
             </ul>
