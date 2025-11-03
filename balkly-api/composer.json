@@ -16,7 +16,6 @@
         "laravel/scout": "^10.6",
         "meilisearch/meilisearch-php": "^1.5",
         "barryvdh/laravel-dompdf": "^2.0",
-        "beyondcode/laravel-websockets": "^1.14",
         "guzzlehttp/guzzle": "^7.8",
         "intervention/image": "^3.5",
         "pragmarx/google2fa": "^8.0",
