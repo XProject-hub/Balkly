@@ -5,13 +5,10 @@ WORKDIR /app
 
 # Install dependencies
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 # Copy application files
 COPY . .
-
-# Build the application (for production)
-# RUN npm run build
 
 # Expose port
 EXPOSE 3000
