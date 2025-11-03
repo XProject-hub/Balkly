@@ -268,14 +268,20 @@ if ! docker ps | grep -q balkly_api; then
     sleep 5
 fi
 
-echo -e "${BLUE}Step 12/15:${NC} Installing backend dependencies..."
-# Wait a bit more for container to stabilize
-sleep 5
-docker exec balkly_api bash -c "composer install --no-interaction --optimize-autoloader"
+echo -e "${BLUE}Step 12/15:${NC} Preparing Laravel directories..."
+# Create required directories and fix permissions
+docker exec balkly_api bash -c "mkdir -p /var/www/bootstrap/cache && chmod -R 775 /var/www/bootstrap/cache && chown -R www-data:www-data /var/www/bootstrap/cache"
+docker exec balkly_api bash -c "mkdir -p /var/www/storage/framework/{cache,sessions,views} && chmod -R 775 /var/www/storage && chown -R www-data:www-data /var/www/storage"
+echo -e "${GREEN}✓${NC} Directories prepared"
+echo ""
+
+echo -e "${BLUE}Step 13/15:${NC} Installing backend dependencies..."
+docker exec balkly_api bash -c "composer install --no-interaction --optimize-autoloader --no-scripts"
+docker exec balkly_api bash -c "composer dump-autoload"
 echo -e "${GREEN}✓${NC} Composer dependencies installed"
 echo ""
 
-echo -e "${BLUE}Step 13/15:${NC} Setting up Laravel backend..."
+echo -e "${BLUE}Step 14/16:${NC} Setting up Laravel backend..."
 docker exec balkly_api bash -c "php artisan key:generate --force" || echo -e "${YELLOW}⚠️  Key generation warning (may already exist)${NC}"
 docker exec balkly_api bash -c "php artisan migrate --force" || echo -e "${RED}❌ Migration failed${NC}"
 docker exec balkly_api bash -c "php artisan db:seed --force" || echo -e "${YELLOW}⚠️  Seeding warning (may already exist)${NC}"
@@ -285,12 +291,12 @@ docker exec balkly_api bash -c "php artisan storage:link" || echo -e "${YELLOW}�
 echo -e "${GREEN}✓${NC} Laravel backend configured"
 echo ""
 
-echo -e "${BLUE}Step 14/15:${NC} Setting up Next.js frontend..."
+echo -e "${BLUE}Step 15/16:${NC} Setting up Next.js frontend..."
 docker exec balkly_web sh -c "npm install" || echo -e "${YELLOW}⚠️  npm install warning${NC}"
 echo -e "${GREEN}✓${NC} Frontend dependencies installed"
 echo ""
 
-echo -e "${BLUE}Step 15/15:${NC} Starting Laravel server..."
+echo -e "${BLUE}Step 16/16:${NC} Starting Laravel server..."
 # Change API container command to run artisan serve
 docker exec -d balkly_api bash -c "php artisan serve --host=0.0.0.0 --port=8000"
 sleep 2
