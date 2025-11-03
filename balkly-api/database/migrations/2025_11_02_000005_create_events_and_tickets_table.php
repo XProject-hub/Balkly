@@ -19,7 +19,8 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->string('city', 100)->nullable();
             $table->string('country', 2)->nullable();
-            $table->point('location_geo')->nullable();
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
             $table->timestamp('start_at');
             $table->timestamp('end_at')->nullable();
             $table->string('partner_ref')->nullable();
@@ -30,7 +31,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             
-            $table->spatialIndex('location_geo');
+            $table->index(['latitude', 'longitude']);
             $table->index(['type', 'status', 'start_at']);
             $table->index(['city', 'country', 'start_at']);
             $table->index('organizer_id');

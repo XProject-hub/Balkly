@@ -17,7 +17,8 @@ return new class extends Migration
             $table->text('description');
             $table->decimal('price', 12, 2)->nullable();
             $table->string('currency', 3)->default('EUR');
-            $table->point('location_geo')->nullable();
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
             $table->string('city', 100)->nullable();
             $table->string('country', 2)->nullable();
             $table->enum('status', ['draft', 'pending_review', 'active', 'paused', 'rejected', 'expired', 'sold'])->default('draft');
@@ -29,7 +30,7 @@ return new class extends Migration
             $table->softDeletes();
             
             $table->fullText(['title', 'description']);
-            $table->spatialIndex('location_geo');
+            $table->index(['latitude', 'longitude']);
             $table->index(['user_id', 'status', 'published_at']);
             $table->index(['category_id', 'status', 'published_at']);
             $table->index(['city', 'country', 'status']);
