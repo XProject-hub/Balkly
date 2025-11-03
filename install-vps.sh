@@ -269,15 +269,14 @@ if ! docker ps | grep -q balkly_api; then
 fi
 
 echo -e "${BLUE}Step 12/15:${NC} Preparing Laravel directories..."
-# Create required directories and fix permissions
-docker exec balkly_api bash -c "mkdir -p /var/www/bootstrap/cache && chmod -R 775 /var/www/bootstrap/cache && chown -R www-data:www-data /var/www/bootstrap/cache"
-docker exec balkly_api bash -c "mkdir -p /var/www/storage/framework/{cache,sessions,views} && chmod -R 775 /var/www/storage && chown -R www-data:www-data /var/www/storage"
+# Create directories and fix all permissions
+docker exec balkly_api bash -c "mkdir -p /var/www/bootstrap/cache /var/www/storage/framework/cache /var/www/storage/framework/sessions /var/www/storage/framework/views /var/www/storage/logs /var/www/storage/app/public"
+docker exec balkly_api bash -c "chmod -R 777 /var/www/bootstrap/cache /var/www/storage"
 echo -e "${GREEN}✓${NC} Directories prepared"
 echo ""
 
 echo -e "${BLUE}Step 13/15:${NC} Installing backend dependencies..."
-docker exec balkly_api bash -c "composer install --no-interaction --optimize-autoloader --no-scripts"
-docker exec balkly_api bash -c "composer dump-autoload"
+docker exec balkly_api bash -c "COMPOSER_ALLOW_SUPERUSER=1 composer install --no-interaction --optimize-autoloader"
 echo -e "${GREEN}✓${NC} Composer dependencies installed"
 echo ""
 
