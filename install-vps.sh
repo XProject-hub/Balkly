@@ -241,18 +241,23 @@ sleep 15
 echo -e "${GREEN}✓${NC} Services ready"
 echo ""
 
-echo -e "${BLUE}Step 10/10:${NC} Setting up Laravel backend..."
-docker exec balkly_api bash -c "composer install --no-interaction --optimize-autoloader --no-dev"
+echo -e "${BLUE}Step 10/12:${NC} Installing backend dependencies..."
+docker exec balkly_api bash -c "composer install --no-interaction --optimize-autoloader"
+echo -e "${GREEN}✓${NC} Composer dependencies installed"
+echo ""
+
+echo -e "${BLUE}Step 11/12:${NC} Setting up Laravel backend..."
 docker exec balkly_api bash -c "php artisan key:generate --force"
 docker exec balkly_api bash -c "php artisan migrate --force"
 docker exec balkly_api bash -c "php artisan db:seed --force"
 docker exec balkly_api bash -c "php artisan config:cache"
 docker exec balkly_api bash -c "php artisan route:cache"
+docker exec balkly_api bash -c "php artisan storage:link"
 echo -e "${GREEN}✓${NC} Laravel backend configured"
 echo ""
 
-echo -e "${BLUE}Step 10/10:${NC} Setting up Next.js frontend..."
-docker exec balkly_web sh -c "npm install --production"
+echo -e "${BLUE}Step 12/12:${NC} Setting up Next.js frontend..."
+docker exec balkly_web sh -c "npm install"
 echo -e "${GREEN}✓${NC} Frontend dependencies installed"
 echo ""
 

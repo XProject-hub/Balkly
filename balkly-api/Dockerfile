@@ -39,11 +39,14 @@ COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
+# Copy composer files first
+COPY composer.json composer.lock* ./
+
+# Set permissions for composer cache
+RUN mkdir -p /var/www/.composer && chown -R www-data:www-data /var/www/.composer
+
 # Copy existing application directory
 COPY . .
-
-# Install PHP dependencies
-RUN composer install --no-interaction --no-dev --optimize-autoloader
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www \
@@ -53,6 +56,6 @@ RUN chown -R www-data:www-data /var/www \
 # Expose port
 EXPOSE 8000
 
-# Start PHP-FPM
-CMD ["php-fpm"]
+# Start PHP-FPM server
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
 

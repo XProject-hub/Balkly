@@ -15,7 +15,6 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "laravel/scout": "^10.6",
         "meilisearch/meilisearch-php": "^1.5",
-        "fruitcake/laravel-cors": "^3.0",
         "barryvdh/laravel-dompdf": "^2.0",
         "beyondcode/laravel-websockets": "^1.14",
         "guzzlehttp/guzzle": "^7.8",

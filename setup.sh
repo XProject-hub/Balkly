@@ -105,34 +105,37 @@ echo -e "${BLUE}Waiting for services to be ready...${NC}"
 sleep 10
 
 # Step 3: Setup backend
-echo -e "${BLUE}Step 3/6:${NC} Setting up Laravel backend..."
-docker exec -it balkly_api bash -c "composer install --no-interaction"
-echo -e "${GREEN}✓${NC} Dependencies installed"
-
-docker exec -it balkly_api bash -c "php artisan key:generate"
-echo -e "${GREEN}✓${NC} Application key generated"
-
-docker exec -it balkly_api bash -c "php artisan migrate --force"
-echo -e "${GREEN}✓${NC} Database migrated"
-
-docker exec -it balkly_api bash -c "php artisan db:seed --force"
-echo -e "${GREEN}✓${NC} Database seeded"
+echo -e "${BLUE}Step 3/6:${NC} Installing backend dependencies..."
+docker exec balkly_api bash -c "composer install --no-interaction --optimize-autoloader"
+echo -e "${GREEN}✓${NC} Composer dependencies installed"
 echo ""
 
-# Step 4: Setup frontend
-echo -e "${BLUE}Step 4/6:${NC} Setting up Next.js frontend..."
-docker exec -it balkly_web sh -c "npm install"
+echo -e "${BLUE}Step 4/6:${NC} Setting up Laravel backend..."
+docker exec balkly_api bash -c "php artisan key:generate --force"
+echo -e "${GREEN}✓${NC} Application key generated"
+
+docker exec balkly_api bash -c "php artisan migrate --force"
+echo -e "${GREEN}✓${NC} Database migrated"
+
+docker exec balkly_api bash -c "php artisan db:seed --force"
+echo -e "${GREEN}✓${NC} Database seeded"
+
+docker exec balkly_api bash -c "php artisan storage:link"
+echo -e "${GREEN}✓${NC} Storage linked"
+echo ""
+
+# Step 5: Setup frontend
+echo -e "${BLUE}Step 5/6:${NC} Setting up Next.js frontend..."
+docker exec balkly_web sh -c "npm install"
 echo -e "${GREEN}✓${NC} Frontend dependencies installed"
 echo ""
 
-# Step 5: Restart services
-echo -e "${BLUE}Step 5/6:${NC} Restarting services..."
+# Step 6: Restart services
+echo -e "${BLUE}Step 6/6:${NC} Restarting services..."
 docker-compose restart web
 echo -e "${GREEN}✓${NC} Services restarted"
 echo ""
 
-# Step 6: Final checks
-echo -e "${BLUE}Step 6/6:${NC} Running final checks..."
 echo -e "${GREEN}✓${NC} All services running"
 echo ""
 
