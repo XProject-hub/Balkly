@@ -139,7 +139,12 @@ echo -e "${BLUE}Step 7/10:${NC} Creating environment files..."
 
 # Create backend .env file
 if [ ! -f balkly-api/.env ]; then
-    cat > balkly-api/.env << 'EOF'
+    if [ -f balkly-api/.env.example ]; then
+        cp balkly-api/.env.example balkly-api/.env
+        echo -e "${GREEN}✓${NC} Backend .env created from .env.example"
+    else
+        # Fallback: create from template
+        cat > balkly-api/.env << 'EOF'
 APP_NAME=Balkly
 APP_ENV=production
 APP_KEY=
@@ -200,20 +205,27 @@ FACEBOOK_CLIENT_SECRET=
 SANCTUM_STATEFUL_DOMAINS=localhost,127.0.0.1
 SESSION_DOMAIN=localhost
 EOF
-    echo -e "${GREEN}✓${NC} Backend .env created"
+        echo -e "${GREEN}✓${NC} Backend .env created from template"
+    fi
 else
     echo -e "${YELLOW}!${NC} Backend .env already exists"
 fi
 
 # Create frontend .env.local file
 if [ ! -f balkly-web/.env.local ]; then
-    cat > balkly-web/.env.local << 'EOF'
+    if [ -f balkly-web/.env.local.example ]; then
+        cp balkly-web/.env.local.example balkly-web/.env.local
+        echo -e "${GREEN}✓${NC} Frontend .env created from .env.local.example"
+    else
+        # Fallback: create from template
+        cat > balkly-web/.env.local << 'EOF'
 NEXT_PUBLIC_API_URL=http://localhost/api/v1
 NEXT_PUBLIC_WS_URL=ws://localhost/ws
 NEXT_PUBLIC_SITE_URL=http://localhost
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_YOUR_STRIPE_KEY
 EOF
-    echo -e "${GREEN}✓${NC} Frontend .env created"
+        echo -e "${GREEN}✓${NC} Frontend .env created from template"
+    fi
 else
     echo -e "${YELLOW}!${NC} Frontend .env already exists"
 fi
