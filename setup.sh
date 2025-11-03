@@ -17,15 +17,65 @@ NC='\033[0m' # No Color
 
 # Step 1: Create environment files
 echo -e "${BLUE}Step 1/6:${NC} Creating environment files..."
+
+# Create backend .env if not exists
 if [ ! -f balkly-api/.env ]; then
-    cp balkly-api/.env.example balkly-api/.env
+    cat > balkly-api/.env << 'EOF'
+APP_NAME=Balkly
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost
+APP_TIMEZONE=UTC
+
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=balkly
+DB_USERNAME=balkly
+DB_PASSWORD=balkly_pass
+
+CACHE_STORE=redis
+QUEUE_CONNECTION=redis
+SESSION_DRIVER=redis
+
+REDIS_CLIENT=predis
+REDIS_HOST=redis
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+AWS_ACCESS_KEY_ID=balkly
+AWS_SECRET_ACCESS_KEY=balkly_minio_pass
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=balkly-media
+AWS_ENDPOINT=http://minio:9000
+AWS_USE_PATH_STYLE_ENDPOINT=true
+
+FILESYSTEM_DISK=s3
+SCOUT_DRIVER=meilisearch
+MEILISEARCH_HOST=http://meilisearch:7700
+MEILISEARCH_KEY=balkly_meili_master_key
+
+STRIPE_KEY=pk_test_YOUR_KEY
+STRIPE_SECRET=sk_test_YOUR_SECRET
+OPENAI_API_KEY=sk-YOUR_OPENAI_KEY
+
+SANCTUM_STATEFUL_DOMAINS=localhost,127.0.0.1
+SESSION_DOMAIN=localhost
+EOF
     echo -e "${GREEN}✓${NC} Backend .env created"
 else
     echo -e "${YELLOW}!${NC} Backend .env already exists (skipped)"
 fi
 
+# Create frontend .env.local if not exists
 if [ ! -f balkly-web/.env.local ]; then
-    cp balkly-web/.env.local.example balkly-web/.env.local
+    cat > balkly-web/.env.local << 'EOF'
+NEXT_PUBLIC_API_URL=http://localhost/api/v1
+NEXT_PUBLIC_WS_URL=ws://localhost/ws
+NEXT_PUBLIC_SITE_URL=http://localhost
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_YOUR_KEY
+EOF
     echo -e "${GREEN}✓${NC} Frontend .env created"
 else
     echo -e "${YELLOW}!${NC} Frontend .env already exists (skipped)"

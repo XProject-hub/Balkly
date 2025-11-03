@@ -10,18 +10,42 @@ echo.
 
 REM Step 1: Create environment files
 echo [Step 1/6] Creating environment files...
+
+REM Create backend .env
 if not exist balkly-api\.env (
-    copy balkly-api\.env.example balkly-api\.env >nul
+    (
+        echo APP_NAME=Balkly
+        echo APP_ENV=local
+        echo APP_KEY=
+        echo APP_DEBUG=true
+        echo APP_URL=http://localhost
+        echo DB_HOST=mysql
+        echo DB_DATABASE=balkly
+        echo DB_USERNAME=balkly
+        echo DB_PASSWORD=balkly_pass
+        echo REDIS_HOST=redis
+        echo AWS_ACCESS_KEY_ID=balkly
+        echo AWS_SECRET_ACCESS_KEY=balkly_minio_pass
+        echo AWS_BUCKET=balkly-media
+        echo AWS_ENDPOINT=http://minio:9000
+        echo STRIPE_KEY=pk_test_YOUR_KEY
+        echo STRIPE_SECRET=sk_test_YOUR_SECRET
+    ) > balkly-api\.env
     echo [✓] Backend .env created
 ) else (
-    echo [!] Backend .env already exists (skipped)
+    echo [!] Backend .env already exists
 )
 
+REM Create frontend .env.local
 if not exist balkly-web\.env.local (
-    copy balkly-web\.env.local.example balkly-web\.env.local >nul
+    (
+        echo NEXT_PUBLIC_API_URL=http://localhost/api/v1
+        echo NEXT_PUBLIC_SITE_URL=http://localhost
+        echo NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_YOUR_KEY
+    ) > balkly-web\.env.local
     echo [✓] Frontend .env created
 ) else (
-    echo [!] Frontend .env already exists (skipped)
+    echo [!] Frontend .env already exists
 )
 echo.
 
