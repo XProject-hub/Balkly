@@ -64,7 +64,7 @@ export default function HomePage() {
             <p className="text-xl md:text-2xl mb-8 text-white/90">
               Your modern marketplace for listings, events, and community discussions.
               <br />
-              Buy, sell, and connect with confidence. ✨
+              Buy, sell, and connect with confidence.
             </p>
             <div className="flex gap-4 justify-center flex-wrap mb-12">
               <Button size="lg" className="text-lg px-8 py-6 hover:scale-105 transition-transform" asChild>
@@ -345,9 +345,9 @@ export default function HomePage() {
               <div className="bg-primary/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <TrendingUp className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">AI-Powered</h3>
+              <h3 className="text-xl font-semibold mb-2">Smart Features</h3>
               <p className="text-muted-foreground">
-                Smart listing suggestions, auto-translation, and content moderation
+                Automatic listing enhancement, multi-language support, and content verification
               </p>
             </div>
 

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, Filter, MapPin, Plus } from "lucide-react";
+import { Search, Filter, MapPin, Plus, Map } from "lucide-react";
 import { listingsAPI, categoriesAPI } from "@/lib/api";
 
 export default function ListingsPage() {
@@ -61,7 +61,7 @@ export default function ListingsPage() {
             <div className="flex gap-2">
               <Button size="lg" variant="secondary" asChild>
                 <Link href="/listings-map">
-                  <MapIcon className="mr-2 h-5 w-5" />
+                  <Map className="mr-2 h-5 w-5" />
                   Map View
                 </Link>
               </Button>
