@@ -73,3 +73,14 @@ balkly-web/.cache/
 *.seed
 *.pid.lock
 
+# Backups
+backups/
+*.sql
+*.bak
+
+# macOS
+.DS_Store
+
+# Documentation (keep organized in docu/)
+/*.md
+!README.md

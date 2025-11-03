@@ -91,7 +91,7 @@ echo      Login: balkly / balkly_minio_pass
 echo      Create bucket: balkly-media
 echo   4. Visit http://localhost
 echo.
-echo Documentation: See START_HERE.md
+echo Documentation: See docu\START_HERE.md
 echo.
 pause
 

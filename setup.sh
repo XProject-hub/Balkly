@@ -98,6 +98,6 @@ echo "  2. Add OpenAI key to balkly-api/.env (optional)"
 echo "  3. Create MinIO bucket 'balkly-media' at http://localhost:9001"
 echo "  4. Visit http://localhost and start exploring!"
 echo ""
-echo -e "${YELLOW}📚 Documentation:${NC} See START_HERE.md for detailed guide"
+echo -e "${YELLOW}📚 Documentation:${NC} See docu/START_HERE.md for detailed guide"
 echo ""
 
