@@ -94,3 +94,11 @@ balkly-web/public/videos/*.mp4
 # Documentation (keep organized in docu/)
 /*.md
 !README.md
+
+# Large media files (add to server directly, not in git)
+*.mov
+*.mp4
+*.avi
+*.mkv
+balkly-web/public/videos/*.mov
+balkly-web/public/videos/*.mp4
