@@ -60,11 +60,17 @@ services:
       context: ./balkly-api
       dockerfile: Dockerfile
     container_name: balkly_api
+    restart: unless-stopped
     working_dir: /var/www
     volumes:
       - ./balkly-api:/var/www
     ports:
       - "8000:8000"
+    healthcheck:
+      test: ["CMD", "php", "-v"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     environment:
       DB_CONNECTION: mysql
       DB_HOST: mysql
@@ -95,7 +101,11 @@ services:
       - meilisearch
     networks:
       - balkly_network
-    command: php artisan serve --host=0.0.0.0 --port=8000
+    entrypoint: ["/bin/sh", "-c"]
+    command: 
+      - |
+        php-fpm -D
+        php artisan serve --host=0.0.0.0 --port=8000
 
   queue:
     build:
