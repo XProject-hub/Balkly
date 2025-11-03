@@ -43,12 +43,20 @@ export default function EventsPage() {
                 Discover concerts, sports, festivals, and more
               </p>
             </div>
-            <Button size="lg" variant="secondary" asChild>
-              <Link href="/events/create">
-                <Plus className="mr-2 h-5 w-5" />
-                Create Event
-              </Link>
-            </Button>
+            <div className="flex gap-2">
+              <Button size="lg" variant="secondary" asChild>
+                <Link href="/events-calendar">
+                  <Calendar className="mr-2 h-5 w-5" />
+                  Calendar View
+                </Link>
+              </Button>
+              <Button size="lg" variant="secondary" asChild>
+                <Link href="/events/create">
+                  <Plus className="mr-2 h-5 w-5" />
+                  Create Event
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </div>

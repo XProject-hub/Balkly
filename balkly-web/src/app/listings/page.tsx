@@ -51,19 +51,27 @@ export default function ListingsPage() {
       {/* Header */}
       <div className="bg-primary text-primary-foreground py-12">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center">
             <div>
               <h1 className="text-4xl font-bold mb-2">Browse Listings</h1>
               <p className="text-lg opacity-90">
                 Find amazing deals on cars, real estate, and more
               </p>
             </div>
-            <Button size="lg" variant="secondary" asChild>
-              <Link href="/listings/create">
-                <Plus className="mr-2 h-5 w-5" />
-                Post Listing
-              </Link>
-            </Button>
+            <div className="flex gap-2">
+              <Button size="lg" variant="secondary" asChild>
+                <Link href="/listings-map">
+                  <MapIcon className="mr-2 h-5 w-5" />
+                  Map View
+                </Link>
+              </Button>
+              <Button size="lg" variant="secondary" asChild>
+                <Link href="/listings/create">
+                  <Plus className="mr-2 h-5 w-5" />
+                  Post Listing
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
