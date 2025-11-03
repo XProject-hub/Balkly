@@ -48,6 +48,9 @@ class AuthController extends Controller
         // Fire registered event (sends verification email)
         event(new Registered($user));
 
+        // Send welcome email
+        $user->notify(new \App\Notifications\WelcomeNotification());
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([

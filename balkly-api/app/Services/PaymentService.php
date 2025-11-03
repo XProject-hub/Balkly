@@ -352,6 +352,9 @@ class PaymentService
 
         // Generate invoice
         app(InvoiceService::class)->generateInvoice($order);
+
+        // Send order confirmation email
+        $order->buyer->notify(new \App\Notifications\OrderConfirmationNotification($order));
     }
 
     /**
