@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 export const translations = {
   en: {
     // Navigation
@@ -230,11 +232,22 @@ export function getTranslation(key: string, lang: string = 'en'): string {
 }
 
 export function useTranslation() {
-  const lang = typeof window !== 'undefined' ? localStorage.getItem('language') || 'en' : 'en';
+  const [lang, setLang] = useState('en');
+  
+  // Only access localStorage after component mounts (client-side)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedLang = localStorage.getItem('language') || 'en';
+      setLang(savedLang);
+    }
+  }, []);
   
   return {
     t: (key: string) => getTranslation(key, lang),
     lang,
   };
 }
+
+// Import for useState and useEffect
+import { useState, useEffect } from 'react';
 
