@@ -248,6 +248,3 @@ export function useTranslation() {
   };
 }
 
-// Import for useState and useEffect
-import { useState, useEffect } from 'react';
-
