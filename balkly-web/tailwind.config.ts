@@ -19,6 +19,17 @@ const config = {
     },
     extend: {
       colors: {
+        // Balkly Brand Colors
+        'balkly-blue': '#1E63FF',
+        'teal-glow': '#06B6D4',
+        'iris-purple': '#7C3AED',
+        'bg-900': '#0B1220',
+        'surface-800': '#0F172A',
+        'surface-700': '#111827',
+        'border-line': '#243244',
+        'text-high': '#F8FAFC',
+        'text-muted': '#A7B4C6',
+        
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -52,6 +63,23 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        success: {
+          DEFAULT: '#22C55E',
+        },
+        warning: {
+          DEFAULT: '#F59E0B',
+        },
+        error: {
+          DEFAULT: '#EF4444',
+        },
+        info: {
+          DEFAULT: '#38BDF8',
+        },
+      },
+      backgroundImage: {
+        'gradient-hero': 'linear-gradient(135deg, #0B1220 0%, #0F172A 40%, #111827 100%)',
+        'gradient-cta': 'linear-gradient(90deg, #1E63FF 0%, #7C3AED 100%)',
+        'glow-overlay': 'radial-gradient(1200px 500px at 20% -10%, rgba(30,99,255,0.25), transparent 60%)',
       },
       borderRadius: {
         lg: "var(--radius)",

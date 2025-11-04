@@ -48,11 +48,13 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section with Video Background */}
-      <section className="relative h-[600px] overflow-hidden">
+      <section className="relative h-[600px] overflow-hidden bg-gradient-hero">
+        {/* Glow Overlay */}
+        <div className="absolute inset-0 bg-glow-overlay z-0" />
+        
         {/* Video Background */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70 z-10" />
-          <div className="w-full h-full bg-gradient-to-br from-primary/30 to-primary/10 animate-gradient" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70 z-10" />
           {/* Fallback gradient - add video element here when you have video file */}
         </div>
 
@@ -68,10 +70,10 @@ export default function HomePage() {
               Buy, sell, and connect with confidence.
             </p>
             <div className="flex gap-4 justify-center flex-wrap mb-12">
-              <Button size="lg" className="text-lg px-8 py-6 hover:scale-105 transition-transform" asChild>
+              <Button size="lg" className="text-lg px-8 py-6 btn-primary hover:scale-105 transition-transform" asChild>
                 <Link href="/listings">Browse Listings</Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:scale-105 transition-transform border-white/30" asChild>
+              <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 backdrop-blur-sm hover:bg-teal-glow/20 hover:scale-105 transition-transform border-white/30" asChild>
                 <Link href="/auth/register">Get Started Free</Link>
               </Button>
             </div>
