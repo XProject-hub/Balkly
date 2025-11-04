@@ -18,7 +18,21 @@ export default function ListingsPage() {
     max_price: "",
     sort_by: "created_at",
     sort_order: "desc",
+    vehicle_type: "",
+    brand: "",
+    year: "",
   });
+
+  const carBrands = [
+    "Audi", "BMW", "Mercedes-Benz", "Volkswagen", "Porsche", "Opel", "Ford",
+    "Toyota", "Honda", "Nissan", "Mazda", "Hyundai", "Kia", "Suzuki",
+    "Renault", "Peugeot", "Citroën", "Fiat", "Alfa Romeo", "Lancia",
+    "Volvo", "Saab", "Seat", "Skoda", "Dacia", "Chevrolet", "Jeep",
+    "Dodge", "Chrysler", "Cadillac", "Buick", "GMC", "Tesla", "Lexus",
+    "Infiniti", "Acura", "Subaru", "Mitsubishi", "Isuzu", "Land Rover",
+    "Jaguar", "Mini", "Smart", "Aston Martin", "Bentley", "Rolls-Royce",
+    "Ferrari", "Lamborghini", "Maserati", "Bugatti", "McLaren",
+  ].sort();
 
   useEffect(() => {
     loadCategories();
@@ -104,6 +118,61 @@ export default function ListingsPage() {
                   </select>
                 </div>
 
+                {/* Car/Auto specific filters */}
+                {(filters.category_id === "1" || categories.find(c => c.id == filters.category_id)?.slug === "auto") && (
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Vehicle Type</label>
+                      <select
+                        value={filters.vehicle_type}
+                        onChange={(e) => setFilters({ ...filters, vehicle_type: e.target.value })}
+                        className="w-full px-3 py-2 border rounded-lg"
+                      >
+                        <option value="">All Types</option>
+                        <option value="car">Cars</option>
+                        <option value="motorcycle">Motorcycles</option>
+                        <option value="truck">Trucks</option>
+                        <option value="van">Vans</option>
+                        <option value="suv">SUVs</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Brand</label>
+                      <select
+                        value={filters.brand}
+                        onChange={(e) => setFilters({ ...filters, brand: e.target.value })}
+                        className="w-full px-3 py-2 border rounded-lg"
+                      >
+                        <option value="">All Brands</option>
+                        {carBrands.map((brand) => (
+                          <option key={brand} value={brand}>
+                            {brand}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Year</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <select
+                          value={filters.year}
+                          onChange={(e) => setFilters({ ...filters, year: e.target.value })}
+                          className="w-full px-3 py-2 border rounded-lg"
+                        >
+                          <option value="">Any Year</option>
+                          {Array.from({ length: 30 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+                            <option key={year} value={year}>
+                              {year}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </>
+                )}
+
                 <div>
                   <label className="block text-sm font-medium mb-2">City</label>
                   <input
@@ -144,7 +213,7 @@ export default function ListingsPage() {
                   >
                     <option value="created_at">Newest First</option>
                     <option value="price">Price: Low to High</option>
-                    <option value="price">Price: High to Low</option>
+                    <option value="price_desc">Price: High to Low</option>
                     <option value="views_count">Most Viewed</option>
                   </select>
                 </div>
@@ -158,6 +227,9 @@ export default function ListingsPage() {
                       max_price: "",
                       sort_by: "created_at",
                       sort_order: "desc",
+                      vehicle_type: "",
+                      brand: "",
+                      year: "",
                     })
                   }
                   variant="outline"
