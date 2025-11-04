@@ -1,6 +1,14 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api/v1';
+// Get API URL - use window.location.origin for dynamic URLs
+const getApiUrl = () => {
+  if (typeof window !== 'undefined') {
+    return window.location.origin + '/api/v1';
+  }
+  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api/v1';
+};
+
+const API_BASE_URL = getApiUrl();
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
