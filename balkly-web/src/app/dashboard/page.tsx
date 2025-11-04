@@ -102,6 +102,12 @@ export default function DashboardPage() {
               <span>My Offers</span>
             </Link>
           </Button>
+          <Button size="lg" variant="outline" asChild className="h-auto py-4">
+            <Link href="/dashboard/insights">
+              <Package className="mr-2 h-5 w-5" />
+              <span>Insights</span>
+            </Link>
+          </Button>
         </div>
 
         {/* Stats */}
