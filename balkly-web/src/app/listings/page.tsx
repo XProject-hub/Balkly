@@ -34,6 +34,15 @@ export default function ListingsPage() {
     "Ferrari", "Lamborghini", "Maserati", "Bugatti", "McLaren",
   ].sort();
 
+  const [realEstateFilters, setRealEstateFilters] = useState({
+    listing_type: "",
+    property_type: "",
+    bedrooms: "",
+    bathrooms: "",
+    area_min: "",
+    area_max: "",
+  });
+
   useEffect(() => {
     loadCategories();
     loadListings();
@@ -117,6 +126,91 @@ export default function ListingsPage() {
                     ))}
                   </select>
                 </div>
+
+                {/* Real Estate specific filters */}
+                {(filters.category_id === "2" || categories.find(c => c.id == filters.category_id)?.slug === "real-estate") && (
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Listing Type</label>
+                      <select
+                        value={realEstateFilters.listing_type}
+                        onChange={(e) => setRealEstateFilters({ ...realEstateFilters, listing_type: e.target.value })}
+                        className="w-full px-3 py-2 border rounded-lg"
+                      >
+                        <option value="">All</option>
+                        <option value="rent">For Rent</option>
+                        <option value="buy">For Sale</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Property Type</label>
+                      <select
+                        value={realEstateFilters.property_type}
+                        onChange={(e) => setRealEstateFilters({ ...realEstateFilters, property_type: e.target.value })}
+                        className="w-full px-3 py-2 border rounded-lg"
+                      >
+                        <option value="">All Types</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="house">House</option>
+                        <option value="villa">Villa</option>
+                        <option value="land">Land</option>
+                        <option value="commercial">Commercial</option>
+                        <option value="office">Office</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Bedrooms</label>
+                      <select
+                        value={realEstateFilters.bedrooms}
+                        onChange={(e) => setRealEstateFilters({ ...realEstateFilters, bedrooms: e.target.value })}
+                        className="w-full px-3 py-2 border rounded-lg"
+                      >
+                        <option value="">Any</option>
+                        <option value="1">1+</option>
+                        <option value="2">2+</option>
+                        <option value="3">3+</option>
+                        <option value="4">4+</option>
+                        <option value="5">5+</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Bathrooms</label>
+                      <select
+                        value={realEstateFilters.bathrooms}
+                        onChange={(e) => setRealEstateFilters({ ...realEstateFilters, bathrooms: e.target.value })}
+                        className="w-full px-3 py-2 border rounded-lg"
+                      >
+                        <option value="">Any</option>
+                        <option value="1">1+</option>
+                        <option value="2">2+</option>
+                        <option value="3">3+</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Area (m²)</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <input
+                          type="number"
+                          value={realEstateFilters.area_min}
+                          onChange={(e) => setRealEstateFilters({ ...realEstateFilters, area_min: e.target.value })}
+                          placeholder="Min m²"
+                          className="px-3 py-2 border rounded-lg"
+                        />
+                        <input
+                          type="number"
+                          value={realEstateFilters.area_max}
+                          onChange={(e) => setRealEstateFilters({ ...realEstateFilters, area_max: e.target.value })}
+                          placeholder="Max m²"
+                          className="px-3 py-2 border rounded-lg"
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
 
                 {/* Car/Auto specific filters */}
                 {(filters.category_id === "1" || categories.find(c => c.id == filters.category_id)?.slug === "auto") && (
@@ -219,7 +313,7 @@ export default function ListingsPage() {
                 </div>
 
                 <Button
-                  onClick={() =>
+                  onClick={() => {
                     setFilters({
                       category_id: "",
                       city: "",
@@ -230,8 +324,16 @@ export default function ListingsPage() {
                       vehicle_type: "",
                       brand: "",
                       year: "",
-                    })
-                  }
+                    });
+                    setRealEstateFilters({
+                      listing_type: "",
+                      property_type: "",
+                      bedrooms: "",
+                      bathrooms: "",
+                      area_min: "",
+                      area_max: "",
+                    });
+                  }}
                   variant="outline"
                   className="w-full"
                 >
