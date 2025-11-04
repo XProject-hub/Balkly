@@ -67,45 +67,89 @@ export default function FullAnalyticsPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Traffic Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
+          <Card className="bg-white">
             <CardHeader>
-              <CardTitle className="text-sm">Total Visits</CardTitle>
+              <CardTitle className="text-sm text-gray-700">Total Visits</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold">{analytics.traffic.total_visits.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground mt-1">Page views</p>
+              <p className="text-3xl font-bold text-gray-900">{analytics.traffic.total_visits.toLocaleString()}</p>
+              <p className="text-xs text-gray-500 mt-1">Page views</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white">
             <CardHeader>
-              <CardTitle className="text-sm">Unique Visitors</CardTitle>
+              <CardTitle className="text-sm text-gray-700">Unique Visitors</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold">{analytics.traffic.unique_visitors.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground mt-1">Individual users</p>
+              <p className="text-3xl font-bold text-gray-900">{analytics.traffic.unique_visitors.toLocaleString()}</p>
+              <p className="text-xs text-gray-500 mt-1">Individual users</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white">
             <CardHeader>
-              <CardTitle className="text-sm">Avg Time on Site</CardTitle>
+              <CardTitle className="text-sm text-gray-700">Avg Time on Site</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold">
+              <p className="text-3xl font-bold text-gray-900">
                 {Math.round(analytics.traffic.avg_time_on_site / 60)}m
               </p>
-              <p className="text-xs text-muted-foreground mt-1">Per session</p>
+              <p className="text-xs text-gray-500 mt-1">Per session</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white">
             <CardHeader>
-              <CardTitle className="text-sm">Bounce Rate</CardTitle>
+              <CardTitle className="text-sm text-gray-700">Registered Users</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold">{analytics.traffic.bounce_rate}%</p>
-              <p className="text-xs text-muted-foreground mt-1">Single page visits</p>
+              <p className="text-3xl font-bold text-gray-900">{analytics.users.total}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                +{analytics.users.new_today} today
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                Guests: {analytics.traffic.unique_visitors - analytics.users.total}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Revenue Summary */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card className="bg-white">
+            <CardHeader>
+              <CardTitle className="text-sm text-gray-700">Revenue (Listings)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold text-balkly-blue">
+                €{analytics.revenue.listing_fees?.toLocaleString() || 0}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">From listing fees</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white">
+            <CardHeader>
+              <CardTitle className="text-sm text-gray-700">Revenue (Forum)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold text-balkly-blue">
+                €{analytics.revenue.sticky_fees?.toLocaleString() || 0}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">From sticky posts</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white">
+            <CardHeader>
+              <CardTitle className="text-sm text-gray-700">Revenue (Events)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold text-balkly-blue">
+                €{analytics.revenue.ticket_fees?.toLocaleString() || 0}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">From event tickets</p>
             </CardContent>
           </Card>
         </div>
