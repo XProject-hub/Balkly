@@ -1,0 +1,33 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /var/www/balkly
+            git pull origin main
+            docker exec balkly_api bash -c "composer install --optimize-autoloader --no-dev"
+            docker exec balkly_api bash -c "php artisan migrate --force"
+            docker exec balkly_api bash -c "php artisan config:cache"
+            docker exec balkly_api bash -c "php artisan route:cache"
+            docker exec balkly_web sh -c "npm install --production"
+            docker-compose restart web api
+            echo "Deployment complete!"
+
