@@ -13,13 +13,16 @@ import {
   MessageCircle,
   Settings,
 } from "lucide-react";
+import { getCurrencySymbol } from "@/lib/currency";
 
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [currencySymbol, setCurrencySymbol] = useState('€');
 
   useEffect(() => {
     loadStats();
+    setCurrencySymbol(getCurrencySymbol());
   }, []);
 
   const loadStats = async () => {
@@ -90,9 +93,9 @@ export default function AdminDashboardPage() {
               <DollarSign className="h-4 w-4 text-gray-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-900">€{(stats.revenue_month || 0).toLocaleString()}</div>
+              <div className="text-2xl font-bold text-gray-900">{currencySymbol}{(stats.revenue_month || 0).toLocaleString()}</div>
               <p className="text-xs text-gray-500">
-                €{(stats.revenue_today || 0).toFixed(2)} today
+                {currencySymbol}{(stats.revenue_today || 0).toFixed(2)} today
               </p>
             </CardContent>
           </Card>

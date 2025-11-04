@@ -18,9 +18,11 @@ import {
 } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CurrencySwitcher from "@/components/CurrencySwitcher";
+import { useTranslation } from "@/lib/i18n/translations";
 
 export default function Header() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -68,21 +70,21 @@ export default function Header() {
               className="flex items-center text-sm font-medium hover:text-primary transition-colors"
             >
               <Package className="h-4 w-4 mr-1" />
-              Listings
+              {t('nav.listings')}
             </Link>
             <Link
               href="/events"
               className="flex items-center text-sm font-medium hover:text-primary transition-colors"
             >
               <Calendar className="h-4 w-4 mr-1" />
-              Events
+              {t('nav.events')}
             </Link>
             <Link
               href="/forum"
               className="flex items-center text-sm font-medium hover:text-primary transition-colors"
             >
               <MessageCircle className="h-4 w-4 mr-1" />
-              Forum
+              {t('nav.forum')}
             </Link>
           </nav>
 
