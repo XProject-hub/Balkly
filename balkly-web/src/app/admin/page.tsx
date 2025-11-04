@@ -232,16 +232,32 @@ export default function AdminDashboardPage() {
           </Link>
 
           <Link href="/admin/content">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer bg-white">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Settings className="mr-2 h-5 w-5" />
+                <CardTitle className="flex items-center text-gray-900">
+                  <Settings className="mr-2 h-5 w-5 text-balkly-blue" />
                   Blog & Knowledge Base
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
+                <p className="text-gray-600">
                   Manage blog posts and help articles
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/admin/forum-categories">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer bg-white">
+              <CardHeader>
+                <CardTitle className="flex items-center text-gray-900">
+                  <MessageCircle className="mr-2 h-5 w-5 text-teal-glow" />
+                  Forum Categories
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Add, edit, and remove forum categories
                 </p>
               </CardContent>
             </Card>

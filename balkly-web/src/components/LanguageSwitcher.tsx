@@ -4,11 +4,11 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 const languages = [
-  { code: 'en', name: 'English', flag: '🇬🇧', dir: 'ltr' },
-  { code: 'sr', name: 'Serbian', flag: '🇷🇸', dir: 'ltr' },
-  { code: 'hr', name: 'Croatian', flag: '🇭🇷', dir: 'ltr' },
-  { code: 'bs', name: 'Bosnian', flag: '🇧🇦', dir: 'ltr' },
-  { code: 'ar', name: 'Arabic', flag: '🇦🇪', dir: 'rtl' },
+  { code: 'en', name: 'English', flagCode: 'GB', flag: '🇬🇧', dir: 'ltr' },
+  { code: 'sr', name: 'Serbian', flagCode: 'RS', flag: '🇷🇸', dir: 'ltr' },
+  { code: 'hr', name: 'Croatian', flagCode: 'HR', flag: '🇭🇷', dir: 'ltr' },
+  { code: 'bs', name: 'Bosnian', flagCode: 'BA', flag: '🇧🇦', dir: 'ltr' },
+  { code: 'ar', name: 'Arabic', flagCode: 'AE', flag: '🇦🇪', dir: 'rtl' },
 ];
 
 export default function LanguageSwitcher() {
@@ -55,26 +55,38 @@ export default function LanguageSwitcher() {
         variant="ghost"
         size="sm"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1"
+        className="flex items-center gap-2 px-3"
       >
-        <span className="text-2xl">{currentLanguage.flag}</span>
+        <span className="font-bold text-sm">{currentLanguage.flagCode}</span>
+        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+        </svg>
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-50">
-          {languages.map((lang) => (
-            <button
-              key={lang.code}
-              onClick={() => handleLanguageChange(lang.code)}
-              className={`w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg ${
-                currentLang === lang.code ? 'bg-gray-50' : ''
-              }`}
-            >
-              <span className="text-2xl">{lang.flag}</span>
-              <span className="text-sm font-medium">{lang.name}</span>
-            </button>
-          ))}
-        </div>
+        <>
+          {/* Backdrop */}
+          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+          
+          {/* Dropdown */}
+          <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border z-50">
+            {languages.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => handleLanguageChange(lang.code)}
+                className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors first:rounded-t-lg last:rounded-b-lg ${
+                  currentLang === lang.code ? 'bg-blue-50' : ''
+                }`}
+              >
+                <span className="font-bold text-lg w-8">{lang.flagCode}</span>
+                <span className="text-sm font-medium text-gray-900">{lang.name}</span>
+                {currentLang === lang.code && (
+                  <span className="ml-auto text-balkly-blue">✓</span>
+                )}
+              </button>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
