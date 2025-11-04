@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import { forumAPI } from "@/lib/api";
+import MarkdownEditor from "@/components/MarkdownEditor";
 
 export default function NewTopicPage() {
   const router = useRouter();
@@ -106,15 +107,10 @@ export default function NewTopicPage() {
 
               <div>
                 <label className="block text-sm font-medium mb-2">Content *</label>
-                <textarea
+                <MarkdownEditor
                   value={formData.content}
-                  onChange={(e) =>
-                    setFormData({ ...formData, content: e.target.value })
-                  }
-                  required
-                  placeholder="Write your message here..."
-                  className="w-full px-4 py-3 border rounded-lg h-64"
-                  maxLength={10000}
+                  onChange={(content) => setFormData({ ...formData, content })}
+                  placeholder="Write your message... (Markdown supported)"
                 />
                 <p className="text-xs text-muted-foreground mt-1">
                   {formData.content.length}/10,000 characters

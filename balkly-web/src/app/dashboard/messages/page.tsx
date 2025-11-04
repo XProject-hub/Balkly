@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Send, Paperclip, ArrowLeft } from "lucide-react";
+import { Send, Paperclip, ArrowLeft, X, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
 
 interface Chat {
@@ -29,7 +29,10 @@ export default function MessagesPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [attachments, setAttachments] = useState<File[]>([]);
+  const [uploading, setUploading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const currentUserId = JSON.parse(localStorage.getItem("user") || "{}")?.id;
 
   useEffect(() => {
@@ -101,11 +104,46 @@ export default function MessagesPage() {
     }
   };
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      setAttachments([...attachments, ...files]);
+    }
+  };
+
+  const removeAttachment = (index: number) => {
+    setAttachments(attachments.filter((_, i) => i !== index));
+  };
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim() || !selectedChat) return;
+    if ((!newMessage.trim() && attachments.length === 0) || !selectedChat) return;
 
     try {
+      // Upload attachments first if any
+      let attachmentUrls: string[] = [];
+      
+      if (attachments.length > 0) {
+        setUploading(true);
+        const formData = new FormData();
+        attachments.forEach(file => formData.append('files[]', file));
+        
+        const uploadResponse = await fetch("/api/v1/media/upload", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+          body: formData,
+        });
+        
+        if (uploadResponse.ok) {
+          const uploadData = await uploadResponse.json();
+          attachmentUrls = uploadData.media.map((m: any) => m.url);
+        }
+        setUploading(false);
+      }
+
+      // Send message
       const response = await fetch("/api/v1/messages", {
         method: "POST",
         headers: {
@@ -115,15 +153,18 @@ export default function MessagesPage() {
         body: JSON.stringify({
           chat_id: selectedChat.id,
           body: newMessage,
+          attachments: attachmentUrls,
         }),
       });
 
       if (response.ok) {
         setNewMessage("");
+        setAttachments([]);
         loadMessages(selectedChat.id);
       }
     } catch (error) {
       console.error("Failed to send message:", error);
+      setUploading(false);
     }
   };
 
@@ -234,40 +275,111 @@ export default function MessagesPage() {
 
                 {/* Messages */}
                 <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
-                  {messages.map((message) => {
-                    const isOwn = message.sender_id === currentUserId;
-                    return (
-                      <div
-                        key={message.id}
-                        className={`flex ${isOwn ? "justify-end" : "justify-start"}`}
-                      >
+                    {messages.map((message) => {
+                      const isOwn = message.sender_id === currentUserId;
+                      return (
                         <div
-                          className={`max-w-[70%] rounded-lg px-4 py-2 ${
-                            isOwn
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-muted"
-                          }`}
+                          key={message.id}
+                          className={`flex ${isOwn ? "justify-end" : "justify-start"}`}
                         >
-                          <p className="whitespace-pre-wrap">{message.body}</p>
-                          <p
-                            className={`text-xs mt-1 ${
-                              isOwn ? "text-primary-foreground/70" : "text-muted-foreground"
+                          <div
+                            className={`max-w-[70%] rounded-lg px-4 py-2 ${
+                              isOwn
+                                ? "bg-gradient-to-r from-balkly-blue to-iris-purple text-white"
+                                : "bg-gray-100 text-gray-900"
                             }`}
                           >
-                            {new Date(message.created_at).toLocaleTimeString()}
-                          </p>
+                            {/* Attachments */}
+                            {message.attachments_json && message.attachments_json.length > 0 && (
+                              <div className="mb-2 space-y-2">
+                                {message.attachments_json.map((url: string, idx: number) => (
+                                  <div key={idx}>
+                                    {url.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                                      <img 
+                                        src={url} 
+                                        alt="Attachment" 
+                                        className="max-w-full rounded cursor-pointer"
+                                        onClick={() => window.open(url, '_blank')}
+                                      />
+                                    ) : (
+                                      <a
+                                        href={url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-2 text-sm underline"
+                                      >
+                                        <Paperclip className="h-3 w-3" />
+                                        View File
+                                      </a>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            
+                            <p className="whitespace-pre-wrap">{message.body}</p>
+                            <p className={`text-xs mt-1 ${isOwn ? "text-white/70" : "text-gray-500"}`}>
+                              {new Date(message.created_at).toLocaleTimeString()}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
                   <div ref={messagesEndRef} />
                 </CardContent>
 
                 {/* Message Input */}
                 <div className="border-t p-4">
+                  {/* Attachment Preview */}
+                  {attachments.length > 0 && (
+                    <div className="mb-3 flex gap-2 flex-wrap">
+                      {attachments.map((file, index) => (
+                        <div key={index} className="relative group">
+                          {file.type.startsWith('image/') ? (
+                            <div className="w-20 h-20 rounded-lg overflow-hidden border-2 border-gray-200">
+                              <img
+                                src={URL.createObjectURL(file)}
+                                alt="Preview"
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-20 h-20 rounded-lg border-2 border-gray-200 flex items-center justify-center bg-gray-50">
+                              <Paperclip className="h-6 w-6 text-gray-400" />
+                            </div>
+                          )}
+                          <button
+                            onClick={() => removeAttachment(index)}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   <form onSubmit={handleSendMessage} className="flex gap-2">
-                    <Button type="button" size="icon" variant="outline">
-                      <Paperclip className="h-4 w-4" />
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      multiple
+                      accept="image/*,application/pdf,.doc,.docx"
+                      onChange={handleFileSelect}
+                      className="hidden"
+                    />
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="outline"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading}
+                    >
+                      {uploading ? (
+                        <div className="animate-spin">⏳</div>
+                      ) : (
+                        <Paperclip className="h-4 w-4" />
+                      )}
                     </Button>
                     <input
                       type="text"
@@ -275,8 +387,9 @@ export default function MessagesPage() {
                       onChange={(e) => setNewMessage(e.target.value)}
                       placeholder="Type a message..."
                       className="flex-1 px-4 py-2 border rounded-lg"
+                      disabled={uploading}
                     />
-                    <Button type="submit" disabled={!newMessage.trim()}>
+                    <Button type="submit" disabled={(!newMessage.trim() && attachments.length === 0) || uploading}>
                       <Send className="h-4 w-4" />
                     </Button>
                   </form>
