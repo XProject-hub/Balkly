@@ -15,31 +15,42 @@ import {
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
-  const [stats, setStats] = useState({
-    totalUsers: 0,
-    activeListings: 0,
-    revenue: 0,
-    pendingModeration: 0,
-    newUsersToday: 0,
-    ordersToday: 0,
-  });
+  const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Load stats (mock data)
-    setStats({
-      totalUsers: 1247,
-      activeListings: 523,
-      revenue: 12450,
-      pendingModeration: 8,
-      newUsersToday: 23,
-      ordersToday: 45,
-    });
+    loadStats();
   }, []);
 
+  const loadStats = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/v1/admin/dashboard", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      const data = await response.json();
+      setStats(data.stats);
+    } catch (error) {
+      console.error("Failed to load stats:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading || !stats) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-primary text-primary-foreground py-8">
+      <div className="text-white py-8" style={{background: 'linear-gradient(135deg, #0F172A 0%, #111827 100%)'}}>
         <div className="container mx-auto px-4">
           <h1 className="text-4xl font-bold mb-2">Admin Dashboard</h1>
           <p className="text-lg opacity-90">Platform overview and management</p>
@@ -49,51 +60,51 @@ export default function AdminDashboardPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
+          <Card className="bg-white">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-gray-700">Total Users</CardTitle>
+              <Users className="h-4 w-4 text-gray-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.totalUsers.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground">
-                +{stats.newUsersToday} today
+              <div className="text-2xl font-bold text-gray-900">{stats.total_users?.toLocaleString() || 0}</div>
+              <p className="text-xs text-gray-500">
+                +{stats.new_users_today || 0} today
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Listings</CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-gray-700">Active Listings</CardTitle>
+              <Package className="h-4 w-4 text-gray-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.activeListings}</div>
-              <p className="text-xs text-muted-foreground">Across all categories</p>
+              <div className="text-2xl font-bold text-gray-900">{stats.active_listings || 0}</div>
+              <p className="text-xs text-gray-500">Total: {stats.total_listings || 0}</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Revenue (Month)</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-gray-700">Revenue (Month)</CardTitle>
+              <DollarSign className="h-4 w-4 text-gray-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">€{stats.revenue.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground">
-                +{stats.ordersToday} orders today
+              <div className="text-2xl font-bold text-gray-900">€{(stats.revenue_month || 0).toLocaleString()}</div>
+              <p className="text-xs text-gray-500">
+                €{(stats.revenue_today || 0).toFixed(2)} today
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Pending Moderation</CardTitle>
-              <AlertCircle className="h-4 w-4 text-destructive" />
+              <CardTitle className="text-sm font-medium text-gray-700">Pending Moderation</CardTitle>
+              <AlertCircle className="h-4 w-4 text-red-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.pendingModeration}</div>
-              <p className="text-xs text-muted-foreground">Requires attention</p>
+              <div className="text-2xl font-bold text-gray-900">{stats.pending_moderation || 0}</div>
+              <p className="text-xs text-gray-500">Requires attention</p>
             </CardContent>
           </Card>
         </div>
@@ -101,20 +112,20 @@ export default function AdminDashboardPage() {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <Link href="/admin/moderation">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer bg-white">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <AlertCircle className="mr-2 h-5 w-5" />
+                <CardTitle className="flex items-center text-gray-900">
+                  <AlertCircle className="mr-2 h-5 w-5 text-red-500" />
                   Moderation Queue
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
+                <p className="text-gray-600">
                   Review flagged content and approve listings
                 </p>
-                {stats.pendingModeration > 0 && (
-                  <div className="mt-2 inline-block px-2 py-1 bg-destructive text-destructive-foreground text-xs rounded-full font-bold">
-                    {stats.pendingModeration} pending
+                {stats.pending_moderation > 0 && (
+                  <div className="mt-2 inline-block px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full font-bold">
+                    {stats.pending_moderation} pending
                   </div>
                 )}
               </CardContent>
@@ -122,15 +133,15 @@ export default function AdminDashboardPage() {
           </Link>
 
           <Link href="/admin/users">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer bg-white">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Users className="mr-2 h-5 w-5" />
+                <CardTitle className="flex items-center text-gray-900">
+                  <Users className="mr-2 h-5 w-5 text-balkly-blue" />
                   User Management
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
+                <p className="text-gray-600">
                   Manage users, roles, and permissions
                 </p>
               </CardContent>
@@ -138,7 +149,7 @@ export default function AdminDashboardPage() {
           </Link>
 
           <Link href="/admin/listings">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer bg-white">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Package className="mr-2 h-5 w-5" />
@@ -250,56 +261,60 @@ export default function AdminDashboardPage() {
           </Link>
         </div>
 
-        {/* Recent Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Registrations</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {[
-                  { name: "John Doe", email: "john@example.com", time: "2 min ago" },
-                  { name: "Jane Smith", email: "jane@example.com", time: "15 min ago" },
-                  { name: "Bob Wilson", email: "bob@example.com", time: "1 hour ago" },
-                ].map((user, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <p className="font-medium">{user.name}</p>
-                      <p className="text-sm text-muted-foreground">{user.email}</p>
+        {/* Real Recent Activity */}
+        {stats.recent_users && stats.recent_orders && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="bg-white">
+              <CardHeader>
+                <CardTitle className="text-gray-900">Recent Registrations</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {stats.recent_users.slice(0, 5).map((user: any) => (
+                    <div key={user.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900">{user.name}</p>
+                        <p className="text-sm text-gray-500">{user.email}</p>
+                      </div>
+                      <span className="text-sm text-gray-500">
+                        {new Date(user.created_at).toLocaleDateString()}
+                      </span>
                     </div>
-                    <span className="text-sm text-muted-foreground">{user.time}</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  ))}
+                  {stats.recent_users.length === 0 && (
+                    <p className="text-center text-gray-500 py-4">No recent registrations</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Orders</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {[
-                  { type: "Listing Plan", amount: 14.99, status: "Paid" },
-                  { type: "Event Tickets", amount: 120.0, status: "Paid" },
-                  { type: "Forum Sticky", amount: 9.99, status: "Paid" },
-                ].map((order, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <p className="font-medium">{order.type}</p>
-                      <p className="text-sm text-muted-foreground">€{order.amount}</p>
+            <Card className="bg-white">
+              <CardHeader>
+                <CardTitle className="text-gray-900">Recent Orders</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {stats.recent_orders.slice(0, 5).map((order: any) => (
+                    <div key={order.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900">Order #{order.id}</p>
+                        <p className="text-sm text-gray-500">€{order.total.toFixed(2)}</p>
+                      </div>
+                      <span className={`text-xs px-2 py-1 rounded-full ${
+                        order.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {order.status.toUpperCase()}
+                      </span>
                     </div>
-                    <span className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">
-                      {order.status}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                  ))}
+                  {stats.recent_orders.length === 0 && (
+                    <p className="text-center text-gray-500 py-4">No recent orders</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );
