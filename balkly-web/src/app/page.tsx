@@ -160,7 +160,7 @@ export default function HomePage() {
               </Card>
             </Link>
 
-            <Link href="/listings?category=electronics">
+            <Link href="/electronics">
               <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
                 <CardHeader className="text-center p-4">
                   <div className="mx-auto mb-2 w-16 h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
@@ -174,7 +174,7 @@ export default function HomePage() {
               </Card>
             </Link>
 
-            <Link href="/listings?category=fashion">
+            <Link href="/fashion">
               <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
                 <CardHeader className="text-center p-4">
                   <div className="mx-auto mb-2 w-16 h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
@@ -188,7 +188,7 @@ export default function HomePage() {
               </Card>
             </Link>
 
-            <Link href="/listings?category=jobs">
+            <Link href="/jobs">
               <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
                 <CardHeader className="text-center p-4">
                   <div className="mx-auto mb-2 w-16 h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">

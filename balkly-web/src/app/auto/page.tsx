@@ -52,7 +52,7 @@ export default function AutoPage() {
       {/* Header */}
       <div className="text-white py-12" style={{background: 'linear-gradient(135deg, #0F172A 0%, #111827 100%)'}}>
         <div className="container mx-auto px-4">
-          <h1 className="text-5xl font-bold mb-4">🚗 Auto & Vehicles</h1>
+          <h1 className="text-5xl font-bold mb-4">Auto & Vehicles</h1>
           <p className="text-xl opacity-90">
             Find your perfect car, motorcycle, or truck
           </p>
@@ -207,7 +207,7 @@ export default function AutoPage() {
                     type="text"
                     value={filters.city}
                     onChange={(e) => setFilters({ ...filters, city: e.target.value })}
-                    placeholder="e.g., Sarajevo"
+                    placeholder="e.g., Dubai"
                     className="w-full px-4 py-2 border rounded-lg"
                   />
                 </div>

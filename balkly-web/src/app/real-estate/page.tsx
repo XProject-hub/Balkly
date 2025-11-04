@@ -43,7 +43,7 @@ export default function RealEstatePage() {
       {/* Header */}
       <div className="text-white py-12" style={{background: 'linear-gradient(135deg, #0F172A 0%, #111827 100%)'}}>
         <div className="container mx-auto px-4">
-          <h1 className="text-5xl font-bold mb-4">🏠 Real Estate</h1>
+          <h1 className="text-5xl font-bold mb-4">Real Estate</h1>
           <p className="text-xl opacity-90">
             Find your dream home or perfect investment
           </p>
@@ -176,7 +176,7 @@ export default function RealEstatePage() {
                     type="text"
                     value={filters.city}
                     onChange={(e) => setFilters({ ...filters, city: e.target.value })}
-                    placeholder="e.g., Sarajevo"
+                    placeholder="e.g., Dubai"
                     className="w-full px-4 py-2 border rounded-lg"
                   />
                 </div>
