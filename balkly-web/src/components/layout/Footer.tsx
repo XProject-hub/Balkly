@@ -38,17 +38,17 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/listings/create" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/listings/create" className="text-gray-400 hover:text-white transition-colors">
                   Post a Listing
                 </Link>
               </li>
               <li>
-                <Link href="/events" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/events" className="text-gray-400 hover:text-white transition-colors">
                   Find Events
                 </Link>
               </li>
               <li>
-                <Link href="/forum" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/forum" className="text-gray-400 hover:text-white transition-colors">
                   Community Forum
                 </Link>
               </li>
@@ -60,27 +60,27 @@ export default function Footer() {
             <h4 className="font-bold mb-4 text-white">Support</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/knowledge-base" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/knowledge-base" className="text-gray-400 hover:text-white transition-colors">
                   Knowledge Base
                 </Link>
               </li>
               <li>
-                <Link href="/help" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/help" className="text-gray-400 hover:text-white transition-colors">
                   Help Center
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/blog" className="text-gray-400 hover:text-white transition-colors">
                   Blog & News
                 </Link>
               </li>
               <li>
-                <Link href="/safety" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/safety" className="text-gray-400 hover:text-white transition-colors">
                   Safety Tips
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
                   Contact Us
                 </Link>
               </li>
@@ -92,22 +92,22 @@ export default function Footer() {
             <h4 className="font-bold mb-4 text-white">Legal</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/terms" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/cookies" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/cookies" className="text-gray-400 hover:text-white transition-colors">
                   Cookie Policy
                 </Link>
               </li>
               <li>
-                <Link href="/refund" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/refund" className="text-gray-400 hover:text-white transition-colors">
                   Refund Policy
                 </Link>
               </li>
