@@ -30,14 +30,24 @@ export default function DashboardPage() {
       setUser(JSON.parse(userData));
     }
 
-    // Load stats (mock data for now)
-    setStats({
-      activeListings: 3,
-      totalViews: 247,
-      messages: 5,
-      revenue: 0,
-    });
+    // Load real stats from API
+    loadStats();
   }, []);
+
+  const loadStats = async () => {
+    try {
+      // TODO: Create endpoint for user dashboard stats
+      // For now, set to 0 (no fake data)
+      setStats({
+        activeListings: 0,
+        totalViews: 0,
+        messages: 0,
+        revenue: 0,
+      });
+    } catch (error) {
+      console.error("Failed to load stats:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -141,7 +151,7 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        {/* Recent Activity */}
+          {/* Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
@@ -149,23 +159,20 @@ export default function DashboardPage() {
               <CardDescription>Your latest posted items</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 border rounded-lg">
-                  <div>
-                    <p className="font-medium">BMW M3 2020</p>
-                    <p className="text-sm text-muted-foreground">Posted 2 days ago</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-primary">€45,000</p>
-                    <p className="text-sm text-muted-foreground">32 views</p>
-                  </div>
+              {stats.activeListings === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground mb-4">No listings yet</p>
+                  <Button asChild>
+                    <Link href="/listings/create">Create Your First Listing</Link>
+                  </Button>
                 </div>
+              ) : (
                 <div className="text-center py-4">
                   <Button variant="outline" asChild>
                     <Link href="/dashboard/listings">View All Listings</Link>
                   </Button>
                 </div>
-              </div>
+              )}
             </CardContent>
           </Card>
 
@@ -175,25 +182,17 @@ export default function DashboardPage() {
               <CardDescription>Latest inquiries</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3 p-3 border rounded-lg">
-                  <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">
-                    J
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium">John Buyer</p>
-                    <p className="text-sm text-muted-foreground line-clamp-1">
-                      Is this still available?
-                    </p>
-                  </div>
-                  <span className="text-xs text-muted-foreground">2h ago</span>
+              {stats.messages === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">No messages yet</p>
                 </div>
+              ) : (
                 <div className="text-center py-4">
                   <Button variant="outline" asChild>
                     <Link href="/dashboard/messages">View All Messages</Link>
                   </Button>
                 </div>
-              </div>
+              )}
             </CardContent>
           </Card>
         </div>

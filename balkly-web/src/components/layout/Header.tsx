@@ -16,6 +16,8 @@ import {
   Settings,
   LayoutDashboard,
 } from "lucide-react";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import CurrencySwitcher from "@/components/CurrencySwitcher";
 
 export default function Header() {
   const router = useRouter();
@@ -100,6 +102,10 @@ export default function Header() {
 
           {/* User Actions */}
           <div className="flex items-center space-x-2">
+            {/* Language & Currency Switchers */}
+            <LanguageSwitcher />
+            <CurrencySwitcher />
+            
             {isLoggedIn ? (
               <>
                 <Button variant="outline" size="sm" asChild className="hidden md:flex">
