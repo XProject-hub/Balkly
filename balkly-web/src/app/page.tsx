@@ -60,14 +60,34 @@ export default function HomePage() {
 
         {/* Hero Content */}
         <div className="relative z-20 container mx-auto px-4 h-full flex items-center">
-          <div className="max-w-4xl mx-auto text-center text-white">
-            <h1 className="text-6xl md:text-7xl font-bold mb-6 animate-fade-in">
-              Welcome to <span className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">Balkly</span>
+          <div className="max-w-5xl mx-auto text-center text-white">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-6">
+              <span className="text-sm font-bold">UAE</span>
+              <span className="text-white/60">•</span>
+              <span className="text-sm font-bold">Balkly Community</span>
+            </div>
+
+            {/* Main Title */}
+            <h1 className="text-6xl md:text-7xl font-bold mb-4 animate-fade-in">
+              Welcome to <span className="bg-gradient-to-r from-balkly-blue to-teal-glow bg-clip-text text-transparent">Balkly</span>
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-white/90">
-              Your modern marketplace for listings, events, and community discussions.
+            
+            {/* Balkans Community Heading */}
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-teal-glow">
+              Ujedinjeni Balkanci u Emiratima
+            </h2>
+            
+            {/* Subtitle */}
+            <p className="text-xl md:text-2xl mb-8 text-white/90 font-medium">
+              Jedna zajednica. Jedna platforma. Bez granica.
+            </p>
+            
+            {/* Description */}
+            <p className="text-lg mb-10 text-white/80 max-w-3xl mx-auto">
+              Kupujte, prodajte i povežite se sa Balkancima širom UAE.
               <br />
-              Buy, sell, and connect with confidence.
+              Vaša lokalna zajednica u Dubaiju, Abu Dhabiju i šire.
             </p>
             <div className="flex gap-4 justify-center flex-wrap mb-12">
               <Button 

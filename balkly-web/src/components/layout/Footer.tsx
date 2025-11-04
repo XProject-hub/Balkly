@@ -8,9 +8,17 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div>
-            <h3 className="text-2xl font-bold text-white mb-4">Balkly</h3>
+            <h3 className="text-2xl font-bold text-white mb-2">Balkly</h3>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-800 rounded-full mb-4">
+              <span className="text-xs font-bold text-teal-glow">UAE</span>
+              <span className="text-gray-600">•</span>
+              <span className="text-xs font-bold text-white">Balkly Community</span>
+            </div>
             <p className="text-sm text-gray-400">
-              Your modern marketplace for listings, events, and community discussions.
+              Ujedinjeni Balkanci u Emiratima
+            </p>
+            <p className="text-xs text-gray-500 mt-2">
+              Jedna zajednica. Jedna platforma. Bez granica.
             </p>
             <div className="flex gap-3 mt-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
