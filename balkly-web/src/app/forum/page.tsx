@@ -96,13 +96,13 @@ export default function ForumPage() {
                         selectedCategory === cat.id ? 'bg-blue-50 border-l-4 border-balkly-blue' : ''
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-teal-glow/10 flex items-center justify-center">
-                          <span className="text-lg">{cat.icon || '💬'}</span>
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-teal-glow/10 flex items-center justify-center">
+                          <MessageCircle className="h-5 w-5 text-teal-glow" />
                         </div>
-                        <div className="flex-1">
-                          <p className="font-medium text-gray-900">{cat.name}</p>
-                          <p className="text-xs text-gray-500">{cat.description}</p>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-gray-900 truncate">{cat.name}</p>
+                          <p className="text-xs text-gray-500 line-clamp-1">{cat.description}</p>
                         </div>
                       </div>
                     </button>
