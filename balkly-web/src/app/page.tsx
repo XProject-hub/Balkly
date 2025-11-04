@@ -48,13 +48,13 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section with Video Background */}
-      <section className="relative h-[600px] overflow-hidden bg-gradient-hero">
+      <section className="relative h-[600px] overflow-hidden" style={{background: 'linear-gradient(135deg, #0B1220 0%, #0F172A 40%, #111827 100%)'}}>
         {/* Glow Overlay */}
-        <div className="absolute inset-0 bg-glow-overlay z-0" />
+        <div className="absolute inset-0 z-0" style={{background: 'radial-gradient(1200px 500px at 20% -10%, rgba(30,99,255,0.25), transparent 60%)'}} />
         
         {/* Video Background */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 z-10" />
           {/* Fallback gradient - add video element here when you have video file */}
         </div>
 
@@ -70,10 +70,20 @@ export default function HomePage() {
               Buy, sell, and connect with confidence.
             </p>
             <div className="flex gap-4 justify-center flex-wrap mb-12">
-              <Button size="lg" className="text-lg px-8 py-6 btn-primary hover:scale-105 transition-transform" asChild>
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-6 hover:scale-105 transition-transform text-white font-bold" 
+                style={{background: 'linear-gradient(90deg, #1E63FF, #7C3AED)', boxShadow: '0 8px 24px rgba(30,99,255,.4)'}}
+                asChild
+              >
                 <Link href="/listings">Browse Listings</Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/10 backdrop-blur-sm hover:bg-teal-glow/20 hover:scale-105 transition-transform border-white/30" asChild>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-lg px-8 py-6 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 transition-transform border-white font-bold" 
+                asChild
+              >
                 <Link href="/auth/register">Get Started Free</Link>
               </Button>
             </div>
@@ -111,7 +121,7 @@ export default function HomePage() {
       <AdBanner position="homepage_top" className="container mx-auto px-4 py-4" />
 
       {/* Categories Section */}
-      <section className="py-20 bg-gradient-to-b from-background to-muted/30">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">
@@ -182,7 +192,7 @@ export default function HomePage() {
       </section>
 
       {/* Featured Listings Section */}
-      <section className="py-20">
+      <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -242,7 +252,7 @@ export default function HomePage() {
       </section>
 
       {/* Upcoming Events Section */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -294,7 +304,7 @@ export default function HomePage() {
       </section>
 
       {/* Trending Forum Section */}
-      <section className="py-20">
+      <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -341,7 +351,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">
             Why Choose Balkly?
@@ -381,21 +391,21 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16">
+      <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <Card className="max-w-3xl mx-auto text-center bg-primary text-primary-foreground">
+          <Card className="max-w-3xl mx-auto text-center text-white border-0" style={{background: 'linear-gradient(90deg, #1E63FF, #7C3AED)'}}>
             <CardHeader>
-              <CardTitle className="text-3xl">Ready to Get Started?</CardTitle>
-              <CardDescription className="text-primary-foreground/80 text-lg">
+              <CardTitle className="text-3xl text-white">Ready to Get Started?</CardTitle>
+              <CardDescription className="text-white/90 text-lg">
                 Join thousands of users buying, selling, and connecting on Balkly
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex gap-4 justify-center">
-                <Button size="lg" variant="secondary" asChild>
+                <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 font-bold" asChild>
                   <Link href="/auth/register">Create Account</Link>
                 </Button>
-                <Button size="lg" variant="outline" className="bg-transparent" asChild>
+                <Button size="lg" variant="outline" className="bg-white/10 text-white border-white/50 hover:bg-white/20 font-bold" asChild>
                   <Link href="/listings/create">Post a Listing</Link>
                 </Button>
               </div>
@@ -405,7 +415,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-muted py-8 mt-16">
+      <footer className="bg-gray-100 py-8 mt-16">
         <div className="container mx-auto px-4">
           <div className="text-center text-muted-foreground">
             <p>&copy; 2025 Balkly. All rights reserved.</p>

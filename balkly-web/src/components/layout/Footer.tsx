@@ -3,26 +3,26 @@ import { Facebook, Twitter, Instagram, Mail } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-muted mt-16">
+    <footer className="bg-gray-900 text-gray-300 mt-16">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div>
-            <h3 className="text-2xl font-bold text-primary mb-4">Balkly</h3>
-            <p className="text-sm text-muted-foreground">
+            <h3 className="text-2xl font-bold text-white mb-4">Balkly</h3>
+            <p className="text-sm text-gray-400">
               Your modern marketplace for listings, events, and community discussions.
             </p>
             <div className="flex gap-3 mt-4">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="mailto:info@balkly.com" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="mailto:info@balkly.com" className="text-gray-400 hover:text-white transition-colors">
                 <Mail className="h-5 w-5" />
               </a>
             </div>
@@ -30,10 +30,10 @@ export default function Footer() {
 
           {/* Marketplace */}
           <div>
-            <h4 className="font-bold mb-4">Marketplace</h4>
+            <h4 className="font-bold mb-4 text-white">Marketplace</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/listings" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/listings" className="text-gray-400 hover:text-white transition-colors">
                   Browse Listings
                 </Link>
               </li>
@@ -57,7 +57,7 @@ export default function Footer() {
 
           {/* Support */}
           <div>
-            <h4 className="font-bold mb-4">Support</h4>
+            <h4 className="font-bold mb-4 text-white">Support</h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/knowledge-base" className="text-muted-foreground hover:text-primary transition-colors">
@@ -89,7 +89,7 @@ export default function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="font-bold mb-4">Legal</h4>
+            <h4 className="font-bold mb-4 text-white">Legal</h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/terms" className="text-muted-foreground hover:text-primary transition-colors">
@@ -115,7 +115,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
+        <div className="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-400">
           <p>&copy; {new Date().getFullYear()} Balkly. All rights reserved.</p>
           <p className="mt-2">
             Built with ❤️ by NLD | Secure payments powered by Stripe

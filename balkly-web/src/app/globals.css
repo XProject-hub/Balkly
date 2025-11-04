@@ -4,13 +4,15 @@
 
 @layer base {
   :root {
-    /* Balkly Brand Colors - Light Mode */
-    --background: 0 0% 100%;
-    --foreground: 218 70% 8%;
+    /* Balkly Brand Colors - Light Mode (Default) */
+    --background: 0 0% 98%;
+    --foreground: 218 70% 15%;
+    
+    /* White cards for contrast */
     --card: 0 0% 100%;
-    --card-foreground: 218 70% 8%;
+    --card-foreground: 218 70% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 218 70% 8%;
+    --popover-foreground: 218 70% 15%;
     
     /* Primary: Balkly Blue #1E63FF */
     --primary: 221 100% 56%;
@@ -28,50 +30,42 @@
     --muted-foreground: 215 16% 47%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
     --ring: 221 100% 56%;
-    --radius: 0.5rem;
-    
-    /* Balkly Specific */
-    --bg-900: #0B1220;
-    --surface-800: #0F172A;
-    --surface-700: #111827;
-    --border-line: #243244;
-    --text-high: #F8FAFC;
-    --text-muted: #A7B4C6;
+    --radius: 0.75rem;
   }
 
   .dark {
-    /* Balkly Brand Colors - Dark Mode */
-    --background: 218 70% 8%;
+    /* Dark mode - only for specific dark sections */
+    --background: 218 25% 12%;
     --foreground: 0 0% 98%;
     
-    /* Cards use Surface 700 */
-    --card: 215 28% 10%;
+    /* Cards slightly lighter for visibility */
+    --card: 218 25% 16%;
     --card-foreground: 0 0% 98%;
-    --popover: 215 28% 10%;
+    --popover: 218 25% 16%;
     --popover-foreground: 0 0% 98%;
     
-    /* Primary: Balkly Blue */
-    --primary: 221 100% 56%;
+    /* Primary: Balkly Blue (brighter for dark bg) */
+    --primary: 221 100% 60%;
     --primary-foreground: 0 0% 100%;
     
     /* Secondary: Teal Glow */
-    --secondary: 188 94% 43%;
+    --secondary: 188 94% 50%;
     --secondary-foreground: 0 0% 100%;
     
     /* Accent: Iris Purple */
-    --accent: 258 90% 58%;
+    --accent: 258 90% 65%;
     --accent-foreground: 0 0% 100%;
     
-    --muted: 215 28% 15%;
-    --muted-foreground: 215 15% 65%;
+    --muted: 218 25% 20%;
+    --muted-foreground: 215 15% 70%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 217 33% 14%;
-    --input: 217 33% 14%;
-    --ring: 221 100% 56%;
+    --border: 218 25% 25%;
+    --input: 218 25% 20%;
+    --ring: 221 100% 60%;
   }
 }
 
@@ -79,39 +73,32 @@
   * {
     @apply border-border;
   }
+  
   body {
     @apply bg-background text-foreground;
+  }
+  
+  /* Balkly Brand Utilities */
+  .bg-balkly-dark {
+    background-color: #0F172A;
+    color: #F8FAFC;
+  }
+  
+  .bg-balkly-darker {
     background-color: #0B1220;
     color: #F8FAFC;
   }
   
-  /* Balkly Brand Styles */
-  .btn-primary {
-    background: linear-gradient(90deg, #1E63FF, #7C3AED);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,.06);
-    box-shadow: 0 0 0 1px rgba(30,99,255,.25) inset, 0 8px 24px rgba(30,99,255,.25);
-  }
-  
-  .card-balkly {
-    background: #111827;
-    border: 1px solid #243244;
-  }
-  
-  .link-primary {
+  .text-balkly-blue {
     color: #1E63FF;
   }
   
-  .link-primary:hover {
+  .text-teal {
     color: #06B6D4;
   }
   
-  .surface-800 {
-    background: #0F172A;
-  }
-  
-  .surface-700 {
-    background: #111827;
+  .hover-teal:hover {
+    color: #06B6D4;
   }
 }
 
@@ -146,9 +133,18 @@
   }
 
   .glassmorphism {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Ensure text is always readable */
+  .text-readable {
+    color: #1f2937 !important;
+  }
+  
+  .text-readable-light {
+    color: #F8FAFC !important;
   }
 }
 
