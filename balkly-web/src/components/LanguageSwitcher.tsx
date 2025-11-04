@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Globe } from "lucide-react";
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧', dir: 'ltr' },
@@ -15,6 +14,14 @@ const languages = [
 export default function LanguageSwitcher() {
   const [currentLang, setCurrentLang] = useState('en');
   const [isOpen, setIsOpen] = useState(false);
+
+  // Load saved language on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('language');
+    if (saved) {
+      setCurrentLang(saved);
+    }
+  }, []);
 
   const handleLanguageChange = (langCode: string) => {
     const lang = languages.find(l => l.code === langCode);
@@ -48,10 +55,9 @@ export default function LanguageSwitcher() {
         variant="ghost"
         size="sm"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2"
+        className="flex items-center gap-1"
       >
-        <span className="text-xl">{currentLanguage.flag}</span>
-        <Globe className="h-4 w-4" />
+        <span className="text-2xl">{currentLanguage.flag}</span>
       </Button>
 
       {isOpen && (

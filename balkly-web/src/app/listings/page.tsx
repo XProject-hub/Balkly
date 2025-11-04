@@ -128,7 +128,7 @@ export default function ListingsPage() {
                 </div>
 
                 {/* Real Estate specific filters */}
-                {(filters.category_id === "2" || categories.find(c => c.id == filters.category_id)?.slug === "real-estate") && (
+                {categories.find(c => c.id == filters.category_id)?.slug === "real-estate" && (
                   <>
                     <div>
                       <label className="block text-sm font-medium mb-2">Listing Type</label>
@@ -213,7 +213,7 @@ export default function ListingsPage() {
                 )}
 
                 {/* Car/Auto specific filters */}
-                {(filters.category_id === "1" || categories.find(c => c.id == filters.category_id)?.slug === "auto") && (
+                {categories.find(c => c.id == filters.category_id)?.slug === "auto" && (
                   <>
                     <div>
                       <label className="block text-sm font-medium mb-2">Vehicle Type</label>
