@@ -55,9 +55,13 @@ export default function LanguageSwitcher() {
         variant="ghost"
         size="sm"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3"
+        className="flex items-center gap-2 px-2"
       >
-        <span className="font-bold text-sm">{currentLanguage.flagCode}</span>
+        <img 
+          src={`https://flagcdn.com/w20/${currentLanguage.flagCode.toLowerCase()}.png`}
+          alt={currentLanguage.name}
+          className="w-6 h-4 object-cover rounded"
+        />
         <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
         </svg>
@@ -78,10 +82,14 @@ export default function LanguageSwitcher() {
                   currentLang === lang.code ? 'bg-blue-50' : ''
                 }`}
               >
-                <span className="font-bold text-lg w-8">{lang.flagCode}</span>
+                <img 
+                  src={`https://flagcdn.com/w40/${lang.flagCode.toLowerCase()}.png`}
+                  alt={lang.name}
+                  className="w-8 h-6 object-cover rounded shadow-sm"
+                />
                 <span className="text-sm font-medium text-gray-900">{lang.name}</span>
                 {currentLang === lang.code && (
-                  <span className="ml-auto text-balkly-blue">✓</span>
+                  <span className="ml-auto text-balkly-blue font-bold">✓</span>
                 )}
               </button>
             ))}

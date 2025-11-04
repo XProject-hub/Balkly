@@ -131,58 +131,86 @@ export default function HomePage() {
               Find exactly what you're looking for
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <Link href="/listings?category=auto">
-              <Card className="hover:shadow-2xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group">
-                <CardHeader className="text-center">
-                  <div className="mx-auto mb-4 w-20 h-20 bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl flex items-center justify-center group-hover:from-primary/30 group-hover:to-primary/10 transition-all">
-                    <Car className="h-10 w-10 text-primary" />
+              <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
+                <CardHeader className="text-center p-4">
+                  <div className="mx-auto mb-2 w-16 h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
+                    <Car className="h-8 w-8 text-balkly-blue" />
                   </div>
-                  <CardTitle className="text-xl">Auto</CardTitle>
-                  <CardDescription>
-                    Cars, motorcycles, and vehicles
+                  <CardTitle className="text-base">Auto</CardTitle>
+                  <CardDescription className="text-xs">
+                    Cars & vehicles
                   </CardDescription>
                 </CardHeader>
               </Card>
             </Link>
 
             <Link href="/listings?category=real-estate">
-              <Card className="hover:shadow-2xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group">
-                <CardHeader className="text-center">
-                  <div className="mx-auto mb-4 w-20 h-20 bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl flex items-center justify-center group-hover:from-primary/30 group-hover:to-primary/10 transition-all">
-                    <Home className="h-10 w-10 text-primary" />
+              <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
+                <CardHeader className="text-center p-4">
+                  <div className="mx-auto mb-2 w-16 h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
+                    <Home className="h-8 w-8 text-balkly-blue" />
                   </div>
-                  <CardTitle className="text-xl">Real Estate</CardTitle>
-                  <CardDescription>
-                    Houses, apartments, and properties
+                  <CardTitle className="text-base">Real Estate</CardTitle>
+                  <CardDescription className="text-xs">
+                    Houses & apartments
                   </CardDescription>
                 </CardHeader>
               </Card>
             </Link>
 
-            <Link href="/events">
-              <Card className="hover:shadow-2xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group">
-                <CardHeader className="text-center">
-                  <div className="mx-auto mb-4 w-20 h-20 bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl flex items-center justify-center group-hover:from-primary/30 group-hover:to-primary/10 transition-all">
-                    <Calendar className="h-10 w-10 text-primary" />
+            <Link href="/listings?category=electronics">
+              <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
+                <CardHeader className="text-center p-4">
+                  <div className="mx-auto mb-2 w-16 h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
+                    <Package className="h-8 w-8 text-balkly-blue" />
                   </div>
-                  <CardTitle className="text-xl">Events</CardTitle>
-                  <CardDescription>
-                    Concerts, sports, and entertainment
+                  <CardTitle className="text-base">Electronics</CardTitle>
+                  <CardDescription className="text-xs">
+                    Phones & gadgets
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+
+            <Link href="/listings?category=fashion">
+              <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
+                <CardHeader className="text-center p-4">
+                  <div className="mx-auto mb-2 w-16 h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
+                    <Package className="h-8 w-8 text-balkly-blue" />
+                  </div>
+                  <CardTitle className="text-base">Fashion</CardTitle>
+                  <CardDescription className="text-xs">
+                    Clothing & shoes
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+
+            <Link href="/listings?category=jobs">
+              <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
+                <CardHeader className="text-center p-4">
+                  <div className="mx-auto mb-2 w-16 h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
+                    <Package className="h-8 w-8 text-balkly-blue" />
+                  </div>
+                  <CardTitle className="text-base">Jobs</CardTitle>
+                  <CardDescription className="text-xs">
+                    Work opportunities
                   </CardDescription>
                 </CardHeader>
               </Card>
             </Link>
 
             <Link href="/forum">
-              <Card className="hover:shadow-2xl hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group">
-                <CardHeader className="text-center">
-                  <div className="mx-auto mb-4 w-20 h-20 bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl flex items-center justify-center group-hover:from-primary/30 group-hover:to-primary/10 transition-all">
-                    <MessageCircle className="h-10 w-10 text-primary" />
+              <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
+                <CardHeader className="text-center p-4">
+                  <div className="mx-auto mb-2 w-16 h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
+                    <MessageCircle className="h-8 w-8 text-balkly-blue" />
                   </div>
-                  <CardTitle className="text-xl">Forum</CardTitle>
-                  <CardDescription>
-                    Community discussions and topics
+                  <CardTitle className="text-base">Forum</CardTitle>
+                  <CardDescription className="text-xs">
+                    Community discussions
                   </CardDescription>
                 </CardHeader>
               </Card>
