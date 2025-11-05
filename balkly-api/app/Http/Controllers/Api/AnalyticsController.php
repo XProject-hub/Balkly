@@ -77,10 +77,11 @@ class AnalyticsController extends Controller
                 ->groupBy('device_type')
                 ->get(),
 
-            // Top pages
-            'top_pages' => PageVisit::select('page_url', 'page_title', DB::raw('count(*) as visits'))
+            // Top pages - group by title only to avoid duplicates
+            'top_pages' => PageVisit::select('page_title', DB::raw('count(*) as visits'))
                 ->where('visited_at', '>=', now()->subDays($period))
-                ->groupBy('page_url', 'page_title')
+                ->whereNotNull('page_title')
+                ->groupBy('page_title')
                 ->orderByDesc('visits')
                 ->take(10)
                 ->get(),

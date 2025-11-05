@@ -200,7 +200,7 @@ export default function FullAnalyticsPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-gray-700">Listings Revenue</h3>
-                <DollarSign className="h-5 w-5 text-green-600" />
+                <TrendingUp className="h-5 w-5 text-green-600" />
               </div>
               <p className="text-4xl font-bold text-green-700">
                 {currencySymbol}{formatNumber(analytics.revenue.listing_fees || 0)}
@@ -213,7 +213,7 @@ export default function FullAnalyticsPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-gray-700">Forum Revenue</h3>
-                <DollarSign className="h-5 w-5 text-blue-600" />
+                <TrendingUp className="h-5 w-5 text-blue-600" />
               </div>
               <p className="text-4xl font-bold text-blue-700">
                 {currencySymbol}{formatNumber(analytics.revenue.sticky_fees || 0)}
@@ -226,7 +226,7 @@ export default function FullAnalyticsPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-gray-700">Events Revenue</h3>
-                <DollarSign className="h-5 w-5 text-purple-600" />
+                <TrendingUp className="h-5 w-5 text-purple-600" />
               </div>
               <p className="text-4xl font-bold text-purple-700">
                 {currencySymbol}{formatNumber(analytics.revenue.ticket_fees || 0)}
