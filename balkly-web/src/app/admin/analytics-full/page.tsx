@@ -2,9 +2,19 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, TrendingUp, Users, Eye, Clock, Monitor, Smartphone, Tablet, DollarSign } from "lucide-react";
+
+// Dynamically import Recharts to avoid SSR issues
+const AreaChart = dynamic(() => import('recharts').then(mod => mod.AreaChart), { ssr: false });
+const Area = dynamic(() => import('recharts').then(mod => mod.Area), { ssr: false });
+const XAxis = dynamic(() => import('recharts').then(mod => mod.XAxis), { ssr: false });
+const YAxis = dynamic(() => import('recharts').then(mod => mod.YAxis), { ssr: false });
+const CartesianGrid = dynamic(() => import('recharts').then(mod => mod.CartesianGrid), { ssr: false });
+const Tooltip = dynamic(() => import('recharts').then(mod => mod.Tooltip), { ssr: false });
+const ResponsiveContainer = dynamic(() => import('recharts').then(mod => mod.ResponsiveContainer), { ssr: false });
 
 export default function FullAnalyticsPage() {
   const [analytics, setAnalytics] = useState<any>(null);
@@ -271,62 +281,61 @@ export default function FullAnalyticsPage() {
           </CardContent>
         </Card>
 
-        {/* Activity Chart - Live View with Colored Areas */}
+        {/* Beautiful Activity Chart with Recharts */}
         <Card className="bg-white mb-8">
           <CardHeader>
-            <CardTitle className="text-gray-900">Activity Overview</CardTitle>
+            <CardTitle className="text-gray-900">Activity & Revenue Trend</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-80 relative">
-              {/* Chart Container */}
-              <div className="absolute inset-0 flex items-end justify-between gap-2 pb-8">
-                {analytics.revenue.by_type && analytics.revenue.by_type.length > 0 ? (
-                  analytics.revenue.by_type.map((day: any, index: number) => {
-                    const maxRevenue = Math.max(...analytics.revenue.by_type.map((d: any) => parseFloat(d.revenue)));
-                    const height = (parseFloat(day.revenue) / maxRevenue) * 100;
-                    
-                    return (
-                      <div key={index} className="flex-1 flex flex-col items-center gap-2 group">
-                        {/* Revenue Bar */}
-                        <div className="w-full relative">
-                          <div
-                            className="w-full bg-gradient-to-t from-balkly-blue via-teal-glow to-iris-purple rounded-t-lg transition-all duration-500 hover:opacity-80 cursor-pointer shadow-lg"
-                            style={{height: `${height * 2}px`, minHeight: '4px'}}
-                            title={`€${parseFloat(day.revenue).toFixed(2)}`}
-                          />
-                          <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <div className="bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
-                              €{parseFloat(day.revenue).toFixed(2)}
-                            </div>
-                          </div>
-                        </div>
-                        {/* Date Label */}
-                        <span className="text-xs text-gray-500 rotate-0">
-                          {new Date(day.date).getDate()}
-                        </span>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div className="flex-1 text-center text-gray-500">No data available yet</div>
-                )}
-              </div>
-              
-              {/* Legend */}
-              <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-6 text-xs">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-balkly-blue" />
-                  <span className="text-gray-600">Revenue</span>
+            <div className="h-96">
+              {analytics.revenue.by_type && analytics.revenue.by_type.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={analytics.revenue.by_type} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#1E63FF" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#1E63FF" stopOpacity={0.1}/>
+                      </linearGradient>
+                      <linearGradient id="colorActivity" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#06B6D4" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#06B6D4" stopOpacity={0.1}/>
+                      </linearGradient>
+                      <linearGradient id="colorGrowth" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#7C3AED" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#7C3AED" stopOpacity={0.1}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis 
+                      dataKey="date" 
+                      tickFormatter={(date) => new Date(date).getDate().toString()}
+                      stroke="#6b7280"
+                    />
+                    <YAxis stroke="#6b7280" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#ffffff', 
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                      }}
+                      formatter={(value: any) => [`€${parseFloat(value).toFixed(2)}`, 'Revenue']}
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="revenue" 
+                      stroke="#1E63FF" 
+                      strokeWidth={3}
+                      fillOpacity={1} 
+                      fill="url(#colorRevenue)" 
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full flex items-center justify-center text-gray-500">
+                  No revenue data yet - will appear when users make purchases
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-teal-glow" />
-                  <span className="text-gray-600">Peak Activity</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-iris-purple" />
-                  <span className="text-gray-600">Growth</span>
-                </div>
-              </div>
+              )}
             </div>
           </CardContent>
         </Card>

@@ -181,6 +181,15 @@ Route::prefix('v1')->group(function () {
             Route::post('/kb/articles', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'store']);
             Route::patch('/kb/articles/{id}', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'update']);
             Route::delete('/kb/articles/{id}', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'destroy']);
+            
+            // Visitor Details
+            Route::get('/visits', function(Request $request) {
+                $visits = \App\Models\PageVisit::with('user')
+                    ->orderBy('visited_at', 'desc')
+                    ->limit($request->get('limit', 100))
+                    ->get();
+                return response()->json(['visits' => $visits]);
+            });
         });
     });
     

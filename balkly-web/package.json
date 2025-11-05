@@ -42,7 +42,8 @@
     "next-themes": "^0.3.0",
     "next-sitemap": "^4.2.3",
     "react-markdown": "^9.0.1",
-    "remark-gfm": "^4.0.0"
+    "remark-gfm": "^4.0.0",
+    "recharts": "^2.10.3"
   },
   "devDependencies": {
     "@types/node": "^22",

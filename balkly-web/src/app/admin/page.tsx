@@ -263,6 +263,22 @@ export default function AdminDashboardPage() {
             </Card>
           </Link>
 
+          <Link href="/admin/visitors">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer bg-white">
+              <CardHeader>
+                <CardTitle className="flex items-center text-gray-900">
+                  <Eye className="mr-2 h-5 w-5 text-balkly-blue" />
+                  Visitor Details
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  View visitor IPs and activity
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+
           <Link href="/admin/settings">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader>
