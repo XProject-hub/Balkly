@@ -340,10 +340,73 @@ export default function FullAnalyticsPage() {
           </CardContent>
         </Card>
 
-        {/* Conversion Funnel - Simple Stats */}
+        {/* Conversion Funnel - Beautiful Chart */}
         <Card className="bg-white mb-8">
           <CardHeader>
             <CardTitle className="text-gray-900">Conversion Funnel</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {analytics.funnel && (
+              <div className="h-96">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart 
+                    data={[
+                      { name: 'Visits', value: analytics.funnel.visits, fill: '#1E63FF' },
+                      { name: 'Registrations', value: analytics.funnel.registrations, fill: '#06B6D4' },
+                      { name: 'Listings', value: analytics.funnel.listings_created, fill: '#7C3AED' },
+                      { name: 'Orders', value: analytics.funnel.orders, fill: '#22C55E' },
+                      { name: 'Paid', value: analytics.funnel.paid_orders, fill: '#F59E0B' },
+                    ]}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                  >
+                    <defs>
+                      <linearGradient id="funnelGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#1E63FF" stopOpacity={0.8}/>
+                        <stop offset="33%" stopColor="#06B6D4" stopOpacity={0.6}/>
+                        <stop offset="66%" stopColor="#7C3AED" stopOpacity={0.4}/>
+                        <stop offset="100%" stopColor="#F59E0B" stopOpacity={0.2}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis 
+                      dataKey="name" 
+                      stroke="#6b7280"
+                      style={{ fontSize: '12px' }}
+                    />
+                    <YAxis stroke="#6b7280" />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#ffffff', 
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                      }}
+                      formatter={(value: any, name: any, props: any) => {
+                        const percentage = analytics.funnel.visits > 0 
+                          ? ((value / analytics.funnel.visits) * 100).toFixed(1) 
+                          : 0;
+                        return [`${value} (${percentage}%)`, props.payload.name];
+                      }}
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="value" 
+                      stroke="#1E63FF"
+                      strokeWidth={3}
+                      fillOpacity={1} 
+                      fill="url(#funnelGradient)" 
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Keep the flow funnel too */}
+        <Card className="bg-white mb-8">
+          <CardHeader>
+            <CardTitle className="text-gray-900">Funnel Flow</CardTitle>
           </CardHeader>
           <CardContent>
             {analytics.funnel && (
