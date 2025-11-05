@@ -172,15 +172,20 @@ export default function AdminUsersPage() {
                               if (!confirm(`Permanently delete ${user.name}? This cannot be undone!`)) return;
                               
                               try {
-                                // Delete user endpoint would need to be created
-                                await fetch(`/api/v1/admin/users/${user.id}`, {
+                                const response = await fetch(`/api/v1/admin/users/${user.id}`, {
                                   method: "DELETE",
                                   headers: {
                                     Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
                                   },
                                 });
-                                alert("User deleted");
-                                window.location.reload();
+                                
+                                if (response.ok) {
+                                  // Remove from list immediately
+                                  setUsers(users.filter(u => u.id !== user.id));
+                                  alert("User deleted successfully");
+                                } else {
+                                  alert("Failed to delete user");
+                                }
                               } catch (error) {
                                 alert("Failed to delete user");
                               }
