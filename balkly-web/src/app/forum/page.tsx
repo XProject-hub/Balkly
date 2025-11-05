@@ -67,11 +67,11 @@ export default function ForumPage() {
           <div className="lg:col-span-1">
             <Card className="bg-white sticky top-20">
               <CardContent className="p-0">
-                <div className="p-4 border-b">
-                  <h3 className="font-bold text-gray-900">Categories</h3>
+                <div className="p-4 border-b bg-gray-50">
+                  <h3 className="font-bold text-gray-900 uppercase text-xs tracking-wider">Forum Categories</h3>
                 </div>
-                <div className="divide-y">
-                  {/* All Topics */}
+                <div className="divide-y divide-gray-100">
+                  {/* All Topics - Prominent */}
                   <button
                     onClick={() => setSelectedCategory(null)}
                     className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors ${
@@ -81,53 +81,59 @@ export default function ForumPage() {
                     <div className="flex items-center gap-3">
                       <MessageCircle className="h-5 w-5 text-balkly-blue" />
                       <div className="flex-1">
-                        <p className="font-medium text-gray-900">All Discussions</p>
+                        <p className="font-bold text-gray-900 uppercase text-sm">All Discussions</p>
                         <p className="text-xs text-gray-500">{topics.length} topics</p>
                       </div>
                     </div>
                   </button>
 
-                  {/* Category List with Subcategories */}
+                  {/* Categories with Subcategories - Hierarchical */}
                   {categories.filter(cat => !cat.parent_id).map((cat) => (
-                    <div key={cat.id}>
-                      {/* Parent Category */}
-                      <button
-                        onClick={() => setSelectedCategory(cat.id)}
-                        className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors ${
-                          selectedCategory === cat.id ? 'bg-blue-50 border-l-4 border-balkly-blue' : ''
-                        }`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-teal-glow/10 flex items-center justify-center">
-                            <MessageCircle className="h-5 w-5 text-teal-glow" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-gray-900 truncate">{cat.name}</p>
-                            <p className="text-xs text-gray-500 line-clamp-1">{cat.description}</p>
-                          </div>
-                        </div>
-                      </button>
-                      
-                      {/* Subcategories */}
-                      {categories.filter(sub => sub.parent_id === cat.id).map((subcat) => (
+                    <div key={cat.id} className="bg-white">
+                      {/* Main Category - Bold Header Style */}
+                      <div className="px-4 pt-4 pb-2 bg-gray-50/50">
                         <button
-                          key={subcat.id}
-                          onClick={() => setSelectedCategory(subcat.id)}
-                          className={`w-full text-left pl-12 pr-4 py-2 hover:bg-gray-50 transition-colors border-l-2 border-gray-200 ${
-                            selectedCategory === subcat.id ? 'bg-blue-50 border-l-4 border-iris-purple' : ''
+                          onClick={() => setSelectedCategory(cat.id)}
+                          className={`w-full text-left p-2 rounded-lg hover:bg-white transition-colors ${
+                            selectedCategory === cat.id ? 'bg-blue-50 ring-2 ring-balkly-blue' : ''
                           }`}
                         >
-                          <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-iris-purple/50"></div>
+                          <div className="flex items-center gap-3">
+                            <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-balkly-blue to-teal-glow flex items-center justify-center">
+                              <MessageCircle className="h-5 w-5 text-white" />
+                            </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-gray-700 truncate">{subcat.name}</p>
-                              {subcat.description && (
-                                <p className="text-xs text-gray-400 truncate">{subcat.description}</p>
-                              )}
+                              <p className="font-bold text-gray-900 uppercase text-sm tracking-wide">{cat.name}</p>
+                              <p className="text-xs text-gray-500">{cat.description}</p>
                             </div>
                           </div>
                         </button>
-                      ))}
+                      </div>
+                      
+                      {/* Subcategories - Indented */}
+                      {categories.filter(sub => sub.parent_id === cat.id).length > 0 && (
+                        <div className="px-4 pb-3 space-y-1">
+                          {categories.filter(sub => sub.parent_id === cat.id).map((subcat) => (
+                            <button
+                              key={subcat.id}
+                              onClick={() => setSelectedCategory(subcat.id)}
+                              className={`w-full text-left pl-10 pr-3 py-2 rounded-lg hover:bg-gray-50 transition-colors ${
+                                selectedCategory === subcat.id ? 'bg-purple-50 ring-2 ring-iris-purple' : ''
+                              }`}
+                            >
+                              <div className="flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 rounded-full bg-iris-purple"></div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium text-gray-700">{subcat.name}</p>
+                                  {subcat.description && (
+                                    <p className="text-xs text-gray-400 line-clamp-1">{subcat.description}</p>
+                                  )}
+                                </div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
