@@ -271,49 +271,92 @@ export default function FullAnalyticsPage() {
           </CardContent>
         </Card>
 
-        {/* Conversion Funnel - Modern Design */}
+        {/* Conversion Funnel - Beautiful Flow Chart */}
         <Card className="bg-white mb-8">
           <CardHeader>
             <CardTitle className="text-gray-900">Conversion Funnel</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {analytics.funnel && Object.entries(analytics.funnel).map(([stage, count]: [string, any], index) => {
-                const maxCount = analytics.funnel.visits || 1;
-                const percentage = ((count / maxCount) * 100).toFixed(1);
-                const colors = [
-                  'from-balkly-blue to-blue-600',
-                  'from-teal-glow to-cyan-600',
-                  'from-iris-purple to-purple-600',
-                  'from-green-500 to-emerald-600',
-                  'from-yellow-500 to-orange-600',
-                ];
-                
-                return (
-                  <div key={stage} className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="font-medium text-gray-900 capitalize">{stage.replace('_', ' ')}</span>
-                      <div className="flex items-center gap-4">
-                        <span className="text-gray-600">{formatNumber(count)}</span>
-                        <span className="font-bold text-gray-900 w-16 text-right">{percentage}%</span>
+            {analytics.funnel && (
+              <div className="flex flex-col items-center space-y-6 py-8">
+                {/* Visits */}
+                <div className="w-full max-w-2xl">
+                  <div className="relative">
+                    <div className="h-24 bg-gradient-to-r from-balkly-blue to-blue-600 rounded-xl flex items-center justify-between px-8 shadow-lg transform hover:scale-105 transition-transform">
+                      <div>
+                        <p className="text-white/90 text-sm font-medium">Stage 1: Visits</p>
+                        <p className="text-white text-3xl font-bold">{formatNumber(analytics.funnel.visits)}</p>
                       </div>
-                    </div>
-                    <div className="relative">
-                      <div className="w-full bg-gray-100 rounded-full h-4 overflow-hidden">
-                        <div 
-                          className={`h-full bg-gradient-to-r ${colors[index % colors.length]} rounded-full transition-all duration-700 flex items-center justify-end pr-3`}
-                          style={{width: `${percentage}%`}}
-                        >
-                          {parseFloat(percentage) > 10 && (
-                            <span className="text-xs font-bold text-white">{count}</span>
-                          )}
-                        </div>
-                      </div>
+                      <div className="text-white text-5xl opacity-20">👁️</div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                  <div className="flex justify-center my-2">
+                    <div className="w-0.5 h-8 bg-gradient-to-b from-balkly-blue to-teal-glow" />
+                  </div>
+                </div>
+
+                {/* Registrations */}
+                <div className="w-11/12 max-w-2xl">
+                  <div className="h-20 bg-gradient-to-r from-teal-glow to-cyan-600 rounded-xl flex items-center justify-between px-8 shadow-lg transform hover:scale-105 transition-transform">
+                    <div>
+                      <p className="text-white/90 text-sm font-medium">Stage 2: Registrations</p>
+                      <p className="text-white text-3xl font-bold">{formatNumber(analytics.funnel.registrations)}</p>
+                      <p className="text-white/75 text-xs">
+                        {((analytics.funnel.registrations / analytics.funnel.visits) * 100).toFixed(1)}% conversion
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex justify-center my-2">
+                    <div className="w-0.5 h-8 bg-gradient-to-b from-teal-glow to-iris-purple" />
+                  </div>
+                </div>
+
+                {/* Listings Created */}
+                <div className="w-10/12 max-w-2xl">
+                  <div className="h-20 bg-gradient-to-r from-iris-purple to-purple-600 rounded-xl flex items-center justify-between px-8 shadow-lg transform hover:scale-105 transition-transform">
+                    <div>
+                      <p className="text-white/90 text-sm font-medium">Stage 3: Listings Created</p>
+                      <p className="text-white text-3xl font-bold">{formatNumber(analytics.funnel.listings_created)}</p>
+                      <p className="text-white/75 text-xs">
+                        {((analytics.funnel.listings_created / analytics.funnel.registrations) * 100).toFixed(1)}% of users
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex justify-center my-2">
+                    <div className="w-0.5 h-8 bg-gradient-to-b from-iris-purple to-green-500" />
+                  </div>
+                </div>
+
+                {/* Orders */}
+                <div className="w-9/12 max-w-2xl">
+                  <div className="h-20 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-between px-8 shadow-lg transform hover:scale-105 transition-transform">
+                    <div>
+                      <p className="text-white/90 text-sm font-medium">Stage 4: Orders</p>
+                      <p className="text-white text-3xl font-bold">{formatNumber(analytics.funnel.orders)}</p>
+                      <p className="text-white/75 text-xs">
+                        {((analytics.funnel.orders / analytics.funnel.listings_created) * 100).toFixed(1)}% of listings
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex justify-center my-2">
+                    <div className="w-0.5 h-8 bg-gradient-to-b from-green-500 to-yellow-500" />
+                  </div>
+                </div>
+
+                {/* Paid Orders - Final */}
+                <div className="w-8/12 max-w-2xl">
+                  <div className="h-20 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-xl flex items-center justify-between px-8 shadow-lg transform hover:scale-105 transition-transform">
+                    <div>
+                      <p className="text-white/90 text-sm font-medium">Stage 5: Paid Orders</p>
+                      <p className="text-white text-3xl font-bold">{formatNumber(analytics.funnel.paid_orders)}</p>
+                      <p className="text-white/75 text-xs">
+                        {((analytics.funnel.paid_orders / analytics.funnel.visits) * 100).toFixed(2)}% total conversion
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
