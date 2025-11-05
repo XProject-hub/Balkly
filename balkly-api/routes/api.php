@@ -219,5 +219,6 @@ Route::prefix('v1')->group(function () {
     // Webhooks (no auth, verified by signature)
     Route::post('/webhooks/stripe', [OrderController::class, 'stripeWebhook']);
     Route::post('/webhooks/checkout', [OrderController::class, 'checkoutWebhook']);
+    Route::post('/webhooks/resend', [\App\Http\Controllers\Api\ResendWebhookController::class, 'handle']);
 });
 

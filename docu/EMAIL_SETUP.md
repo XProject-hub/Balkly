@@ -1,5 +1,70 @@
 # Email Configuration for Balkly
 
+## ✅ RECOMMENDED: Resend (Modern, Developer-Friendly)
+
+**You're already registered! Here's how to complete setup:**
+
+### **1. Add DNS Records (In Your Domain Registrar)**
+
+Go to your domain provider and add these records from Resend dashboard:
+
+```
+Type: TXT
+Name: resend._domainkey
+Value: p=MIGfMA0GCSqGSIb3DQEB... (copy from Resend)
+TTL: Auto
+
+Type: MX
+Name: send
+Value: feedback-smtp.us-east-1.amazonses.com
+Priority: 10
+
+Type: TXT
+Name: send
+Value: v=spf1 include:amazonses.com ~all
+```
+
+### **2. Configure on Your Server**
+
+```bash
+# On your server (91.211.90.121):
+cd /var/www/balkly
+nano balkly-api/.env
+
+# Add these lines:
+RESEND_API_KEY=re_ekq54c3z_6FjSE9sTJJs5kCV2vAuCaHWB
+RESEND_WEBHOOK_SECRET=whsec_71Xtoa/kpD0v3xV3Wk9S48UvlocJGrea
+
+MAIL_MAILER=resend
+MAIL_FROM_ADDRESS=noreply@balkly.live
+MAIL_FROM_NAME="Balkly"
+
+# Save and exit
+
+# Restart API
+docker-compose restart api
+docker exec -d balkly_api bash -c "php artisan serve --host=0.0.0.0 --port=8000"
+```
+
+### **3. Configure Webhook in Resend Dashboard**
+
+1. Go to https://resend.com/webhooks
+2. Add webhook endpoint: `https://balkly.live/api/v1/webhooks/resend`
+3. Select events: `email.sent`, `email.delivered`, `email.opened`, `email.clicked`, `email.bounced`
+4. Save
+
+### **4. Multiple Send Addresses**
+
+In Resend, you can send from:
+- ✉️ `noreply@balkly.live` (default)
+- ✉️ `info@balkly.live` (just change from address)
+- ✉️ `support@balkly.live` (change from address)
+- ✉️ `haris.kravarevic@balkly.live` (change from address)
+
+**No extra setup needed!** Once domain is verified, you can use ANY @balkly.live address!
+
+---
+
 ## Option 1: Gmail SMTP (Free - Recommended for Testing)
 
 1. **Create App Password in Gmail:**
