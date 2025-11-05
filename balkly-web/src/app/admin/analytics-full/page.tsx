@@ -16,15 +16,19 @@ const CartesianGrid = dynamic(() => import('recharts').then(mod => mod.Cartesian
 const Tooltip = dynamic(() => import('recharts').then(mod => mod.Tooltip), { ssr: false });
 const ResponsiveContainer = dynamic(() => import('recharts').then(mod => mod.ResponsiveContainer), { ssr: false });
 
+import { getCurrencySymbol } from "@/lib/currency";
+
 export default function FullAnalyticsPage() {
   const [analytics, setAnalytics] = useState<any>(null);
   const [period, setPeriod] = useState(30);
   const [loading, setLoading] = useState(true);
   const [onlineUsers, setOnlineUsers] = useState({ total: 0, registered: 0, guests: 0 });
+  const [currencySymbol, setCurrencySymbol] = useState('€');
 
   useEffect(() => {
     loadAnalytics();
     loadOnlineUsers();
+    setCurrencySymbol(getCurrencySymbol());
     
     // Refresh online users every 30 seconds
     const interval = setInterval(loadOnlineUsers, 30000);
@@ -199,7 +203,7 @@ export default function FullAnalyticsPage() {
                 <DollarSign className="h-5 w-5 text-green-600" />
               </div>
               <p className="text-4xl font-bold text-green-700">
-                €{formatNumber(analytics.revenue.listing_fees || 0)}
+                {currencySymbol}{formatNumber(analytics.revenue.listing_fees || 0)}
               </p>
               <p className="text-sm text-green-600 mt-2">From promoted listings</p>
             </CardContent>
@@ -212,7 +216,7 @@ export default function FullAnalyticsPage() {
                 <DollarSign className="h-5 w-5 text-blue-600" />
               </div>
               <p className="text-4xl font-bold text-blue-700">
-                €{formatNumber(analytics.revenue.sticky_fees || 0)}
+                {currencySymbol}{formatNumber(analytics.revenue.sticky_fees || 0)}
               </p>
               <p className="text-sm text-blue-600 mt-2">From sticky posts</p>
             </CardContent>
@@ -225,7 +229,7 @@ export default function FullAnalyticsPage() {
                 <DollarSign className="h-5 w-5 text-purple-600" />
               </div>
               <p className="text-4xl font-bold text-purple-700">
-                €{formatNumber(analytics.revenue.ticket_fees || 0)}
+                {currencySymbol}{formatNumber(analytics.revenue.ticket_fees || 0)}
               </p>
               <p className="text-sm text-purple-600 mt-2">From event tickets</p>
             </CardContent>

@@ -15,11 +15,16 @@ class OnlineUsersController extends Controller
     {
         $sessionId = session()->getId();
         
+        // Get real IP from headers
+        $realIp = $request->header('X-Forwarded-For') 
+                  ? explode(',', $request->header('X-Forwarded-For'))[0]
+                  : $request->ip();
+        
         DB::table('online_users')->updateOrInsert(
             ['session_id' => $sessionId],
             [
                 'user_id' => auth()->id(),
-                'ip_address' => $request->ip(),
+                'ip_address' => $realIp,
                 'page_url' => $request->input('page_url'),
                 'last_activity' => now(),
                 'updated_at' => now(),

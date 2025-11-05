@@ -23,12 +23,17 @@ class AnalyticsController extends Controller
             'time_on_page' => 'nullable|integer',
         ]);
 
+        // Get real IP from headers (for proxies/nginx)
+        $realIp = $request->header('X-Forwarded-For') 
+                  ? explode(',', $request->header('X-Forwarded-For'))[0]
+                  : $request->ip();
+
         PageVisit::create([
             'user_id' => auth()->id(),
             'page_url' => $request->page_url,
             'page_title' => $request->page_title,
             'referrer' => $request->header('referer'),
-            'ip_address' => $request->ip(),
+            'ip_address' => $realIp,
             'user_agent' => $request->userAgent(),
             'device_type' => $this->detectDeviceType($request->userAgent()),
             'browser' => $this->detectBrowser($request->userAgent()),
