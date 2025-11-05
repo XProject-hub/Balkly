@@ -4,6 +4,7 @@ services:
   mysql:
     image: mysql:8.0
     container_name: balkly_mysql
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: balkly_secret
       MYSQL_DATABASE: balkly
@@ -15,21 +16,33 @@ services:
       - mysql_data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     networks:
-      - balkly_network
+      - balkly
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7-alpine
     container_name: balkly_redis
+    restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
     networks:
-      - balkly_network
+      - balkly
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   minio:
     image: quay.io/minio/minio:latest
     container_name: balkly_minio
+    restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: balkly
@@ -40,20 +53,31 @@ services:
     volumes:
       - minio_data:/data
     networks:
-      - balkly_network
+      - balkly
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
 
   meilisearch:
     image: getmeili/meilisearch:v1.5
     container_name: balkly_meilisearch
+    restart: unless-stopped
     environment:
       MEILI_MASTER_KEY: balkly_meili_master_key
-      MEILI_ENV: development
+      MEILI_ENV: production
     ports:
       - "7700:7700"
     volumes:
       - meilisearch_data:/meili_data
     networks:
-      - balkly_network
+      - balkly
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7700/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   api:
     build:
@@ -66,11 +90,6 @@ services:
       - ./balkly-api:/var/www
     ports:
       - "8000:8000"
-    healthcheck:
-      test: ["CMD", "php", "-v"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     environment:
       DB_CONNECTION: mysql
       DB_HOST: mysql
@@ -90,17 +109,22 @@ services:
       SCOUT_DRIVER: meilisearch
       MEILISEARCH_HOST: http://meilisearch:7700
       MEILISEARCH_KEY: balkly_meili_master_key
-      MAIL_MAILER: smtp
-      MAIL_HOST: mailpit
-      MAIL_PORT: "1025"
-      MAIL_FROM_ADDRESS: noreply@balkly.com
     depends_on:
-      - mysql
-      - redis
-      - minio
-      - meilisearch
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      meilisearch:
+        condition: service_healthy
     networks:
-      - balkly_network
+      - balkly
+    healthcheck:
+      test: ["CMD", "php", "-v"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     command: sh -c "sleep infinity"
 
   queue:
@@ -108,6 +132,7 @@ services:
       context: ./balkly-api
       dockerfile: Dockerfile
     container_name: balkly_queue
+    restart: unless-stopped
     working_dir: /var/www
     volumes:
       - ./balkly-api:/var/www
@@ -121,10 +146,10 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
     depends_on:
-      - mysql
-      - redis
+      api:
+        condition: service_healthy
     networks:
-      - balkly_network
+      - balkly
     command: php artisan horizon
 
   web:
@@ -132,6 +157,7 @@ services:
       context: ./balkly-web
       dockerfile: Dockerfile
     container_name: balkly_web
+    restart: unless-stopped
     working_dir: /app
     volumes:
       - ./balkly-web:/app
@@ -140,16 +166,23 @@ services:
     ports:
       - "3000:3000"
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
-      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: https://balkly.live/api/v1
+      NEXT_PUBLIC_APP_URL: https://balkly.live
+      NODE_ENV: production
     depends_on:
       - api
     networks:
-      - balkly_network
+      - balkly
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   nginx:
     image: nginx:stable-alpine
     container_name: balkly_nginx
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
@@ -157,18 +190,27 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro
     depends_on:
-      - api
       - web
+      - api
     networks:
-      - balkly_network
+      - balkly
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:80"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 volumes:
   mysql_data:
+    driver: local
   redis_data:
+    driver: local
   minio_data:
+    driver: local
   meilisearch_data:
+    driver: local
 
 networks:
-  balkly_network:
+  balkly:
     driver: bridge
-
+    name: balkly_network
