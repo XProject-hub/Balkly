@@ -4,12 +4,137 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Plus, Edit, Trash2, MessageCircle } from "lucide-react";
+import { ArrowLeft, Plus, Edit, Trash2, MessageCircle, GripVertical, Save, X } from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+// Sortable Category Item Component
+function SortableCategoryItem({ category, onEdit, onDelete, onRename, editingName, setEditingName }: any) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: category.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className={`bg-white border rounded-lg ${isDragging ? 'shadow-2xl' : ''}`}>
+      <div className="p-4 flex items-center gap-4">
+        {/* Drag Handle */}
+        <div {...attributes} {...listeners} className="cursor-move text-gray-400 hover:text-gray-600">
+          <GripVertical className="h-5 w-5" />
+        </div>
+
+        {/* Category Icon */}
+        <div className="w-12 h-12 rounded-full bg-teal-glow/10 flex items-center justify-center flex-shrink-0">
+          <MessageCircle className="h-6 w-6 text-teal-glow" />
+        </div>
+
+        {/* Category Info - Editable */}
+        <div className="flex-1">
+          {editingName === category.id ? (
+            <div className="space-y-2">
+              <input
+                type="text"
+                value={category.name}
+                onChange={(e) => onRename(category.id, e.target.value)}
+                className="w-full px-3 py-1 border border-balkly-blue rounded-lg font-bold text-gray-900"
+                autoFocus
+              />
+              <input
+                type="text"
+                value={category.description || ''}
+                onChange={(e) => onRename(category.id, category.name, e.target.value)}
+                className="w-full px-3 py-1 border rounded-lg text-sm text-gray-600"
+                placeholder="Description..."
+              />
+            </div>
+          ) : (
+            <>
+              <h3 className="font-bold text-gray-900">{category.name}</h3>
+              <p className="text-sm text-gray-500">{category.description}</p>
+            </>
+          )}
+          
+          <div className="flex items-center gap-2 mt-1">
+            <span className={`px-2 py-0.5 text-xs rounded-full ${
+              category.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
+            }`}>
+              {category.is_active ? 'Active' : 'Inactive'}
+            </span>
+            {!category.parent_id ? (
+              <span className="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800">
+                Main Category
+              </span>
+            ) : (
+              <span className="px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-800">
+                Subcategory {category.parent_name && `of ${category.parent_name}`}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-2">
+          {editingName === category.id ? (
+            <Button
+              size="sm"
+              variant="default"
+              onClick={() => setEditingName(null)}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              <Save className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setEditingName(category.id)}
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+          )}
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={() => onDelete(category.id)}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function AdminForumCategoriesPage() {
   const [categories, setCategories] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any>(null);
+  const [editingName, setEditingName] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -17,6 +142,13 @@ export default function AdminForumCategoriesPage() {
     parent_id: null as number | null,
     is_active: true,
   });
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   useEffect(() => {
     loadCategories();
@@ -77,6 +209,77 @@ export default function AdminForumCategoriesPage() {
       loadCategories();
     } catch (error) {
       alert("Failed to delete category");
+    }
+  };
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = categories.findIndex((cat) => cat.id === active.id);
+      const newIndex = categories.findIndex((cat) => cat.id === over.id);
+
+      const newCategories = arrayMove(categories, oldIndex, newIndex);
+      setCategories(newCategories);
+
+      // Update order on backend
+      try {
+        await Promise.all(
+          newCategories.map((cat, index) =>
+            fetch(`/api/v1/admin/forum/categories/${cat.id}`, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
+              },
+              body: JSON.stringify({ order: index }),
+            })
+          )
+        );
+      } catch (error) {
+        console.error('Failed to update order:', error);
+        loadCategories(); // Reload on error
+      }
+    }
+  };
+
+  const handleRename = async (id: number, newName: string, newDesc?: string) => {
+    const updatedCategories = categories.map(cat => {
+      if (cat.id === id) {
+        return {
+          ...cat,
+          name: newName,
+          description: newDesc !== undefined ? newDesc : cat.description
+        };
+      }
+      return cat;
+    });
+    setCategories(updatedCategories);
+
+    // Save to backend when user clicks save (not on every keystroke)
+  };
+
+  const saveRename = async (id: number) => {
+    const category = categories.find(cat => cat.id === id);
+    if (!category) return;
+
+    try {
+      await fetch(`/api/v1/admin/forum/categories/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+        body: JSON.stringify({
+          name: category.name,
+          description: category.description,
+        }),
+      });
+      setEditingName(null);
+      alert('Category updated!');
+    } catch (error) {
+      alert('Failed to update category');
+      loadCategories();
     }
   };
 
@@ -169,122 +372,72 @@ export default function AdminForumCategoriesPage() {
           </Card>
         )}
 
-        {/* Categories List - Hierarchical */}
-        <div className="space-y-3">
-          {categories.filter(cat => !cat.parent_id).map((category) => (
-            <div key={category.id}>
-              {/* Parent Category */}
-              <Card className="bg-white">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-teal-glow/10 flex items-center justify-center">
-                        <MessageCircle className="h-6 w-6 text-teal-glow" />
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-gray-900">{category.name}</h3>
-                        <p className="text-sm text-gray-500">{category.description}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className={`px-2 py-0.5 text-xs rounded-full ${
-                            category.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
-                          }`}>
-                            {category.is_active ? 'Active' : 'Inactive'}
-                          </span>
-                          <span className="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800">
-                            Main Category
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setEditingCategory(category);
-                        setFormData({
-                          name: category.name,
-                          description: category.description || "",
-                          slug: category.slug,
-                          parent_id: category.parent_id || null,
-                          is_active: category.is_active,
-                        });
-                        setShowForm(true);
-                      }}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => handleDelete(category.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            {/* Subcategories */}
-            {categories.filter(sub => sub.parent_id === category.id).map((subcat) => (
-              <Card key={subcat.id} className="bg-gray-50 ml-12 mt-2">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-8 h-8 rounded-full bg-iris-purple/10 flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-iris-purple"></div>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{subcat.name}</h3>
-                        <p className="text-xs text-gray-500">{subcat.description}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className={`px-2 py-0.5 text-xs rounded-full ${
-                            subcat.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'
-                          }`}>
-                            {subcat.is_active ? 'Active' : 'Inactive'}
-                          </span>
-                          <span className="px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-800">
-                            Subcategory of {category.name}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => {
-                          setEditingCategory(subcat);
-                          setFormData({
-                            name: subcat.name,
-                            description: subcat.description || "",
-                            slug: subcat.slug,
-                            parent_id: subcat.parent_id || null,
-                            is_active: subcat.is_active,
-                          });
-                          setShowForm(true);
-                        }}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleDelete(subcat.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-            </div>
-          ))}
+        {/* Drag & Drop Instructions */}
+        <div className="mb-6 p-4 bg-blue-50 border-l-4 border-balkly-blue rounded-lg">
+          <p className="text-sm text-blue-900 font-medium">💡 Tip: Drag categories to reorder them. Click Edit icon to rename inline!</p>
         </div>
+
+        {/* Categories List - Drag & Drop */}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="space-y-6">
+            {categories.filter(cat => !cat.parent_id).map((category) => (
+              <div key={category.id}>
+                {/* Main Category - Draggable */}
+                <SortableContext
+                  items={[category.id]}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <SortableCategoryItem
+                    category={category}
+                    onEdit={setEditingCategory}
+                    onDelete={handleDelete}
+                    onRename={handleRename}
+                    editingName={editingName}
+                    setEditingName={(id: number | null) => {
+                      if (id === null && editingName) {
+                        saveRename(editingName);
+                      }
+                      setEditingName(id);
+                    }}
+                  />
+                </SortableContext>
+
+                {/* Subcategories - Also Draggable */}
+                {categories.filter(sub => sub.parent_id === category.id).length > 0 && (
+                  <div className="ml-12 mt-2 space-y-2">
+                    <SortableContext
+                      items={categories.filter(sub => sub.parent_id === category.id).map(s => s.id)}
+                      strategy={verticalListSortingStrategy}
+                    >
+                      {categories.filter(sub => sub.parent_id === category.id).map((subcat) => (
+                        <div key={subcat.id} className="relative">
+                          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-200"></div>
+                          <SortableCategoryItem
+                            category={{ ...subcat, parent_name: category.name }}
+                            onEdit={setEditingCategory}
+                            onDelete={handleDelete}
+                            onRename={handleRename}
+                            editingName={editingName}
+                            setEditingName={(id: number | null) => {
+                              if (id === null && editingName) {
+                                saveRename(editingName);
+                              }
+                              setEditingName(id);
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </SortableContext>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </DndContext>
       </div>
     </div>
   );
