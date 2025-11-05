@@ -271,7 +271,67 @@ export default function FullAnalyticsPage() {
           </CardContent>
         </Card>
 
-        {/* Conversion Funnel - Beautiful Flow Chart */}
+        {/* Activity Chart - Live View with Colored Areas */}
+        <Card className="bg-white mb-8">
+          <CardHeader>
+            <CardTitle className="text-gray-900">Activity Overview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-80 relative">
+              {/* Chart Container */}
+              <div className="absolute inset-0 flex items-end justify-between gap-2 pb-8">
+                {analytics.revenue.by_type && analytics.revenue.by_type.length > 0 ? (
+                  analytics.revenue.by_type.map((day: any, index: number) => {
+                    const maxRevenue = Math.max(...analytics.revenue.by_type.map((d: any) => parseFloat(d.revenue)));
+                    const height = (parseFloat(day.revenue) / maxRevenue) * 100;
+                    
+                    return (
+                      <div key={index} className="flex-1 flex flex-col items-center gap-2 group">
+                        {/* Revenue Bar */}
+                        <div className="w-full relative">
+                          <div
+                            className="w-full bg-gradient-to-t from-balkly-blue via-teal-glow to-iris-purple rounded-t-lg transition-all duration-500 hover:opacity-80 cursor-pointer shadow-lg"
+                            style={{height: `${height * 2}px`, minHeight: '4px'}}
+                            title={`€${parseFloat(day.revenue).toFixed(2)}`}
+                          />
+                          <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+                              €{parseFloat(day.revenue).toFixed(2)}
+                            </div>
+                          </div>
+                        </div>
+                        {/* Date Label */}
+                        <span className="text-xs text-gray-500 rotate-0">
+                          {new Date(day.date).getDate()}
+                        </span>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="flex-1 text-center text-gray-500">No data available yet</div>
+                )}
+              </div>
+              
+              {/* Legend */}
+              <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-6 text-xs">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-balkly-blue" />
+                  <span className="text-gray-600">Revenue</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-teal-glow" />
+                  <span className="text-gray-600">Peak Activity</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-iris-purple" />
+                  <span className="text-gray-600">Growth</span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Conversion Funnel - Simple Stats */}
         <Card className="bg-white mb-8">
           <CardHeader>
             <CardTitle className="text-gray-900">Conversion Funnel</CardTitle>

@@ -155,14 +155,40 @@ export default function AdminUsersPage() {
                         <Link href={`/profile/${user.id}`}>View Profile</Link>
                       </Button>
                       {user.role !== "admin" && (
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => handleBanUser(user.id, user.name)}
-                        >
-                          <UserX className="h-4 w-4 mr-2" />
-                          Ban
-                        </Button>
+                        <>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => handleBanUser(user.id, user.name)}
+                          >
+                            <UserX className="h-4 w-4 mr-2" />
+                            Ban
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={async () => {
+                              if (!confirm(`Permanently delete ${user.name}? This cannot be undone!`)) return;
+                              
+                              try {
+                                // Delete user endpoint would need to be created
+                                await fetch(`/api/v1/admin/users/${user.id}`, {
+                                  method: "DELETE",
+                                  headers: {
+                                    Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+                                  },
+                                });
+                                alert("User deleted");
+                                window.location.reload();
+                              } catch (error) {
+                                alert("Failed to delete user");
+                              }
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </>
                       )}
                     </div>
                   </div>
