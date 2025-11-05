@@ -367,10 +367,10 @@ export default function FullAnalyticsPage() {
           </CardHeader>
           <CardContent>
             <WorldMap visitors={[
-              { country: 'UAE', count: analytics.users.total || 1 },
-              { country: 'Serbia', count: 0 },
-              { country: 'Croatia', count: 0 },
-              { country: 'Bosnia', count: 0 },
+              { country: 'UAE', count: analytics.users.total || 1, lat: 25.2048, lng: 55.2708 },
+              { country: 'Serbia', count: 0, lat: 44.7866, lng: 20.4489 },
+              { country: 'Croatia', count: 0, lat: 45.8150, lng: 15.9819 },
+              { country: 'Bosnia', count: 0, lat: 43.8563, lng: 18.4131 },
             ]} />
           </CardContent>
         </Card>
@@ -430,8 +430,8 @@ export default function FullAnalyticsPage() {
           </CardContent>
         </Card>
 
-        {/* Keep the flow funnel too */}
-        <Card className="bg-white mb-8">
+        {/* Remove old funnel flow - we have the chart above */}
+        {/* <Card className="bg-white mb-8">
           <CardHeader>
             <CardTitle className="text-gray-900">Funnel Flow</CardTitle>
           </CardHeader>
