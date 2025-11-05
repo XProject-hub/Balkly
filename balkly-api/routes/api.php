@@ -188,6 +188,10 @@ Route::prefix('v1')->group(function () {
     Route::post('/banners/{id}/impression', [\App\Http\Controllers\Api\AdBannerController::class, 'trackImpression']);
     Route::post('/banners/{id}/click', [\App\Http\Controllers\Api\AdBannerController::class, 'trackClick']);
     
+    // Online users tracking
+    Route::get('/online/count', [\App\Http\Controllers\Api\OnlineUsersController::class, 'count']);
+    Route::post('/online/track', [\App\Http\Controllers\Api\OnlineUsersController::class, 'track']);
+    
     // Blog (public)
     Route::get('/blog', [\App\Http\Controllers\Api\BlogController::class, 'index']);
     Route::get('/blog/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'show']);
