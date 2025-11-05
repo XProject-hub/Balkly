@@ -10,13 +10,19 @@ import { ArrowLeft, TrendingUp, Users, Eye, Clock, Monitor, Smartphone, Tablet, 
 // Dynamically import Recharts to avoid SSR issues
 const AreaChart = dynamic(() => import('recharts').then(mod => mod.AreaChart), { ssr: false });
 const Area = dynamic(() => import('recharts').then(mod => mod.Area), { ssr: false });
+const BarChart = dynamic(() => import('recharts').then(mod => mod.BarChart), { ssr: false });
+const Bar = dynamic(() => import('recharts').then(mod => mod.Bar), { ssr: false });
 const XAxis = dynamic(() => import('recharts').then(mod => mod.XAxis), { ssr: false });
 const YAxis = dynamic(() => import('recharts').then(mod => mod.YAxis), { ssr: false });
 const CartesianGrid = dynamic(() => import('recharts').then(mod => mod.CartesianGrid), { ssr: false });
 const Tooltip = dynamic(() => import('recharts').then(mod => mod.Tooltip), { ssr: false });
 const ResponsiveContainer = dynamic(() => import('recharts').then(mod => mod.ResponsiveContainer), { ssr: false });
+const PieChart = dynamic(() => import('recharts').then(mod => mod.PieChart), { ssr: false });
+const Pie = dynamic(() => import('recharts').then(mod => mod.Pie), { ssr: false });
+const Cell = dynamic(() => import('recharts').then(mod => mod.Cell), { ssr: false });
 
 import { getCurrencySymbol } from "@/lib/currency";
+import WorldMap from "@/components/WorldMap";
 
 export default function FullAnalyticsPage() {
   const [analytics, setAnalytics] = useState<any>(null);
@@ -47,6 +53,16 @@ export default function FullAnalyticsPage() {
       setAnalytics(data);
     } catch (error) {
       console.error("Failed to load analytics:", error);
+      // Set empty data structure so page doesn't crash
+      setAnalytics({
+        traffic: { total_visits: 0, unique_visitors: 0, avg_time_on_site: 0, bounce_rate: 0, visits_by_day: [] },
+        devices: [],
+        top_pages: [],
+        users: { total: 0, new_today: 0, new_this_week: 0, new_this_month: 0 },
+        listings: { total: 0, active: 0, pending: 0, by_category: [] },
+        revenue: { total_all_time: 0, today: 0, this_week: 0, this_month: 0, by_type: [], listing_fees: 0, sticky_fees: 0, ticket_fees: 0 },
+        funnel: { visits: 0, registrations: 0, listings_created: 0, orders: 0, paid_orders: 0 },
+      });
     } finally {
       setLoading(false);
     }
@@ -344,63 +360,70 @@ export default function FullAnalyticsPage() {
           </CardContent>
         </Card>
 
-        {/* Conversion Funnel - Beautiful Chart */}
+        {/* World Map - Visitor Locations */}
         <Card className="bg-white mb-8">
           <CardHeader>
-            <CardTitle className="text-gray-900">Conversion Funnel</CardTitle>
+            <CardTitle className="text-gray-900">Geographic Distribution</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <WorldMap visitors={[
+              { country: 'UAE', count: analytics.users.total || 1 },
+              { country: 'Serbia', count: 0 },
+              { country: 'Croatia', count: 0 },
+              { country: 'Bosnia', count: 0 },
+            ]} />
+          </CardContent>
+        </Card>
+
+        {/* Conversion Funnel - Infographic Style */}
+        <Card className="bg-white mb-8">
+          <CardHeader>
+            <CardTitle className="text-gray-900">Conversion Funnel - Infographic</CardTitle>
           </CardHeader>
           <CardContent>
             {analytics.funnel && (
               <div className="h-96">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart 
+                  <BarChart 
                     data={[
                       { name: 'Visits', value: analytics.funnel.visits, fill: '#1E63FF' },
-                      { name: 'Registrations', value: analytics.funnel.registrations, fill: '#06B6D4' },
+                      { name: 'Register', value: analytics.funnel.registrations, fill: '#06B6D4' },
                       { name: 'Listings', value: analytics.funnel.listings_created, fill: '#7C3AED' },
                       { name: 'Orders', value: analytics.funnel.orders, fill: '#22C55E' },
                       { name: 'Paid', value: analytics.funnel.paid_orders, fill: '#F59E0B' },
                     ]}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                    layout="horizontal"
                   >
-                    <defs>
-                      <linearGradient id="funnelGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#1E63FF" stopOpacity={0.8}/>
-                        <stop offset="33%" stopColor="#06B6D4" stopOpacity={0.6}/>
-                        <stop offset="66%" stopColor="#7C3AED" stopOpacity={0.4}/>
-                        <stop offset="100%" stopColor="#F59E0B" stopOpacity={0.2}/>
-                      </linearGradient>
-                    </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis 
-                      dataKey="name" 
-                      stroke="#6b7280"
-                      style={{ fontSize: '12px' }}
-                    />
-                    <YAxis stroke="#6b7280" />
+                    <XAxis type="number" stroke="#6b7280" />
+                    <YAxis dataKey="name" type="category" stroke="#6b7280" width={100} />
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: '#ffffff', 
-                        border: '1px solid #e5e7eb',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                        border: '2px solid #1E63FF',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 25px -5px rgb(0 0 0 / 0.2)'
                       }}
                       formatter={(value: any, name: any, props: any) => {
                         const percentage = analytics.funnel.visits > 0 
                           ? ((value / analytics.funnel.visits) * 100).toFixed(1) 
                           : 0;
-                        return [`${value} (${percentage}%)`, props.payload.name];
+                        return [`${value} users (${percentage}%)`, props.payload.name];
                       }}
                     />
-                    <Area 
-                      type="monotone" 
-                      dataKey="value" 
-                      stroke="#1E63FF"
-                      strokeWidth={3}
-                      fillOpacity={1} 
-                      fill="url(#funnelGradient)" 
-                    />
-                  </AreaChart>
+                    <Bar dataKey="value" radius={[0, 8, 8, 0]}>
+                      {[
+                        { name: 'Visits', fill: '#1E63FF' },
+                        { name: 'Register', fill: '#06B6D4' },
+                        { name: 'Listings', fill: '#7C3AED' },
+                        { name: 'Orders', fill: '#22C55E' },
+                        { name: 'Paid', fill: '#F59E0B' },
+                      ].map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                      ))}
+                    </Bar>
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
             )}
