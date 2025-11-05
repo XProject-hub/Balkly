@@ -236,5 +236,22 @@ class AdminController extends Controller
 
         return response()->json(['message' => 'User banned successfully']);
     }
+
+    /**
+     * Permanently delete user
+     */
+    public function deleteUser($id)
+    {
+        $user = User::withTrashed()->findOrFail($id);
+        
+        if ($user->role === 'admin') {
+            return response()->json(['error' => 'Cannot delete admin users'], 403);
+        }
+
+        // Permanently delete
+        $user->forceDelete();
+
+        return response()->json(['message' => 'User deleted successfully']);
+    }
 }
 
