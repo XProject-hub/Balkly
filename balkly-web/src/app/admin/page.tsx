@@ -12,6 +12,7 @@ import {
   Calendar,
   MessageCircle,
   Settings,
+  Eye,
 } from "lucide-react";
 import { getCurrencySymbol } from "@/lib/currency";
 
