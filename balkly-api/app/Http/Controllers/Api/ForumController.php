@@ -11,11 +11,16 @@ use Illuminate\Support\Str;
 
 class ForumController extends Controller
 {
-    public function categories()
+    public function categories(Request $request)
     {
-        $categories = ForumCategory::where('is_active', true)
-            ->orderBy('order')
-            ->get();
+        // Admin can see all categories, public only sees active ones
+        $query = ForumCategory::query();
+        
+        if (!$request->user() || !$request->user()->isAdmin()) {
+            $query->where('is_active', true);
+        }
+        
+        $categories = $query->orderBy('order')->get();
 
         return response()->json(['categories' => $categories]);
     }
@@ -116,6 +121,94 @@ class ForumController extends Controller
         return response()->json([
             'topic' => $topic,
             'message' => 'Topic made sticky (payment implementation pending)',
+        ]);
+    }
+
+    // Admin category management
+    public function createCategory(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:forum_categories,slug',
+            'description' => 'nullable|string',
+            'icon' => 'nullable|string',
+            'parent_id' => 'nullable|exists:forum_categories,id',
+            'is_active' => 'boolean',
+            'order' => 'nullable|integer',
+        ]);
+
+        // Auto-generate slug if not provided
+        if (empty($validated['slug'])) {
+            $validated['slug'] = Str::slug($validated['name']);
+        }
+
+        // Set default order
+        if (!isset($validated['order'])) {
+            $maxOrder = ForumCategory::max('order') ?? 0;
+            $validated['order'] = $maxOrder + 1;
+        }
+
+        $category = ForumCategory::create($validated);
+
+        return response()->json([
+            'category' => $category,
+            'message' => 'Category created successfully',
+        ], 201);
+    }
+
+    public function updateCategory(Request $request, $id)
+    {
+        $category = ForumCategory::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'slug' => 'sometimes|string|max:255|unique:forum_categories,slug,' . $id,
+            'description' => 'nullable|string',
+            'icon' => 'nullable|string',
+            'parent_id' => 'nullable|exists:forum_categories,id',
+            'is_active' => 'boolean',
+            'order' => 'nullable|integer',
+        ]);
+
+        // Update slug if name changed and slug not provided
+        if (isset($validated['name']) && !isset($validated['slug'])) {
+            $validated['slug'] = Str::slug($validated['name']);
+        }
+
+        $category->update($validated);
+
+        return response()->json([
+            'category' => $category,
+            'message' => 'Category updated successfully',
+        ]);
+    }
+
+    public function deleteCategory($id)
+    {
+        $category = ForumCategory::findOrFail($id);
+        
+        // Check if category has topics
+        $topicsCount = ForumTopic::where('category_id', $id)->count();
+        
+        if ($topicsCount > 0) {
+            return response()->json([
+                'message' => "Cannot delete category with $topicsCount topics. Move or delete topics first."
+            ], 400);
+        }
+
+        // Check if it has subcategories
+        $subcategoriesCount = ForumCategory::where('parent_id', $id)->count();
+        
+        if ($subcategoriesCount > 0) {
+            return response()->json([
+                'message' => "Cannot delete category with $subcategoriesCount subcategories. Delete subcategories first."
+            ], 400);
+        }
+
+        $category->delete();
+
+        return response()->json([
+            'message' => 'Category deleted successfully',
         ]);
     }
 }

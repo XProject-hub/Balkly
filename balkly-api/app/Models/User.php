@@ -94,5 +94,21 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->notify(new ResetPasswordNotification($token));
     }
+
+    /**
+     * Check if user is admin
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is seller
+     */
+    public function isSeller(): bool
+    {
+        return in_array($this->role, ['seller', 'admin']);
+    }
 }
 

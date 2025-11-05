@@ -182,6 +182,11 @@ Route::prefix('v1')->group(function () {
             Route::patch('/kb/articles/{id}', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'update']);
             Route::delete('/kb/articles/{id}', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'destroy']);
             
+            // Forum Category Management
+            Route::post('/forum/categories', [ForumController::class, 'createCategory']);
+            Route::patch('/forum/categories/{id}', [ForumController::class, 'updateCategory']);
+            Route::delete('/forum/categories/{id}', [ForumController::class, 'deleteCategory']);
+            
             // Visitor Details
             Route::get('/visits', function(Request $request) {
                 $visits = \App\Models\PageVisit::with('user')
