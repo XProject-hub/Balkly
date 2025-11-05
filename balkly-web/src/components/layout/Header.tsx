@@ -208,6 +208,7 @@ export default function Header() {
             <nav className="space-y-2">
               <Link
                 href="/listings"
+                onClick={() => setIsMenuOpen(false)}
                 className="flex items-center px-4 py-2 text-sm font-medium hover:bg-accent rounded-lg"
               >
                 <Package className="h-4 w-4 mr-2" />
@@ -215,6 +216,7 @@ export default function Header() {
               </Link>
               <Link
                 href="/events"
+                onClick={() => setIsMenuOpen(false)}
                 className="flex items-center px-4 py-2 text-sm font-medium hover:bg-accent rounded-lg"
               >
                 <Calendar className="h-4 w-4 mr-2" />
@@ -222,6 +224,7 @@ export default function Header() {
               </Link>
               <Link
                 href="/forum"
+                onClick={() => setIsMenuOpen(false)}
                 className="flex items-center px-4 py-2 text-sm font-medium hover:bg-accent rounded-lg"
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
@@ -233,6 +236,7 @@ export default function Header() {
                   <div className="border-t my-2" />
                   <Link
                     href="/listings/create"
+                    onClick={() => setIsMenuOpen(false)}
                     className="flex items-center px-4 py-2 text-sm font-medium hover:bg-accent rounded-lg"
                   >
                     <Package className="h-4 w-4 mr-2" />
@@ -240,6 +244,7 @@ export default function Header() {
                   </Link>
                   <Link
                     href="/dashboard"
+                    onClick={() => setIsMenuOpen(false)}
                     className="flex items-center px-4 py-2 text-sm font-medium hover:bg-accent rounded-lg"
                   >
                     <LayoutDashboard className="h-4 w-4 mr-2" />
@@ -247,6 +252,7 @@ export default function Header() {
                   </Link>
                   <Link
                     href="/dashboard/messages"
+                    onClick={() => setIsMenuOpen(false)}
                     className="flex items-center px-4 py-2 text-sm font-medium hover:bg-accent rounded-lg"
                   >
                     <MessageCircle className="h-4 w-4 mr-2" />
@@ -255,6 +261,7 @@ export default function Header() {
                   {user?.role === "admin" && (
                     <Link
                       href="/admin"
+                      onClick={() => setIsMenuOpen(false)}
                       className="flex items-center px-4 py-2 text-sm font-medium hover:bg-accent rounded-lg"
                     >
                       <Settings className="h-4 w-4 mr-2" />
@@ -262,7 +269,10 @@ export default function Header() {
                     </Link>
                   )}
                   <button
-                    onClick={handleLogout}
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      handleLogout();
+                    }}
                     className="flex items-center w-full px-4 py-2 text-sm font-medium hover:bg-accent rounded-lg text-destructive"
                   >
                     <LogOut className="h-4 w-4 mr-2" />
@@ -274,12 +284,14 @@ export default function Header() {
                   <div className="border-t my-2" />
                   <Link
                     href="/auth/login"
+                    onClick={() => setIsMenuOpen(false)}
                     className="flex items-center px-4 py-2 text-sm font-medium hover:bg-accent rounded-lg"
                   >
                     Login
                   </Link>
                   <Link
                     href="/auth/register"
+                    onClick={() => setIsMenuOpen(false)}
                     className="flex items-center px-4 py-2 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg"
                   >
                     Sign Up
