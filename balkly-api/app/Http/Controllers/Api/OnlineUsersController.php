@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class OnlineUsersController extends php
+class OnlineUsersController extends Controller
 {
     /**
      * Track user activity
