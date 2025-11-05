@@ -87,25 +87,48 @@ export default function ForumPage() {
                     </div>
                   </button>
 
-                  {/* Category List */}
-                  {categories.map((cat) => (
-                    <button
-                      key={cat.id}
-                      onClick={() => setSelectedCategory(cat.id)}
-                      className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors ${
-                        selectedCategory === cat.id ? 'bg-blue-50 border-l-4 border-balkly-blue' : ''
-                      }`}
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-teal-glow/10 flex items-center justify-center">
-                          <MessageCircle className="h-5 w-5 text-teal-glow" />
+                  {/* Category List with Subcategories */}
+                  {categories.filter(cat => !cat.parent_id).map((cat) => (
+                    <div key={cat.id}>
+                      {/* Parent Category */}
+                      <button
+                        onClick={() => setSelectedCategory(cat.id)}
+                        className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors ${
+                          selectedCategory === cat.id ? 'bg-blue-50 border-l-4 border-balkly-blue' : ''
+                        }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-teal-glow/10 flex items-center justify-center">
+                            <MessageCircle className="h-5 w-5 text-teal-glow" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 truncate">{cat.name}</p>
+                            <p className="text-xs text-gray-500 line-clamp-1">{cat.description}</p>
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-gray-900 truncate">{cat.name}</p>
-                          <p className="text-xs text-gray-500 line-clamp-1">{cat.description}</p>
-                        </div>
-                      </div>
-                    </button>
+                      </button>
+                      
+                      {/* Subcategories */}
+                      {categories.filter(sub => sub.parent_id === cat.id).map((subcat) => (
+                        <button
+                          key={subcat.id}
+                          onClick={() => setSelectedCategory(subcat.id)}
+                          className={`w-full text-left pl-12 pr-4 py-2 hover:bg-gray-50 transition-colors border-l-2 border-gray-200 ${
+                            selectedCategory === subcat.id ? 'bg-blue-50 border-l-4 border-iris-purple' : ''
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-iris-purple/50"></div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-gray-700 truncate">{subcat.name}</p>
+                              {subcat.description && (
+                                <p className="text-xs text-gray-400 truncate">{subcat.description}</p>
+                              )}
+                            </div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
                   ))}
                 </div>
               </CardContent>
