@@ -517,7 +517,7 @@ export default function FullAnalyticsPage() {
               </div>
             )}
           </CardContent>
-        </Card>
+        </Card> */}
 
         {/* Top Pages */}
         {analytics.top_pages && analytics.top_pages.length > 0 && (
