@@ -19,59 +19,72 @@ class KnowledgeBaseSeeder extends Seeder
             return;
         }
 
-        // Create Categories
-        $gettingStarted = KbCategory::create([
-            'name' => 'Getting Started',
-            'slug' => 'getting-started',
-            'description' => 'New to Balkly? Start here!',
-            'display_order' => 1,
-        ]);
+        // Create Categories (or get existing)
+        $gettingStarted = KbCategory::firstOrCreate(
+            ['slug' => 'getting-started'],
+            [
+                'name' => 'Getting Started',
+                'description' => 'New to Balkly? Start here!',
+                'display_order' => 1,
+            ]
+        );
 
-        $listings = KbCategory::create([
-            'name' => 'Listings & Selling',
-            'slug' => 'listings-selling',
-            'description' => 'Everything about posting and managing listings',
-            'display_order' => 2,
-        ]);
+        $listings = KbCategory::firstOrCreate(
+            ['slug' => 'listings-selling'],
+            [
+                'name' => 'Listings & Selling',
+                'description' => 'Everything about posting and managing listings',
+                'display_order' => 2,
+            ]
+        );
 
-        $buying = KbCategory::create([
-            'name' => 'Buying & Orders',
-            'slug' => 'buying-orders',
-            'description' => 'How to buy items and manage orders',
-            'display_order' => 3,
-        ]);
+        $buying = KbCategory::firstOrCreate(
+            ['slug' => 'buying-orders'],
+            [
+                'name' => 'Buying & Orders',
+                'description' => 'How to buy items and manage orders',
+                'display_order' => 3,
+            ]
+        );
 
-        $events = KbCategory::create([
-            'name' => 'Events & Tickets',
-            'slug' => 'events-tickets',
-            'description' => 'Event tickets and QR codes',
-            'display_order' => 4,
-        ]);
+        $events = KbCategory::firstOrCreate(
+            ['slug' => 'events-tickets'],
+            [
+                'name' => 'Events & Tickets',
+                'description' => 'Event tickets and QR codes',
+                'display_order' => 4,
+            ]
+        );
 
-        $forum = KbCategory::create([
-            'name' => 'Forum & Community',
-            'slug' => 'forum-community',
-            'description' => 'Using the Balkly community forum',
-            'display_order' => 5,
-        ]);
+        $forum = KbCategory::firstOrCreate(
+            ['slug' => 'forum-community'],
+            [
+                'name' => 'Forum & Community',
+                'description' => 'Using the Balkly community forum',
+                'display_order' => 5,
+            ]
+        );
 
-        $account = KbCategory::create([
-            'name' => 'Account & Security',
-            'slug' => 'account-security',
-            'description' => 'Managing your account and security settings',
-            'display_order' => 6,
-        ]);
+        $account = KbCategory::firstOrCreate(
+            ['slug' => 'account-security'],
+            [
+                'name' => 'Account & Security',
+                'description' => 'Managing your account and security settings',
+                'display_order' => 6,
+            ]
+        );
 
         // Create Articles
 
         // Getting Started
-        KbArticle::create([
-            'category_id' => $gettingStarted->id,
-            'title' => 'Welcome to Balkly - Quick Start Guide',
-            'slug' => 'welcome-quick-start',
-            'is_published' => true,
-            'display_order' => 1,
-            'content' => '
+        KbArticle::firstOrCreate(
+            ['slug' => 'welcome-quick-start'],
+            [
+                'category_id' => $gettingStarted->id,
+                'title' => 'Welcome to Balkly - Quick Start Guide',
+                'is_published' => true,
+                'display_order' => 1,
+                'content' => '
 # Welcome to Balkly!
 
 Balkly is the premier marketplace platform for the Balkan community in the UAE. Whether you\'re buying, selling, or connecting with fellow Balkanci, we\'ve got you covered!
@@ -106,16 +119,18 @@ Balkly is the premier marketplace platform for the Balkan community in the UAE. 
 - 📚 Knowledge Base: You\'re here!
 
 **Dobrodošli! مرحبا بك!**
-            ',
-        ]);
+                ',
+            ]
+        );
 
-        KbArticle::create([
-            'category_id' => $gettingStarted->id,
-            'title' => 'How to Switch Languages',
-            'slug' => 'switch-languages',
-            'is_published' => true,
-            'display_order' => 2,
-            'content' => '
+        KbArticle::firstOrCreate(
+            ['slug' => 'switch-languages'],
+            [
+                'category_id' => $gettingStarted->id,
+                'title' => 'How to Switch Languages',
+                'is_published' => true,
+                'display_order' => 2,
+                'content' => '
 # Language Support
 
 Balkly supports 5 languages to serve our diverse Balkan community in UAE!
@@ -144,17 +159,19 @@ We also support multiple currencies:
 - **AED** (د.إ) - UAE Dirham
 
 Change currency using the dropdown next to the language switcher.
-            ',
-        ]);
+                ',
+            ]
+        );
 
         // Listings & Selling
-        KbArticle::create([
-            'category_id' => $listings->id,
-            'title' => 'How to Post a Listing',
-            'slug' => 'post-listing',
-            'is_published' => true,
-            'display_order' => 3,
-            'content' => '
+        KbArticle::firstOrCreate(
+            ['slug' => 'post-listing'],
+            [
+                'category_id' => $listings->id,
+                'title' => 'How to Post a Listing',
+                'is_published' => true,
+                'display_order' => 3,
+                'content' => '
 # Posting Your First Listing
 
 Follow these simple steps to post your item for sale:
@@ -208,16 +225,18 @@ Click "Submit" and your listing goes live immediately!
 ✅ Include all relevant details
 
 Happy selling! 🎉
-            ',
-        ]);
+                ',
+            ]
+        );
 
-        KbArticle::create([
-            'category_id' => $listings->id,
-            'title' => 'Promoting Your Listings - Pricing & Benefits',
-            'slug' => 'promoting-listings',
-            'is_published' => true,
-            'display_order' => 4,
-            'content' => '
+        KbArticle::firstOrCreate(
+            ['slug' => 'promoting-listings'],
+            [
+                'category_id' => $listings->id,
+                'title' => 'Promoting Your Listings - Pricing & Benefits',
+                'is_published' => true,
+                'display_order' => 4,
+                'content' => '
 # Listing Promotion Plans
 
 Want more visibility? Promote your listing to appear at the top!
@@ -267,17 +286,19 @@ Don\'t want to pay? No problem!
 - Still get views and messages
 
 **It\'s your choice!** 💰
-            ',
-        ]);
+                ',
+            ]
+        );
 
         // Events & Tickets
-        KbArticle::create([
-            'category_id' => $events->id,
-            'title' => 'How Event Tickets Work - QR Codes & Entry',
-            'slug' => 'event-tickets-qr',
-            'is_published' => true,
-            'display_order' => 5,
-            'content' => '
+        KbArticle::firstOrCreate(
+            ['slug' => 'event-tickets-qr'],
+            [
+                'category_id' => $events->id,
+                'title' => 'How Event Tickets Work - QR Codes & Entry',
+                'is_published' => true,
+                'display_order' => 5,
+                'content' => '
 # Event Tickets & QR Codes
 
 Balkly uses modern QR code technology for seamless event entry!
@@ -339,17 +360,19 @@ No worries!
 - Contact support@balkly.live
 
 We can resend anytime! 🎉
-            ',
-        ]);
+                ',
+            ]
+        );
 
         // Forum
-        KbArticle::create([
-            'category_id' => $forum->id,
-            'title' => 'Using the Community Forum',
-            'slug' => 'using-forum',
-            'is_published' => true,
-            'display_order' => 6,
-            'content' => '
+        KbArticle::firstOrCreate(
+            ['slug' => 'using-forum'],
+            [
+                'category_id' => $forum->id,
+                'title' => 'Using the Community Forum',
+                'is_published' => true,
+                'display_order' => 6,
+                'content' => '
 # Community Forum Guide
 
 Connect with thousands of Balkanci living in UAE!
@@ -420,17 +443,19 @@ Format your posts beautifully:
 Stuck? Post in **Help & Support** category!
 
 Our community is friendly and helpful. 🤝
-            ',
-        ]);
+                ',
+            ]
+        );
 
         // Account & Security
-        KbArticle::create([
-            'category_id' => $account->id,
-            'title' => 'Account Security & Two-Factor Authentication (2FA)',
-            'slug' => 'account-security-2fa',
-            'is_published' => true,
-            'display_order' => 7,
-            'content' => '
+        KbArticle::firstOrCreate(
+            ['slug' => 'account-security-2fa'],
+            [
+                'category_id' => $account->id,
+                'title' => 'Account Security & Two-Factor Authentication (2FA)',
+                'is_published' => true,
+                'display_order' => 7,
+                'content' => '
 # Keep Your Account Secure
 
 Protect your Balkly account with these security features!
@@ -499,17 +524,19 @@ See something wrong?
 - We investigate within 24 hours
 
 **Stay safe!** 🛡️
-            ',
-        ]);
+                ',
+            ]
+        );
 
         // Buying
-        KbArticle::create([
-            'category_id' => $buying->id,
-            'title' => 'How to Buy Safely on Balkly',
-            'slug' => 'buying-safely',
-            'is_published' => true,
-            'display_order' => 8,
-            'content' => '
+        KbArticle::firstOrCreate(
+            ['slug' => 'buying-safely'],
+            [
+                'category_id' => $buying->id,
+                'title' => 'How to Buy Safely on Balkly',
+                'is_published' => true,
+                'display_order' => 8,
+                'content' => '
 # Safe Buying Guide
 
 Follow these tips for secure purchases on Balkly!
@@ -596,8 +623,9 @@ Watch out for:
 - Dispute resolution support
 
 **Buy smart, buy safe!** 🛡️✅
-            ',
-        ]);
+                ',
+            ]
+        );
 
         echo "✅ Knowledge Base seeded with " . KbArticle::count() . " articles!\n";
     }
