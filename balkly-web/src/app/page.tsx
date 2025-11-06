@@ -114,10 +114,13 @@ export default function HomePage() {
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <input
                     type="text"
+                    id="hero-search"
+                    name="q"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search for cars, homes, events, or anything..."
                     className="w-full pl-12 pr-4 py-4 rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-primary text-foreground bg-transparent"
+                    autoComplete="off"
                   />
                 </div>
                 <Button size="lg" type="submit" className="px-8">

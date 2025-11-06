@@ -94,10 +94,13 @@ export default function Header() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
                 type="text"
+                id="header-search"
+                name="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search..."
                 className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm"
+                autoComplete="off"
               />
             </div>
           </form>
@@ -197,10 +200,13 @@ export default function Header() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <input
                   type="text"
+                  id="mobile-search"
+                  name="search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search..."
                   className="w-full pl-10 pr-4 py-2 border rounded-lg"
+                  autoComplete="off"
                 />
               </div>
             </form>
