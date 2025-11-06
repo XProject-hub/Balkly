@@ -30,6 +30,14 @@ const config = {
         'text-high': '#F8FAFC',
         'text-muted': '#A7B4C6',
         
+        // New Mist Tints
+        'mist': {
+          50: '#F6F8FC',
+          100: '#F1F5FF',
+          200: '#EAF0FF',
+        },
+        'hairline': '#E6EDF7',
+        
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

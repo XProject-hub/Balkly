@@ -140,8 +140,12 @@ export default function HomePage() {
       <AdBanner position="homepage_top" className="container mx-auto px-4 py-4" />
 
       {/* Categories Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+      <section className="py-16 bg-mist-100 relative overflow-hidden section-glow">
+        {/* Subtle glow overlay */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'radial-gradient(800px 320px at 15% 0%, rgba(30,99,255,0.08), transparent 60%), radial-gradient(600px 240px at 85% 10%, rgba(6,182,212,0.08), transparent 60%)'
+        }}></div>
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">
               Explore Categories
@@ -239,7 +243,7 @@ export default function HomePage() {
       </section>
 
       {/* Featured Listings Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-16 bg-mist-50">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -299,7 +303,7 @@ export default function HomePage() {
       </section>
 
       {/* Upcoming Events Section */}
-      <section className="py-20 bg-white">
+      <section className="py-16 bg-mist-200 relative overflow-hidden section-glow">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -351,7 +355,7 @@ export default function HomePage() {
       </section>
 
       {/* Trending Forum Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-16 bg-mist-50">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -398,7 +402,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-mist-100">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">
             Why Choose Balkly?

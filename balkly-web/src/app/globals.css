@@ -5,8 +5,14 @@
 @layer base {
   :root {
     /* Balkly Brand Colors - Light Mode (Default) */
-    --background: 0 0% 98%;
+    --background: 216 100% 98%;
     --foreground: 218 70% 15%;
+    
+    /* Mist Tints for soft backgrounds */
+    --mist-50: #F6F8FC;
+    --mist-100: #F1F5FF;
+    --mist-200: #EAF0FF;
+    --hairline: #E6EDF7;
     
     /* White cards for contrast */
     --card: 0 0% 100%;
@@ -75,7 +81,8 @@
   }
   
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background-color: var(--mist-50);
   }
   
   /* Balkly Brand Utilities */
@@ -145,6 +152,25 @@
   
   .text-readable-light {
     color: #F8FAFC !important;
+  }
+  
+  /* Section glow overlay */
+  .section-glow::before {
+    content: "";
+    position: absolute;
+    inset: -20% -10% auto -10%;
+    height: 60%;
+    pointer-events: none;
+    background: radial-gradient(800px 320px at 15% 0%, rgba(30,99,255,0.08), transparent 60%),
+                radial-gradient(600px 240px at 85% 10%, rgba(6,182,212,0.08), transparent 60%);
+  }
+  
+  /* Enhanced card styling */
+  .card-enhanced {
+    background: white;
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+    box-shadow: 0 1px 2px rgba(2,6,23,0.04), 0 8px 24px rgba(30,99,255,0.04);
   }
 }
 
