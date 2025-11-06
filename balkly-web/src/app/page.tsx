@@ -140,12 +140,10 @@ export default function HomePage() {
       <AdBanner position="homepage_top" className="container mx-auto px-4 py-4" />
 
       {/* Categories Section */}
-      <section className="py-20 relative overflow-hidden" style={{
-        background: 'linear-gradient(135deg, #E8F1FF 0%, #EAF5FF 50%, #E0EFFF 100%)'
-      }}>
+      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
         {/* Decorative blobs */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-balkly-blue/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-glow/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-balkly-blue/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-teal-glow/10 rounded-full blur-3xl"></div>
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
@@ -245,12 +243,10 @@ export default function HomePage() {
       </section>
 
       {/* Featured Listings Section */}
-      <section className="py-20 relative overflow-hidden" style={{
-        background: 'linear-gradient(135deg, #F0FDFA 0%, #ECFDF5 50%, #E8FCF3 100%)'
-      }}>
+      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-teal-glow/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-balkly-blue/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-teal-glow/15 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-green-500/10 rounded-full blur-3xl"></div>
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex justify-between items-center mb-12">
@@ -311,12 +307,10 @@ export default function HomePage() {
       </section>
 
       {/* Upcoming Events Section */}
-      <section className="py-20 relative overflow-hidden" style={{
-        background: 'linear-gradient(135deg, #FFF8F0 0%, #FFF4E8 50%, #FFEEDD 100%)'
-      }}>
+      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
         {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-96 h-96 bg-iris-purple/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-teal-glow/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-orange-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-3xl"></div>
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex justify-between items-center mb-12">
@@ -369,12 +363,10 @@ export default function HomePage() {
       </section>
 
       {/* Trending Forum Section */}
-      <section className="py-20 relative overflow-hidden" style={{
-        background: 'linear-gradient(135deg, #FFF5F7 0%, #FFF0F5 50%, #FFEEF3 100%)'
-      }}>
+      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-rose-50 via-pink-50 to-fuchsia-50">
         {/* Decorative gradients */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-iris-purple/8 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-balkly-blue/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-iris-purple/15 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-pink-500/10 rounded-full blur-3xl"></div>
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex justify-between items-center mb-12">
@@ -422,13 +414,10 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 relative overflow-hidden" style={{
-        background: 'linear-gradient(135deg, #F0F4FF 0%, #E8EEFF 100%)'
-      }}>
+      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50">
         {/* Animated gradient overlay */}
-        <div className="absolute inset-0 opacity-30" style={{
-          background: 'radial-gradient(circle at 20% 50%, rgba(30,99,255,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(6,182,212,0.1) 0%, transparent 50%)'
-        }}></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-iris-purple/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-500/8 rounded-full blur-3xl"></div>
         
         <div className="container mx-auto px-4 relative z-10">
           <h2 className="text-5xl font-bold text-center mb-16 text-gray-900">
