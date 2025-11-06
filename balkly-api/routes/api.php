@@ -44,6 +44,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/forum/categories', [ForumController::class, 'categories']);
     Route::get('/forum/topics', [ForumController::class, 'topics']);
     Route::get('/forum/topics/{id}', [ForumController::class, 'show']);
+    Route::post('/forum/topics/{id}/report', [ForumController::class, 'reportTopic'])->middleware('auth:sanctum');
     
     // Search
     Route::get('/search', [SearchController::class, 'search']);
@@ -186,6 +187,10 @@ Route::prefix('v1')->group(function () {
             Route::post('/forum/categories', [ForumController::class, 'createCategory']);
             Route::patch('/forum/categories/{id}', [ForumController::class, 'updateCategory']);
             Route::delete('/forum/categories/{id}', [ForumController::class, 'deleteCategory']);
+            
+            // Forum Admin - Delete Topics & Posts
+            Route::delete('/forum/topics/{id}', [ForumController::class, 'deleteTopic']);
+            Route::delete('/forum/posts/{id}', [ForumController::class, 'deletePost']);
             
             // Visitor Details
             Route::get('/visits', function(Request $request) {

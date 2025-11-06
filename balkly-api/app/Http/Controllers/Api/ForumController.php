@@ -211,5 +211,78 @@ class ForumController extends Controller
             'message' => 'Category deleted successfully',
         ]);
     }
+
+    // Report topic
+    public function reportTopic(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'reason' => 'required|string|max:500',
+        ]);
+
+        $topic = ForumTopic::findOrFail($id);
+
+        // Create report (you can create a reports table or just log)
+        \Illuminate\Support\Facades\Log::warning('Forum Topic Reported', [
+            'topic_id' => $id,
+            'topic_title' => $topic->title,
+            'reported_by' => auth()->id(),
+            'reporter_name' => auth()->user()->name,
+            'reason' => $validated['reason'],
+            'url' => '/forum/topics/' . $id,
+        ]);
+
+        // You can also store in database if you have a reports table
+        // Report::create([...]);
+
+        return response()->json([
+            'message' => 'Report submitted successfully',
+        ]);
+    }
+
+    // Admin: Delete topic
+    public function deleteTopic($id)
+    {
+        $topic = ForumTopic::findOrFail($id);
+        
+        // Log deletion
+        \Illuminate\Support\Facades\Log::info('Forum Topic Deleted by Admin', [
+            'topic_id' => $id,
+            'topic_title' => $topic->title,
+            'deleted_by' => auth()->id(),
+            'admin_name' => auth()->user()->name,
+        ]);
+
+        $topic->delete(); // Soft delete
+
+        return response()->json([
+            'message' => 'Topic deleted successfully',
+        ]);
+    }
+
+    // Admin: Delete post
+    public function deletePost($id)
+    {
+        $post = ForumPost::findOrFail($id);
+        
+        // Update topic reply count
+        $topic = ForumTopic::find($post->topic_id);
+        if ($topic) {
+            $topic->decrement('replies_count');
+        }
+
+        // Log deletion
+        \Illuminate\Support\Facades\Log::info('Forum Post Deleted by Admin', [
+            'post_id' => $id,
+            'topic_id' => $post->topic_id,
+            'deleted_by' => auth()->id(),
+            'admin_name' => auth()->user()->name,
+        ]);
+
+        $post->delete(); // Soft delete
+
+        return response()->json([
+            'message' => 'Post deleted successfully',
+        ]);
+    }
 }
 

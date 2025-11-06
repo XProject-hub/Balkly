@@ -26,6 +26,14 @@ export default function TopicDetailPage() {
   const [reply, setReply] = useState("");
   const [loading, setLoading] = useState(true);
   const [showStickyModal, setShowStickyModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setCurrentUser(JSON.parse(userData));
+    }
+  }, []);
 
   useEffect(() => {
     if (topicId) {
@@ -80,6 +88,59 @@ export default function TopicDetailPage() {
       }
     } catch (error) {
       console.error("Failed to purchase sticky:", error);
+    }
+  };
+
+  const handleReport = async () => {
+    const reason = prompt("Razlog prijave:");
+    if (!reason) return;
+
+    try {
+      await fetch(`/api/v1/forum/topics/${topicId}/report`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({ reason }),
+      });
+      alert("Prijava poslana! Moderatori će pregledati u roku 24h.");
+    } catch (error) {
+      alert("Greška pri slanju prijave.");
+    }
+  };
+
+  const handleDeleteTopic = async () => {
+    if (!confirm("Sigurno želite obrisati ovaj topic?")) return;
+
+    try {
+      await fetch(`/api/v1/admin/forum/topics/${topicId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      alert("Topic obrisan!");
+      router.push("/forum");
+    } catch (error) {
+      alert("Greška pri brisanju topica.");
+    }
+  };
+
+  const handleDeletePost = async (postId: number) => {
+    if (!confirm("Sigurno želite obrisati ovaj post?")) return;
+
+    try {
+      await fetch(`/api/v1/admin/forum/posts/${postId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      loadTopic(); // Reload to show changes
+      alert("Post obrisan!");
+    } catch (error) {
+      alert("Greška pri brisanju posta.");
     }
   };
 
@@ -152,7 +213,7 @@ export default function TopicDetailPage() {
               </div>
 
               <div className="flex gap-2">
-                {!topic.is_sticky && topic.user_id === JSON.parse(localStorage.getItem("user") || "{}")?.id && (
+                {!topic.is_sticky && topic.user_id === currentUser?.id && (
                   <Button
                     size="sm"
                     variant="outline"
@@ -162,9 +223,24 @@ export default function TopicDetailPage() {
                     Make Sticky
                   </Button>
                 )}
-                <Button size="sm" variant="outline">
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={handleReport}
+                  title="Prijavi topic"
+                >
                   <Flag className="h-4 w-4" />
                 </Button>
+                {currentUser?.role === "admin" && (
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={handleDeleteTopic}
+                    title="Obriši topic (Admin)"
+                  >
+                    🗑️ Delete
+                  </Button>
+                )}
               </div>
             </div>
           </CardHeader>
@@ -198,7 +274,7 @@ export default function TopicDetailPage() {
                     <div className="prose max-w-none">
                       <p className="whitespace-pre-wrap">{post.content}</p>
                     </div>
-                    <div className="flex gap-4 mt-3">
+                    <div className="flex gap-4 mt-3 items-center">
                       <button className="text-sm text-muted-foreground hover:text-foreground flex items-center">
                         <ThumbsUp className="h-4 w-4 mr-1" />
                         Like ({post.likes_count || 0})
@@ -206,6 +282,14 @@ export default function TopicDetailPage() {
                       <button className="text-sm text-muted-foreground hover:text-foreground">
                         Reply
                       </button>
+                      {currentUser?.role === "admin" && (
+                        <button
+                          onClick={() => handleDeletePost(post.id)}
+                          className="text-sm text-red-600 hover:text-red-700 font-medium ml-auto"
+                        >
+                          🗑️ Delete (Admin)
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

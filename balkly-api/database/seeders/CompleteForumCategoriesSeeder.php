@@ -346,7 +346,7 @@ class CompleteForumCategoriesSeeder extends Seeder
             [
                 'name' => 'Preporuke po kvartu',
                 'slug' => 'kvartovi',
-                'description' => 'Dubai, Abu Dhabi, Vienna...',
+                'description' => 'Dubai, Abu Dhabi, Sharjah...',
                 'icon' => 'map-pin',
                 'order' => 31,
             ],
