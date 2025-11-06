@@ -215,6 +215,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/kb/categories', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'categories']);
     Route::get('/kb/search', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'search']);
     Route::get('/kb/{slug}', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'show']);
+    Route::post('/kb/{id}/feedback', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'feedback']);
     
     // Webhooks (no auth, verified by signature)
     Route::post('/webhooks/stripe', [OrderController::class, 'stripeWebhook']);
