@@ -82,18 +82,29 @@ export default function RefundPolicyPage() {
               <li>Completed transactions between users</li>
             </ul>
 
+            <h2>Governing Law</h2>
+            <p>
+              This Refund Policy is governed by the laws of the United Arab Emirates. 
+              All refund disputes shall be resolved in accordance with UAE consumer protection regulations.
+            </p>
+
             <h2>Contact Us</h2>
             <p>
-              For refund inquiries: <strong>refunds@balkly.com</strong>
-              <br />
+              <strong>NoLimitsDevelopments LLC</strong><br />
+              Dubai, United Arab Emirates<br />
+              Email: <a href="mailto:refunds@balkly.live" className="text-balkly-blue hover:underline">refunds@balkly.live</a><br />
+              Support: <a href="mailto:support@balkly.live" className="text-balkly-blue hover:underline">support@balkly.live</a><br />
               Or contact us through our <Link href="/contact" className="text-balkly-blue hover:underline">support page</Link>
             </p>
 
-            <div className="mt-8 p-6 bg-blue-50 rounded-lg">
-              <p className="font-medium text-gray-900 mb-2">Need Help?</p>
-              <p className="text-sm text-gray-700">
+            <div className="mt-8 p-6 bg-blue-50 rounded-lg border-l-4 border-balkly-blue">
+              <p className="font-medium text-gray-900 mb-2">📧 Need Help with a Refund?</p>
+              <p className="text-sm text-gray-700 mb-3">
                 Our support team is here to assist with any refund-related questions. 
                 We aim to respond within 24 hours.
+              </p>
+              <p className="text-xs text-gray-600">
+                Response time: Mon-Fri 9AM-6PM GST (Gulf Standard Time)
               </p>
             </div>
           </CardContent>

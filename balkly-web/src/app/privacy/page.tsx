@@ -1,32 +1,16 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
-
-export default function PrivacyPolicyPage() {
+export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <div className="bg-primary text-primary-foreground py-12">
-        <div className="container mx-auto px-4">
-          <Link href="/">
-            <Button variant="secondary" size="sm" className="mb-4">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Home
-            </Button>
-          </Link>
-          <h1 className="text-4xl font-bold">Privacy Policy</h1>
-          <p className="text-lg opacity-90 mt-2">Last updated: November 2, 2025</p>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="container mx-auto px-4 max-w-4xl">
+        <div className="bg-white rounded-lg shadow-sm p-8 md:p-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Privacy Policy</h1>
+          <p className="text-gray-600 mb-8">Last Updated: November 6, 2025</p>
 
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
-        <Card>
-          <CardContent className="prose max-w-none p-8">
+          <div className="prose max-w-none">
             <h2>1. Introduction</h2>
             <p>
-              Balkly ("we," "our," or "us") respects your privacy and is committed to protecting your personal
-              data. This privacy policy explains how we collect, use, and safeguard your information when you
-              use our platform.
+              <strong>NoLimitsDevelopments LLC</strong> ("we", "our", "Balkly") respects your privacy and is committed to protecting your personal data. 
+              This Privacy Policy explains how we collect, use, and safeguard your information when you use our platform.
             </p>
 
             <h2>2. Information We Collect</h2>
@@ -34,130 +18,156 @@ export default function PrivacyPolicyPage() {
             <h3>2.1 Information You Provide</h3>
             <ul>
               <li><strong>Account Information:</strong> Name, email address, password, phone number</li>
-              <li><strong>Profile Information:</strong> Bio, location, company details, VAT ID</li>
-              <li><strong>Listing Information:</strong> Titles, descriptions, images, prices, locations</li>
+              <li><strong>Profile Information:</strong> Avatar, bio, location (city/country), preferred language</li>
+              <li><strong>Listings:</strong> Item details, photos, descriptions, pricing</li>
+              <li><strong>Communications:</strong> Messages, forum posts, support inquiries</li>
               <li><strong>Payment Information:</strong> Processed securely by Stripe (we don't store card details)</li>
-              <li><strong>Communication:</strong> Messages, forum posts, support inquiries</li>
             </ul>
 
-            <h3>2.2 Automatically Collected Information</h3>
+            <h3>2.2 Information Automatically Collected</h3>
             <ul>
-              <li><strong>Usage Data:</strong> Pages visited, features used, time spent</li>
-              <li><strong>Device Information:</strong> IP address, browser type, device type</li>
-              <li><strong>Cookies:</strong> Session cookies, preference cookies, analytics cookies</li>
+              <li><strong>Usage Data:</strong> Pages visited, time spent, interactions</li>
+              <li><strong>Device Information:</strong> IP address, browser type, device type, operating system</li>
+              <li><strong>Location Data:</strong> General location based on IP (city/country level)</li>
+              <li><strong>Cookies:</strong> Session cookies, preference cookies (see Cookie Policy)</li>
             </ul>
 
             <h2>3. How We Use Your Information</h2>
-            <p>We use your information to:</p>
+            <p>We use your data to:</p>
             <ul>
-              <li>Provide and maintain our services</li>
-              <li>Process payments and generate invoices</li>
-              <li>Send transactional emails (order confirmations, tickets, notifications)</li>
-              <li>Improve and personalize your experience</li>
-              <li>Detect and prevent fraud and abuse</li>
-              <li>Moderate content for safety</li>
+              <li>Provide and improve our marketplace services</li>
+              <li>Process transactions and send confirmations</li>
+              <li>Communicate with you about your account and activities</li>
+              <li>Personalize your experience (language, currency preferences)</li>
+              <li>Prevent fraud and ensure platform security</li>
+              <li>Analyze usage patterns to improve features</li>
+              <li>Send promotional emails (with your consent - you can opt out)</li>
               <li>Comply with legal obligations</li>
             </ul>
 
-            <h2>4. Smart Enhancement Features</h2>
-            <p>
-              Our platform uses automated systems to enhance your listings (title improvements, translations).
-              This processing is done securely and your content is not stored by third-party services longer
-              than necessary for processing.
-            </p>
-
-            <h2>5. Data Sharing</h2>
-            <p>We may share your information with:</p>
+            <h2>4. Information Sharing</h2>
+            <p>We share your information only in these circumstances:</p>
+            
+            <h3>4.1 With Other Users</h3>
             <ul>
-              <li><strong>Payment Processors:</strong> Stripe for payment processing</li>
-              <li><strong>Email Services:</strong> SendGrid/Postmark for transactional emails</li>
-              <li><strong>Cloud Storage:</strong> For storing images and files</li>
-              <li><strong>Analytics:</strong> Aggregated, anonymized data only</li>
-            </ul>
-            <p>We <strong>never</strong> sell your personal data to third parties.</p>
-
-            <h2>6. Data Security</h2>
-            <p>
-              We implement appropriate security measures including:
-            </p>
-            <ul>
-              <li>Encryption of data in transit (HTTPS/SSL)</li>
-              <li>Secure password hashing (Argon2id)</li>
-              <li>Two-factor authentication (optional)</li>
-              <li>Regular security audits</li>
-              <li>Access controls and monitoring</li>
+              <li>Your public profile (name, avatar) is visible to all users</li>
+              <li>Listing details are public</li>
+              <li>Forum posts and comments are public</li>
+              <li>Your email and phone are NEVER shared without your permission</li>
             </ul>
 
-            <h2>7. Your Rights (GDPR)</h2>
+            <h3>4.2 With Service Providers</h3>
+            <ul>
+              <li><strong>Stripe:</strong> Payment processing (PCI-DSS compliant)</li>
+              <li><strong>Resend:</strong> Email delivery service</li>
+              <li><strong>Cloud Storage:</strong> Image and file hosting (MinIO S3)</li>
+              <li><strong>Analytics:</strong> Usage tracking (anonymized)</li>
+            </ul>
+
+            <h3>4.3 Legal Requirements</h3>
+            <p>
+              We may disclose your information if required by UAE law, court order, or government request, 
+              or to protect our rights, property, or safety.
+            </p>
+
+            <h2>5. Your Rights (Under UAE and GDPR)</h2>
             <p>You have the right to:</p>
             <ul>
-              <li><strong>Access:</strong> Request a copy of your data</li>
-              <li><strong>Rectification:</strong> Correct inaccurate data</li>
-              <li><strong>Erasure:</strong> Request deletion of your data</li>
-              <li><strong>Portability:</strong> Export your data</li>
-              <li><strong>Object:</strong> Object to certain processing</li>
-              <li><strong>Withdraw Consent:</strong> Opt-out of marketing communications</li>
+              <li><strong>Access:</strong> Request a copy of your personal data</li>
+              <li><strong>Rectification:</strong> Correct inaccurate information</li>
+              <li><strong>Erasure:</strong> Delete your account and data ("right to be forgotten")</li>
+              <li><strong>Data Portability:</strong> Export your data in machine-readable format</li>
+              <li><strong>Object:</strong> Opt out of marketing communications</li>
+              <li><strong>Restrict Processing:</strong> Limit how we use your data</li>
             </ul>
-            <p>To exercise these rights, contact us at: privacy@balkly.com</p>
 
-            <h2>8. Data Retention</h2>
             <p>
-              We retain your personal data only as long as necessary for the purposes outlined in this policy
-              or as required by law. Account data is retained while your account is active and for 30 days
-              after deletion for backup purposes.
+              To exercise these rights, contact us at: <a href="mailto:privacy@balkly.live" className="text-balkly-blue hover:underline">privacy@balkly.live</a>
             </p>
 
-            <h2>9. Cookies</h2>
+            <h2>6. Data Security</h2>
+            <p>We implement industry-standard security measures:</p>
+            <ul>
+              <li>Encrypted data transmission (HTTPS/SSL)</li>
+              <li>Secure password hashing (bcrypt)</li>
+              <li>Two-factor authentication (2FA) available</li>
+              <li>Regular security audits and updates</li>
+              <li>Limited employee access to personal data</li>
+              <li>Secure cloud infrastructure with backups</li>
+            </ul>
+
+            <h2>7. Data Retention</h2>
+            <ul>
+              <li><strong>Active Accounts:</strong> Data retained while account is active</li>
+              <li><strong>Deleted Accounts:</strong> Personal data deleted within 30 days (except legal requirements)</li>
+              <li><strong>Transaction Records:</strong> Retained for 7 years (UAE tax/legal compliance)</li>
+              <li><strong>Anonymized Analytics:</strong> Retained indefinitely for platform improvement</li>
+            </ul>
+
+            <h2>8. Children's Privacy</h2>
             <p>
-              We use cookies to:
+              Balkly is not intended for users under 18 years of age. We do not knowingly collect 
+              information from children. If we discover data from a minor, we will delete it immediately.
+            </p>
+
+            <h2>9. International Data Transfers</h2>
+            <p>
+              Your data is primarily stored on servers in the UAE. If data is transferred outside UAE, 
+              we ensure appropriate safeguards are in place to protect your information in accordance 
+              with this Privacy Policy.
+            </p>
+
+            <h2>10. Cookies & Tracking</h2>
+            <p>
+              We use cookies for essential platform functionality and analytics. 
+              See our <a href="/cookies" className="text-balkly-blue hover:underline">Cookie Policy</a> for details.
+            </p>
+
+            <h2>11. Third-Party Links</h2>
+            <p>
+              Our platform may contain links to external websites. We are not responsible for the 
+              privacy practices of third-party sites. Please review their privacy policies.
+            </p>
+
+            <h2>12. Marketing Communications</h2>
+            <p>
+              With your consent, we may send promotional emails about new features, events, and offers. 
+              You can opt out anytime by:
             </p>
             <ul>
-              <li>Maintain your session and keep you logged in</li>
-              <li>Remember your preferences</li>
-              <li>Analyze platform usage (anonymized)</li>
-              <li>Improve platform performance</li>
+              <li>Clicking "Unsubscribe" in any marketing email</li>
+              <li>Updating preferences in your account settings</li>
+              <li>Emailing: <a href="mailto:unsubscribe@balkly.live" className="text-balkly-blue hover:underline">unsubscribe@balkly.live</a></li>
             </ul>
-            <p>You can control cookies through your browser settings.</p>
 
-            <h2>10. Children's Privacy</h2>
+            <h2>13. Changes to Privacy Policy</h2>
             <p>
-              Our service is not intended for users under 18 years of age. We do not knowingly collect
-              personal information from children. If you become aware that a child has provided us with
-              personal data, please contact us.
+              We may update this Privacy Policy periodically. We will notify you of significant changes 
+              via email or prominent notice on the platform. Continued use after changes constitutes acceptance.
             </p>
 
-            <h2>11. International Data Transfers</h2>
+            <h2>14. Contact Us</h2>
             <p>
-              Your information may be transferred to and maintained on servers located outside your country.
-              By using our service, you consent to such transfers while we ensure appropriate safeguards.
+              For privacy-related questions or requests, contact us at:
+            </p>
+            <p>
+              <strong>NoLimitsDevelopments LLC</strong><br />
+              Privacy & Data Protection Officer<br />
+              Dubai, United Arab Emirates<br />
+              Email: <a href="mailto:privacy@balkly.live" className="text-balkly-blue hover:underline">privacy@balkly.live</a><br />
+              Support: <a href="mailto:support@balkly.live" className="text-balkly-blue hover:underline">support@balkly.live</a>
             </p>
 
-            <h2>12. Changes to This Policy</h2>
-            <p>
-              We may update this privacy policy from time to time. We will notify you of significant changes
-              via email or platform notification. Continued use after changes constitutes acceptance.
-            </p>
+            <hr className="my-8" />
 
-            <h2>13. Contact Us</h2>
-            <p>
-              For privacy-related questions or concerns:
+            <p className="text-sm text-gray-600">
+              <strong>Compliance:</strong> This Privacy Policy complies with UAE Federal Decree-Law No. 45 of 2021 
+              on the Protection of Personal Data and the EU General Data Protection Regulation (GDPR) for 
+              European users.
             </p>
-            <p>
-              <strong>Email:</strong> privacy@balkly.com<br>
-              <strong>Data Protection Officer:</strong> dpo@balkly.com<br>
-              <strong>Address:</strong> Balkly Platform, Bosnia and Herzegovina
-            </p>
-
-            <div style="margin-top: 40px; padding: 20px; background: #f9fafb; border-radius: 8px;">
-              <p style="margin: 0; text-align: center; color: #6b7280;">
-                <strong>Your privacy matters to us.</strong> We're committed to protecting your personal information
-                and being transparent about how we use it.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-

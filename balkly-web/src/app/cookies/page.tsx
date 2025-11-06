@@ -80,9 +80,23 @@ export default function CookiePolicyPage() {
               By using Balkly, you consent to our use of cookies as described in this policy.
             </p>
 
+            <h2>Updates to This Policy</h2>
+            <p>
+              We may update this Cookie Policy from time to time. Check this page periodically for changes.
+            </p>
+
             <h2>Contact Us</h2>
             <p>
-              Questions about cookies? Contact us at privacy@balkly.com
+              <strong>NoLimitsDevelopments LLC</strong><br />
+              Dubai, United Arab Emirates<br />
+              Email: <a href="mailto:privacy@balkly.live" className="text-balkly-blue hover:underline">privacy@balkly.live</a>
+            </p>
+            
+            <hr className="my-8" />
+            
+            <p className="text-sm text-gray-600">
+              This Cookie Policy complies with UAE Federal Decree-Law No. 45 of 2021 on the Protection 
+              of Personal Data and international privacy standards.
             </p>
           </CardContent>
         </Card>

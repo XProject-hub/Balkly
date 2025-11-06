@@ -1,147 +1,143 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
-
-export default function TermsOfServicePage() {
+export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <div className="bg-primary text-primary-foreground py-12">
-        <div className="container mx-auto px-4">
-          <Link href="/">
-            <Button variant="secondary" size="sm" className="mb-4">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Home
-            </Button>
-          </Link>
-          <h1 className="text-4xl font-bold">Terms of Service</h1>
-          <p className="text-lg opacity-90 mt-2">Last updated: November 2, 2025</p>
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="container mx-auto px-4 max-w-4xl">
+        <div className="bg-white rounded-lg shadow-sm p-8 md:p-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Terms of Service</h1>
+          <p className="text-gray-600 mb-8">Last Updated: November 6, 2025</p>
+
+          <div className="prose max-w-none">
+            <h2>1. Agreement to Terms</h2>
+            <p>
+              By accessing and using Balkly ("Platform"), operated by <strong>NoLimitsDevelopments LLC</strong>, registered in the United Arab Emirates, you agree to be bound by these Terms of Service and all applicable laws and regulations.
+            </p>
+
+            <h2>2. User Accounts</h2>
+            <h3>2.1 Registration</h3>
+            <p>You must be at least 18 years old to create an account. You agree to:</p>
+            <ul>
+              <li>Provide accurate and complete information</li>
+              <li>Maintain the security of your account credentials</li>
+              <li>Notify us immediately of any unauthorized access</li>
+              <li>Accept responsibility for all activities under your account</li>
+            </ul>
+
+            <h3>2.2 Account Types</h3>
+            <ul>
+              <li><strong>Buyer:</strong> Browse and purchase items/tickets</li>
+              <li><strong>Seller:</strong> Post listings and sell items (subject to approval)</li>
+              <li><strong>Organizer:</strong> Create and manage events</li>
+            </ul>
+
+            <h2>3. Marketplace Rules</h2>
+            <h3>3.1 Listings</h3>
+            <ul>
+              <li>Listings must be accurate and not misleading</li>
+              <li>Prohibited items: weapons, drugs, counterfeit goods, illegal items under UAE law</li>
+              <li>You retain ownership of your content but grant Balkly a license to display it</li>
+              <li>We reserve the right to remove any listing that violates these terms</li>
+            </ul>
+
+            <h3>3.2 Pricing & Payments</h3>
+            <ul>
+              <li><strong>Posting is FREE</strong> for all categories</li>
+              <li><strong>Promotion fees</strong> apply for featured placement (3, 7, 30 days)</li>
+              <li><strong>Event tickets</strong> include a 5% platform fee</li>
+              <li><strong>Forum sticky posts</strong> require payment for featured placement</li>
+              <li>All payments are processed securely through Stripe</li>
+              <li>Prices shown in EUR or AED based on user selection</li>
+            </ul>
+
+            <h2>4. User Conduct</h2>
+            <p>You agree NOT to:</p>
+            <ul>
+              <li>Post fraudulent, misleading, or deceptive content</li>
+              <li>Harass, threaten, or abuse other users</li>
+              <li>Spam or send unsolicited commercial messages</li>
+              <li>Violate any applicable UAE or international laws</li>
+              <li>Impersonate others or create fake accounts</li>
+              <li>Scrape or harvest data from the platform</li>
+              <li>Attempt to hack or compromise platform security</li>
+            </ul>
+
+            <h2>5. Intellectual Property</h2>
+            <p>
+              The Balkly name, logo, and all platform features are owned by NoLimitsDevelopments LLC. 
+              User-generated content remains the property of the respective users, who grant Balkly 
+              a worldwide, non-exclusive license to use, display, and distribute such content.
+            </p>
+
+            <h2>6. Privacy & Data</h2>
+            <p>
+              Your use of Balkly is subject to our <a href="/privacy" className="text-balkly-blue hover:underline">Privacy Policy</a>. 
+              We comply with UAE data protection regulations and international privacy standards.
+            </p>
+
+            <h2>7. Liability & Disclaimers</h2>
+            <h3>7.1 Platform "As Is"</h3>
+            <p>
+              Balkly is provided "as is" without warranties of any kind. We do not guarantee:
+            </p>
+            <ul>
+              <li>Accuracy of user-posted content</li>
+              <li>Quality or authenticity of listed items</li>
+              <li>Successful completion of transactions</li>
+              <li>Uninterrupted platform availability</li>
+            </ul>
+
+            <h3>7.2 Limitation of Liability</h3>
+            <p>
+              NoLimitsDevelopments LLC and Balkly are not liable for:
+            </p>
+            <ul>
+              <li>Disputes between buyers and sellers</li>
+              <li>Lost, stolen, or damaged items during transactions</li>
+              <li>Financial losses from fraudulent users</li>
+              <li>Indirect, incidental, or consequential damages</li>
+            </ul>
+
+            <p>
+              Maximum liability is limited to the amount paid by the user in the 12 months prior to the claim.
+            </p>
+
+            <h2>8. Governing Law</h2>
+            <p>
+              These Terms are governed by the laws of the <strong>United Arab Emirates</strong>. 
+              Any disputes shall be resolved in the courts of Dubai, UAE, or through arbitration as mutually agreed.
+            </p>
+
+            <h2>9. Termination</h2>
+            <p>We reserve the right to:</p>
+            <ul>
+              <li>Suspend or terminate accounts that violate these terms</li>
+              <li>Remove content that breaches our policies</li>
+              <li>Ban users engaged in fraudulent activities</li>
+              <li>Modify or discontinue services with notice</li>
+            </ul>
+
+            <h2>10. Changes to Terms</h2>
+            <p>
+              We may update these Terms at any time. Continued use of the platform after changes 
+              constitutes acceptance of the updated terms. Major changes will be notified via email.
+            </p>
+
+            <h2>11. Contact Information</h2>
+            <p>
+              <strong>NoLimitsDevelopments LLC</strong><br />
+              Dubai, United Arab Emirates<br />
+              Email: <a href="mailto:legal@balkly.live" className="text-balkly-blue hover:underline">legal@balkly.live</a><br />
+              Support: <a href="mailto:support@balkly.live" className="text-balkly-blue hover:underline">support@balkly.live</a>
+            </p>
+
+            <hr className="my-8" />
+
+            <p className="text-sm text-gray-600">
+              By using Balkly, you acknowledge that you have read, understood, and agree to be bound 
+              by these Terms of Service and our Privacy Policy.
+            </p>
+          </div>
         </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
-        <Card>
-          <CardContent className="prose max-w-none p-8">
-            <h2>1. Acceptance of Terms</h2>
-            <p>
-              By accessing and using Balkly ("the Platform"), you accept and agree to be bound by the terms
-              and provision of this agreement. If you do not agree to abide by the above, please do not use
-              this service.
-            </p>
-
-            <h2>2. Description of Service</h2>
-            <p>
-              Balkly provides an online marketplace platform that enables users to:
-            </p>
-            <ul>
-              <li>Post and browse classified listings</li>
-              <li>Participate in community forum discussions</li>
-              <li>Purchase event tickets</li>
-              <li>Communicate with other users</li>
-              <li>Access paid premium features</li>
-            </ul>
-
-            <h2>3. User Accounts</h2>
-            <p>
-              To access certain features of the Platform, you must register for an account. You agree to:
-            </p>
-            <ul>
-              <li>Provide accurate, current, and complete information</li>
-              <li>Maintain the security of your password and account</li>
-              <li>Notify us immediately of any unauthorized use</li>
-              <li>Be responsible for all activities that occur under your account</li>
-            </ul>
-
-            <h2>4. Listing Policies</h2>
-            <p>
-              When creating listings, you agree to:
-            </p>
-            <ul>
-              <li>Provide truthful and accurate descriptions</li>
-              <li>Not post prohibited or illegal items</li>
-              <li>Own the rights to all images and content posted</li>
-              <li>Comply with all applicable laws and regulations</li>
-              <li>Pay applicable listing fees before publication</li>
-            </ul>
-
-            <h2>5. Payment Terms</h2>
-            <p>
-              <strong>Listing Fees:</strong> Fees are charged based on the selected plan (Standard, Featured, or Boost).
-              All fees are non-refundable unless otherwise stated.
-            </p>
-            <p>
-              <strong>Event Tickets:</strong> A service fee of 7.5% + €0.35 per ticket applies to all ticket purchases.
-            </p>
-            <p>
-              <strong>Forum Sticky:</strong> Fees for sticky posts are charged upfront for the selected duration.
-            </p>
-
-            <h2>6. Refund Policy</h2>
-            <p>
-              Refunds are handled on a case-by-case basis. For ticket refunds, please refer to the event
-              organizer's specific refund policy. Listing fees are generally non-refundable after publication.
-            </p>
-
-            <h2>7. Prohibited Content</h2>
-            <p>
-              You may not post content that:
-            </p>
-            <ul>
-              <li>Is illegal, fraudulent, or deceptive</li>
-              <li>Infringes intellectual property rights</li>
-              <li>Contains adult or offensive material</li>
-              <li>Promotes violence or discrimination</li>
-              <li>Contains spam or malicious code</li>
-            </ul>
-
-            <h2>8. Moderation</h2>
-            <p>
-              We reserve the right to review, reject, or remove any content that violates these terms.
-              Content may be reviewed by automated systems and human moderators.
-            </p>
-
-            <h2>9. Intellectual Property</h2>
-            <p>
-              The Platform and its original content, features, and functionality are owned by Balkly and are
-              protected by international copyright, trademark, and other intellectual property laws.
-            </p>
-
-            <h2>10. Limitation of Liability</h2>
-            <p>
-              Balkly shall not be liable for any indirect, incidental, special, consequential, or punitive
-              damages resulting from your use or inability to use the service.
-            </p>
-
-            <h2>11. Dispute Resolution</h2>
-            <p>
-              Any disputes arising from the use of this Platform shall be resolved through mediation or
-              arbitration in accordance with the laws of Bosnia and Herzegovina.
-            </p>
-
-            <h2>12. Changes to Terms</h2>
-            <p>
-              We reserve the right to modify these terms at any time. Changes will be effective immediately
-              upon posting. Your continued use of the Platform constitutes acceptance of the modified terms.
-            </p>
-
-            <h2>13. Contact Information</h2>
-            <p>
-              For questions about these Terms of Service, please contact us at:
-            </p>
-            <p>
-              <strong>Email:</strong> legal@balkly.com<br>
-              <strong>Address:</strong> Balkly Platform, Bosnia and Herzegovina
-            </p>
-
-            <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
-              <p style="text-align: center; color: #6b7280;">
-                By using Balkly, you acknowledge that you have read and understood these Terms of Service.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
 }
-
