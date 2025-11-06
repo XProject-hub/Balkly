@@ -85,11 +85,10 @@
     background-color: var(--mist-50);
   }
   
-  /* Override card backgrounds globally */
-  [class*="rounded-lg bg-card"],
-  [class*="bg-white"] {
-    background: linear-gradient(to bottom, #FAFCFF 0%, #F8FAFD 100%) !important;
-    border-color: var(--hairline) !important;
+  /* Reduce white - don't override everything */
+  .card-mist {
+    background: linear-gradient(135deg, #FAFCFF 0%, #F6FAFF 100%);
+    border: 1px solid var(--hairline);
   }
   
   /* Balkly Brand Utilities */

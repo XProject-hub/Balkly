@@ -140,17 +140,19 @@ export default function HomePage() {
       <AdBanner position="homepage_top" className="container mx-auto px-4 py-4" />
 
       {/* Categories Section */}
-      <section className="py-16 bg-mist-100 relative overflow-hidden section-glow">
-        {/* Subtle glow overlay */}
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(800px 320px at 15% 0%, rgba(30,99,255,0.08), transparent 60%), radial-gradient(600px 240px at 85% 10%, rgba(6,182,212,0.08), transparent 60%)'
-        }}></div>
+      <section className="py-20 relative overflow-hidden" style={{
+        background: 'linear-gradient(135deg, #E8F1FF 0%, #EAF5FF 50%, #E0EFFF 100%)'
+      }}>
+        {/* Decorative blobs */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-balkly-blue/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-glow/5 rounded-full blur-3xl"></div>
+        
         <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-bold mb-4 text-gray-900">
               Explore Categories
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-xl text-gray-600">
               Find exactly what you're looking for
             </p>
           </div>
@@ -243,12 +245,18 @@ export default function HomePage() {
       </section>
 
       {/* Featured Listings Section */}
-      <section className="py-16 bg-mist-50">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-8">
+      <section className="py-20 relative overflow-hidden" style={{
+        background: 'linear-gradient(135deg, #F0FDFA 0%, #ECFDF5 50%, #E8FCF3 100%)'
+      }}>
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-teal-glow/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-balkly-blue/5 rounded-full blur-3xl"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex justify-between items-center mb-12">
             <div>
-              <h2 className="text-4xl font-bold mb-2">Featured Listings</h2>
-              <p className="text-muted-foreground">Handpicked items from trusted sellers</p>
+              <h2 className="text-5xl font-bold mb-2 text-gray-900">Featured Listings</h2>
+              <p className="text-xl text-gray-600">Handpicked items from trusted sellers</p>
             </div>
             <Button variant="outline" asChild>
               <Link href="/listings">View All</Link>
@@ -303,12 +311,18 @@ export default function HomePage() {
       </section>
 
       {/* Upcoming Events Section */}
-      <section className="py-16 bg-mist-200 relative overflow-hidden section-glow">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-8">
+      <section className="py-20 relative overflow-hidden" style={{
+        background: 'linear-gradient(135deg, #FFF8F0 0%, #FFF4E8 50%, #FFEEDD 100%)'
+      }}>
+        {/* Decorative elements */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-iris-purple/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-teal-glow/5 rounded-full blur-3xl"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex justify-between items-center mb-12">
             <div>
-              <h2 className="text-4xl font-bold mb-2">Upcoming Events</h2>
-              <p className="text-muted-foreground">Don't miss out on exciting events</p>
+              <h2 className="text-5xl font-bold mb-2 text-gray-900">Upcoming Events</h2>
+              <p className="text-xl text-gray-600">Don't miss out on exciting events</p>
             </div>
             <Button variant="outline" asChild>
               <Link href="/events">View All Events</Link>
@@ -355,12 +369,18 @@ export default function HomePage() {
       </section>
 
       {/* Trending Forum Section */}
-      <section className="py-16 bg-mist-50">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-8">
+      <section className="py-20 relative overflow-hidden" style={{
+        background: 'linear-gradient(135deg, #FFF5F7 0%, #FFF0F5 50%, #FFEEF3 100%)'
+      }}>
+        {/* Decorative gradients */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-iris-purple/8 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-balkly-blue/5 rounded-full blur-3xl"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex justify-between items-center mb-12">
             <div>
-              <h2 className="text-4xl font-bold mb-2">Trending Discussions</h2>
-              <p className="text-muted-foreground">Join the conversation</p>
+              <h2 className="text-5xl font-bold mb-2 text-gray-900">Trending Discussions</h2>
+              <p className="text-xl text-gray-600">Join the conversation</p>
             </div>
             <Button variant="outline" asChild>
               <Link href="/forum">Visit Forum</Link>
@@ -402,9 +422,16 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-mist-100">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
+      <section className="py-20 relative overflow-hidden" style={{
+        background: 'linear-gradient(135deg, #F0F4FF 0%, #E8EEFF 100%)'
+      }}>
+        {/* Animated gradient overlay */}
+        <div className="absolute inset-0 opacity-30" style={{
+          background: 'radial-gradient(circle at 20% 50%, rgba(30,99,255,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(6,182,212,0.1) 0%, transparent 50%)'
+        }}></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <h2 className="text-5xl font-bold text-center mb-16 text-gray-900">
             Why Choose Balkly?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -442,26 +469,34 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <Card className="max-w-3xl mx-auto text-center text-white border-0" style={{background: 'linear-gradient(90deg, #1E63FF, #7C3AED)'}}>
-            <CardHeader>
-              <CardTitle className="text-3xl text-white">Ready to Get Started?</CardTitle>
-              <CardDescription className="text-white/90 text-lg">
-                Join thousands of users buying, selling, and connecting on Balkly
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-4 justify-center">
-                <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 font-bold" asChild>
-                  <Link href="/auth/register">Create Account</Link>
-                </Button>
-                <Button size="lg" variant="outline" className="bg-white/10 text-white border-white/50 hover:bg-white/20 font-bold" asChild>
-                  <Link href="/listings/create">Post a Listing</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+      <section className="py-24 relative overflow-hidden" style={{
+        background: 'linear-gradient(135deg, #1E63FF 0%, #4A7FFF 50%, #7C3AED 100%)'
+      }}>
+        {/* Animated patterns */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: 'radial-gradient(circle at 20% 30%, white 1px, transparent 1px), radial-gradient(circle at 80% 70%, white 1px, transparent 1px)',
+          backgroundSize: '50px 50px'
+        }}></div>
+        <div className="absolute top-10 right-10 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 left-10 w-64 h-64 bg-teal-glow/20 rounded-full blur-3xl"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
+              Ready to Get Started?
+            </h2>
+            <p className="text-xl md:text-2xl text-white/90 mb-12 font-medium">
+              Join thousands of Balkanci buying, selling, and connecting across UAE
+            </p>
+            <div className="flex gap-6 justify-center flex-wrap">
+              <Button size="lg" className="bg-white text-balkly-blue hover:bg-white/90 font-bold px-8 py-6 text-lg shadow-xl" asChild>
+                <Link href="/auth/register">Create Account</Link>
+              </Button>
+              <Button size="lg" className="bg-white/20 backdrop-blur-sm text-white border-2 border-white/40 hover:bg-white/30 font-bold px-8 py-6 text-lg shadow-xl" asChild>
+                <Link href="/listings/create">Post a Listing</Link>
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
 
