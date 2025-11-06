@@ -41,7 +41,7 @@ export default function KnowledgeBasePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-mist-50">
       {/* Header */}
       <div
         className="text-white py-16"

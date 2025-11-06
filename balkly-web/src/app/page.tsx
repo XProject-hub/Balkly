@@ -46,7 +46,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-mist-50">
       {/* Hero Section with Video Background */}
       <section className="relative h-[700px] overflow-hidden" style={{background: 'linear-gradient(135deg, #0B1220 0%, #0F172A 40%, #111827 100%)'}}>
         {/* Glow Overlay */}

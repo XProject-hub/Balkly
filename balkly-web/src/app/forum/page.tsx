@@ -41,9 +41,9 @@ export default function ForumPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-mist-50">
       {/* Header */}
-      <div className="bg-white border-b">
+      <div className="bg-white border-b border-hairline shadow-sm">
         <div className="container mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
             <div>

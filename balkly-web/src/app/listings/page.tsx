@@ -70,7 +70,7 @@ export default function ListingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-mist-50">
       {/* Header */}
       <div className="bg-primary text-primary-foreground py-12">
         <div className="container mx-auto px-4">
