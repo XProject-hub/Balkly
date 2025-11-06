@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\KBCategory;
-use App\Models\KBArticle;
+use App\Models\KbCategory;
+use App\Models\KbArticle;
 use App\Models\User;
 
 class KnowledgeBaseSeeder extends Seeder
@@ -20,42 +20,42 @@ class KnowledgeBaseSeeder extends Seeder
         }
 
         // Create Categories
-        $gettingStarted = KBCategory::create([
+        $gettingStarted = KbCategory::create([
             'name' => 'Getting Started',
             'slug' => 'getting-started',
             'description' => 'New to Balkly? Start here!',
             'order' => 1,
         ]);
 
-        $listings = KBCategory::create([
+        $listings = KbCategory::create([
             'name' => 'Listings & Selling',
             'slug' => 'listings-selling',
             'description' => 'Everything about posting and managing listings',
             'order' => 2,
         ]);
 
-        $buying = KBCategory::create([
+        $buying = KbCategory::create([
             'name' => 'Buying & Orders',
             'slug' => 'buying-orders',
             'description' => 'How to buy items and manage orders',
             'order' => 3,
         ]);
 
-        $events = KBCategory::create([
+        $events = KbCategory::create([
             'name' => 'Events & Tickets',
             'slug' => 'events-tickets',
             'description' => 'Event tickets and QR codes',
             'order' => 4,
         ]);
 
-        $forum = KBCategory::create([
+        $forum = KbCategory::create([
             'name' => 'Forum & Community',
             'slug' => 'forum-community',
             'description' => 'Using the Balkly community forum',
             'order' => 5,
         ]);
 
-        $account = KBCategory::create([
+        $account = KbCategory::create([
             'name' => 'Account & Security',
             'slug' => 'account-security',
             'description' => 'Managing your account and security settings',
@@ -65,7 +65,7 @@ class KnowledgeBaseSeeder extends Seeder
         // Create Articles
 
         // Getting Started
-        KBArticle::create([
+        KbArticle::create([
             'category_id' => $gettingStarted->id,
             'author_id' => $admin->id,
             'title' => 'Welcome to Balkly - Quick Start Guide',
@@ -111,7 +111,7 @@ Balkly is the premier marketplace platform for the Balkan community in the UAE. 
             'published_at' => now(),
         ]);
 
-        KBArticle::create([
+        KbArticle::create([
             'category_id' => $gettingStarted->id,
             'author_id' => $admin->id,
             'title' => 'How to Switch Languages',
@@ -152,7 +152,7 @@ Change currency using the dropdown next to the language switcher.
         ]);
 
         // Listings & Selling
-        KBArticle::create([
+        KbArticle::create([
             'category_id' => $listings->id,
             'author_id' => $admin->id,
             'title' => 'How to Post a Listing',
@@ -217,7 +217,7 @@ Happy selling! 🎉
             'published_at' => now(),
         ]);
 
-        KBArticle::create([
+        KbArticle::create([
             'category_id' => $listings->id,
             'author_id' => $admin->id,
             'title' => 'Promoting Your Listings - Pricing & Benefits',
@@ -279,7 +279,7 @@ Don\'t want to pay? No problem!
         ]);
 
         // Events & Tickets
-        KBArticle::create([
+        KbArticle::create([
             'category_id' => $events->id,
             'author_id' => $admin->id,
             'title' => 'How Event Tickets Work - QR Codes & Entry',
@@ -353,7 +353,7 @@ We can resend anytime! 🎉
         ]);
 
         // Forum
-        KBArticle::create([
+        KbArticle::create([
             'category_id' => $forum->id,
             'author_id' => $admin->id,
             'title' => 'Using the Community Forum',
@@ -436,7 +436,7 @@ Our community is friendly and helpful. 🤝
         ]);
 
         // Account & Security
-        KBArticle::create([
+        KbArticle::create([
             'category_id' => $account->id,
             'author_id' => $admin->id,
             'title' => 'Account Security & Two-Factor Authentication (2FA)',
@@ -517,7 +517,7 @@ See something wrong?
         ]);
 
         // Buying
-        KBArticle::create([
+        KbArticle::create([
             'category_id' => $buying->id,
             'author_id' => $admin->id,
             'title' => 'How to Buy Safely on Balkly',
@@ -615,7 +615,7 @@ Watch out for:
             'published_at' => now(),
         ]);
 
-        echo "✅ Knowledge Base seeded with " . KBArticle::count() . " articles!\n";
+        echo "✅ Knowledge Base seeded with " . KbArticle::count() . " articles!\n";
     }
 }
 
