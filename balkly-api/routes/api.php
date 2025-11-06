@@ -240,5 +240,86 @@ Route::prefix('v1')->group(function () {
             'response' => $response->json(),
         ]);
     });
+    
+    // Contact form endpoint
+    Route::post('/contact', function(Request $request) {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string',
+        ]);
+        
+        $apiKey = config('resend.api_key');
+        
+        // Send to support team
+        $response = \Illuminate\Support\Facades\Http::withHeaders([
+            'Authorization' => 'Bearer ' . $apiKey,
+            'Content-Type' => 'application/json',
+        ])->post('https://api.resend.com/emails', [
+            'from' => 'noreply@balkly.live',
+            'to' => ['h.kravarevic@gmail.com'],
+            'reply_to' => $validated['email'],
+            'subject' => '[Balkly Contact] ' . $validated['subject'],
+            'html' => "
+                <div style='background: #f3f4f6; padding: 20px;'>
+                    <div style='background: white; padding: 30px; border-radius: 8px; max-width: 600px; margin: 0 auto;'>
+                        <h2 style='color: #1E63FF; margin-bottom: 20px;'>📧 New Contact Form Submission</h2>
+                        
+                        <div style='background: #f9fafb; padding: 15px; border-radius: 8px; margin-bottom: 20px;'>
+                            <p style='margin: 5px 0;'><strong>From:</strong> {$validated['name']}</p>
+                            <p style='margin: 5px 0;'><strong>Email:</strong> <a href='mailto:{$validated['email']}' style='color: #1E63FF;'>{$validated['email']}</a></p>
+                            <p style='margin: 5px 0;'><strong>Subject:</strong> {$validated['subject']}</p>
+                        </div>
+                        
+                        <div style='background: #fff; padding: 20px; border-left: 4px solid #1E63FF;'>
+                            <p style='white-space: pre-wrap; color: #374151;'>{$validated['message']}</p>
+                        </div>
+                        
+                        <div style='margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center;'>
+                            <p style='color: #9ca3af; font-size: 12px;'>
+                                Sent via Balkly Contact Form | 
+                                <a href='https://balkly.live' style='color: #1E63FF;'>balkly.live</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            ",
+        ]);
+        
+        // Send confirmation to user
+        \Illuminate\Support\Facades\Http::withHeaders([
+            'Authorization' => 'Bearer ' . $apiKey,
+            'Content-Type' => 'application/json',
+        ])->post('https://api.resend.com/emails', [
+            'from' => 'support@balkly.live',
+            'to' => [$validated['email']],
+            'subject' => 'We received your message - Balkly Support',
+            'html' => "
+                <div style='background: #f3f4f6; padding: 20px;'>
+                    <div style='background: white; padding: 30px; border-radius: 8px; max-width: 600px; margin: 0 auto;'>
+                        <h2 style='color: #1E63FF;'>Thank you for contacting Balkly!</h2>
+                        <p style='color: #374151; line-height: 1.6;'>Hi {$validated['name']},</p>
+                        <p style='color: #374151; line-height: 1.6;'>
+                            We've received your message and our support team will respond within 24 hours.
+                        </p>
+                        <div style='background: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0;'>
+                            <p style='margin: 0; color: #6b7280; font-size: 14px;'><strong>Your message:</strong></p>
+                            <p style='margin: 10px 0 0 0; color: #374151; white-space: pre-wrap;'>{$validated['message']}</p>
+                        </div>
+                        <p style='color: #374151;'>Best regards,<br><strong>Balkly Support Team</strong></p>
+                        <hr style='margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;'>
+                        <p style='color: #9ca3af; font-size: 12px; text-align: center;'>
+                            📧 support@balkly.live | 🌐 <a href='https://balkly.live' style='color: #1E63FF;'>balkly.live</a>
+                        </p>
+                    </div>
+                </div>
+            ",
+        ]);
+        
+        return response()->json([
+            'message' => 'Message sent successfully!',
+        ]);
+    });
 });
 

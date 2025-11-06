@@ -39,10 +39,9 @@ export default function CreateListingPage() {
   const [plans, setPlans] = useState<any[]>([]);
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
 
-  // Load categories on mount
-  useState(() => {
+  useEffect(() => {
     loadCategories();
-  });
+  }, []);
 
   const loadCategories = async () => {
     try {

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             ForumCategorySeeder::class,
             ForumSubcategoriesSeeder::class,
             UserSeeder::class,
+            KnowledgeBaseSeeder::class,
         ]);
     }
 }
