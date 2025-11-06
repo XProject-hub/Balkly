@@ -5,23 +5,19 @@ import { ArrowLeft } from "lucide-react";
 
 export default function RefundPolicyPage() {
   return (
-    <div className="min-h-screen bg-white">
-      <div className="text-white py-12" style={{background: 'linear-gradient(135deg, #0F172A 0%, #111827 100%)'}}>
-        <div className="container mx-auto px-4">
-          <Link href="/">
-            <Button variant="secondary" size="sm" className="mb-4">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Home
-            </Button>
-          </Link>
-          <h1 className="text-4xl font-bold">Refund Policy</h1>
-          <p className="text-lg opacity-90 mt-2">Last updated: November 2025</p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Header */}
+      <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white py-16">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <h1 className="text-5xl font-bold mb-4">Refund Policy</h1>
+          <p className="text-xl text-white/90">Last Updated: November 6, 2025</p>
+          <p className="text-white/80 mt-4">NoLimitsDevelopments LLC • Dubai, UAE</p>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
-        <Card>
-          <CardContent className="prose max-w-none p-8">
+      <div className="container mx-auto px-4 max-w-5xl py-12">
+        <div className="bg-white rounded-xl shadow-lg p-8 md:p-12 lg:p-16">
+          <div className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-h2:text-3xl prose-h2:font-bold prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-3 prose-h2:border-b-2 prose-h2:border-green-500/20 prose-h3:text-xl prose-h3:font-semibold prose-h3:mt-8 prose-h3:mb-4 prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 prose-li:text-gray-700 prose-li:mb-2 prose-strong:text-gray-900 prose-a:text-balkly-blue prose-a:no-underline hover:prose-a:underline prose-ul:my-6 prose-ol:my-6">
             <h2>Refund Policy Overview</h2>
             <p>
               At Balkly, we strive to ensure customer satisfaction. This policy outlines our 

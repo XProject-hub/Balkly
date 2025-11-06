@@ -1,12 +1,18 @@
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-mist-50 py-12">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <div className="bg-white rounded-lg shadow-sm p-8 md:p-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Privacy Policy</h1>
-          <p className="text-gray-600 mb-8">Last Updated: November 6, 2025</p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Header */}
+      <div className="bg-gradient-to-r from-teal-glow to-balkly-blue text-white py-16">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <h1 className="text-5xl font-bold mb-4">Privacy Policy</h1>
+          <p className="text-xl text-white/90">Last Updated: November 6, 2025</p>
+          <p className="text-white/80 mt-4">NoLimitsDevelopments LLC • Dubai, UAE</p>
+        </div>
+      </div>
 
-          <div className="prose max-w-none">
+      <div className="container mx-auto px-4 max-w-5xl py-12">
+        <div className="bg-white rounded-xl shadow-lg p-8 md:p-12 lg:p-16">
+          <div className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-h2:text-3xl prose-h2:font-bold prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-3 prose-h2:border-b-2 prose-h2:border-teal-glow/20 prose-h3:text-xl prose-h3:font-semibold prose-h3:mt-8 prose-h3:mb-4 prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 prose-li:text-gray-700 prose-li:mb-2 prose-strong:text-gray-900 prose-a:text-balkly-blue prose-a:no-underline hover:prose-a:underline prose-ul:my-6 prose-ol:my-6">
             <h2>1. Introduction</h2>
             <p>
               <strong>NoLimitsDevelopments LLC</strong> ("we", "our", "Balkly") respects your privacy and is committed to protecting your personal data. 
