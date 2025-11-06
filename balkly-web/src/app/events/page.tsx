@@ -32,7 +32,7 @@ export default function EventsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-mist-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground py-16">
         <div className="container mx-auto px-4">

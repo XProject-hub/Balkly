@@ -5,18 +5,12 @@
 @layer base {
   :root {
     /* Balkly Brand Colors - Light Mode (Default) */
-    --background: 216 100% 98%;
-    --foreground: 218 70% 15%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
     
-    /* Mist Tints for soft backgrounds */
-    --mist-50: #F6F8FC;
-    --mist-100: #F1F5FF;
-    --mist-200: #EAF0FF;
-    --hairline: #E6EDF7;
-    
-    /* Cards with subtle tint */
-    --card: 216 100% 99%;
-    --card-foreground: 218 70% 15%;
+    /* White cards for contrast */
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 218 70% 15%;
     
@@ -32,12 +26,12 @@
     --accent: 258 90% 58%;
     --accent-foreground: 0 0% 100%;
     
-    --muted: 216 100% 96%;
-    --muted-foreground: 215 16% 47%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 216 50% 92%;
-    --input: 216 100% 98%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
     --ring: 221 100% 56%;
     --radius: 0.75rem;
   }
@@ -81,14 +75,7 @@
   }
   
   body {
-    @apply text-foreground;
-    background-color: var(--mist-50);
-  }
-  
-  /* Reduce white - don't override everything */
-  .card-mist {
-    background: linear-gradient(135deg, #FAFCFF 0%, #F6FAFF 100%);
-    border: 1px solid var(--hairline);
+    @apply bg-background text-foreground;
   }
   
   /* Balkly Brand Utilities */

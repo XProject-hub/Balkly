@@ -46,7 +46,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-mist-50">
+    <div className="min-h-screen">
       {/* Hero Section with Video Background */}
       <section className="relative h-[700px] overflow-hidden" style={{background: 'linear-gradient(135deg, #0B1220 0%, #0F172A 40%, #111827 100%)'}}>
         {/* Glow Overlay */}
@@ -140,17 +140,13 @@ export default function HomePage() {
       <AdBanner position="homepage_top" className="container mx-auto px-4 py-4" />
 
       {/* Categories Section */}
-      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-        {/* Decorative blobs */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-balkly-blue/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-teal-glow/10 rounded-full blur-3xl"></div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-4 text-gray-900">
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">
               Explore Categories
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-lg text-muted-foreground">
               Find exactly what you're looking for
             </p>
           </div>
@@ -243,16 +239,12 @@ export default function HomePage() {
       </section>
 
       {/* Featured Listings Section */}
-      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
-        {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-teal-glow/15 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-green-500/10 rounded-full blur-3xl"></div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex justify-between items-center mb-12">
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center mb-8">
             <div>
-              <h2 className="text-5xl font-bold mb-2 text-gray-900">Featured Listings</h2>
-              <p className="text-xl text-gray-600">Handpicked items from trusted sellers</p>
+              <h2 className="text-4xl font-bold mb-2">Featured Listings</h2>
+              <p className="text-muted-foreground">Handpicked items from trusted sellers</p>
             </div>
             <Button variant="outline" asChild>
               <Link href="/listings">View All</Link>
@@ -307,16 +299,12 @@ export default function HomePage() {
       </section>
 
       {/* Upcoming Events Section */}
-      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
-        {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-orange-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-3xl"></div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex justify-between items-center mb-12">
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center mb-8">
             <div>
-              <h2 className="text-5xl font-bold mb-2 text-gray-900">Upcoming Events</h2>
-              <p className="text-xl text-gray-600">Don't miss out on exciting events</p>
+              <h2 className="text-4xl font-bold mb-2">Upcoming Events</h2>
+              <p className="text-muted-foreground">Don't miss out on exciting events</p>
             </div>
             <Button variant="outline" asChild>
               <Link href="/events">View All Events</Link>
@@ -363,16 +351,12 @@ export default function HomePage() {
       </section>
 
       {/* Trending Forum Section */}
-      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-rose-50 via-pink-50 to-fuchsia-50">
-        {/* Decorative gradients */}
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-iris-purple/15 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-pink-500/10 rounded-full blur-3xl"></div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex justify-between items-center mb-12">
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center mb-8">
             <div>
-              <h2 className="text-5xl font-bold mb-2 text-gray-900">Trending Discussions</h2>
-              <p className="text-xl text-gray-600">Join the conversation</p>
+              <h2 className="text-4xl font-bold mb-2">Trending Discussions</h2>
+              <p className="text-muted-foreground">Join the conversation</p>
             </div>
             <Button variant="outline" asChild>
               <Link href="/forum">Visit Forum</Link>
@@ -414,13 +398,9 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50">
-        {/* Animated gradient overlay */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-iris-purple/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-500/8 rounded-full blur-3xl"></div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <h2 className="text-5xl font-bold text-center mb-16 text-gray-900">
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">
             Why Choose Balkly?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -458,34 +438,26 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 relative overflow-hidden" style={{
-        background: 'linear-gradient(135deg, #1E63FF 0%, #4A7FFF 50%, #7C3AED 100%)'
-      }}>
-        {/* Animated patterns */}
-        <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: 'radial-gradient(circle at 20% 30%, white 1px, transparent 1px), radial-gradient(circle at 80% 70%, white 1px, transparent 1px)',
-          backgroundSize: '50px 50px'
-        }}></div>
-        <div className="absolute top-10 right-10 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 left-10 w-64 h-64 bg-teal-glow/20 rounded-full blur-3xl"></div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
-              Ready to Get Started?
-            </h2>
-            <p className="text-xl md:text-2xl text-white/90 mb-12 font-medium">
-              Join thousands of Balkanci buying, selling, and connecting across UAE
-            </p>
-            <div className="flex gap-6 justify-center flex-wrap">
-              <Button size="lg" className="bg-white text-balkly-blue hover:bg-white/90 font-bold px-8 py-6 text-lg shadow-xl" asChild>
-                <Link href="/auth/register">Create Account</Link>
-              </Button>
-              <Button size="lg" className="bg-white/20 backdrop-blur-sm text-white border-2 border-white/40 hover:bg-white/30 font-bold px-8 py-6 text-lg shadow-xl" asChild>
-                <Link href="/listings/create">Post a Listing</Link>
-              </Button>
-            </div>
-          </div>
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <Card className="max-w-3xl mx-auto text-center text-white border-0" style={{background: 'linear-gradient(90deg, #1E63FF, #7C3AED)'}}>
+            <CardHeader>
+              <CardTitle className="text-3xl text-white">Ready to Get Started?</CardTitle>
+              <CardDescription className="text-white/90 text-lg">
+                Join thousands of users buying, selling, and connecting on Balkly
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex gap-4 justify-center">
+                <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 font-bold" asChild>
+                  <Link href="/auth/register">Create Account</Link>
+                </Button>
+                <Button size="lg" variant="outline" className="bg-white/10 text-white border-white/50 hover:bg-white/20 font-bold" asChild>
+                  <Link href="/listings/create">Post a Listing</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
