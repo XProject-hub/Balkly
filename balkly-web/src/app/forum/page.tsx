@@ -43,12 +43,12 @@ export default function ForumPage() {
   return (
     <div className="min-h-screen bg-mist-50">
       {/* Header */}
-      <div className="bg-white border-b border-hairline shadow-sm">
-        <div className="container mx-auto px-4 py-6">
+      <div className="bg-gradient-to-r from-mist-100 to-mist-200 border-b border-hairline shadow-sm">
+        <div className="container mx-auto px-4 py-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Community Forum</h1>
-              <p className="text-gray-600 mt-1">Discussions, questions, and community</p>
+              <h1 className="text-4xl font-bold text-gray-900">Community Forum</h1>
+              <p className="text-gray-600 mt-2">Diskusije, pitanja i zajednica</p>
             </div>
             <Button className="bg-gradient-to-r from-balkly-blue to-iris-purple text-white" asChild>
               <Link href="/forum/new">
