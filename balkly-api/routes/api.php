@@ -220,5 +220,25 @@ Route::prefix('v1')->group(function () {
     Route::post('/webhooks/stripe', [OrderController::class, 'stripeWebhook']);
     Route::post('/webhooks/checkout', [OrderController::class, 'checkoutWebhook']);
     Route::post('/webhooks/resend', [\App\Http\Controllers\Api\ResendWebhookController::class, 'handle']);
+    
+    // Test email endpoint (remove in production)
+    Route::get('/test-email', function() {
+        $apiKey = config('resend.api_key');
+        
+        $response = \Illuminate\Support\Facades\Http::withHeaders([
+            'Authorization' => 'Bearer ' . $apiKey,
+            'Content-Type' => 'application/json',
+        ])->post('https://api.resend.com/emails', [
+            'from' => 'info@balkly.live',
+            'to' => ['h.kravarevic@gmail.com'],
+            'subject' => 'Test Email from Balkly',
+            'html' => '<h1>Welcome to Balkly!</h1><p>Your email system is working perfectly!</p>',
+        ]);
+        
+        return response()->json([
+            'sent' => $response->successful(),
+            'response' => $response->json(),
+        ]);
+    });
 });
 
