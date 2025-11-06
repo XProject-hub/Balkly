@@ -47,7 +47,8 @@
 - ✅ Free posting, pay to promote model
 - ✅ Invoice generation ready
 - ⏳ Actual payment flow completion
-- ⏳ Payout system for sellers
+
+**Note:** Balkly is a CLASSIFIEDS platform - sellers meet buyers directly. NO platform commission on sales. NO seller payouts. Users only pay for posting/promotion fees.
 
 ### **Forum** ✅ **95% COMPLETE**
 - ✅ 38 main categories + 60+ subcategories (Serbian/Bosnian)
@@ -88,7 +89,7 @@
 - ✅ User management (view, delete, ban)
 - ✅ Forum category management
 - ✅ Listings overview
-- ✅ Orders overview
+- ✅ Orders overview (promotion purchases)
 - ✅ Platform settings page
 - ✅ Visitor tracking with real IPs
 - ✅ Online users counter (real-time)
@@ -98,8 +99,9 @@
 - ✅ Top pages statistics
 - ✅ Visitor details page
 - ⏳ Moderation queue interface
-- ⏳ Payout management
 - ⏳ Content approval workflow
+
+**Note:** NO seller payouts needed - person-to-person transactions!
 
 ### **Multi-Language Support** ✅ **100% COMPLETE**
 - ✅ 3 languages: English, Balkly (BS/SR/HR unified), Arabic
@@ -224,17 +226,17 @@
 - ❌ Favorites/Watchlist sync across devices
 - ❌ Seller verification program
 - ❌ Review/rating system completion
-- ❌ Offer/counteroffer system
-- ❌ Listing performance analytics (seller dashboard)
+- ❌ Listing performance analytics (views, messages count)
 
 ### **Events - Advanced**
 - ❌ Affiliate event integration (partner APIs)
 - ❌ Event creation wizard
 - ❌ Ticket purchase completion
 - ❌ QR scanning mobile app
-- ❌ Organizer payout system
 - ❌ Event analytics
 - ❌ Seating selection
+
+**Note:** Event ticketing WOULD need organizer payouts, but main focus is classifieds model.
 
 ### **Forum - Advanced**
 - ❌ Post voting system
@@ -253,14 +255,12 @@
 - ❌ Dispute resolution system
 
 ### **Advanced Features**
-- ❌ Escrow system for high-value items
+- ❌ Escrow system for high-value items (optional safety feature)
 - ❌ Video uploads
 - ❌ Live streaming events
-- ❌ Auction functionality
 - ❌ Price intelligence/suggestions
 - ❌ Geo-fenced promotions
 - ❌ Referral program
-- ❌ Seller subscriptions
 
 ### **Mobile Apps**
 - ❌ React Native iOS app
@@ -348,15 +348,21 @@
 
 ## 💰 **MONETIZATION STATUS**
 
-### **Revenue Streams Implemented:**
-- ✅ Listing promotion fees (3, 5, 7, 10, 30 days)
-- ✅ Forum sticky posts (7, 15, 30 days)
-- ✅ Event ticketing structure (7.5% + €0.35 per ticket)
+### **Business Model: CLASSIFIEDS (Person-to-Person)**
+- Sellers post listings and set their own prices
+- Buyers contact sellers via chat
+- **Transaction happens OFFLINE** (in-person or direct transfer)
+- **Platform does NOT take commission on sales**
+- **Sellers do NOT earn through platform**
+
+### **Platform Revenue (Admin Only):**
+- ✅ Listing promotion fees (€5-€30 for 3-30 days featured placement)
+- ✅ Forum sticky posts (€5-€20 for 7-30 days pinned)
+- ✅ Event ticket fees (7.5% + €0.35 per ticket) - OPTIONAL feature
 
 ### **Not Yet Active:**
-- ⏳ Actual payment processing
-- ⏳ Seller subscriptions
-- ⏳ Affiliate commissions
+- ⏳ Actual payment processing (Stripe checkout)
+- ⏳ Invoice generation
 
 ---
 
@@ -432,13 +438,16 @@
 
 ## 📋 **MISSING FROM USE CASE**
 
-### **Not Implemented:**
-- ❌ Wallet & seller payouts
+### **Not Needed (Classifieds Model):**
+- ❌ Wallet system - NOT needed (person-to-person sales)
+- ❌ Seller payouts - NOT needed (no platform commission)
+- ❌ Offer/counteroffer system - Users negotiate via chat
+- ❌ Auction functionality - Not in classifieds model
+
+### **Not Implemented Yet:**
 - ❌ Affiliate event tracking
 - ❌ QR scanning app
 - ❌ Review/rating system (structure exists)
-- ❌ Offer/counteroffer system
-- ❌ Auction functionality
 - ❌ Video uploads
 - ❌ Price intelligence AI
 - ❌ Mobile native apps
@@ -452,24 +461,32 @@
 
 ## 💡 **SUMMARY**
 
-**You have a FULLY FUNCTIONAL marketplace platform with:**
-- Complete user system
-- Forum with 100+ categories
-- Listing creation and browsing
-- Real-time chat
-- Multi-language
-- Professional email
-- Admin panel
-- Analytics
-- Legal compliance
+**You have a FULLY FUNCTIONAL classifieds platform with:**
+- Complete user system (register, login, 2FA)
+- Forum with 100+ categories (Serbian/Bosnian)
+- Listing creation and browsing (FREE to post!)
+- Real-time chat between buyers and sellers
+- Multi-language (English, Balkly, Arabic)
+- Professional email (@balkly.live)
+- Admin panel with analytics
+- Legal compliance (UAE laws)
+- Knowledge Base
+- Contact page with live chat
 
-**To start making money, you just need to:**
-1. Complete Stripe checkout flow (2-3 days of work)
-2. Turn on payment processing
+### **💰 Revenue Model (Admin Only):**
+- Users post listings for FREE
+- Users PAY to PROMOTE listings (€5-€30 for featured placement)
+- Users PAY for forum sticky posts (€5-€20)
+- **NO commission on sales** - person-to-person transactions
+- **NO seller payouts needed** - classifieds model
+
+### **To Start Making Money:**
+1. Complete Stripe checkout flow (2-3 days)
+2. Enable promotion purchases
 3. Market the platform!
 
 **Current State: 85% Complete**  
-**Ready for: Soft Launch Today, Full Launch in 1 Week**
+**Ready for: Soft Launch TODAY (with free listings), Full Launch in 1 Week (with paid promotions)**
 
-🎉 **Congratulations! You've built a comprehensive platform!** 🎉
+🎉 **Congratulations! You've built a comprehensive classifieds platform!** 🎉
 
