@@ -24,42 +24,42 @@ class KnowledgeBaseSeeder extends Seeder
             'name' => 'Getting Started',
             'slug' => 'getting-started',
             'description' => 'New to Balkly? Start here!',
-            'order' => 1,
+            'display_order' => 1,
         ]);
 
         $listings = KbCategory::create([
             'name' => 'Listings & Selling',
             'slug' => 'listings-selling',
             'description' => 'Everything about posting and managing listings',
-            'order' => 2,
+            'display_order' => 2,
         ]);
 
         $buying = KbCategory::create([
             'name' => 'Buying & Orders',
             'slug' => 'buying-orders',
             'description' => 'How to buy items and manage orders',
-            'order' => 3,
+            'display_order' => 3,
         ]);
 
         $events = KbCategory::create([
             'name' => 'Events & Tickets',
             'slug' => 'events-tickets',
             'description' => 'Event tickets and QR codes',
-            'order' => 4,
+            'display_order' => 4,
         ]);
 
         $forum = KbCategory::create([
             'name' => 'Forum & Community',
             'slug' => 'forum-community',
             'description' => 'Using the Balkly community forum',
-            'order' => 5,
+            'display_order' => 5,
         ]);
 
         $account = KbCategory::create([
             'name' => 'Account & Security',
             'slug' => 'account-security',
             'description' => 'Managing your account and security settings',
-            'order' => 6,
+            'display_order' => 6,
         ]);
 
         // Create Articles
@@ -67,9 +67,10 @@ class KnowledgeBaseSeeder extends Seeder
         // Getting Started
         KbArticle::create([
             'category_id' => $gettingStarted->id,
-            'author_id' => $admin->id,
             'title' => 'Welcome to Balkly - Quick Start Guide',
             'slug' => 'welcome-quick-start',
+            'is_published' => true,
+            'display_order' => 1,
             'content' => '
 # Welcome to Balkly!
 
@@ -106,16 +107,14 @@ Balkly is the premier marketplace platform for the Balkan community in the UAE. 
 
 **Dobrodošli! مرحبا بك!**
             ',
-            'views_count' => 0,
-            'is_helpful_count' => 0,
-            'published_at' => now(),
         ]);
 
         KbArticle::create([
             'category_id' => $gettingStarted->id,
-            'author_id' => $admin->id,
             'title' => 'How to Switch Languages',
             'slug' => 'switch-languages',
+            'is_published' => true,
+            'display_order' => 2,
             'content' => '
 # Language Support
 
@@ -146,17 +145,15 @@ We also support multiple currencies:
 
 Change currency using the dropdown next to the language switcher.
             ',
-            'views_count' => 0,
-            'is_helpful_count' => 0,
-            'published_at' => now(),
         ]);
 
         // Listings & Selling
         KbArticle::create([
             'category_id' => $listings->id,
-            'author_id' => $admin->id,
             'title' => 'How to Post a Listing',
             'slug' => 'post-listing',
+            'is_published' => true,
+            'display_order' => 3,
             'content' => '
 # Posting Your First Listing
 
@@ -212,16 +209,14 @@ Click "Submit" and your listing goes live immediately!
 
 Happy selling! 🎉
             ',
-            'views_count' => 0,
-            'is_helpful_count' => 0,
-            'published_at' => now(),
         ]);
 
         KbArticle::create([
             'category_id' => $listings->id,
-            'author_id' => $admin->id,
             'title' => 'Promoting Your Listings - Pricing & Benefits',
             'slug' => 'promoting-listings',
+            'is_published' => true,
+            'display_order' => 4,
             'content' => '
 # Listing Promotion Plans
 
@@ -273,17 +268,15 @@ Don\'t want to pay? No problem!
 
 **It\'s your choice!** 💰
             ',
-            'views_count' => 0,
-            'is_helpful_count' => 0,
-            'published_at' => now(),
         ]);
 
         // Events & Tickets
         KbArticle::create([
             'category_id' => $events->id,
-            'author_id' => $admin->id,
             'title' => 'How Event Tickets Work - QR Codes & Entry',
             'slug' => 'event-tickets-qr',
+            'is_published' => true,
+            'display_order' => 5,
             'content' => '
 # Event Tickets & QR Codes
 
@@ -347,17 +340,15 @@ No worries!
 
 We can resend anytime! 🎉
             ',
-            'views_count' => 0,
-            'is_helpful_count' => 0,
-            'published_at' => now(),
         ]);
 
         // Forum
         KbArticle::create([
             'category_id' => $forum->id,
-            'author_id' => $admin->id,
             'title' => 'Using the Community Forum',
             'slug' => 'using-forum',
+            'is_published' => true,
+            'display_order' => 6,
             'content' => '
 # Community Forum Guide
 
@@ -430,17 +421,15 @@ Stuck? Post in **Help & Support** category!
 
 Our community is friendly and helpful. 🤝
             ',
-            'views_count' => 0,
-            'is_helpful_count' => 0,
-            'published_at' => now(),
         ]);
 
         // Account & Security
         KbArticle::create([
             'category_id' => $account->id,
-            'author_id' => $admin->id,
             'title' => 'Account Security & Two-Factor Authentication (2FA)',
             'slug' => 'account-security-2fa',
+            'is_published' => true,
+            'display_order' => 7,
             'content' => '
 # Keep Your Account Secure
 
@@ -511,17 +500,15 @@ See something wrong?
 
 **Stay safe!** 🛡️
             ',
-            'views_count' => 0,
-            'is_helpful_count' => 0,
-            'published_at' => now(),
         ]);
 
         // Buying
         KbArticle::create([
             'category_id' => $buying->id,
-            'author_id' => $admin->id,
             'title' => 'How to Buy Safely on Balkly',
             'slug' => 'buying-safely',
+            'is_published' => true,
+            'display_order' => 8,
             'content' => '
 # Safe Buying Guide
 
@@ -610,9 +597,6 @@ Watch out for:
 
 **Buy smart, buy safe!** 🛡️✅
             ',
-            'views_count' => 0,
-            'is_helpful_count' => 0,
-            'published_at' => now(),
         ]);
 
         echo "✅ Knowledge Base seeded with " . KbArticle::count() . " articles!\n";
