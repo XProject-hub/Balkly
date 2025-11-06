@@ -45,7 +45,7 @@ export const translations = {
     'common.no': 'No',
   },
   
-  sr: {
+  balkly: {
     // Navigation (Serbian)
     'nav.listings': 'Oglasi',
     'nav.events': 'Događaji',
@@ -82,94 +82,6 @@ export const translations = {
     'common.viewAll': 'Pogledaj sve',
     'common.create': 'Kreiraj',
     'common.edit': 'Izmeni',
-    'common.delete': 'Obriši',
-    'common.save': 'Sačuvaj',
-    'common.cancel': 'Otkaži',
-    'common.yes': 'Da',
-    'common.no': 'Ne',
-  },
-  
-  hr: {
-    // Navigation (Croatian)
-    'nav.listings': 'Oglasi',
-    'nav.events': 'Događaji',
-    'nav.forum': 'Forum',
-    'nav.search': 'Pretraga',
-    'nav.login': 'Prijava',
-    'nav.signup': 'Registracija',
-    'nav.dashboard': 'Nadzorna ploča',
-    'nav.messages': 'Poruke',
-    'nav.settings': 'Postavke',
-    'nav.logout': 'Odjava',
-    
-    // Homepage
-    'home.welcome': 'Dobrodošli u',
-    'home.subtitle': 'Vaša moderna tržnica za oglase, događaje i diskusije. Kupujte, prodajte i povežite se s povjerenjem.',
-    'home.browse': 'Pregledaj oglase',
-    'home.getStarted': 'Započni besplatno',
-    'home.search': 'Pretraži automobile, nekretnine, događaje...',
-    
-    // Categories
-    'cat.auto': 'Automobili',
-    'cat.autoDesc': 'Automobili, motocikli i vozila',
-    'cat.realestate': 'Nekretnine',
-    'cat.realestateDesc': 'Kuće, stanovi i imanja',
-    'cat.events': 'Događaji',
-    'cat.eventsDesc': 'Koncerti, sport i zabava',
-    'cat.forum': 'Forum',
-    'cat.forumDesc': 'Rasprave zajednice i teme',
-    
-    // Common
-    'common.featured': 'Istaknuto',
-    'common.new': 'Novo',
-    'common.trending': 'Popularno',
-    'common.viewAll': 'Pogledaj sve',
-    'common.create': 'Kreiraj',
-    'common.edit': 'Uredi',
-    'common.delete': 'Obriši',
-    'common.save': 'Spremi',
-    'common.cancel': 'Otkaži',
-    'common.yes': 'Da',
-    'common.no': 'Ne',
-  },
-  
-  bs: {
-    // Navigation (Bosnian)
-    'nav.listings': 'Oglasi',
-    'nav.events': 'Događaji',
-    'nav.forum': 'Forum',
-    'nav.search': 'Pretraga',
-    'nav.login': 'Prijava',
-    'nav.signup': 'Registracija',
-    'nav.dashboard': 'Kontrolna tabla',
-    'nav.messages': 'Poruke',
-    'nav.settings': 'Postavke',
-    'nav.logout': 'Odjava',
-    
-    // Homepage
-    'home.welcome': 'Dobrodošli u',
-    'home.subtitle': 'Vaša moderna tržnica za oglase, događaje i diskusije. Kupujte, prodajte i povežite se sa povjerenjem.',
-    'home.browse': 'Pregledaj oglase',
-    'home.getStarted': 'Počni besplatno',
-    'home.search': 'Pretraži automobile, nekretnine, događaje...',
-    
-    // Categories
-    'cat.auto': 'Automobili',
-    'cat.autoDesc': 'Automobili, motocikli i vozila',
-    'cat.realestate': 'Nekretnine',
-    'cat.realestateDesc': 'Kuće, stanovi i imanja',
-    'cat.events': 'Događaji',
-    'cat.eventsDesc': 'Koncerti, sport i zabava',
-    'cat.forum': 'Forum',
-    'cat.forumDesc': 'Rasprave zajednice i teme',
-    
-    // Common
-    'common.featured': 'Istaknuto',
-    'common.new': 'Novo',
-    'common.trending': 'Popularno',
-    'common.viewAll': 'Pogledaj sve',
-    'common.create': 'Kreiraj',
-    'common.edit': 'Uredi',
     'common.delete': 'Obriši',
     'common.save': 'Sačuvaj',
     'common.cancel': 'Otkaži',
