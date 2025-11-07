@@ -1,36 +1,59 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
 export default function TrackingScript() {
   const pathname = usePathname();
+  const pageLoadTime = useRef<number>(Date.now());
 
   useEffect(() => {
-    // Track page visit
-    const trackVisit = async () => {
-      try {
-        // Get better page title based on URL
-        const getPageTitle = () => {
-          const path = window.location.pathname;
-          if (path === '/') return 'Homepage';
-          if (path.includes('/listings/')) return 'Listing Detail';
-          if (path === '/listings') return 'Browse Listings';
-          if (path === '/auto') return 'Auto Category';
-          if (path === '/real-estate') return 'Real Estate Category';
-          if (path === '/electronics') return 'Electronics Category';
-          if (path === '/fashion') return 'Fashion Category';
-          if (path === '/jobs') return 'Jobs Category';
-          if (path === '/events') return 'Events';
-          if (path === '/forum') return 'Forum';
-          if (path.includes('/forum/topics/')) return 'Forum Topic';
-          if (path === '/auth/login') return 'Login';
-          if (path === '/auth/register') return 'Register';
-          if (path.includes('/dashboard')) return 'Dashboard';
-          return document.title;
-        };
+    // Reset page load time on pathname change
+    pageLoadTime.current = Date.now();
 
-        await fetch("/api/v1/analytics/track", {
+    const getPageTitle = () => {
+      const path = window.location.pathname;
+      if (path === '/') return 'Homepage';
+      if (path.includes('/listings/')) return 'Listing Detail';
+      if (path === '/listings') return 'Browse Listings';
+      if (path === '/auto') return 'Auto Category';
+      if (path === '/real-estate') return 'Real Estate Category';
+      if (path === '/electronics') return 'Electronics Category';
+      if (path === '/fashion') return 'Fashion Category';
+      if (path === '/jobs') return 'Jobs Category';
+      if (path === '/events') return 'Events';
+      if (path === '/forum') return 'Forum';
+      if (path.includes('/forum/topics/')) return 'Forum Topic';
+      if (path === '/auth/login') return 'Login';
+      if (path === '/auth/register') return 'Register';
+      if (path.includes('/dashboard')) return 'Dashboard';
+      if (path.includes('/admin')) return 'Admin Panel';
+      return document.title;
+    };
+
+    // Track page visit with time tracking
+    const trackVisit = async () => {
+      const timeOnPage = Math.floor((Date.now() - pageLoadTime.current) / 1000); // seconds
+
+      try {
+        // Only track analytics once per page (not repeatedly)
+        if (timeOnPage < 5) {
+          await fetch("/api/v1/analytics/track", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("auth_token") || ""}`,
+            },
+            body: JSON.stringify({
+              page_url: window.location.pathname,
+              page_title: getPageTitle(),
+              time_on_page: timeOnPage,
+            }),
+          });
+        }
+
+        // Update online status (every 30 seconds for real-time)
+        await fetch("/api/v1/online/track", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -41,17 +64,6 @@ export default function TrackingScript() {
             page_title: getPageTitle(),
           }),
         });
-
-        // Track online status
-        await fetch("/api/v1/online/track", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            page_url: window.location.pathname,
-          }),
-        });
       } catch (error) {
         // Silent fail
       }
@@ -59,8 +71,8 @@ export default function TrackingScript() {
 
     trackVisit();
 
-    // Track every 2 minutes while on page
-    const interval = setInterval(trackVisit, 120000);
+    // Track online status every 30 seconds (real-time presence)
+    const interval = setInterval(trackVisit, 30000);
     return () => clearInterval(interval);
   }, [pathname]);
 

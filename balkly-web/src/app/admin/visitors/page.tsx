@@ -12,6 +12,10 @@ export default function VisitorsPage() {
 
   useEffect(() => {
     loadVisits();
+    
+    // Auto-refresh every 10 seconds for real-time tracking
+    const interval = setInterval(loadVisits, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   const loadVisits = async () => {
@@ -48,9 +52,34 @@ export default function VisitorsPage() {
       </div>
 
       <div className="container mx-auto px-4 py-8 max-w-6xl">
+        {/* Real-time indicator */}
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-2 bg-green-50 border border-green-200 px-4 py-2 rounded-lg">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium text-green-700">Real-time • Updates every 10s</span>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={async () => {
+              await fetch("/api/v1/admin/visits/cleanup", {
+                method: "POST",
+                headers: { Authorization: `Bearer ${localStorage.getItem("auth_token")}` },
+              });
+              loadVisits();
+            }}
+          >
+            🗑️ Clean Old Data
+          </Button>
+        </div>
+
         <Card className="bg-white">
           <CardHeader>
-            <CardTitle className="text-gray-900">Recent Visitors ({visits.length})</CardTitle>
+            <CardTitle className="text-gray-900 flex items-center gap-2">
+              <Globe className="h-5 w-5 text-balkly-blue" />
+              Active Visitors - Last 5 Minutes ({visits.length})
+            </CardTitle>
+            <p className="text-sm text-gray-500 mt-2">Showing unique visitors by IP address</p>
           </CardHeader>
           <CardContent>
             {loading ? (

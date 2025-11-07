@@ -192,13 +192,28 @@ Route::prefix('v1')->group(function () {
             Route::delete('/forum/topics/{id}', [ForumController::class, 'deleteTopic']);
             Route::delete('/forum/posts/{id}', [ForumController::class, 'deletePost']);
             
-            // Visitor Details
+            // Visitor Details - Real-time (unique by IP, last 5 min)
             Route::get('/visits', function(Request $request) {
+                // Get unique visitors from last 5 minutes, grouped by IP
                 $visits = \App\Models\PageVisit::with('user')
+                    ->where('visited_at', '>=', now()->subMinutes(5))
                     ->orderBy('visited_at', 'desc')
-                    ->limit($request->get('limit', 100))
-                    ->get();
+                    ->get()
+                    ->groupBy('ip_address')
+                    ->map(function($group) {
+                        // Return only the most recent visit for each IP
+                        return $group->first();
+                    })
+                    ->values();
+                
                 return response()->json(['visits' => $visits]);
+            });
+            
+            // Clean old visits (run periodically)
+            Route::post('/visits/cleanup', function() {
+                // Delete visits older than 5 minutes
+                \App\Models\PageVisit::where('visited_at', '<', now()->subMinutes(5))->delete();
+                return response()->json(['cleaned' => true]);
             });
         });
     });
