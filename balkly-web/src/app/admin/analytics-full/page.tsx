@@ -86,36 +86,50 @@ export default function FullAnalyticsPage() {
 
   const formatNumber = (num: number) => num?.toLocaleString() || 0;
 
-  // Generate daily data for the last 30 days with realistic trends
-  const generateDailyData = () => {
-    const data = [];
-    const today = new Date();
-    
-    for (let i = 29; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      const dayOfWeek = date.getDay();
-      
-      // Weekend effect (lower numbers on weekends)
-      const weekendMultiplier = (dayOfWeek === 0 || dayOfWeek === 6) ? 0.7 : 1;
-      
-      // Growth trend over time
-      const growthFactor = 1 + ((29 - i) * 0.02);
-      
-      // Some randomness
-      const randomFactor = 0.8 + Math.random() * 0.4;
-      
-      data.push({
-        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        visitors: Math.floor(150 * weekendMultiplier * growthFactor * randomFactor),
-        users: Math.floor(25 * weekendMultiplier * growthFactor * randomFactor),
-        listings: Math.floor(12 * weekendMultiplier * growthFactor * randomFactor),
-        orders: Math.floor(8 * weekendMultiplier * growthFactor * randomFactor),
-        revenue: Math.floor(450 * weekendMultiplier * growthFactor * randomFactor),
-      });
+  // Get REAL daily data from analytics
+  const getDailyData = () => {
+    if (!analytics?.traffic?.visits_by_day) {
+      return [];
     }
-    
-    return data;
+
+    // Merge all daily data by date
+    const dataMap = new Map();
+
+    // Add visit data
+    analytics.traffic.visits_by_day.forEach((day: any) => {
+      dataMap.set(day.date, {
+        date: new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        visitors: day.unique_visitors || 0,
+        users: 0,
+        listings: 0,
+        orders: 0,
+        revenue: 0,
+      });
+    });
+
+    // Add user registrations by day
+    analytics.traffic.users_by_day?.forEach((day: any) => {
+      if (dataMap.has(day.date)) {
+        dataMap.get(day.date).users = day.count || 0;
+      }
+    });
+
+    // Add listings by day
+    analytics.traffic.listings_by_day?.forEach((day: any) => {
+      if (dataMap.has(day.date)) {
+        dataMap.get(day.date).listings = day.count || 0;
+      }
+    });
+
+    // Add orders and revenue by day
+    analytics.traffic.orders_by_day?.forEach((day: any) => {
+      if (dataMap.has(day.date)) {
+        dataMap.get(day.date).orders = day.count || 0;
+        dataMap.get(day.date).revenue = Math.round(day.revenue || 0);
+      }
+    });
+
+    return Array.from(dataMap.values());
   };
 
   return (
@@ -298,7 +312,7 @@ export default function FullAnalyticsPage() {
           <CardContent>
             <ResponsiveContainer width="100%" height={400}>
               <LineChart
-                data={generateDailyData()}
+                data={getDailyData()}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
               >
                 <defs>

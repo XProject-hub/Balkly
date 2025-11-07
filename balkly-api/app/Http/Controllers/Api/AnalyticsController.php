@@ -52,20 +52,46 @@ class AnalyticsController extends Controller
         $period = $request->get('period', 30); // days
 
         $analytics = [
-            // Website traffic
+            // Website traffic - ALL REAL DATA
             'traffic' => [
                 'total_visits' => PageVisit::where('visited_at', '>=', now()->subDays($period))->count(),
                 'unique_visitors' => PageVisit::where('visited_at', '>=', now()->subDays($period))
                     ->distinct('ip_address')->count('ip_address'),
-                'avg_time_on_site' => PageVisit::where('visited_at', '>=', now()->subDays($period))
-                    ->avg('time_on_page'),
+                'avg_time_on_site' => round(PageVisit::where('visited_at', '>=', now()->subDays($period))
+                    ->avg('time_on_page') ?: 0),
                 'bounce_rate' => $this->calculateBounceRate($period),
                 'visits_by_day' => PageVisit::select(
                         DB::raw('DATE(visited_at) as date'),
                         DB::raw('count(*) as visits'),
-                        DB::raw('count(distinct ip_address) as unique_visitors')
+                        DB::raw('count(distinct ip_address) as unique_visitors'),
+                        DB::raw('avg(time_on_page) as avg_time')
                     )
                     ->where('visited_at', '>=', now()->subDays($period))
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->get(),
+                'users_by_day' => User::select(
+                        DB::raw('DATE(created_at) as date'),
+                        DB::raw('count(*) as count')
+                    )
+                    ->where('created_at', '>=', now()->subDays($period))
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->get(),
+                'listings_by_day' => Listing::select(
+                        DB::raw('DATE(created_at) as date'),
+                        DB::raw('count(*) as count')
+                    )
+                    ->where('created_at', '>=', now()->subDays($period))
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->get(),
+                'orders_by_day' => Order::select(
+                        DB::raw('DATE(created_at) as date'),
+                        DB::raw('count(*) as count'),
+                        DB::raw('sum(total) as revenue')
+                    )
+                    ->where('created_at', '>=', now()->subDays($period))
                     ->groupBy('date')
                     ->orderBy('date')
                     ->get(),
