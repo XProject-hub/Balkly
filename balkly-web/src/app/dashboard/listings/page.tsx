@@ -34,7 +34,13 @@ export default function MyListingsPage() {
       if (response.ok) {
         const data = await response.json();
         console.log("My listings data:", data);
-        setListings(data.data || []);
+        console.log("Data array:", data.data);
+        console.log("Number of listings:", data.data?.length || 0);
+        
+        // Handle both paginated and array responses
+        const listingsArray = data.data || data || [];
+        console.log("Setting listings:", listingsArray);
+        setListings(listingsArray);
       } else {
         console.error("Failed to load listings, status:", response.status);
         const error = await response.text();
