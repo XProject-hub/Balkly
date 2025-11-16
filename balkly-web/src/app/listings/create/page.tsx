@@ -478,8 +478,24 @@ export default function CreateListingPage() {
                               },
                             })
                           }
-                          className="w-full px-4 py-2 border rounded-lg"
+                          className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+                          // Special validation for Year field
+                          {...(attr.slug === 'year' && {
+                            min: 1950,
+                            max: new Date().getFullYear() + 1,
+                            placeholder: `e.g., ${new Date().getFullYear() - 3}`,
+                            onInput: (e: any) => {
+                              const val = parseInt(e.target.value);
+                              if (val < 1950) e.target.value = '1950';
+                              if (val > new Date().getFullYear() + 1) e.target.value = String(new Date().getFullYear() + 1);
+                            }
+                          })}
                         />
+                      )}
+                      {attr.slug === 'year' && (
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Valid range: 1950 - {new Date().getFullYear() + 1}
+                        </p>
                       )}
                     </div>
                   ))}
