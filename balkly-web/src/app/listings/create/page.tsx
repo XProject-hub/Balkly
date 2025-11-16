@@ -4,8 +4,41 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import { 
+  ArrowLeft, 
+  ArrowRight, 
+  Sparkles,
+  Car,
+  Home,
+  Calendar,
+  Smartphone,
+  Shirt,
+  Sofa,
+  Dumbbell,
+  Briefcase,
+  Wrench,
+  Package,
+} from "lucide-react";
 import { listingsAPI, categoriesAPI } from "@/lib/api";
+
+// Icon mapping function
+const getIconComponent = (iconName: string) => {
+  const icons: Record<string, any> = {
+    'car': Car,
+    'home': Home,
+    'calendar': Calendar,
+    'smartphone': Smartphone,
+    'shirt': Shirt,
+    'sofa': Sofa,
+    'dumbbell': Dumbbell,
+    'briefcase': Briefcase,
+    'wrench': Wrench,
+    'package': Package,
+  };
+  
+  const IconComponent = icons[iconName?.toLowerCase()] || Package;
+  return <IconComponent className="h-16 w-16 mx-auto" />;
+};
 
 // Multi-step wizard steps
 const STEPS = [
@@ -219,15 +252,20 @@ export default function CreateListingPage() {
                 {categories.map((category) => (
                   <button
                     key={category.id}
-                    onClick={() => setFormData({ ...formData, category_id: category.id })}
-                    className={`p-6 border-2 rounded-lg transition-all hover:border-primary ${
+                    onClick={() => {
+                      setFormData({ ...formData, category_id: category.id });
+                      setSelectedCategory(category);
+                    }}
+                    className={`p-6 border-2 rounded-lg transition-all hover:border-primary hover:shadow-lg ${
                       formData.category_id === category.id
-                        ? "border-primary bg-primary/5"
+                        ? "border-primary bg-primary/5 shadow-lg"
                         : "border-border"
                     }`}
                   >
-                    <div className="text-4xl mb-2">{category.icon || "📦"}</div>
-                    <h3 className="font-bold">{category.name}</h3>
+                    <div className="mb-4 text-primary">
+                      {getIconComponent(category.icon)}
+                    </div>
+                    <h3 className="font-bold text-lg">{category.name}</h3>
                     <p className="text-sm text-muted-foreground mt-1">
                       {category.description}
                     </p>
