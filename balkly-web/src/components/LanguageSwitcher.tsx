@@ -83,13 +83,13 @@ export default function LanguageSwitcher() {
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
           
           {/* Dropdown */}
-          <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border z-50">
+          <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-xl border dark:border-gray-700 z-50">
             {languages.map((lang) => (
               <button
                 key={lang.code}
                 onClick={() => handleLanguageChange(lang.code)}
-                className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors first:rounded-t-lg last:rounded-b-lg ${
-                  currentLang === lang.code ? 'bg-blue-50' : ''
+                className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors first:rounded-t-lg last:rounded-b-lg ${
+                  currentLang === lang.code ? 'bg-blue-50 dark:bg-gray-700' : ''
                 }`}
               >
                 {lang.isBalkly ? (
@@ -104,9 +104,9 @@ export default function LanguageSwitcher() {
                   />
                 )}
                 <div className="flex-1 text-left">
-                  <span className="text-sm font-medium text-gray-900">{lang.name}</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{lang.name}</span>
                   {lang.isBalkly && (
-                    <p className="text-xs text-gray-500">Bosanski, Srpski, Hrvatski</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Bosanski, Srpski, Hrvatski</p>
                   )}
                 </div>
                 {currentLang === lang.code && (
