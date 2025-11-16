@@ -55,6 +55,8 @@ class EventController extends Controller
             'start_at' => 'required|date',
             'end_at' => 'nullable|date|after:start_at',
             'partner_url' => 'nullable|url',
+            'partner_ref' => 'nullable|string|max:100',
+            'image_url' => 'nullable|url',
         ]);
 
         $event = Event::create([
@@ -69,6 +71,8 @@ class EventController extends Controller
             'start_at' => $validated['start_at'],
             'end_at' => $validated['end_at'] ?? null,
             'partner_url' => $validated['partner_url'] ?? null,
+            'partner_ref' => $validated['partner_ref'] ?? null,
+            'image_url' => $validated['image_url'] ?? null,
             'status' => 'draft',
         ]);
 

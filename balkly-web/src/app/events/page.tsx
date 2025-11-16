@@ -151,12 +151,16 @@ export default function EventsPage() {
                             <Calendar className="h-20 w-20 text-primary/20" />
                           </div>
                         )}
-                        {event.type === "own" && (
+                        {event.type === "own" ? (
                           <div className="absolute top-2 right-2 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold">
                             <Ticket className="inline h-3 w-3 mr-1" />
                             TICKETS AVAILABLE
                           </div>
-                        )}
+                        ) : event.type === "affiliate" ? (
+                          <div className="absolute top-2 right-2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-bold">
+                            FEATURED
+                          </div>
+                        ) : null}
                       </div>
                       <CardHeader>
                         <CardTitle className="line-clamp-1">{event.title}</CardTitle>

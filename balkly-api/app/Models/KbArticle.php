@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class KbArticle extends Model
+class KBArticle extends Model
 {
-    use Searchable;
+    use HasFactory, SoftDeletes;
+
+    protected $table = 'kb_articles';
 
     protected $fillable = [
         'category_id',
@@ -24,22 +27,26 @@ class KbArticle extends Model
         'is_published',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'related_articles' => 'array',
-            'is_published' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'published_at' => 'datetime',
+        'views_count' => 'integer',
+        'is_helpful_count' => 'integer',
+    ];
 
+    // Relationships
     public function category()
     {
-        return $this->belongsTo(KbCategory::class, 'category_id');
+        return $this->belongsTo(KBCategory::class, 'category_id');
     }
 
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
+    // Scopes
     public function scopePublished($query)
     {
-        return $query->where('is_published', true);
+        return $query->whereNotNull('published_at');
     }
 }
-

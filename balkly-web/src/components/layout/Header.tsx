@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CurrencySwitcher from "@/components/CurrencySwitcher";
+import ThemeToggle from "@/components/ThemeToggle";
 import { useTranslation } from "@/lib/i18n/translations";
 
 export default function Header() {
@@ -110,6 +111,7 @@ export default function Header() {
             {/* Language & Currency Switchers */}
             <LanguageSwitcher />
             <CurrencySwitcher />
+            <ThemeToggle />
             
             {isLoggedIn ? (
               <>
@@ -233,11 +235,17 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
                 className="flex items-center px-4 py-2 text-sm font-medium hover:bg-accent rounded-lg"
               >
-                <MessageCircle className="h-4 w-4 mr-2" />
-                Forum
-              </Link>
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Forum
+            </Link>
 
-              {isLoggedIn ? (
+            <div className="border-t my-2" />
+            <div className="px-4 py-2 flex items-center justify-between">
+              <span className="text-sm font-medium">Theme</span>
+              <ThemeToggle />
+            </div>
+
+            {isLoggedIn ? (
                 <>
                   <div className="border-t my-2" />
                   <Link

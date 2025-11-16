@@ -16,6 +16,7 @@ import {
   Minus,
 } from "lucide-react";
 import { eventsAPI } from "@/lib/api";
+import { trackAffiliateClick } from "@/lib/platinumlist";
 
 export default function EventDetailPage() {
   const params = useParams();
@@ -348,19 +349,45 @@ export default function EventDetailPage() {
                 </CardContent>
               </Card>
             ) : event.type === "affiliate" && event.partner_url ? (
-              <Card className="sticky top-4">
+              <Card className="sticky top-4 border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5">
                 <CardHeader>
-                  <CardTitle>Partner Event</CardTitle>
+                  <div className="flex items-center gap-2">
+                    <CardTitle>Partner Event</CardTitle>
+                    <span className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded-full font-bold">
+                      FEATURED
+                    </span>
+                  </div>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    This event is hosted by our partner. You'll be redirected to their site to purchase tickets.
+                <CardContent className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    This event is hosted by our trusted partner. Click below to view tickets and pricing on their official platform.
                   </p>
-                  <Button className="w-full" size="lg" asChild>
-                    <a href={event.partner_url} target="_blank" rel="noopener noreferrer">
-                      Get Tickets on Partner Site
-                    </a>
+                  
+                  {event.metadata?.price && (
+                    <div className="p-3 bg-background rounded-lg">
+                      <p className="text-xs text-muted-foreground mb-1">Starting from</p>
+                      <p className="text-2xl font-bold text-primary">
+                        {event.metadata.price.currency} {event.metadata.price.min}
+                        {event.metadata.price.max && ` - ${event.metadata.price.max}`}
+                      </p>
+                    </div>
+                  )}
+
+                  <Button 
+                    className="w-full" 
+                    size="lg"
+                    onClick={() => {
+                      trackAffiliateClick(event.id, event.title);
+                      window.open(event.partner_url, '_blank', 'noopener,noreferrer');
+                    }}
+                  >
+                    <Ticket className="mr-2 h-5 w-5" />
+                    Get Tickets
                   </Button>
+
+                  <p className="text-xs text-center text-muted-foreground">
+                    Powered by {event.metadata?.source || 'partner'}
+                  </p>
                 </CardContent>
               </Card>
             ) : null}

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { fetchPlatinumListEvents, getPlatinumListEvent } from './platinumlist';
 
 // Get API URL - use window.location.origin for dynamic URLs
 const getApiUrl = () => {
@@ -64,8 +65,49 @@ export const categoriesAPI = {
 };
 
 export const eventsAPI = {
-  getAll: (params?: any) => api.get('/events', { params }),
-  getOne: (id: string) => api.get(`/events/${id}`),
+  getAll: async (params?: any) => {
+    try {
+      // Fetch both local and affiliate events
+      const [localResponse, affiliateEvents] = await Promise.all([
+        api.get('/events', { params }),
+        fetchPlatinumListEvents({
+          city: params?.city,
+          limit: params?.per_page,
+        }),
+      ]);
+
+      // Merge results
+      const localEvents = localResponse.data.data || [];
+      const mergedEvents = [...affiliateEvents, ...localEvents];
+
+      // Sort by date
+      mergedEvents.sort((a, b) => 
+        new Date(a.start_at).getTime() - new Date(b.start_at).getTime()
+      );
+
+      return {
+        ...localResponse,
+        data: {
+          ...localResponse.data,
+          data: mergedEvents,
+        },
+      };
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      // Fallback to just local events
+      return api.get('/events', { params });
+    }
+  },
+  
+  getOne: async (id: string) => {
+    // Check if it's a platinumlist event (prefixed with 'pl-')
+    if (id.startsWith('pl-')) {
+      const event = await getPlatinumListEvent(id);
+      return { data: { event } };
+    }
+    return api.get(`/events/${id}`);
+  },
+  
   create: (data: any) => api.post('/events', data),
 };
 
