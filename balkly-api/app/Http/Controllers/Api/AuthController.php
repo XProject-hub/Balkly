@@ -45,11 +45,15 @@ class AuthController extends Controller
         // Create profile
         Profile::create(['user_id' => $user->id]);
 
-        // Fire registered event (sends verification email)
-        event(new Registered($user));
+        // Auto-verify email (skip email sending for now)
+        $user->email_verified_at = now();
+        $user->save();
 
-        // Send welcome email
-        $user->notify(new \App\Notifications\WelcomeNotification());
+        // Fire registered event (sends verification email) - DISABLED for now
+        // event(new Registered($user));
+
+        // Send welcome email - DISABLED for now
+        // $user->notify(new \App\Notifications\WelcomeNotification());
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -57,7 +61,7 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token,
             'token_type' => 'Bearer',
-            'message' => 'Registration successful! Please verify your email.',
+            'message' => 'Registration successful! Welcome to Balkly.',
         ], 201);
     }
 
