@@ -88,8 +88,10 @@ export default function CreateListingPage() {
         title: data.improved_title || formData.title,
         description: data.improved_description || formData.description,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI helper failed:", error);
+      const errorMsg = error.response?.data?.message || "AI enhancement failed. Please ensure your title and description are in English or try again.";
+      alert(errorMsg);
     } finally {
       setAiLoading(false);
     }
@@ -152,9 +154,10 @@ export default function CreateListingPage() {
         // No plan selected, just save as draft
         router.push(`/dashboard/listings?created=${listingId}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to create listing:", error);
-      alert("Failed to create listing. Please try again.");
+      const errorMsg = error.response?.data?.message || error.message || "Failed to create listing. Please check all required fields and try again.";
+      alert(`Error: ${errorMsg}`);
     } finally {
       setLoading(false);
     }
