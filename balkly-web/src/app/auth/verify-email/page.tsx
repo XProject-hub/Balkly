@@ -52,26 +52,39 @@ export default function VerifyEmailPage() {
               <Mail className="h-8 w-8 text-primary" />
             )}
           </div>
-          <CardTitle className="text-2xl">Email Verification</CardTitle>
+          <CardTitle className="text-2xl">Verify Your Email</CardTitle>
           <CardDescription>
-            {status === "idle" && "Email verification is currently disabled. You can skip this step."}
+            {status === "idle" && "We've sent a verification link to your email address"}
             {status === "success" && message}
-            {status === "error" && "Email verification is disabled. Please continue to your dashboard."}
+            {status === "error" && message}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {status === "idle" && (
             <>
               <p className="text-sm text-muted-foreground text-center">
-                Email verification is currently disabled. You can proceed directly to your dashboard.
+                Click the link in the email to verify your account. If you didn't receive the email, you can request a new one.
               </p>
 
               <Button
-                onClick={() => router.push("/dashboard")}
+                onClick={handleResend}
+                disabled={loading}
                 className="w-full"
+                variant="outline"
               >
-                Continue to Dashboard
+                {loading ? "Sending..." : "Resend Verification Email"}
               </Button>
+              
+              <p className="text-xs text-center text-muted-foreground">
+                Or{" "}
+                <button
+                  onClick={() => window.location.href = "/dashboard"}
+                  className="text-primary hover:underline font-medium"
+                >
+                  skip for now
+                </button>
+                {" "}and verify later
+              </p>
             </>
           )}
 

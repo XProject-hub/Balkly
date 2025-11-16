@@ -45,20 +45,23 @@ class AuthController extends Controller
         // Create profile
         Profile::create(['user_id' => $user->id]);
 
-        // Auto-verify email for now (you can enable verification emails later)
-        $user->email_verified_at = now();
-        $user->save();
+        // Send verification email (using Resend)
+        try {
+            event(new Registered($user));
+            $user->sendEmailVerificationNotification();
+        } catch (\Exception $e) {
+            // Email failed but don't block registration - auto-verify instead
+            \Log::warning('Verification email failed: ' . $e->getMessage());
+            $user->email_verified_at = now();
+            $user->save();
+        }
 
-        // Send welcome email (using Resend)
+        // Send welcome email
         try {
             $user->notify(new \App\Notifications\WelcomeNotification());
         } catch (\Exception $e) {
-            // Email failed but don't block registration
             \Log::warning('Welcome email failed: ' . $e->getMessage());
         }
-
-        // Fire registered event (sends verification email) if you want email verification
-        // event(new Registered($user));
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -66,7 +69,7 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token,
             'token_type' => 'Bearer',
-            'message' => 'Registration successful! Welcome to Balkly.',
+            'message' => 'Registration successful! Please check your email to verify your account.',
         ], 201);
     }
 
