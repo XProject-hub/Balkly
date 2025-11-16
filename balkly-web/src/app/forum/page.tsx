@@ -47,8 +47,8 @@ export default function ForumPage() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Community Forum</h1>
-              <p className="text-gray-600 mt-1">Diskusije, pitanja i zajednica</p>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Community Forum</h1>
+              <p className="text-gray-600 dark:text-gray-300 mt-1">Diskusije, pitanja i zajednica</p>
             </div>
             <Button className="bg-gradient-to-r from-balkly-blue to-iris-purple text-white" asChild>
               <Link href="/forum/new">
@@ -70,32 +70,32 @@ export default function ForumPage() {
                 <div className="p-4 border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
                   <h3 className="font-bold text-gray-900 dark:text-gray-100 uppercase text-xs tracking-wider">Forum Categories</h3>
                 </div>
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-gray-100 dark:divide-gray-700">
                   {/* All Topics - Prominent */}
                   <button
                     onClick={() => setSelectedCategory(null)}
-                    className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors ${
-                      selectedCategory === null ? 'bg-blue-50 border-l-4 border-balkly-blue' : ''
+                    className={`w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                      selectedCategory === null ? 'bg-blue-50 dark:bg-blue-900/30 border-l-4 border-balkly-blue' : ''
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <MessageCircle className="h-5 w-5 text-balkly-blue" />
                       <div className="flex-1">
-                        <p className="font-bold text-gray-900 uppercase text-sm">All Discussions</p>
-                        <p className="text-xs text-gray-500">{topics.length} topics</p>
+                        <p className="font-bold text-gray-900 dark:text-gray-100 uppercase text-sm">All Discussions</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{topics.length} topics</p>
                       </div>
                     </div>
                   </button>
 
                   {/* Categories with Subcategories - Hierarchical */}
                   {categories.filter(cat => !cat.parent_id).map((cat) => (
-                    <div key={cat.id} className="bg-white">
+                    <div key={cat.id} className="bg-white dark:bg-gray-800">
                       {/* Main Category - Bold Header Style */}
-                      <div className="px-4 pt-4 pb-2 bg-gray-50/50">
+                      <div className="px-4 pt-4 pb-2 bg-gray-50/50 dark:bg-gray-700/50">
                         <button
                           onClick={() => setSelectedCategory(cat.id)}
-                          className={`w-full text-left p-2 rounded-lg hover:bg-white transition-colors ${
-                            selectedCategory === cat.id ? 'bg-blue-50 ring-2 ring-balkly-blue' : ''
+                          className={`w-full text-left p-2 rounded-lg hover:bg-white dark:hover:bg-gray-700 transition-colors ${
+                            selectedCategory === cat.id ? 'bg-blue-50 dark:bg-blue-900/30 ring-2 ring-balkly-blue' : ''
                           }`}
                         >
                           <div className="flex items-center gap-3">
@@ -103,8 +103,8 @@ export default function ForumPage() {
                               <MessageCircle className="h-5 w-5 text-white" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="font-bold text-gray-900 uppercase text-sm tracking-wide">{cat.name}</p>
-                              <p className="text-xs text-gray-500">{cat.description}</p>
+                              <p className="font-bold text-gray-900 dark:text-gray-100 uppercase text-sm tracking-wide">{cat.name}</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">{cat.description}</p>
                             </div>
                           </div>
                         </button>
@@ -117,16 +117,16 @@ export default function ForumPage() {
                             <button
                               key={subcat.id}
                               onClick={() => setSelectedCategory(subcat.id)}
-                              className={`w-full text-left pl-10 pr-3 py-2 rounded-lg hover:bg-gray-50 transition-colors ${
-                                selectedCategory === subcat.id ? 'bg-purple-50 ring-2 ring-iris-purple' : ''
+                              className={`w-full text-left pl-10 pr-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                                selectedCategory === subcat.id ? 'bg-purple-50 dark:bg-purple-900/30 ring-2 ring-iris-purple' : ''
                               }`}
                             >
                               <div className="flex items-center gap-2">
                                 <div className="w-1.5 h-1.5 rounded-full bg-iris-purple"></div>
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-medium text-gray-700">{subcat.name}</p>
+                                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200">{subcat.name}</p>
                                   {subcat.description && (
-                                    <p className="text-xs text-gray-400 line-clamp-1">{subcat.description}</p>
+                                    <p className="text-xs text-gray-400 dark:text-gray-500 line-clamp-1">{subcat.description}</p>
                                   )}
                                 </div>
                               </div>
