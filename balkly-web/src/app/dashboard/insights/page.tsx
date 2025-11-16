@@ -70,8 +70,8 @@ export default function SellerInsightsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-gray-900">{insights.totalViews}</p>
-              <p className="text-xs text-gray-500 mt-1">Across all listings</p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{insights.totalViews}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Across all listings</p>
             </CardContent>
           </Card>
 
@@ -83,8 +83,8 @@ export default function SellerInsightsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-gray-900">{insights.totalMessages}</p>
-              <p className="text-xs text-gray-500 mt-1">Total inquiries</p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{insights.totalMessages}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Total inquiries</p>
             </CardContent>
           </Card>
 
@@ -96,8 +96,8 @@ export default function SellerInsightsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-gray-900">{insights.activeListings}</p>
-              <p className="text-xs text-gray-500 mt-1">Currently published</p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{insights.activeListings}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Currently published</p>
             </CardContent>
           </Card>
 
@@ -110,7 +110,7 @@ export default function SellerInsightsPage() {
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold text-balkly-blue">€{insights.totalRevenue}</p>
-              <p className="text-xs text-gray-500 mt-1">From sales</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">From sales</p>
             </CardContent>
           </Card>
         </div>
@@ -121,23 +121,23 @@ export default function SellerInsightsPage() {
             <CardTitle className="text-gray-900">Performance Tips</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <h3 className="font-bold text-gray-900 mb-2">Boost Your Listings</h3>
-              <p className="text-sm text-gray-700">
+            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2">Boost Your Listings</h3>
+              <p className="text-sm text-gray-700 dark:text-gray-300">
                 Featured listings get 10x more views. Consider upgrading your top listings for better visibility.
               </p>
             </div>
 
-            <div className="p-4 bg-teal-50 rounded-lg">
-              <h3 className="font-bold text-gray-900 mb-2">Quick Responses</h3>
-              <p className="text-sm text-gray-700">
+            <div className="p-4 bg-teal-50 dark:bg-teal-900/20 rounded-lg">
+              <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2">Quick Responses</h3>
+              <p className="text-sm text-gray-700 dark:text-gray-300">
                 Sellers who respond within 1 hour get 3x more completed sales. Check your messages regularly!
               </p>
             </div>
 
-            <div className="p-4 bg-purple-50 rounded-lg">
-              <h3 className="font-bold text-gray-900 mb-2">Quality Photos</h3>
-              <p className="text-sm text-gray-700">
+            <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+              <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2">Quality Photos</h3>
+              <p className="text-sm text-gray-700 dark:text-gray-300">
                 Listings with 5+ high-quality photos receive 5x more inquiries. Add multiple angles and details.
               </p>
             </div>
