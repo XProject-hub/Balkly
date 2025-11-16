@@ -108,6 +108,15 @@ export default function Header() {
               <MessageCircle className="h-4 w-4 mr-1" />
               {t('nav.forum')}
             </Link>
+            {isLoggedIn && (
+              <Link
+                href="/dashboard"
+                className="flex items-center text-sm font-medium hover:text-primary transition-colors"
+              >
+                <LayoutDashboard className="h-4 w-4 mr-1" />
+                Dashboard
+              </Link>
+            )}
           </nav>
 
           {/* Search Bar (Desktop) */}

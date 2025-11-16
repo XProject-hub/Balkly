@@ -396,13 +396,17 @@ export default function CreateListingPage() {
                     <select
                       value={formData.country}
                       onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                      className="w-full px-4 py-2 border rounded-lg"
+                      className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                     >
-                      <option value="BA">Bosnia and Herzegovina</option>
-                      <option value="HR">Croatia</option>
-                      <option value="RS">Serbia</option>
-                      <option value="ME">Montenegro</option>
-                      <option value="SI">Slovenia</option>
+                      <option value="AE">🇦🇪 United Arab Emirates</option>
+                      <option value="BA">🇧🇦 Bosnia and Herzegovina</option>
+                      <option value="HR">🇭🇷 Croatia</option>
+                      <option value="RS">🇷🇸 Serbia</option>
+                      <option value="ME">🇲🇪 Montenegro</option>
+                      <option value="SI">🇸🇮 Slovenia</option>
+                      <option value="MK">🇲🇰 North Macedonia</option>
+                      <option value="AL">🇦🇱 Albania</option>
+                      <option value="XK">🇽🇰 Kosovo</option>
                     </select>
                   </div>
                 </div>
