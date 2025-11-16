@@ -96,13 +96,13 @@ export default function Header() {
   return (
     <header className="border-b bg-white dark:bg-gray-900 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-24">
+        <div className="flex items-center justify-between h-28">
           {/* Logo */}
-          <Link href="/" className="flex items-center -ml-4 mr-8">
+          <Link href="/" className="flex items-center -ml-8 mr-12">
             <img 
               src="/logo.png" 
               alt="Balkly" 
-              className="h-20 w-auto dark:brightness-110"
+              className="h-24 w-auto dark:brightness-110"
             />
           </Link>
 

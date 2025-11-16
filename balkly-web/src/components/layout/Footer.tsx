@@ -11,7 +11,7 @@ export default function Footer() {
             <img 
               src="/logo.png" 
               alt="Balkly" 
-              className="h-16 w-auto mb-4 brightness-0 invert"
+              className="h-24 w-auto mb-6 brightness-0 invert"
             />
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-800 rounded-full mb-4">
               <span className="text-xs font-bold text-teal-glow">UAE</span>
