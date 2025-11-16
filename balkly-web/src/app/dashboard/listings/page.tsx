@@ -20,31 +20,35 @@ export default function MyListingsPage() {
     setLoading(true);
     try {
       const token = localStorage.getItem("auth_token");
-      console.log("Loading my listings with token:", token ? "present" : "missing");
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
       
-      const response = await fetch("/api/v1/listings/my-listings", {
+      console.log("Loading listings for user ID:", user.id);
+      
+      // WORKAROUND: Fetch ALL listings and filter client-side
+      const response = await fetch("/api/v1/listings", {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
       
-      console.log("My listings response status:", response.status);
+      console.log("Listings response status:", response.status);
       
       if (response.ok) {
         const data = await response.json();
-        console.log("My listings data:", data);
-        console.log("Data array:", data.data);
-        console.log("Number of listings:", data.data?.length || 0);
+        console.log("All listings data:", data);
         
-        // Handle both paginated and array responses
-        const listingsArray = data.data || data || [];
-        console.log("Setting listings:", listingsArray);
-        setListings(listingsArray);
+        // Filter to show only current user's listings
+        const allListings = data.data || [];
+        const myListings = allListings.filter((listing: any) => listing.user_id === user.id);
+        
+        console.log("Total listings:", allListings.length);
+        console.log("My listings:", myListings.length);
+        console.log("My listings data:", myListings);
+        
+        setListings(myListings);
       } else {
         console.error("Failed to load listings, status:", response.status);
-        const error = await response.text();
-        console.error("Error:", error);
       }
     } catch (error) {
       console.error("Failed to load listings:", error);
