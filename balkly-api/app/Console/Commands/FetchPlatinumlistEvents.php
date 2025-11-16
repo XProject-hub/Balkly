@@ -167,7 +167,7 @@ class FetchPlatinumlistEvents extends Command
                 'venue' => $attr['venue'],
                 'city' => $attr['city'],
                 'country' => 'AE',
-                'start_at' => now(),
+                'start_at' => now()->addDay(), // Start tomorrow so it shows as "upcoming"
                 'end_at' => now()->addYear(),
                 'partner_url' => $affiliateLink,
                 'partner_ref' => $affiliate_ref,
