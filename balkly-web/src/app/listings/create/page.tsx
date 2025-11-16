@@ -239,6 +239,15 @@ export default function CreateListingPage() {
             {/* Step 2: Title, Description, Photos */}
             {currentStep === 2 && (
               <div className="space-y-4">
+                {/* Show Selected Category */}
+                {selectedCategory && (
+                  <div className="p-4 bg-primary/10 dark:bg-primary/20 rounded-lg border border-primary/20">
+                    <p className="text-sm text-muted-foreground">Category Selected:</p>
+                    <p className="font-bold text-lg text-primary">{selectedCategory.name}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{selectedCategory.description}</p>
+                  </div>
+                )}
+                
                 <div>
                   <label className="block text-sm font-medium mb-2">Title *</label>
                   <input
