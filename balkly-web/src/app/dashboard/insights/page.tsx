@@ -17,9 +17,32 @@ export default function SellerInsightsPage() {
   });
 
   useEffect(() => {
-    // TODO: Load seller-specific insights from API
-    // For now showing structure
+    loadInsights();
   }, []);
+
+  const loadInsights = async () => {
+    try {
+      const response = await fetch("/api/v1/profile/insights", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setInsights({
+          totalViews: data.insights.total_views || 0,
+          totalMessages: data.insights.total_messages || 0,
+          activeListings: data.insights.active_listings || 0,
+          totalRevenue: data.insights.total_orders * 10 || 0, // Estimate
+          viewsByListing: [],
+          messagesByListing: [],
+        });
+      }
+    } catch (error) {
+      console.error("Failed to load insights:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-mist-50 dark:bg-gray-900">
