@@ -39,12 +39,15 @@ export default function RegisterPage() {
       // Store user data
       localStorage.setItem("user", JSON.stringify(response.data.user));
       
+      // Trigger auth state update event for Header
+      window.dispatchEvent(new Event('auth-change'));
+      
       // Check if email verification is required
       if (response.data.user.email_verified_at === null) {
         router.push("/auth/verify-email");
       } else {
-        // Redirect to dashboard
-        router.push("/dashboard");
+        // Force reload to update header state, then redirect
+        window.location.href = "/dashboard";
       }
     } catch (err: any) {
       console.error("Registration error:", err);

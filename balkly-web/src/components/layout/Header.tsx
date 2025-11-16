@@ -32,13 +32,25 @@ export default function Header() {
   const [theme, setTheme] = useState("light");
 
   useEffect(() => {
-    const token = localStorage.getItem("auth_token");
-    const userData = localStorage.getItem("user");
-    
-    if (token && userData) {
-      setIsLoggedIn(true);
-      setUser(JSON.parse(userData));
-    }
+    const checkAuth = () => {
+      const token = localStorage.getItem("auth_token");
+      const userData = localStorage.getItem("user");
+      
+      if (token && userData) {
+        setIsLoggedIn(true);
+        setUser(JSON.parse(userData));
+      } else {
+        setIsLoggedIn(false);
+        setUser(null);
+      }
+    };
+
+    // Check auth on mount
+    checkAuth();
+
+    // Listen for auth changes
+    window.addEventListener('auth-change', checkAuth);
+    window.addEventListener('storage', checkAuth);
 
     // Get theme from localStorage
     const savedTheme = localStorage.getItem("theme") || "light";
@@ -46,6 +58,11 @@ export default function Header() {
     if (savedTheme === "dark") {
       document.documentElement.classList.add("dark");
     }
+
+    return () => {
+      window.removeEventListener('auth-change', checkAuth);
+      window.removeEventListener('storage', checkAuth);
+    };
   }, []);
 
   const toggleTheme = () => {
