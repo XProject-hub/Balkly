@@ -115,6 +115,7 @@ export default function LoginPage() {
             </div>
           </form>
 
+            {/* OAuth Login - Hidden until configured
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
@@ -160,6 +161,7 @@ export default function LoginPage() {
                 Social login ready - provide OAuth credentials to activate
               </p>
             </div>
+            */}
         </CardContent>
       </Card>
     </div>
