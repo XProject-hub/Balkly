@@ -26,13 +26,43 @@ class CategorySeeder extends Seeder
             'slug' => 'brand',
             'type' => 'select',
             'options_json' => [
-                'Audi', 'BMW', 'Mercedes-Benz', 'Volkswagen', 'Porsche', 'Ford',
-                'Toyota', 'Honda', 'Nissan', 'Mazda', 'Hyundai', 'Kia', 'Suzuki',
-                'Renault', 'Peugeot', 'Citroën', 'Fiat', 'Volvo', 'Chevrolet', 'Jeep',
-                'Dodge', 'Tesla', 'Lexus', 'Infiniti', 'Land Rover', 'Jaguar', 'Mini',
-                'Mitsubishi', 'Subaru', 'Skoda', 'Seat', 'Alfa Romeo', 'Maserati',
-                'Ferrari', 'Lamborghini', 'Bentley', 'Rolls-Royce', 'McLaren', 'Aston Martin',
-                'GMC', 'Cadillac', 'Buick', 'RAM', 'Genesis', 'Acura', 'Lincoln',
+                // Japanese Brands
+                'Toyota', 'Lexus', 'Daihatsu', 'Hino', 'Subaru', 'Nissan', 'Infiniti', 
+                'Honda', 'Acura', 'Mazda', 'Mitsubishi', 'Suzuki', 'Isuzu',
+                // German Brands
+                'Volkswagen', 'Audi', 'Porsche', 'Mercedes-Benz', 'Maybach', 'BMW', 
+                'MINI', 'Smart', 'Opel', 'Alpina',
+                // French Brands
+                'Renault', 'Dacia', 'Alpine', 'Peugeot', 'Citroën', 'DS Automobiles', 'Bugatti',
+                // Italian Brands
+                'Fiat', 'Abarth', 'Alfa Romeo', 'Lancia', 'Ferrari', 'Maserati', 
+                'Lamborghini', 'Pagani', 'Iveco',
+                // British Brands
+                'Aston Martin', 'Bentley', 'Rolls-Royce', 'Jaguar', 'Land Rover', 
+                'Lotus', 'McLaren', 'MG', 'Vauxhall', 'Caterham', 'TVR', 'Morgan',
+                // American Brands
+                'Ford', 'Lincoln', 'Chevrolet', 'Buick', 'GMC', 'Cadillac', 
+                'Chrysler', 'Dodge', 'Ram', 'Jeep', 'Tesla', 'Rivian', 'Lucid', 
+                'Fisker', 'Karma',
+                // Korean Brands
+                'Hyundai', 'Genesis', 'Kia', 'SsangYong',
+                // Swedish Brands
+                'Volvo', 'Polestar', 'Koenigsegg', 'Saab',
+                // Spanish/Czech Brands
+                'SEAT', 'Cupra', 'Skoda', 'Tatra',
+                // Russian Brands
+                'Lada', 'GAZ', 'UAZ',
+                // Chinese Brands
+                'BYD', 'Geely', 'Great Wall Motors', 'Haval', 'Ora', 'Tank', 'Wey', 
+                'Chery', 'SAIC Motor', 'Roewe', 'Maxus', 'Wuling', 'Baojun', 
+                'NIO', 'XPeng', 'Li Auto', 'Hongqi', 'FAW', 'Dongfeng', 'GAC', 
+                'Trumpchi', 'Aion', 'JAC', 'BAIC', 'Arcfox', 'Foton', 
+                'Lynk & Co', 'Zeekr',
+                // Indian Brands
+                'Tata Motors', 'Mahindra', 'Maruti Suzuki', 'Force Motors',
+                // Other Brands
+                'Togg', 'Khodro', 'Saipa', 'Proton', 'Perodua', 'VinFast', 
+                'Spyker', 'Donkervoort', 'KTM', 'Rimac', 'Mastretta',
             ],
             'is_required' => true,
             'is_searchable' => true,
