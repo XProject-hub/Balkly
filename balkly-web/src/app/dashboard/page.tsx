@@ -133,7 +133,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.activeListings}</div>
-              <p className="text-xs text-muted-foreground">+2 from last month</p>
+              <p className="text-xs text-muted-foreground">Your posted items</p>
             </CardContent>
           </Card>
 
@@ -144,7 +144,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalViews}</div>
-              <p className="text-xs text-muted-foreground">+12% from last week</p>
+              <p className="text-xs text-muted-foreground">Total page views</p>
             </CardContent>
           </Card>
 
@@ -155,7 +155,9 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.messages}</div>
-              <p className="text-xs text-muted-foreground">3 unread</p>
+              <p className="text-xs text-muted-foreground">
+                {stats.messages > 0 ? `${stats.messages} total` : "No messages yet"}
+              </p>
             </CardContent>
           </Card>
 
