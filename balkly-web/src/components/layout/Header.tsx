@@ -98,11 +98,11 @@ export default function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center">
             <img 
               src="/logo.png" 
               alt="Balkly" 
-              className="h-8 w-auto dark:brightness-110"
+              className="h-12 w-auto dark:brightness-110"
             />
           </Link>
 
