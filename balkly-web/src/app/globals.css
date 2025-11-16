@@ -77,6 +77,47 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Global dark mode overrides for elements that don't have dark: classes */
+  .dark {
+    color-scheme: dark;
+  }
+
+  .dark .bg-white:not([class*="dark:bg-"]) {
+    background-color: rgb(17 24 39) !important; /* gray-900 */
+  }
+
+  .dark .bg-gray-50:not([class*="dark:bg-"]) {
+    background-color: rgb(31 41 55) !important; /* gray-800 */
+  }
+
+  .dark .bg-gray-100:not([class*="dark:bg-"]) {
+    background-color: rgb(31 41 55) !important; /* gray-800 */
+  }
+
+  .dark .text-gray-900:not([class*="dark:text-"]) {
+    color: rgb(243 244 246) !important; /* gray-100 */
+  }
+
+  .dark .text-gray-800:not([class*="dark:text-"]) {
+    color: rgb(229 231 235) !important; /* gray-200 */
+  }
+
+  .dark .text-gray-700:not([class*="dark:text-"]) {
+    color: rgb(209 213 219) !important; /* gray-300 */
+  }
+
+  .dark .text-gray-600:not([class*="dark:text-"]) {
+    color: rgb(156 163 175) !important; /* gray-400 */
+  }
+
+  .dark .border-gray-200:not([class*="dark:border-"]) {
+    border-color: rgb(55 65 81) !important; /* gray-700 */
+  }
+
+  .dark .border-gray-300:not([class*="dark:border-"]) {
+    border-color: rgb(75 85 99) !important; /* gray-600 */
+  }
   
   /* Balkly Brand Utilities */
   .bg-balkly-dark {
