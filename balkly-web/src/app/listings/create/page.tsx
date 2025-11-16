@@ -432,16 +432,37 @@ export default function CreateListingPage() {
                       onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
                       className="px-4 py-2 border rounded-lg"
                     >
+                      <option value="AED">AED د.إ</option>
                       <option value="EUR">EUR €</option>
                       <option value="USD">USD $</option>
-                      <option value="BAM">BAM KM</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-lg mb-4">Choose a Plan</h3>
+                  <h3 className="font-bold text-lg mb-4">Choose a Plan (Optional)</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Boost your listing visibility with a premium plan, or continue with basic free listing.
+                  </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Free Plan */}
+                    <button
+                      onClick={() => setSelectedPlan(null)}
+                      className={`p-6 border-2 rounded-lg transition-all ${
+                        selectedPlan === null
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <h4 className="font-bold text-lg mb-2">Free Listing</h4>
+                      <p className="text-3xl font-bold text-primary mb-2">
+                        FREE
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Basic listing visibility
+                      </p>
+                    </button>
+                    
                     {plans.map((plan) => (
                       <button
                         key={plan.id}
@@ -494,7 +515,7 @@ export default function CreateListingPage() {
           ) : (
             <Button
               onClick={handleSubmit}
-              disabled={loading || !selectedPlan}
+              disabled={loading}
             >
               {loading ? "Processing..." : "Publish Listing"}
             </Button>
