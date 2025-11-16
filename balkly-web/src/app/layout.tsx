@@ -53,6 +53,14 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#1E63FF" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        
+        {/* GetYourGuide Analytics */}
+        <script 
+          async 
+          defer 
+          src="https://widget.getyourguide.com/dist/pa.umd.production.min.js" 
+          data-gyg-partner-id="MG30TZM"
+        />
       </head>
       <body className={inter.className}>
         <TrackingScript />
