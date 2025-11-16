@@ -19,15 +19,26 @@ export default function MyListingsPage() {
   const loadListings = async () => {
     setLoading(true);
     try {
+      const token = localStorage.getItem("auth_token");
+      console.log("Loading my listings with token:", token ? "present" : "missing");
+      
       const response = await fetch("/api/v1/listings/my-listings", {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       });
       
+      console.log("My listings response status:", response.status);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log("My listings data:", data);
         setListings(data.data || []);
+      } else {
+        console.error("Failed to load listings, status:", response.status);
+        const error = await response.text();
+        console.error("Error:", error);
       }
     } catch (error) {
       console.error("Failed to load listings:", error);
