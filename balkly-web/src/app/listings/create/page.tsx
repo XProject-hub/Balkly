@@ -277,12 +277,19 @@ export default function CreateListingPage() {
             {/* Step 2: Title, Description, Photos */}
             {currentStep === 2 && (
               <div className="space-y-4">
-                {/* Show Selected Category */}
+                {/* Show Selected Category - Prominent Banner */}
                 {selectedCategory && (
-                  <div className="p-4 bg-primary/10 dark:bg-primary/20 rounded-lg border border-primary/20">
-                    <p className="text-sm text-muted-foreground">Category Selected:</p>
-                    <p className="font-bold text-lg text-primary">{selectedCategory.name}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{selectedCategory.description}</p>
+                  <div className="p-5 bg-gradient-to-r from-primary/10 to-accent/10 dark:from-primary/20 dark:to-accent/20 rounded-lg border-2 border-primary/30 shadow-sm">
+                    <div className="flex items-center gap-4">
+                      <div className="flex-shrink-0 w-12 h-12 bg-primary text-primary-foreground rounded-lg flex items-center justify-center">
+                        {getIconComponent(selectedCategory.icon)}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs text-muted-foreground uppercase tracking-wider">Category Selected:</p>
+                        <p className="font-bold text-xl text-primary dark:text-primary-foreground">{selectedCategory.name}</p>
+                        <p className="text-sm text-muted-foreground mt-0.5">{selectedCategory.description}</p>
+                      </div>
+                    </div>
                   </div>
                 )}
                 
