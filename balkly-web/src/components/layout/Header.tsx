@@ -15,10 +15,11 @@ import {
   LogOut,
   Settings,
   LayoutDashboard,
+  Moon,
+  Sun,
 } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CurrencySwitcher from "@/components/CurrencySwitcher";
-import ThemeToggle from "@/components/ThemeToggle";
 import { useTranslation } from "@/lib/i18n/translations";
 
 export default function Header() {
@@ -28,6 +29,7 @@ export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [theme, setTheme] = useState("light");
 
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
@@ -37,7 +39,26 @@ export default function Header() {
       setIsLoggedIn(true);
       setUser(JSON.parse(userData));
     }
+
+    // Get theme from localStorage
+    const savedTheme = localStorage.getItem("theme") || "light";
+    setTheme(savedTheme);
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    }
   }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    
+    if (newTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
@@ -56,7 +77,7 @@ export default function Header() {
   };
 
   return (
-    <header className="border-b bg-white sticky top-0 z-50 shadow-sm">
+    <header className="border-b bg-white dark:bg-gray-900 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -100,7 +121,7 @@ export default function Header() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search..."
-                className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm"
+                className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm dark:bg-gray-800 dark:border-gray-700"
                 autoComplete="off"
               />
             </div>
@@ -111,7 +132,21 @@ export default function Header() {
             {/* Language & Currency Switchers */}
             <LanguageSwitcher />
             <CurrencySwitcher />
-            <ThemeToggle />
+            
+            {/* Theme Toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleTheme}
+              className="w-9 px-0"
+              aria-label="Toggle theme"
+            >
+              {theme === "light" ? (
+                <Moon className="h-4 w-4" />
+              ) : (
+                <Sun className="h-4 w-4" />
+              )}
+            </Button>
             
             {isLoggedIn ? (
               <>
@@ -207,7 +242,7 @@ export default function Header() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search..."
-                  className="w-full pl-10 pr-4 py-2 border rounded-lg"
+                  className="w-full pl-10 pr-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                   autoComplete="off"
                 />
               </div>
@@ -242,7 +277,14 @@ export default function Header() {
             <div className="border-t my-2" />
             <div className="px-4 py-2 flex items-center justify-between">
               <span className="text-sm font-medium">Theme</span>
-              <ThemeToggle />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleTheme}
+                className="w-9 px-0"
+              >
+                {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+              </Button>
             </div>
 
             {isLoggedIn ? (

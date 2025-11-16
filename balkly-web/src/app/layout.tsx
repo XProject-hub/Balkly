@@ -4,7 +4,6 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import TrackingScript from "@/components/TrackingScript";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -55,11 +54,10 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className={inter.className}>
-        <ThemeProvider>
-          <TrackingScript />
-          <Header />
-          <main>{children}</main>
-          <Footer />
+        <TrackingScript />
+        <Header />
+        <main>{children}</main>
+        <Footer />
         
         {/* Register Service Worker */}
         <Script id="register-sw" strategy="afterInteractive">
@@ -78,7 +76,6 @@ export default function RootLayout({
             }
           `}
         </Script>
-        </ThemeProvider>
       </body>
     </html>
   );
