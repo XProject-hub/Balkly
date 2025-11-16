@@ -10,3 +10,6 @@ Artisan::command('inspire', function () {
 
 Schedule::command('horizon:snapshot')->everyFiveMinutes();
 
+// Fetch Platinumlist events daily at 3 AM
+Schedule::command('platinumlist:fetch')->dailyAt('03:00');
+
