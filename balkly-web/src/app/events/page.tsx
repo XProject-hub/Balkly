@@ -78,7 +78,7 @@ export default function EventsPage() {
                   <select
                     value={filters.type}
                     onChange={(e) => setFilters({ ...filters, type: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-lg"
+                    className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                   >
                     <option value="">All Types</option>
                     <option value="own">Balkly Tickets</option>
@@ -92,8 +92,8 @@ export default function EventsPage() {
                     type="text"
                     value={filters.city}
                     onChange={(e) => setFilters({ ...filters, city: e.target.value })}
-                    placeholder="e.g., Sarajevo"
-                    className="w-full px-3 py-2 border rounded-lg"
+                    placeholder="e.g., Dubai"
+                    className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                   />
                 </div>
 

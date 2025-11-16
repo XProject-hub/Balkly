@@ -364,9 +364,9 @@ export default function EventDetailPage() {
                   </p>
                   
                   {event.metadata?.price && (
-                    <div className="p-3 bg-background rounded-lg">
+                    <div className="p-3 bg-background dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                       <p className="text-xs text-muted-foreground mb-1">Starting from</p>
-                      <p className="text-2xl font-bold text-primary">
+                      <p className="text-2xl font-bold text-primary dark:text-primary-foreground">
                         {event.metadata.price.currency} {event.metadata.price.min}
                         {event.metadata.price.max && ` - ${event.metadata.price.max}`}
                       </p>
