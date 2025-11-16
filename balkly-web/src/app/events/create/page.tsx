@@ -242,7 +242,7 @@ export default function CreateEventPage() {
                       type="text"
                       value={formData.city}
                       onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                      placeholder="Sarajevo"
+                      placeholder="Dubai"
                       className="w-full px-4 py-2 border rounded-lg"
                     />
                   </div>

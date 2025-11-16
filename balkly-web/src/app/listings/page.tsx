@@ -273,7 +273,7 @@ export default function ListingsPage() {
                     type="text"
                     value={filters.city}
                     onChange={(e) => setFilters({ ...filters, city: e.target.value })}
-                    placeholder="e.g., Sarajevo"
+                    placeholder="e.g., Dubai"
                     className="w-full px-3 py-2 border rounded-lg"
                   />
                 </div>

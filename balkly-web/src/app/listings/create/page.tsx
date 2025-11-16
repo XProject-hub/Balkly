@@ -27,9 +27,9 @@ export default function CreateListingPage() {
     title: "",
     description: "",
     price: "",
-    currency: "EUR",
+    currency: "AED",
     city: "",
-    country: "BA",
+    country: "AE",
     images: [] as File[],
     attributes: {} as Record<string, string>,
   });
@@ -387,7 +387,7 @@ export default function CreateListingPage() {
                       type="text"
                       value={formData.city}
                       onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                      placeholder="e.g., Sarajevo"
+                      placeholder="e.g., Dubai"
                       className="w-full px-4 py-2 border rounded-lg"
                     />
                   </div>

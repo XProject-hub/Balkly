@@ -13,7 +13,7 @@ export default function SettingsPage() {
     email: "",
     phone: "",
     city: "",
-    country: "BA",
+    country: "AE",
     bio: "",
     notifications_email: true,
     notifications_push: false,
@@ -89,7 +89,7 @@ export default function SettingsPage() {
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    placeholder="+387 XX XXX XXX"
+                    placeholder="+971 XX XXX XXXX"
                     className="w-full px-4 py-2 border rounded-lg"
                   />
                 </div>
@@ -99,7 +99,7 @@ export default function SettingsPage() {
                     type="text"
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    placeholder="Sarajevo"
+                    placeholder="Dubai"
                     className="w-full px-4 py-2 border rounded-lg"
                   />
                 </div>
