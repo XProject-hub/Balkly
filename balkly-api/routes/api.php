@@ -69,6 +69,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/auth/2fa/recovery-codes', [AuthController::class, 'get2FARecoveryCodes']);
         
         // Listings
+        Route::get('/listings/my-listings', [ListingController::class, 'myListings']);
         Route::post('/listings', [ListingController::class, 'store']);
         Route::patch('/listings/{id}', [ListingController::class, 'update']);
         Route::delete('/listings/{id}', [ListingController::class, 'destroy']);

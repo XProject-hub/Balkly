@@ -72,6 +72,23 @@ class ListingController extends Controller
         ]);
     }
 
+    /**
+     * Get current user's listings (all statuses)
+     */
+    public function myListings(Request $request)
+    {
+        $query = Listing::query()
+            ->with(['category', 'media'])
+            ->where('user_id', auth()->id());
+
+        // Sort by most recent first
+        $query->orderBy('created_at', 'desc');
+
+        $listings = $query->paginate($request->get('per_page', 20));
+
+        return response()->json($listings);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -93,10 +110,10 @@ class ListingController extends Controller
                 'slug' => Str::slug($validated['title']) . '-' . Str::random(8),
                 'description' => $validated['description'],
                 'price' => $validated['price'] ?? null,
-                'currency' => $validated['currency'] ?? 'EUR',
+                'currency' => $validated['currency'] ?? 'AED',
                 'city' => $validated['city'] ?? null,
                 'country' => $validated['country'] ?? null,
-                'status' => 'draft',
+                'status' => 'active', // Changed from draft to active for immediate visibility
             ]);
 
             // Handle attributes
