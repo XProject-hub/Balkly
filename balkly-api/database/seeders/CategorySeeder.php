@@ -22,10 +22,18 @@ class CategorySeeder extends Seeder
 
         Attribute::create([
             'category_id' => $auto->id,
-            'name' => 'Make',
-            'slug' => 'make',
+            'name' => 'Brand',
+            'slug' => 'brand',
             'type' => 'select',
-            'options_json' => ['BMW', 'Mercedes', 'Audi', 'Volkswagen', 'Toyota', 'Honda'],
+            'options_json' => [
+                'Audi', 'BMW', 'Mercedes-Benz', 'Volkswagen', 'Porsche', 'Ford',
+                'Toyota', 'Honda', 'Nissan', 'Mazda', 'Hyundai', 'Kia', 'Suzuki',
+                'Renault', 'Peugeot', 'Citroën', 'Fiat', 'Volvo', 'Chevrolet', 'Jeep',
+                'Dodge', 'Tesla', 'Lexus', 'Infiniti', 'Land Rover', 'Jaguar', 'Mini',
+                'Mitsubishi', 'Subaru', 'Skoda', 'Seat', 'Alfa Romeo', 'Maserati',
+                'Ferrari', 'Lamborghini', 'Bentley', 'Rolls-Royce', 'McLaren', 'Aston Martin',
+                'GMC', 'Cadillac', 'Buick', 'RAM', 'Genesis', 'Acura', 'Lincoln',
+            ],
             'is_required' => true,
             'is_searchable' => true,
             'order' => 1,
@@ -49,6 +57,11 @@ class CategorySeeder extends Seeder
             'is_required' => true,
             'is_searchable' => true,
             'order' => 3,
+            'metadata' => json_encode([
+                'min' => 1980,
+                'max' => date('Y') + 1,
+                'validation' => 'Year must be between 1980 and ' . (date('Y') + 1),
+            ]),
         ]);
 
         Attribute::create([
