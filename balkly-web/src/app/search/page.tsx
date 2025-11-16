@@ -69,7 +69,7 @@ export default function SearchPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search for anything..."
-                  className="w-full pl-10 pr-4 py-3 rounded-lg border text-foreground"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg border text-foreground dark:bg-gray-800 dark:border-gray-700"
                 />
               </div>
               <Button size="lg" type="submit">

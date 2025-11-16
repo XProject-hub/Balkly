@@ -41,9 +41,9 @@ export default function ForumPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white border-b">
+      <div className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
         <div className="container mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
             <div>
@@ -65,10 +65,10 @@ export default function ForumPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Left Sidebar - Categories (Flarum Style) */}
           <div className="lg:col-span-1">
-            <Card className="bg-white sticky top-20">
+            <Card className="bg-white dark:bg-gray-800 sticky top-20">
               <CardContent className="p-0">
-                <div className="p-4 border-b bg-gray-50">
-                  <h3 className="font-bold text-gray-900 uppercase text-xs tracking-wider">Forum Categories</h3>
+                <div className="p-4 border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+                  <h3 className="font-bold text-gray-900 dark:text-gray-100 uppercase text-xs tracking-wider">Forum Categories</h3>
                 </div>
                 <div className="divide-y divide-gray-100">
                   {/* All Topics - Prominent */}
