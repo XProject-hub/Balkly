@@ -130,15 +130,18 @@ export default function CreateListingPage() {
       const data = await response.json();
       
       // Update form with AI suggestions
-      if (data.improved_title || data.improved_description) {
+      const titleChanged = data.improved_title && data.improved_title !== formData.title;
+      const descChanged = data.improved_description && data.improved_description !== formData.description;
+      
+      if (titleChanged || descChanged) {
         setFormData({
           ...formData,
           title: data.improved_title || formData.title,
           description: data.improved_description || formData.description,
         });
-        alert("✨ Listing enhanced with AI suggestions!");
+        alert("✨ Listing enhanced with AI suggestions! Check the updated title and description.");
       } else {
-        alert("AI didn't suggest improvements. Your listing looks good!");
+        alert("AI is not configured or didn't suggest changes. Your listing looks good as-is!");
       }
     } catch (error: any) {
       console.error("AI helper failed:", error);
@@ -167,19 +170,28 @@ export default function CreateListingPage() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
+      console.log("Creating listing with data:", formData);
+      
       // Create listing
       const listingResponse = await listingsAPI.create({
         category_id: formData.category_id,
         title: formData.title,
         description: formData.description,
-        price: parseFloat(formData.price),
+        price: parseFloat(formData.price) || 0,
         currency: formData.currency,
         city: formData.city,
         country: formData.country,
         attributes: formData.attributes,
       });
 
+      console.log("Listing response:", listingResponse.data);
+
+      if (!listingResponse.data || !listingResponse.data.listing) {
+        throw new Error("Invalid response from server");
+      }
+
       const listingId = listingResponse.data.listing.id;
+      console.log("Listing created with ID:", listingId);
 
       // If a plan is selected, proceed to payment
       if (selectedPlan) {
@@ -202,13 +214,35 @@ export default function CreateListingPage() {
           window.location.href = orderData.checkout_url;
         }
       } else {
-        // No plan selected, just save as draft
-        router.push(`/dashboard/listings?created=${listingId}`);
+        // No plan selected, publish as free listing
+        try {
+          await listingsAPI.publish(listingId);
+        } catch (publishError) {
+          console.log("Publish error (non-critical):", publishError);
+        }
+        
+        // Redirect to dashboard
+        alert("✅ Listing created successfully!");
+        window.location.href = `/dashboard/listings`;
       }
     } catch (error: any) {
       console.error("Failed to create listing:", error);
-      const errorMsg = error.response?.data?.message || error.message || "Failed to create listing. Please check all required fields and try again.";
-      alert(`Error: ${errorMsg}`);
+      console.error("Error details:", error.response?.data);
+      
+      const errorMsg = error.response?.data?.message || 
+                      error.response?.data?.errors ||
+                      error.message || 
+                      "Failed to create listing. Please check all required fields.";
+      
+      // Format error message
+      if (typeof errorMsg === 'object') {
+        const errors = Object.entries(errorMsg).map(([field, msgs]) => 
+          `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`
+        ).join('\n');
+        alert(`Validation errors:\n${errors}`);
+      } else {
+        alert(`Error creating listing:\n${errorMsg}`);
+      }
     } finally {
       setLoading(false);
     }
