@@ -214,15 +214,11 @@ export default function CreateListingPage() {
           window.location.href = orderData.checkout_url;
         }
       } else {
-        // No plan selected, publish as free listing
-        try {
-          await listingsAPI.publish(listingId);
-        } catch (publishError) {
-          console.log("Publish error (non-critical):", publishError);
-        }
+        // No plan selected, listing is already active
+        // Don't call publish as it might set to pending_review
         
         // Redirect to dashboard
-        alert("✅ Listing created successfully!");
+        alert("✅ Listing created successfully! View it in My Listings.");
         window.location.href = `/dashboard/listings`;
       }
     } catch (error: any) {
