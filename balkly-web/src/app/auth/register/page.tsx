@@ -39,10 +39,24 @@ export default function RegisterPage() {
       // Store user data
       localStorage.setItem("user", JSON.stringify(response.data.user));
       
-      // Redirect to dashboard
-      router.push("/dashboard");
+      // Check if email verification is required
+      if (response.data.user.email_verified_at === null) {
+        router.push("/auth/verify-email");
+      } else {
+        // Redirect to dashboard
+        router.push("/dashboard");
+      }
     } catch (err: any) {
-      setError(err.response?.data?.message || "Registration failed. Please try again.");
+      console.error("Registration error:", err);
+      const errorMsg = err.response?.data?.message || err.response?.data?.errors || "Registration failed. Please try again.";
+      
+      // If errors is an object, format it
+      if (typeof errorMsg === 'object') {
+        const firstError = Object.values(errorMsg)[0];
+        setError(Array.isArray(firstError) ? firstError[0] : String(firstError));
+      } else {
+        setError(String(errorMsg));
+      }
     } finally {
       setLoading(false);
     }
@@ -70,7 +84,7 @@ export default function RegisterPage() {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
-                className="w-full px-4 py-2 border rounded-lg"
+                className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                 placeholder="John Doe"
               />
             </div>
@@ -82,7 +96,7 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
-                className="w-full px-4 py-2 border rounded-lg"
+                className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                 placeholder="your@email.com"
               />
             </div>
@@ -95,7 +109,7 @@ export default function RegisterPage() {
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
                 minLength={8}
-                className="w-full px-4 py-2 border rounded-lg"
+                className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                 placeholder="••••••••"
               />
               <p className="text-xs text-muted-foreground mt-1">
@@ -112,7 +126,7 @@ export default function RegisterPage() {
                   setFormData({ ...formData, password_confirmation: e.target.value })
                 }
                 required
-                className="w-full px-4 py-2 border rounded-lg"
+                className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                 placeholder="••••••••"
               />
             </div>
@@ -122,11 +136,11 @@ export default function RegisterPage() {
               <select
                 value={formData.locale}
                 onChange={(e) => setFormData({ ...formData, locale: e.target.value })}
-                className="w-full px-4 py-2 border rounded-lg"
+                className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
               >
-                <option value="en">English</option>
-                <option value="bs">Bosnian</option>
-                <option value="de">German</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="balkly">🇧🇦 Balkly (Bosanski, Srpski, Hrvatski)</option>
+                <option value="ar">🇦🇪 العربية (Arabic)</option>
               </select>
             </div>
 
