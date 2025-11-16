@@ -16,8 +16,9 @@ export default function CookiePolicyPage() {
       </div>
 
       <div className="container mx-auto px-4 max-w-5xl py-12">
-        <div className="bg-white rounded-xl shadow-lg p-8 md:p-12 lg:p-16">
-          <div className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-h2:text-3xl prose-h2:font-bold prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-3 prose-h2:border-b-2 prose-h2:border-iris-purple/20 prose-h3:text-xl prose-h3:font-semibold prose-h3:mt-8 prose-h3:mb-4 prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 prose-li:text-gray-700 prose-li:mb-2 prose-strong:text-gray-900 prose-a:text-balkly-blue prose-a:no-underline hover:prose-a:underline prose-ul:my-6 prose-ol:my-6">
+        <Card className="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+          <CardContent className="p-8 md:p-12 lg:p-16">
+            <div className="prose prose-lg max-w-none prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-h2:text-3xl prose-h2:font-bold prose-h2:mt-12 prose-h2:mb-6 prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-li:text-gray-700 dark:prose-li:text-gray-300">
             <h2>What Are Cookies</h2>
             <p>
               Cookies are small text files that are stored on your device when you visit our website. 
@@ -94,6 +95,7 @@ export default function CookiePolicyPage() {
               This Cookie Policy complies with UAE Federal Decree-Law No. 45 of 2021 on the Protection 
               of Personal Data and international privacy standards.
             </p>
+            </div>
           </CardContent>
         </Card>
       </div>
