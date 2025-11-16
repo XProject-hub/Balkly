@@ -5,7 +5,7 @@ import { ArrowLeft, Users, Globe, Shield } from "lucide-react";
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <div className="text-white py-16" style={{background: 'linear-gradient(135deg, #0F172A 0%, #111827 100%)'}}>
         <div className="container mx-auto px-4 max-w-4xl">
           <Link href="/">
@@ -22,8 +22,8 @@ export default function AboutPage() {
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         {/* Mission */}
         <div className="mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Mission</h2>
-          <p className="text-lg text-gray-700 leading-relaxed">
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-6">Our Mission</h2>
+          <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
             Balkly connects the Balkan community across the United Arab Emirates. 
             We provide a trusted platform where Balkans people can buy, sell, find jobs, 
             attend events, and build lasting connections - all in one place.
@@ -37,8 +37,8 @@ export default function AboutPage() {
               <div className="w-16 h-16 bg-balkly-blue/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Users className="h-8 w-8 text-balkly-blue" />
               </div>
-              <h3 className="font-bold text-xl mb-3 text-gray-900">Community First</h3>
-              <p className="text-gray-600">
+              <h3 className="font-bold text-xl mb-3 text-gray-900 dark:text-gray-100">Community First</h3>
+              <p className="text-gray-600 dark:text-gray-400">
                 Built by Balkans, for Balkans. We understand your needs.
               </p>
             </CardContent>
@@ -49,8 +49,8 @@ export default function AboutPage() {
               <div className="w-16 h-16 bg-teal-glow/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Shield className="h-8 w-8 text-teal-glow" />
               </div>
-              <h3 className="font-bold text-xl mb-3 text-gray-900">Safe & Secure</h3>
-              <p className="text-gray-600">
+              <h3 className="font-bold text-xl mb-3 text-gray-900 dark:text-gray-100">Safe & Secure</h3>
+              <p className="text-gray-600 dark:text-gray-400">
                 Protected payments, verified sellers, and secure messaging.
               </p>
             </CardContent>
@@ -61,8 +61,8 @@ export default function AboutPage() {
               <div className="w-16 h-16 bg-iris-purple/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Globe className="h-8 w-8 text-iris-purple" />
               </div>
-              <h3 className="font-bold text-xl mb-3 text-gray-900">UAE Wide</h3>
-              <p className="text-gray-600">
+              <h3 className="font-bold text-xl mb-3 text-gray-900 dark:text-gray-100">UAE Wide</h3>
+              <p className="text-gray-600 dark:text-gray-400">
                 Serving Dubai, Abu Dhabi, Sharjah, and all Emirates.
               </p>
             </CardContent>
@@ -71,8 +71,8 @@ export default function AboutPage() {
 
         {/* Story */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
-          <div className="prose max-w-none text-gray-700">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">Our Story</h2>
+          <div className="prose max-w-none text-gray-700 dark:text-gray-300">
             <p className="text-lg mb-4">
               Balkly was created to unite the Balkan community in the UAE. Whether you're from 
               Serbia, Croatia, Bosnia, or any Balkan country, Balkly is your home away from home.
