@@ -76,14 +76,25 @@ export default function NewTopicPage() {
                     setFormData({ ...formData, category_id: e.target.value })
                   }
                   required
-                  className="w-full px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                 >
                   <option value="">Select a category</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
+                  {categories
+                    .filter(cat => !cat.parent_id)
+                    .map((parentCat) => (
+                      <optgroup key={parentCat.id} label={`📁 ${parentCat.name}`}>
+                        <option value={parentCat.id}>
+                          {parentCat.name}
+                        </option>
+                        {categories
+                          .filter(subCat => subCat.parent_id === parentCat.id)
+                          .map((subCat) => (
+                            <option key={subCat.id} value={subCat.id}>
+                              &nbsp;&nbsp;└─ {subCat.name}
+                            </option>
+                          ))}
+                      </optgroup>
+                    ))}
                 </select>
               </div>
 
