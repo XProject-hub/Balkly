@@ -101,30 +101,48 @@ export default function CreateListingPage() {
   };
 
   const handleAIHelper = async () => {
+    if (!formData.title || !formData.description) {
+      alert("Please enter both title and description first!");
+      return;
+    }
+
     setAiLoading(true);
     try {
       // Call AI helper endpoint
       const response = await fetch("/api/v1/ai/listing_helper", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+        },
         body: JSON.stringify({
           title: formData.title,
           description: formData.description,
           category: selectedCategory?.name,
+          locale: "en", // Force English for AI
         }),
       });
+
+      if (!response.ok) {
+        throw new Error("AI service unavailable");
+      }
+
       const data = await response.json();
       
       // Update form with AI suggestions
-      setFormData({
-        ...formData,
-        title: data.improved_title || formData.title,
-        description: data.improved_description || formData.description,
-      });
+      if (data.improved_title || data.improved_description) {
+        setFormData({
+          ...formData,
+          title: data.improved_title || formData.title,
+          description: data.improved_description || formData.description,
+        });
+        alert("✨ Listing enhanced with AI suggestions!");
+      } else {
+        alert("AI didn't suggest improvements. Your listing looks good!");
+      }
     } catch (error: any) {
       console.error("AI helper failed:", error);
-      const errorMsg = error.response?.data?.message || "AI enhancement failed. Please ensure your title and description are in English or try again.";
-      alert(errorMsg);
+      alert("AI enhancement is currently unavailable. Your listing will be saved as-is.");
     } finally {
       setAiLoading(false);
     }

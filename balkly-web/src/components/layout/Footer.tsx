@@ -8,7 +8,11 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div>
-            <h3 className="text-2xl font-bold text-white mb-2">Balkly</h3>
+            <img 
+              src="/logo.png" 
+              alt="Balkly" 
+              className="h-8 w-auto mb-2 brightness-0 invert"
+            />
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-800 rounded-full mb-4">
               <span className="text-xs font-bold text-teal-glow">UAE</span>
               <span className="text-gray-600">•</span>

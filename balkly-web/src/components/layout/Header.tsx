@@ -99,7 +99,11 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="text-2xl font-bold text-primary">Balkly</div>
+            <img 
+              src="/logo.png" 
+              alt="Balkly" 
+              className="h-8 w-auto dark:brightness-110"
+            />
           </Link>
 
           {/* Desktop Navigation */}
