@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, User, Bell, Shield, CreditCard } from "lucide-react";
 
 export default function SettingsPage() {
+  const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -237,13 +239,22 @@ export default function SettingsPage() {
               <CardDescription>Manage your password and security</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button variant="outline">Change Password</Button>
+              <Button 
+                variant="outline"
+                onClick={() => router.push("/settings/security")}
+              >
+                Change Password
+              </Button>
               <div className="border-t pt-4">
                 <p className="text-sm text-muted-foreground mb-2">
                   Two-Factor Authentication
                 </p>
-                <Button variant="outline" size="sm">
-                  Enable 2FA
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => router.push("/settings/security")}
+                >
+                  {user?.twofa_secret ? "Manage 2FA" : "Enable 2FA"}
                 </Button>
               </div>
             </CardContent>
@@ -262,7 +273,15 @@ export default function SettingsPage() {
               <p className="text-sm text-muted-foreground mb-4">
                 No payment methods saved yet
               </p>
-              <Button variant="outline">Add Payment Method</Button>
+              <Button 
+                variant="outline"
+                onClick={() => alert("Payment methods will be managed through Stripe during checkout. This feature is for viewing saved cards.")}
+              >
+                Add Payment Method
+              </Button>
+              <p className="text-xs text-muted-foreground mt-2">
+                Payment methods are securely saved during checkout
+              </p>
             </CardContent>
           </Card>
 
@@ -290,7 +309,39 @@ export default function SettingsPage() {
                     Permanently delete your account and all data
                   </p>
                 </div>
-                <Button variant="destructive" size="sm">
+                <Button 
+                  variant="destructive" 
+                  size="sm"
+                  onClick={() => {
+                    const confirm = window.confirm(
+                      "⚠️ WARNING: This will permanently delete your account and all data.\n\n" +
+                      "This includes:\n" +
+                      "• All your listings\n" +
+                      "• Messages and chats\n" +
+                      "• Orders and history\n" +
+                      "• Profile information\n\n" +
+                      "This action CANNOT be undone!\n\n" +
+                      "Are you absolutely sure?"
+                    );
+                    
+                    if (confirm) {
+                      const doubleConfirm = window.confirm(
+                        "FINAL CONFIRMATION\n\n" +
+                        "Type your email in the next prompt to confirm deletion."
+                      );
+                      
+                      if (doubleConfirm) {
+                        const email = prompt("Enter your email address to confirm:");
+                        if (email === user?.email) {
+                          // TODO: Call API to delete account
+                          alert("Account deletion requested. This feature will be implemented with admin approval.");
+                        } else {
+                          alert("Email does not match. Account deletion cancelled.");
+                        }
+                      }
+                    }
+                  }}
+                >
                   Delete Account
                 </Button>
               </div>
