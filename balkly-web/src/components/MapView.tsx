@@ -13,7 +13,7 @@ interface MapViewProps {
 
 export default function MapView({
   listings,
-  center = [43.8563, 18.4131], // Sarajevo
+  center = [25.2048, 55.2708], // Dubai
   zoom = 12,
   height = "500px",
 }: MapViewProps) {

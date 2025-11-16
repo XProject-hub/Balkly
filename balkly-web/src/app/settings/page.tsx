@@ -33,8 +33,40 @@ export default function SettingsPage() {
   }, []);
 
   const handleSave = async () => {
-    // TODO: API call to update profile
-    alert("Settings saved successfully!");
+    try {
+      const token = localStorage.getItem("auth_token");
+      const response = await fetch("/api/v1/profile/update", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          phone: formData.phone,
+          city: formData.city,
+          country: formData.country,
+          bio: formData.bio,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Update local storage
+        const userData = JSON.parse(localStorage.getItem("user") || "{}");
+        userData.phone = formData.phone;
+        userData.city = formData.city;
+        userData.country = formData.country;
+        userData.bio = formData.bio;
+        localStorage.setItem("user", JSON.stringify(userData));
+        
+        alert("Settings saved successfully!");
+      } else {
+        alert("Failed to save settings. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error saving settings:", error);
+      alert("Failed to save settings. Please try again.");
+    }
   };
 
   return (
