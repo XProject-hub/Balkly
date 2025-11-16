@@ -9,9 +9,9 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <img 
-              src="/logo.png" 
+              src="/logo-icon.png" 
               alt="Balkly" 
-              className="h-24 w-auto mb-6 brightness-0 invert"
+              className="h-32 w-32 mb-6 brightness-110"
             />
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-800 rounded-full mb-4">
               <span className="text-xs font-bold text-teal-glow">UAE</span>
