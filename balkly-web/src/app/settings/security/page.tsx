@@ -15,6 +15,11 @@ export default function SecuritySettingsPage() {
   const [verificationCode, setVerificationCode] = useState("");
   const [recoveryCodes, setRecoveryCodes] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    current_password: "",
+    new_password: "",
+    confirm_password: "",
+  });
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -142,6 +147,46 @@ export default function SecuritySettingsPage() {
     alert("Recovery codes copied to clipboard!");
   };
 
+  const handleChangePassword = async () => {
+    if (passwordData.new_password !== passwordData.confirm_password) {
+      alert("New passwords do not match!");
+      return;
+    }
+
+    if (passwordData.new_password.length < 8) {
+      alert("Password must be at least 8 characters!");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch("/api/v1/auth/change-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({
+          current_password: passwordData.current_password,
+          new_password: passwordData.new_password,
+        }),
+      });
+
+      if (response.ok) {
+        setPasswordData({ current_password: "", new_password: "", confirm_password: "" });
+        alert("Password updated successfully!");
+      } else {
+        const error = await response.json();
+        alert(error.message || "Failed to update password");
+      }
+    } catch (error) {
+      console.error("Error changing password:", error);
+      alert("Failed to update password. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-primary text-primary-foreground py-8">
@@ -173,27 +218,35 @@ export default function SecuritySettingsPage() {
                 <label className="block text-sm font-medium mb-2">Current Password</label>
                 <input
                   type="password"
+                  value={passwordData.current_password}
+                  onChange={(e) => setPasswordData({ ...passwordData, current_password: e.target.value })}
                   placeholder="••••••••"
-                  className="w-full px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">New Password</label>
                 <input
                   type="password"
+                  value={passwordData.new_password}
+                  onChange={(e) => setPasswordData({ ...passwordData, new_password: e.target.value })}
                   placeholder="••••••••"
-                  className="w-full px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Confirm New Password</label>
                 <input
                   type="password"
+                  value={passwordData.confirm_password}
+                  onChange={(e) => setPasswordData({ ...passwordData, confirm_password: e.target.value })}
                   placeholder="••••••••"
-                  className="w-full px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                 />
               </div>
-              <Button>Update Password</Button>
+              <Button onClick={handleChangePassword} disabled={loading}>
+                {loading ? "Updating..." : "Update Password"}
+              </Button>
             </CardContent>
           </Card>
 
