@@ -20,17 +20,50 @@ export default function SettingsPage() {
   });
 
   useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      const parsed = JSON.parse(userData);
-      setUser(parsed);
-      setFormData({
-        ...formData,
-        name: parsed.name || "",
-        email: parsed.email || "",
-      });
-    }
+    loadUserData();
   }, []);
+
+  const loadUserData = async () => {
+    try {
+      // Fetch fresh user data from API
+      const response = await fetch("/api/v1/auth/me", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const userData = data.user;
+        setUser(userData);
+        
+        // Populate form with all data including profile
+        setFormData({
+          name: userData.name || "",
+          email: userData.email || "",
+          phone: userData.profile?.phone || "",
+          city: userData.profile?.city || "",
+          country: userData.profile?.country || "AE",
+          bio: userData.profile?.bio || "",
+          notifications_email: true,
+          notifications_push: false,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to load user data:", error);
+      // Fallback to localStorage
+      const userData = localStorage.getItem("user");
+      if (userData) {
+        const parsed = JSON.parse(userData);
+        setUser(parsed);
+        setFormData({
+          ...formData,
+          name: parsed.name || "",
+          email: parsed.email || "",
+        });
+      }
+    }
+  };
 
   const handleSave = async () => {
     try {
@@ -51,21 +84,22 @@ export default function SettingsPage() {
 
       if (response.ok) {
         const data = await response.json();
-        // Update local storage
-        const userData = JSON.parse(localStorage.getItem("user") || "{}");
-        userData.phone = formData.phone;
-        userData.city = formData.city;
-        userData.country = formData.country;
-        userData.bio = formData.bio;
-        localStorage.setItem("user", JSON.stringify(userData));
+        
+        // Update local storage with full user object
+        localStorage.setItem("user", JSON.stringify(data.user));
+        setUser(data.user);
         
         alert("Settings saved successfully!");
+        
+        // Reload data to confirm it saved
+        await loadUserData();
       } else {
-        alert("Failed to save settings. Please try again.");
+        const error = await response.json();
+        alert(error.message || "Failed to save settings. Please try again.");
       }
     } catch (error) {
       console.error("Error saving settings:", error);
-      alert("Failed to save settings. Please try again.");
+      alert("Failed to save settings. Please check your connection and try again.");
     }
   };
 
