@@ -36,16 +36,30 @@ export default function DashboardPage() {
 
   const loadStats = async () => {
     try {
-      // TODO: Create endpoint for user dashboard stats
-      // For now, set to 0 (no fake data)
+      const response = await fetch("/api/v1/profile/insights", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setStats({
+          activeListings: data.insights?.total_listings || data.insights?.active_listings || 0,
+          totalViews: data.insights?.total_views || 0,
+          messages: data.insights?.total_messages || 0,
+          revenue: (data.insights?.total_orders || 0) * 10,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to load stats:", error);
+      // Fallback to 0
       setStats({
         activeListings: 0,
         totalViews: 0,
         messages: 0,
         revenue: 0,
       });
-    } catch (error) {
-      console.error("Failed to load stats:", error);
     }
   };
 
