@@ -113,7 +113,7 @@ class ListingController extends Controller
         });
 
         return response()->json([
-            'listing' => $listing->load(['category', 'media']),
+            'listing' => $listing->fresh(['category', 'media', 'user']),
             'message' => 'Listing created successfully',
         ], 201);
     }

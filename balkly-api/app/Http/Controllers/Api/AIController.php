@@ -24,7 +24,7 @@ class AIController extends Controller
             'title' => 'nullable|string',
             'description' => 'nullable|string',
             'category' => 'nullable|string',
-            'locale' => 'nullable|string|in:en,bs,de',
+            'locale' => 'nullable|string|in:en,balkly,ar,bs,sr,hr,de',
         ]);
 
         $result = $this->aiService->improveListing(
