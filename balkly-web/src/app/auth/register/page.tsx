@@ -42,13 +42,8 @@ export default function RegisterPage() {
       // Trigger auth state update event for Header
       window.dispatchEvent(new Event('auth-change'));
       
-      // Check if email verification is required
-      if (response.data.user.email_verified_at === null) {
-        router.push("/auth/verify-email");
-      } else {
-        // Force reload to update header state, then redirect
-        window.location.href = "/dashboard";
-      }
+      // Email verification is auto-completed on backend, go straight to dashboard
+      window.location.href = "/dashboard";
     } catch (err: any) {
       console.error("Registration error:", err);
       const errorMsg = err.response?.data?.message || err.response?.data?.errors || "Registration failed. Please try again.";
