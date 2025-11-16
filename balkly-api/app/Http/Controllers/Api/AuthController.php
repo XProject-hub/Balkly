@@ -45,15 +45,20 @@ class AuthController extends Controller
         // Create profile
         Profile::create(['user_id' => $user->id]);
 
-        // Auto-verify email (skip email sending for now)
+        // Auto-verify email for now (you can enable verification emails later)
         $user->email_verified_at = now();
         $user->save();
 
-        // Fire registered event (sends verification email) - DISABLED for now
-        // event(new Registered($user));
+        // Send welcome email (using Resend)
+        try {
+            $user->notify(new \App\Notifications\WelcomeNotification());
+        } catch (\Exception $e) {
+            // Email failed but don't block registration
+            \Log::warning('Welcome email failed: ' . $e->getMessage());
+        }
 
-        // Send welcome email - DISABLED for now
-        // $user->notify(new \App\Notifications\WelcomeNotification());
+        // Fire registered event (sends verification email) if you want email verification
+        // event(new Registered($user));
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
