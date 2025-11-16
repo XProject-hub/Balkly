@@ -34,7 +34,7 @@ export default function EventsPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground py-16">
+      <div className="bg-gradient-to-r from-primary to-primary/80 dark:from-primary/90 dark:to-primary/70 text-primary-foreground py-16">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center">
             <div>

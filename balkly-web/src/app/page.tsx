@@ -46,11 +46,11 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Hero Section with Video Background */}
-      <section className="relative h-[700px] overflow-hidden" style={{background: 'linear-gradient(135deg, #0B1220 0%, #0F172A 40%, #111827 100%)'}}>
+      <section className="relative h-[700px] overflow-hidden bg-gradient-hero dark:bg-gradient-to-br dark:from-gray-900 dark:to-black">
         {/* Glow Overlay */}
-        <div className="absolute inset-0 z-0" style={{background: 'radial-gradient(1200px 500px at 20% -10%, rgba(30,99,255,0.25), transparent 60%)'}} />
+        <div className="absolute inset-0 z-0 opacity-100 dark:opacity-50" style={{background: 'radial-gradient(1200px 500px at 20% -10%, rgba(30,99,255,0.25), transparent 60%)'}} />
         
         {/* Video Background */}
         <div className="absolute inset-0 z-0">
@@ -143,7 +143,7 @@ export default function HomePage() {
       <AdBanner position="homepage_top" className="container mx-auto px-4 py-4" />
 
       {/* Categories Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">
@@ -242,7 +242,7 @@ export default function HomePage() {
       </section>
 
       {/* Featured Listings Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -302,7 +302,7 @@ export default function HomePage() {
       </section>
 
       {/* Upcoming Events Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -354,7 +354,7 @@ export default function HomePage() {
       </section>
 
       {/* Trending Forum Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -401,7 +401,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">
             Why Choose Balkly?
@@ -441,7 +441,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <Card className="max-w-3xl mx-auto text-center text-white border-0" style={{background: 'linear-gradient(90deg, #1E63FF, #7C3AED)'}}>
             <CardHeader>
@@ -465,7 +465,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-100 py-8 mt-16">
+      <footer className="bg-gray-100 dark:bg-gray-900 py-8 mt-16">
         <div className="container mx-auto px-4">
           <div className="text-center text-muted-foreground">
             <p>&copy; 2025 Balkly. All rights reserved.</p>
