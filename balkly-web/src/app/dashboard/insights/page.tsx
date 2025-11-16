@@ -22,7 +22,7 @@ export default function SellerInsightsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-mist-50">
+    <div className="min-h-screen bg-mist-50 dark:bg-gray-900">
       <div className="text-white py-8" style={{background: 'linear-gradient(135deg, #0F172A 0%, #111827 100%)'}}>
         <div className="container mx-auto px-4">
           <Link href="/dashboard">
@@ -39,7 +39,7 @@ export default function SellerInsightsPage() {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-white">
+          <Card className="bg-white dark:bg-gray-800">
             <CardHeader>
               <CardTitle className="text-sm text-gray-700 flex items-center justify-between">
                 Total Views
@@ -52,7 +52,7 @@ export default function SellerInsightsPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white">
+          <Card className="bg-white dark:bg-gray-800">
             <CardHeader>
               <CardTitle className="text-sm text-gray-700 flex items-center justify-between">
                 Messages Received
@@ -65,7 +65,7 @@ export default function SellerInsightsPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white">
+          <Card className="bg-white dark:bg-gray-800">
             <CardHeader>
               <CardTitle className="text-sm text-gray-700 flex items-center justify-between">
                 Active Listings
@@ -78,7 +78,7 @@ export default function SellerInsightsPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white">
+          <Card className="bg-white dark:bg-gray-800">
             <CardHeader>
               <CardTitle className="text-sm text-gray-700 flex items-center justify-between">
                 Revenue

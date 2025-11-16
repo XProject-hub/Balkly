@@ -55,6 +55,11 @@ Route::prefix('v1')->group(function () {
         Route::post('/auth/logout', [AuthController::class, 'logout']);
         Route::get('/auth/me', [AuthController::class, 'me']);
         Route::post('/auth/send-verification', [AuthController::class, 'sendVerificationEmail']);
+        Route::post('/auth/change-password', [\App\Http\Controllers\Api\ProfileController::class, 'changePassword']);
+        
+        // Profile
+        Route::patch('/profile/update', [\App\Http\Controllers\Api\ProfileController::class, 'update']);
+        Route::get('/profile/insights', [\App\Http\Controllers\Api\ProfileController::class, 'insights']);
         
         // 2FA Routes
         Route::post('/auth/2fa/enable', [AuthController::class, 'enable2FA']);
