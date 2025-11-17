@@ -14,30 +14,35 @@ class FetchPlatinumlistEvents extends Command
 
     public function handle()
     {
-        $this->info('🎪 Fetching events from Platinumlist XML feed...');
+        $this->info('🎪 Fetching events from Platinumlist API...');
 
         try {
-            // Fetch XML feed
-            $xmlUrl = 'https://platinumlist.net/xml-feed/partnership-program';
-            $xmlContent = file_get_contents($xmlUrl);
+            // Use Platinumlist API v7
+            $apiKey = 'a580a83b-bd1b-4073-a285-aa8bbbe82dee';
+            $apiUrl = 'https://api.platinumlist.net/v/7/events?scope=affiliate.show.events&include=price';
             
-            if (!$xmlContent) {
-                $this->error('Failed to fetch XML feed');
+            $response = \Illuminate\Support\Facades\Http::withHeaders([
+                'Api-Key' => $apiKey,
+                'Accept' => 'application/json',
+                'price_scope' => 'price',
+            ])->get($apiUrl);
+
+            if (!$response->successful()) {
+                $this->error('Failed to fetch from Platinumlist API: ' . $response->status());
                 return 1;
             }
 
-            // Parse XML
-            $xml = simplexml_load_string($xmlContent);
+            $data = $response->json();
             
-            if (!$xml || !isset($xml->shop->offers->offer)) {
-                $this->error('Failed to parse XML or no offers found');
+            if (!isset($data['data']) || empty($data['data'])) {
+                $this->error('No events found in API response');
                 return 1;
             }
 
-            $events = $this->parseXmlEvents($xml);
+            $events = $this->parseApiEvents($data['data']);
 
             if (empty($events)) {
-                $this->error('No events to import');
+                $this->error('No UAE events to import');
                 return 1;
             }
 
@@ -205,57 +210,58 @@ class FetchPlatinumlistEvents extends Command
     }
 
     /**
-     * Parse XML feed and extract events
+     * Parse Platinumlist API response and extract UAE events
      */
-    private function parseXmlEvents($xml)
+    private function parseApiEvents($apiEvents)
     {
         $events = [];
         $affiliate_ref = 'zjblytn';
         $systemUserId = 1;
 
-        foreach ($xml->shop->offers->offer as $offer) {
-            // Only Dubai & UAE events
-            $city = (string)$offer->city;
-            $country = (string)$offer->country;
+        foreach ($apiEvents as $event) {
+            // Only UAE events (Dubai, Abu Dhabi, Sharjah, etc.)
+            $country = $event['country'] ?? '';
             
             if ($country !== 'United Arab Emirates') {
                 continue;
             }
 
-            $eventUrl = (string)$offer->url;
-            $affiliateLink = $eventUrl . '/?ref=' . $affiliate_ref;
+            $eventUrl = $event['url'] ?? '';
+            if (empty($eventUrl)) continue;
+            
+            $affiliateLink = $eventUrl . '?ref=' . $affiliate_ref;
+
+            // Parse dates
+            $startDate = isset($event['start_date']) ? 
+                \Carbon\Carbon::parse($event['start_date']) : now()->addDay();
+            $endDate = isset($event['end_date']) ? 
+                \Carbon\Carbon::parse($event['end_date']) : $startDate->copy()->addMonth();
 
             $events[] = [
                 'organizer_id' => $systemUserId,
                 'type' => 'affiliate',
-                'title' => (string)$offer->event_name,
-                'slug' => Str::slug((string)$offer->event_name) . '-' . Str::random(8),
-                'description' => (string)$offer->event_description,
-                'venue' => (string)$offer->venue,
-                'city' => $city,
+                'title' => $event['name'] ?? 'Untitled Event',
+                'slug' => Str::slug($event['name'] ?? 'event') . '-' . Str::random(8),
+                'description' => $event['description'] ?? '',
+                'venue' => $event['venue'] ?? '',
+                'city' => $event['city'] ?? 'Dubai',
                 'country' => 'AE',
-                'start_at' => $this->parseDate((string)$offer->date_from),
-                'end_at' => $this->parseDate((string)$offer->date_till),
+                'start_at' => $startDate,
+                'end_at' => $endDate,
                 'partner_url' => $affiliateLink,
                 'partner_ref' => $affiliate_ref,
-                'image_url' => (string)$offer->picture_768x768 ?: (string)$offer->picture_1600x615,
+                'image_url' => $event['image_url'] ?? $event['images']['large'] ?? null,
                 'status' => 'published',
                 'metadata' => json_encode([
-                    'source' => 'platinumlist',
+                    'source' => 'platinumlist_api',
                     'original_url' => $eventUrl,
-                    'event_id' => (string)$offer->offer_id,
-                    'category' => (string)$offer->category,
+                    'event_id' => $event['id'] ?? null,
+                    'category' => $event['category'] ?? '',
                     'price' => [
-                        'min' => (float)$offer->price_min,
-                        'max' => (float)$offer->price_max,
-                        'currency' => (string)$offer->currencyId,
+                        'min' => (float)($event['price_min'] ?? 0),
+                        'max' => (float)($event['price_max'] ?? 0),
+                        'currency' => $event['currency'] ?? 'AED',
                     ],
-                    'images' => [
-                        'large' => (string)$offer->picture_1600x615,
-                        'square' => (string)$offer->picture_768x768,
-                        'medium' => (string)$offer->picture_960х540,
-                    ],
-                    'video' => (string)$offer->video ?: null,
                 ]),
             ];
         }
