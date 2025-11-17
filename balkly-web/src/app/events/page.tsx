@@ -10,20 +10,29 @@ import { eventsAPI } from "@/lib/api";
 export default function EventsPage() {
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [totalEvents, setTotalEvents] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
     type: "",
     city: "",
+    category: "",
   });
 
   useEffect(() => {
     loadEvents();
-  }, [filters]);
+  }, [filters, currentPage]);
 
   const loadEvents = async () => {
     setLoading(true);
     try {
-      const response = await eventsAPI.getAll(filters);
+      const params = {
+        ...filters,
+        page: currentPage,
+        per_page: 20,
+      };
+      const response = await eventsAPI.getAll(params);
       setEvents(response.data.data || []);
+      setTotalEvents(response.data.total || 0);
     } catch (error) {
       console.error("Failed to load events:", error);
     } finally {
@@ -77,7 +86,10 @@ export default function EventsPage() {
                   <label className="block text-sm font-medium mb-2">Event Type</label>
                   <select
                     value={filters.type}
-                    onChange={(e) => setFilters({ ...filters, type: e.target.value })}
+                    onChange={(e) => {
+                      setFilters({ ...filters, type: e.target.value });
+                      setCurrentPage(1);
+                    }}
                     className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                   >
                     <option value="">All Types</option>
@@ -87,23 +99,66 @@ export default function EventsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">City</label>
-                  <input
-                    type="text"
-                    value={filters.city}
-                    onChange={(e) => setFilters({ ...filters, city: e.target.value })}
-                    placeholder="e.g., Dubai"
+                  <label className="block text-sm font-medium mb-2">Category</label>
+                  <select
+                    value={filters.category}
+                    onChange={(e) => {
+                      setFilters({ ...filters, category: e.target.value });
+                      setCurrentPage(1);
+                    }}
                     className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-                  />
+                  >
+                    <option value="">All Categories</option>
+                    <option value="Concerts">🎤 Concerts</option>
+                    <option value="Nightlife">🎉 Nightlife</option>
+                    <option value="Sports">⚽ Sports Events</option>
+                    <option value="Comedy">😂 Comedy Shows</option>
+                    <option value="Festival">🎊 Festivals</option>
+                    <option value="Brunches">🍽️ Brunches</option>
+                    <option value="Water Parks">💦 Water Parks</option>
+                    <option value="Theme Parks">🎢 Theme Parks</option>
+                    <option value="Shows">🎭 Shows & Theater</option>
+                    <option value="Arabic">🇦🇪 Arabic Events</option>
+                    <option value="Desi">🇮🇳 Desi Events</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">City</label>
+                  <select
+                    value={filters.city}
+                    onChange={(e) => {
+                      setFilters({ ...filters, city: e.target.value });
+                      setCurrentPage(1);
+                    }}
+                    className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                  >
+                    <option value="">All Cities</option>
+                    <option value="Dubai">🏙️ Dubai</option>
+                    <option value="Abu Dhabi">🏛️ Abu Dhabi</option>
+                    <option value="Sharjah">🕌 Sharjah</option>
+                    <option value="Ajman">Ajman</option>
+                    <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+                    <option value="Al Ain">Al Ain</option>
+                  </select>
                 </div>
 
                 <Button
-                  onClick={() => setFilters({ type: "", city: "" })}
+                  onClick={() => {
+                    setFilters({ type: "", city: "", category: "" });
+                    setCurrentPage(1);
+                  }}
                   variant="outline"
                   className="w-full"
                 >
                   Clear Filters
                 </Button>
+
+                <div className="pt-4 border-t dark:border-gray-700">
+                  <p className="text-sm text-muted-foreground">
+                    Showing {events.length} of {totalEvents} events
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </div>
