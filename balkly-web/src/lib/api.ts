@@ -4,12 +4,15 @@ import { fetchPlatinumListEvents, getPlatinumListEvent } from './platinumlist';
 // Get API URL - use window.location.origin for dynamic URLs
 const getApiUrl = () => {
   if (typeof window !== 'undefined') {
-    return window.location.origin + '/api/v1';
+    const baseUrl = window.location.origin + '/api/v1';
+    console.log('API Base URL:', baseUrl);
+    return baseUrl;
   }
   return process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api/v1';
 };
 
 const API_BASE_URL = getApiUrl();
+console.log('Axios configured with base URL:', API_BASE_URL);
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -66,9 +69,16 @@ export const categoriesAPI = {
 
 export const eventsAPI = {
   getAll: async (params?: any) => {
-    // All events now come from database (XML imported by Laravel command)
-    // No need to merge - just fetch from API
-    return api.get('/events', { params });
+    console.log('eventsAPI.getAll called with params:', params);
+    const response = await api.get('/events', { params });
+    console.log('API response received:', response);
+    console.log('Response data structure:', {
+      hasData: !!response.data,
+      dataKeys: Object.keys(response.data || {}),
+      total: response.data?.total,
+      dataArray: response.data?.data,
+    });
+    return response;
   },
   
   getOne: async (id: string) => {
