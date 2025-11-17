@@ -61,9 +61,12 @@ const AFFILIATE_BASE = 'https://platinumlist.net/aff/?ref=';
 
 /**
  * Generate affiliate link for a Platinumlist event
+ * Format: https://platinumlist.net/aff/?ref=zjblytn&link=https://attraction-url
  */
 export function generateAffiliateLink(eventUrl: string): string {
-  return `${AFFILIATE_BASE}${AFFILIATE_REF}&link=${encodeURIComponent(eventUrl)}`;
+  // Ensure URL has https://
+  const fullUrl = eventUrl.startsWith('http') ? eventUrl : `https://${eventUrl}`;
+  return `${AFFILIATE_BASE}${AFFILIATE_REF}&link=${fullUrl}`;
 }
 
 /**
@@ -71,11 +74,11 @@ export function generateAffiliateLink(eventUrl: string): string {
  * This is based on the Looker Studio data reference provided
  */
 const MOCK_PLATINUMLIST_EVENTS: PlatinumListEvent[] = [
-  // Top Attractions from Platinumlist
+  // Official Platinumlist Attractions from Spreadsheet
   {
     id: 'pl-burj-khalifa',
-    title: 'Burj Khalifa - At The Top Experience',
-    description: 'Visit the world\'s tallest building! Experience breathtaking 360-degree views from levels 124 & 125. Book your tickets now for the ultimate Dubai experience.',
+    title: 'Burj Khalifa',
+    description: 'Visit the world\'s tallest building! Experience breathtaking 360-degree views from the observation decks. Multi-language support: English, Arabic, Russian, Hebrew, German, Spanish, Polish, French, Italian.',
     image_url: 'https://cdn.pixabay.com/photo/2020/02/03/00/12/burj-khalifa-4814842_1280.jpg',
     venue: 'Burj Khalifa',
     city: 'Dubai',
@@ -83,7 +86,7 @@ const MOCK_PLATINUMLIST_EVENTS: PlatinumListEvent[] = [
     start_date: '2025-11-17T09:00:00Z',
     end_date: '2026-12-31T23:00:00Z',
     category: 'Attractions',
-    url: 'https://burj-khalifa.platinumlist.net',
+    url: 'burj-khalifa.platinumlist.net',
     price: {
       min: 149,
       max: 379,
@@ -92,8 +95,8 @@ const MOCK_PLATINUMLIST_EVENTS: PlatinumListEvent[] = [
   },
   {
     id: 'pl-skydive',
-    title: 'Skydive Dubai - Tandem Jump',
-    description: 'Experience the thrill of a lifetime with Skydive Dubai! Jump from 13,000 feet over the iconic Palm Jumeirah. No experience needed - tandem jumps available.',
+    title: 'Skydive Dubai',
+    description: 'Experience the ultimate adrenaline rush! Tandem skydiving over Dubai. Multi-language support: English, Russian, German, French.',
     image_url: 'https://cdn.pixabay.com/photo/2016/11/29/13/15/aircraft-1870374_1280.jpg',
     venue: 'Skydive Dubai',
     city: 'Dubai',
@@ -101,7 +104,7 @@ const MOCK_PLATINUMLIST_EVENTS: PlatinumListEvent[] = [
     start_date: '2025-11-17T07:00:00Z',
     end_date: '2026-12-31T18:00:00Z',
     category: 'Adventure',
-    url: 'https://skydive.platinumlist.net',
+    url: 'skydive.platinumlist.net',
     price: {
       min: 1699,
       max: 2199,
@@ -110,8 +113,8 @@ const MOCK_PLATINUMLIST_EVENTS: PlatinumListEvent[] = [
   },
   {
     id: 'pl-atlantis',
-    title: 'Atlantis Aquaventure Waterpark',
-    description: 'Experience the Middle East\'s #1 waterpark! Featuring thrilling slides, private beach access, and underwater adventures. Perfect for families.',
+    title: 'Atlantis Aquaventure',
+    description: 'Middle East\'s #1 waterpark at Atlantis The Palm! Thrilling slides, marine experiences, and beach access. Languages: English, German, French.',
     image_url: 'https://cdn.pixabay.com/photo/2020/02/08/14/29/atlantis-4829924_1280.jpg',
     venue: 'Atlantis The Palm',
     city: 'Dubai',
@@ -119,7 +122,7 @@ const MOCK_PLATINUMLIST_EVENTS: PlatinumListEvent[] = [
     start_date: '2025-11-17T10:00:00Z',
     end_date: '2026-12-31T18:00:00Z',
     category: 'Water Parks',
-    url: 'https://altantiswaterpark.platinumlist.net',
+    url: 'altantiswaterpark.platinumlist.net',
     price: {
       min: 299,
       max: 399,
@@ -129,7 +132,7 @@ const MOCK_PLATINUMLIST_EVENTS: PlatinumListEvent[] = [
   {
     id: 'pl-img-world',
     title: 'IMG Worlds of Adventure',
-    description: 'World\'s largest indoor theme park! Meet Marvel Super Heroes, explore Cartoon Network zone, and experience thrilling rides. All-weather entertainment.',
+    description: 'World\'s largest indoor theme park! Marvel, Cartoon Network, and thrilling rides. Perfect for families.',
     image_url: 'https://cdn.pixabay.com/photo/2017/11/12/13/28/amusement-park-2943408_1280.jpg',
     venue: 'IMG Worlds',
     city: 'Dubai',
@@ -137,7 +140,7 @@ const MOCK_PLATINUMLIST_EVENTS: PlatinumListEvent[] = [
     start_date: '2025-11-17T11:00:00Z',
     end_date: '2026-12-31T21:00:00Z',
     category: 'Theme Parks',
-    url: 'https://imgworld.platinumlist.net',
+    url: 'imgworld.platinumlist.net',
     price: {
       min: 295,
       max: 345,
