@@ -30,11 +30,21 @@ export default function EventsPage() {
         page: currentPage,
         per_page: 20,
       };
+      console.log("Loading events with params:", params);
       const response = await eventsAPI.getAll(params);
-      setEvents(response.data.data || []);
+      console.log("Events API response:", response);
+      console.log("Events data:", response.data);
+      console.log("Events array:", response.data.data);
+      console.log("Total events:", response.data.total);
+      
+      const eventsArray = response.data.data || [];
+      console.log("Setting events array length:", eventsArray.length);
+      
+      setEvents(eventsArray);
       setTotalEvents(response.data.total || 0);
     } catch (error) {
       console.error("Failed to load events:", error);
+      console.error("Error details:", error);
     } finally {
       setLoading(false);
     }
