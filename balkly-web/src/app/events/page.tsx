@@ -109,17 +109,17 @@ export default function EventsPage() {
                     className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                   >
                     <option value="">All Categories</option>
-                    <option value="Concerts">🎤 Concerts</option>
-                    <option value="Nightlife">🎉 Nightlife</option>
-                    <option value="Sports">⚽ Sports Events</option>
-                    <option value="Comedy">😂 Comedy Shows</option>
-                    <option value="Festival">🎊 Festivals</option>
-                    <option value="Brunches">🍽️ Brunches</option>
-                    <option value="Water Parks">💦 Water Parks</option>
-                    <option value="Theme Parks">🎢 Theme Parks</option>
-                    <option value="Shows">🎭 Shows & Theater</option>
-                    <option value="Arabic">🇦🇪 Arabic Events</option>
-                    <option value="Desi">🇮🇳 Desi Events</option>
+                    <option value="Concerts">Concerts</option>
+                    <option value="Nightlife">Nightlife</option>
+                    <option value="Sports">Sports Events</option>
+                    <option value="Comedy">Comedy Shows</option>
+                    <option value="Festival">Festivals</option>
+                    <option value="Brunches">Brunches</option>
+                    <option value="Water Parks">Water Parks</option>
+                    <option value="Theme Parks">Theme Parks</option>
+                    <option value="Shows">Shows & Theater</option>
+                    <option value="Arabic">Arabic Events</option>
+                    <option value="Desi">Desi Events</option>
                   </select>
                 </div>
 
@@ -134,9 +134,9 @@ export default function EventsPage() {
                     className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                   >
                     <option value="">All Cities</option>
-                    <option value="Dubai">🏙️ Dubai</option>
-                    <option value="Abu Dhabi">🏛️ Abu Dhabi</option>
-                    <option value="Sharjah">🕌 Sharjah</option>
+                    <option value="Dubai">Dubai</option>
+                    <option value="Abu Dhabi">Abu Dhabi</option>
+                    <option value="Sharjah">Sharjah</option>
                     <option value="Ajman">Ajman</option>
                     <option value="Ras Al Khaimah">Ras Al Khaimah</option>
                     <option value="Al Ain">Al Ain</option>
