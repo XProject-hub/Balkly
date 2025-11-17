@@ -17,19 +17,24 @@ class EventController extends Controller
         $query = Event::with(['organizer', 'tickets'])
             ->where('status', 'published');
 
-        if ($request->has('type')) {
+        // Only filter if value is NOT empty string
+        if ($request->filled('type')) {
             $query->where('type', $request->type);
         }
 
-        if ($request->has('city')) {
+        if ($request->filled('city')) {
             $query->where('city', $request->city);
+        }
+
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
         }
 
         // Show all events (Platinumlist has long-running attractions)
         // Don't filter by date at all - let frontend handle it
         $query->orderBy('start_at', 'asc');
 
-        $events = $query->paginate(20);
+        $events = $query->paginate($request->input('per_page', 20));
 
         return response()->json($events);
     }
