@@ -14,12 +14,27 @@ class FetchPlatinumlistEvents extends Command
 
     public function handle()
     {
-        $this->info('🎪 Fetching events from Platinumlist...');
+        $this->info('🎪 Fetching events from Platinumlist XML feed...');
 
         try {
-            // For now, use the predefined attraction landing pages
-            // When XML feed becomes available, this can be updated
-            $events = $this->getPredefinedEvents();
+            // Fetch XML feed
+            $xmlUrl = 'https://platinumlist.net/xml-feed/partnership-program';
+            $xmlContent = file_get_contents($xmlUrl);
+            
+            if (!$xmlContent) {
+                $this->error('Failed to fetch XML feed');
+                return 1;
+            }
+
+            // Parse XML
+            $xml = simplexml_load_string($xmlContent);
+            
+            if (!$xml || !isset($xml->shop->offers->offer)) {
+                $this->error('Failed to parse XML or no offers found');
+                return 1;
+            }
+
+            $events = $this->parseXmlEvents($xml);
 
             if (empty($events)) {
                 $this->error('No events to import');
@@ -187,6 +202,87 @@ class FetchPlatinumlistEvents extends Command
         }
 
         return $events;
+    }
+
+    /**
+     * Parse XML feed and extract events
+     */
+    private function parseXmlEvents($xml)
+    {
+        $events = [];
+        $affiliate_ref = 'zjblytn';
+        $systemUserId = 1;
+
+        foreach ($xml->shop->offers->offer as $offer) {
+            // Only Dubai & UAE events
+            $city = (string)$offer->city;
+            $country = (string)$offer->country;
+            
+            if ($country !== 'United Arab Emirates') {
+                continue;
+            }
+
+            $eventUrl = (string)$offer->url;
+            $affiliateLink = $eventUrl . '/?ref=' . $affiliate_ref;
+
+            $events[] = [
+                'organizer_id' => $systemUserId,
+                'type' => 'affiliate',
+                'title' => (string)$offer->event_name,
+                'slug' => Str::slug((string)$offer->event_name) . '-' . Str::random(8),
+                'description' => (string)$offer->event_description,
+                'venue' => (string)$offer->venue,
+                'city' => $city,
+                'country' => 'AE',
+                'start_at' => $this->parseDate((string)$offer->date_from),
+                'end_at' => $this->parseDate((string)$offer->date_till),
+                'partner_url' => $affiliateLink,
+                'partner_ref' => $affiliate_ref,
+                'image_url' => (string)$offer->picture_768x768 ?: (string)$offer->picture_1600x615,
+                'status' => 'published',
+                'metadata' => json_encode([
+                    'source' => 'platinumlist',
+                    'original_url' => $eventUrl,
+                    'event_id' => (string)$offer->offer_id,
+                    'category' => (string)$offer->category,
+                    'price' => [
+                        'min' => (float)$offer->price_min,
+                        'max' => (float)$offer->price_max,
+                        'currency' => (string)$offer->currencyId,
+                    ],
+                    'images' => [
+                        'large' => (string)$offer->picture_1600x615,
+                        'square' => (string)$offer->picture_768x768,
+                        'medium' => (string)$offer->picture_960х540,
+                    ],
+                    'video' => (string)$offer->video ?: null,
+                ]),
+            ];
+        }
+
+        return $events;
+    }
+
+    /**
+     * Parse Platinumlist date format (DD.MM.YYYY) to MySQL datetime
+     */
+    private function parseDate($dateString)
+    {
+        try {
+            if (empty($dateString)) {
+                return now()->addDay();
+            }
+            
+            // Format: 17.11.2025
+            $parts = explode('.', $dateString);
+            if (count($parts) === 3) {
+                return \Carbon\Carbon::createFromFormat('d.m.Y', $dateString)->setTime(12, 0);
+            }
+            
+            return now()->addDay();
+        } catch (\Exception $e) {
+            return now()->addDay();
+        }
     }
 }
 
