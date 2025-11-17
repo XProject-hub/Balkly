@@ -70,10 +70,14 @@ export function generateAffiliateLink(eventUrl: string): string {
 }
 
 /**
- * Mock data for Platinumlist events (until API is available)
- * This is based on the Looker Studio data reference provided
+ * NOTE: Mock data is now deprecated!
+ * All events are fetched from XML feed and stored in database.
+ * Laravel command runs every 2 hours: platinumlist:fetch
+ * 
+ * This array is kept empty - all events come from API/database
  */
 const MOCK_PLATINUMLIST_EVENTS: PlatinumListEvent[] = [
+  // All events now come from XML feed - this array is not used
   // Official Platinumlist Attractions from Spreadsheet
   {
     id: 'pl-atlantis-aquaventure',
@@ -471,43 +475,19 @@ function convertPlatinumListEvent(plEvent: PlatinumListEvent): BalklyEvent {
 /**
  * Fetch Platinumlist events from XML feed (for automation)
  * 
- * NOTE: To enable automatic updates from Platinumlist:
- * 1. Create a Laravel command: php artisan make:command FetchPlatinumlistEvents
- * 2. Fetch XML from: https://bit.ly/pl_events
- * 3. Parse XML and save as affiliate events in database
- * 4. Schedule in Laravel: Schedule::command('platinumlist:fetch')->daily()
+ * XML feed is automatically parsed by Laravel command every 2 hours.
+ * Events are stored in database with real images and affiliate links.
  * 
- * This function will then fetch from YOUR database instead of mock data.
+ * This function returns EMPTY array since all events come from database now.
  */
 export async function fetchPlatinumListEvents(filters?: {
   city?: string;
   category?: string;
   limit?: number;
 }): Promise<BalklyEvent[]> {
-  // TODO: Replace with database call when XML sync is implemented
-  // For now, using mock data with real Platinumlist attractions
-  
-  let events = [...MOCK_PLATINUMLIST_EVENTS];
-
-  // Apply filters
-  if (filters?.city) {
-    events = events.filter(e => 
-      e.city?.toLowerCase().includes(filters.city!.toLowerCase())
-    );
-  }
-
-  if (filters?.category) {
-    events = events.filter(e => 
-      e.category?.toLowerCase().includes(filters.category!.toLowerCase())
-    );
-  }
-
-  if (filters?.limit) {
-    events = events.slice(0, filters.limit);
-  }
-
-  // Convert to Balkly format
-  return events.map(convertPlatinumListEvent);
+  // All events now come from database (Laravel fetches XML every 2 hours)
+  // Return empty array - frontend will get events from API
+  return [];
 }
 
 /**
