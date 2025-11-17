@@ -196,30 +196,6 @@ export default function EventsPage() {
             )}
           </div>
         </div>
-
-        {/* GetYourGuide Tours & Experiences Widget */}
-        <div className="container mx-auto px-4 py-12">
-          <Card className="bg-gradient-to-br from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10 border-2 border-primary/20">
-            <CardHeader>
-              <CardTitle className="text-2xl">Explore Tours & Experiences in UAE</CardTitle>
-              <CardDescription>
-                Discover amazing activities, tours, and experiences from GetYourGuide
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {/* GetYourGuide Widget */}
-              <div 
-                data-gyg-widget="auto" 
-                data-gyg-partner-id="MG30TZM" 
-                data-gyg-cmp="UAE_Post"
-                className="min-h-[400px]"
-              />
-              <p className="text-xs text-center text-muted-foreground mt-4">
-                Powered by GetYourGuide - Book tours and experiences with confidence
-              </p>
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </div>
   );
