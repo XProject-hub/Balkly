@@ -66,37 +66,9 @@ export const categoriesAPI = {
 
 export const eventsAPI = {
   getAll: async (params?: any) => {
-    try {
-      // Fetch both local and affiliate events
-      const [localResponse, affiliateEvents] = await Promise.all([
-        api.get('/events', { params }),
-        fetchPlatinumListEvents({
-          city: params?.city,
-          limit: params?.per_page,
-        }),
-      ]);
-
-      // Merge results
-      const localEvents = localResponse.data.data || [];
-      const mergedEvents = [...affiliateEvents, ...localEvents];
-
-      // Sort by date
-      mergedEvents.sort((a, b) => 
-        new Date(a.start_at).getTime() - new Date(b.start_at).getTime()
-      );
-
-      return {
-        ...localResponse,
-        data: {
-          ...localResponse.data,
-          data: mergedEvents,
-        },
-      };
-    } catch (error) {
-      console.error('Error fetching events:', error);
-      // Fallback to just local events
-      return api.get('/events', { params });
-    }
+    // All events now come from database (XML imported by Laravel command)
+    // No need to merge - just fetch from API
+    return api.get('/events', { params });
   },
   
   getOne: async (id: string) => {
