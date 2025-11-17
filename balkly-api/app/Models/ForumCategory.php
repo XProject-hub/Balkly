@@ -29,5 +29,10 @@ class ForumCategory extends Model
     {
         return $this->hasMany(ForumTopic::class, 'category_id');
     }
+
+    public function subcategories()
+    {
+        return $this->hasMany(ForumSubcategory::class, 'forum_category_id')->orderBy('order');
+    }
 }
 

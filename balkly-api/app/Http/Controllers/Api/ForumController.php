@@ -20,7 +20,7 @@ class ForumController extends Controller
             $query->where('is_active', true);
         }
         
-        $categories = $query->orderBy('order')->get();
+        $categories = $query->with('subcategories')->orderBy('order')->get();
 
         return response()->json(['categories' => $categories]);
     }
