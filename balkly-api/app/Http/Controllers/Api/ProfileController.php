@@ -9,6 +9,18 @@ use Illuminate\Support\Facades\Hash;
 class ProfileController extends Controller
 {
     /**
+     * Get current user profile
+     */
+    public function show(Request $request)
+    {
+        $user = $request->user();
+        
+        return response()->json([
+            'user' => $user->load('profile'),
+        ]);
+    }
+
+    /**
      * Update user profile
      */
     public function update(Request $request)
