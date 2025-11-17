@@ -71,13 +71,10 @@ export const eventsAPI = {
   getAll: async (params?: any) => {
     console.log('eventsAPI.getAll called with params:', params);
     const response = await api.get('/events', { params });
-    console.log('API response received:', response);
-    console.log('Response data structure:', {
-      hasData: !!response.data,
-      dataKeys: Object.keys(response.data || {}),
-      total: response.data?.total,
-      dataArray: response.data?.data,
-    });
+    console.log('RAW API RESPONSE:', JSON.stringify(response.data, null, 2));
+    console.log('Total from API:', response.data?.total);
+    console.log('Data array length:', response.data?.data?.length);
+    console.log('First 3 events:', response.data?.data?.slice(0, 3));
     return response;
   },
   
