@@ -57,16 +57,16 @@ interface BalklyEvent {
 }
 
 const AFFILIATE_REF = 'zjblytn';
-const AFFILIATE_BASE = 'https://platinumlist.net/aff/?ref=';
 
 /**
  * Generate affiliate link for a Platinumlist event
- * Format: https://platinumlist.net/aff/?ref=zjblytn&link=https://attraction-url
+ * Correct format from official docs: https://attraction.platinumlist.net/?ref=yourref
  */
 export function generateAffiliateLink(eventUrl: string): string {
   // Ensure URL has https://
   const fullUrl = eventUrl.startsWith('http') ? eventUrl : `https://${eventUrl}`;
-  return `${AFFILIATE_BASE}${AFFILIATE_REF}&link=${fullUrl}`;
+  // Add ref parameter at the end
+  return `${fullUrl}/?ref=${AFFILIATE_REF}`;
 }
 
 /**
@@ -79,7 +79,7 @@ const MOCK_PLATINUMLIST_EVENTS: PlatinumListEvent[] = [
     id: 'pl-burj-khalifa',
     title: 'Burj Khalifa',
     description: 'Visit the world\'s tallest building! Experience breathtaking 360-degree views from the observation decks. Multi-language support: English, Arabic, Russian, Hebrew, German, Spanish, Polish, French, Italian.',
-    image_url: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&h=600&fit=crop',
+    image_url: 'https://placehold.co/800x600/1E63FF/FFFFFF/png?text=Burj+Khalifa',
     venue: 'Burj Khalifa',
     city: 'Dubai',
     country: 'AE',
