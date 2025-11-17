@@ -16,8 +16,7 @@ class ForumCategoriesSeeder extends Seeder
                 'slug' => 'general',
                 'description' => 'General topics and community discussions',
                 'icon' => '💬',
-                'color' => '#3b82f6',
-                'sort_order' => 1,
+                'order' => 1,
                 'subcategories' => [
                     ['name' => 'Announcements', 'slug' => 'announcements', 'description' => 'Official announcements and updates'],
                     ['name' => 'Help & Support', 'slug' => 'help-support', 'description' => 'Get help from the community'],
@@ -30,8 +29,7 @@ class ForumCategoriesSeeder extends Seeder
                 'slug' => 'marketplace',
                 'description' => 'Buy, sell, and trade items',
                 'icon' => '🛍️',
-                'color' => '#10b981',
-                'sort_order' => 2,
+                'order' => 2,
                 'subcategories' => [
                     ['name' => 'Buy & Sell', 'slug' => 'buy-sell', 'description' => 'General buying and selling'],
                     ['name' => 'Price Negotiation', 'slug' => 'price-negotiation', 'description' => 'Discuss pricing and deals'],
@@ -44,8 +42,7 @@ class ForumCategoriesSeeder extends Seeder
                 'slug' => 'auto',
                 'description' => 'Cars, motorcycles, and vehicles',
                 'icon' => '🚗',
-                'color' => '#f59e0b',
-                'sort_order' => 3,
+                'order' => 3,
                 'subcategories' => [
                     ['name' => 'Cars', 'slug' => 'cars', 'description' => 'Car discussions and sales'],
                     ['name' => 'Motorcycles', 'slug' => 'motorcycles', 'description' => 'Motorcycle community'],
@@ -59,8 +56,7 @@ class ForumCategoriesSeeder extends Seeder
                 'slug' => 'electronics',
                 'description' => 'Phones, computers, and gadgets',
                 'icon' => '📱',
-                'color' => '#8b5cf6',
-                'sort_order' => 4,
+                'order' => 4,
                 'subcategories' => [
                     ['name' => 'Mobile Phones', 'slug' => 'phones', 'description' => 'Smartphones and tablets'],
                     ['name' => 'Computers', 'slug' => 'computers', 'description' => 'Laptops and desktops'],
@@ -74,8 +70,7 @@ class ForumCategoriesSeeder extends Seeder
                 'slug' => 'real-estate',
                 'description' => 'Properties for rent and sale',
                 'icon' => '🏠',
-                'color' => '#ef4444',
-                'sort_order' => 5,
+                'order' => 5,
                 'subcategories' => [
                     ['name' => 'For Rent', 'slug' => 'for-rent', 'description' => 'Rental properties'],
                     ['name' => 'For Sale', 'slug' => 'for-sale', 'description' => 'Properties for sale'],
@@ -89,8 +84,7 @@ class ForumCategoriesSeeder extends Seeder
                 'slug' => 'jobs',
                 'description' => 'Job listings and career discussions',
                 'icon' => '💼',
-                'color' => '#06b6d4',
-                'sort_order' => 6,
+                'order' => 6,
                 'subcategories' => [
                     ['name' => 'Job Offers', 'slug' => 'job-offers', 'description' => 'Available positions'],
                     ['name' => 'Job Seekers', 'slug' => 'job-seekers', 'description' => 'Looking for work'],
@@ -104,8 +98,7 @@ class ForumCategoriesSeeder extends Seeder
                 'slug' => 'services',
                 'description' => 'Professional services',
                 'icon' => '🔧',
-                'color' => '#84cc16',
-                'sort_order' => 7,
+                'order' => 7,
                 'subcategories' => [
                     ['name' => 'Home Services', 'slug' => 'home-services', 'description' => 'Plumbing, electrical, etc.'],
                     ['name' => 'Professional Services', 'slug' => 'professional', 'description' => 'Accounting, legal, etc.'],
@@ -118,8 +111,7 @@ class ForumCategoriesSeeder extends Seeder
                 'slug' => 'fashion',
                 'description' => 'Clothing, accessories, and beauty',
                 'icon' => '👗',
-                'color' => '#ec4899',
-                'sort_order' => 8,
+                'order' => 8,
                 'subcategories' => [
                     ['name' => 'Clothing', 'slug' => 'clothing', 'description' => 'Men and women clothing'],
                     ['name' => 'Accessories', 'slug' => 'accessories', 'description' => 'Bags, watches, jewelry'],
@@ -132,8 +124,7 @@ class ForumCategoriesSeeder extends Seeder
                 'slug' => 'home-garden',
                 'description' => 'Furniture, decor, and gardening',
                 'icon' => '🪴',
-                'color' => '#14b8a6',
-                'sort_order' => 9,
+                'order' => 9,
                 'subcategories' => [
                     ['name' => 'Furniture', 'slug' => 'furniture', 'description' => 'Home furniture'],
                     ['name' => 'Home Decor', 'slug' => 'decor', 'description' => 'Decoration items'],
@@ -146,8 +137,7 @@ class ForumCategoriesSeeder extends Seeder
                 'slug' => 'sports',
                 'description' => 'Sports equipment and hobbies',
                 'icon' => '⚽',
-                'color' => '#f97316',
-                'sort_order' => 10,
+                'order' => 10,
                 'subcategories' => [
                     ['name' => 'Sports Equipment', 'slug' => 'sports-equipment', 'description' => 'Sports gear'],
                     ['name' => 'Fitness', 'slug' => 'fitness', 'description' => 'Gym and fitness'],
