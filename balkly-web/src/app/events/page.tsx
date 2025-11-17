@@ -94,7 +94,7 @@ export default function EventsPage() {
                   >
                     <option value="">All Types</option>
                     <option value="own">Balkly Tickets</option>
-                    <option value="affiliate">Partner Events</option>
+                    <option value="affiliate">Platinumlist Events</option>
                   </select>
                 </div>
 
@@ -212,13 +212,18 @@ export default function EventsPage() {
                             TICKETS AVAILABLE
                           </div>
                         ) : event.type === "affiliate" ? (
-                          <div className="absolute top-2 right-2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-bold">
-                            FEATURED
+                          <div className="absolute top-2 right-2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                            PLATINUMLIST
                           </div>
                         ) : null}
                       </div>
                       <CardHeader>
                         <CardTitle className="line-clamp-1">{event.title}</CardTitle>
+                        {event.type === "affiliate" && (
+                          <p className="text-xs text-muted-foreground">
+                            Powered by Platinumlist
+                          </p>
+                        )}
                         <CardDescription className="space-y-1">
                           <div className="flex items-center">
                             <Calendar className="h-4 w-4 mr-2" />

@@ -25,9 +25,11 @@ class EventController extends Controller
             $query->where('city', $request->city);
         }
 
-        // Show events from yesterday onwards (not too strict)
-        $query->where('start_at', '>=', now()->subDay())
-              ->orderBy('start_at');
+        // Show events - include past 7 days and all future (for Platinumlist long-running attractions)
+        $query->where(function($q) {
+            $q->where('start_at', '>=', now()->subDays(7))
+              ->orWhere('end_at', '>=', now());
+        })->orderBy('start_at');
 
         $events = $query->paginate(20);
 
