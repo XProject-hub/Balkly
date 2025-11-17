@@ -25,8 +25,8 @@ class EventController extends Controller
             $query->where('city', $request->city);
         }
 
-        // Upcoming events only
-        $query->where('start_at', '>', now())
+        // Show events from yesterday onwards (not too strict)
+        $query->where('start_at', '>=', now()->subDay())
               ->orderBy('start_at');
 
         $events = $query->paginate(20);
