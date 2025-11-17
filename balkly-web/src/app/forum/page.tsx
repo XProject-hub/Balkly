@@ -88,7 +88,7 @@ export default function ForumPage() {
                   </button>
 
                   {/* Categories with Subcategories - Hierarchical */}
-                  {categories.filter(cat => !cat.parent_id).map((cat) => (
+                  {categories.map((cat) => (
                     <div key={cat.id} className="bg-white dark:bg-gray-800">
                       {/* Main Category - Bold Header Style */}
                       <div className="px-4 pt-4 pb-2 bg-gray-50/50 dark:bg-gray-700/50">
@@ -99,8 +99,8 @@ export default function ForumPage() {
                           }`}
                         >
                           <div className="flex items-center gap-3">
-                            <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-balkly-blue to-teal-glow flex items-center justify-center">
-                              <MessageCircle className="h-5 w-5 text-white" />
+                            <div className="flex-shrink-0 text-2xl">
+                              {cat.icon || '📁'}
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="font-bold text-gray-900 dark:text-gray-100 uppercase text-sm tracking-wide">{cat.name}</p>
@@ -111,9 +111,9 @@ export default function ForumPage() {
                       </div>
                       
                       {/* Subcategories - Indented */}
-                      {categories.filter(sub => sub.parent_id === cat.id).length > 0 && (
+                      {cat.subcategories && cat.subcategories.length > 0 && (
                         <div className="px-4 pb-3 space-y-1">
-                          {categories.filter(sub => sub.parent_id === cat.id).map((subcat) => (
+                          {cat.subcategories.map((subcat: any) => (
                             <button
                               key={subcat.id}
                               onClick={() => setSelectedCategory(subcat.id)}
