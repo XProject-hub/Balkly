@@ -555,7 +555,7 @@ export default function CreateListingPage() {
                     >
                       <option value="AED">AED د.إ</option>
                       <option value="EUR">EUR €</option>
-                      <option value="USD">USD $</option>
+                      <option value="BAM">BAM KM</option>
                     </select>
                   </div>
                 </div>
