@@ -22,6 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
+
+        // Use custom Authenticate middleware for API
+        $middleware->redirectGuestsTo(fn () => throw new \Illuminate\Auth\AuthenticationException());
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // Return JSON for unauthenticated API requests instead of redirect
