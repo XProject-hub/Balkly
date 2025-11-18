@@ -11,7 +11,7 @@ export function getCurrencySymbol(currency?: string): string {
   const symbols: Record<string, string> = {
     'EUR': '€',
     'AED': 'د.إ',
-    'USD': '$',
+    'USD': '€', // Changed to € as requested
     'BAM': 'KM',
   };
   
