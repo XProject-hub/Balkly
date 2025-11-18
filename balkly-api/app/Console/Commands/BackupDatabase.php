@@ -24,10 +24,9 @@ class BackupDatabase extends Command
         $database = env('DB_DATABASE');
         $username = env('DB_USERNAME');
         $password = env('DB_PASSWORD');
-        $host = env('DB_HOST');
 
-        // Create backup
-        $command = "mysqldump -h {$host} -u {$username} -p{$password} {$database} > {$backupPath} 2>&1";
+        // Execute mysqldump in MySQL container (Docker-aware)
+        $command = "docker exec balkly_mysql mysqldump -u {$username} -p{$password} {$database} > {$backupPath} 2>&1";
         exec($command, $output, $returnCode);
 
         if ($returnCode === 0) {
