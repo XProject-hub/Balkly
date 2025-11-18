@@ -62,9 +62,11 @@ export default function LanguageSwitcher() {
         className="flex items-center gap-2 px-2"
       >
         {currentLanguage.isBalkly ? (
-          <div className="w-6 h-4 bg-gradient-to-r from-balkly-blue to-teal-glow rounded flex items-center justify-center text-white font-bold text-[10px]">
-            B
-          </div>
+          <img 
+            src="/balkly-icon.png"
+            alt="Balkly"
+            className="w-6 h-4 object-contain"
+          />
         ) : (
           <img 
             src={`https://flagcdn.com/w20/${currentLanguage.flagCode.toLowerCase()}.png`}
@@ -93,9 +95,11 @@ export default function LanguageSwitcher() {
                 }`}
               >
                 {lang.isBalkly ? (
-                  <div className="w-8 h-6 bg-gradient-to-r from-balkly-blue to-teal-glow rounded shadow-sm flex items-center justify-center text-white font-bold text-xs">
-                    B
-                  </div>
+                  <img 
+                    src="/balkly-icon.png"
+                    alt="Balkly"
+                    className="w-8 h-6 object-contain"
+                  />
                 ) : (
                   <img 
                     src={`https://flagcdn.com/w40/${lang.flagCode.toLowerCase()}.png`}
