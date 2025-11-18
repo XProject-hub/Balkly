@@ -463,21 +463,6 @@ export default function HomePage() {
           </Card>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-100 dark:bg-gray-900 py-8 mt-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center text-muted-foreground">
-            <p>&copy; 2025 Balkly. All rights reserved.</p>
-            <div className="flex gap-4 justify-center mt-4">
-              <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
-              <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
-              <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-              <Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
