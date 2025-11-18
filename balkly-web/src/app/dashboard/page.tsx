@@ -11,7 +11,7 @@ import {
   TrendingUp,
   Plus,
   Eye,
-  DollarSign,
+  Euro,
 } from "lucide-react";
 
 export default function DashboardPage() {
@@ -100,7 +100,7 @@ export default function DashboardPage() {
           </Button>
           <Button size="lg" variant="outline" asChild className="h-auto py-4">
             <Link href="/dashboard/orders">
-              <DollarSign className="mr-2 h-5 w-5" />
+              <Euro className="mr-2 h-5 w-5" />
               <span>Orders</span>
             </Link>
           </Button>
@@ -112,7 +112,7 @@ export default function DashboardPage() {
           </Button>
           <Button size="lg" variant="outline" asChild className="h-auto py-4">
             <Link href="/dashboard/offers">
-              <DollarSign className="mr-2 h-5 w-5" />
+              <Euro className="mr-2 h-5 w-5" />
               <span>My Offers</span>
             </Link>
           </Button>

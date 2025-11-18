@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Eye, TrendingUp, MessageCircle, DollarSign } from "lucide-react";
+import { ArrowLeft, Eye, TrendingUp, MessageCircle, Euro } from "lucide-react";
 
 export default function SellerInsightsPage() {
   const [insights, setInsights] = useState({
@@ -105,7 +105,7 @@ export default function SellerInsightsPage() {
             <CardHeader>
               <CardTitle className="text-sm text-gray-700 flex items-center justify-between">
                 Revenue
-                <DollarSign className="h-4 w-4 text-gray-400" />
+                <Euro className="h-4 w-4 text-gray-400" />
               </CardTitle>
             </CardHeader>
             <CardContent>
