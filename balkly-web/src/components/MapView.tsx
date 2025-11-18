@@ -26,10 +26,11 @@ export default function MapView({
     // Initialize map
     const map = L.map(mapContainerRef.current).setView(center, zoom);
 
-    // Add tile layer
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '© OpenStreetMap contributors',
+    // Add tile layer - CartoDB Positron (English labels)
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+      attribution: '© OpenStreetMap contributors, © CARTO',
       maxZoom: 19,
+      subdomains: 'abcd',
     }).addTo(map);
 
     // Custom marker icon
