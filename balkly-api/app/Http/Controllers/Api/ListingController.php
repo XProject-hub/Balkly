@@ -135,6 +135,41 @@ class ListingController extends Controller
         ], 201);
     }
 
+    /**
+     * Upload media for listing
+     */
+    public function uploadMedia(Request $request, $id)
+    {
+        $listing = Listing::where('user_id', auth()->id())->findOrFail($id);
+
+        $request->validate([
+            'images' => 'required|array|max:10',
+            'images.*' => 'image|mimes:jpeg,jpg,png,gif,webp|max:5120', // 5MB max
+        ]);
+
+        $uploadedMedia = [];
+
+        foreach ($request->file('images') as $index => $image) {
+            $path = $image->store('listings/' . $listing->id, 'public');
+            
+            $media = $listing->media()->create([
+                'file_name' => $image->getClientOriginalName(),
+                'file_path' => $path,
+                'mime_type' => $image->getMimeType(),
+                'size' => $image->getSize(),
+                'collection_name' => 'images',
+                'order' => $index,
+            ]);
+
+            $uploadedMedia[] = $media;
+        }
+
+        return response()->json([
+            'message' => 'Images uploaded successfully',
+            'media' => $uploadedMedia,
+        ]);
+    }
+
     public function update(Request $request, $id)
     {
         $listing = Listing::where('user_id', auth()->id())->findOrFail($id);

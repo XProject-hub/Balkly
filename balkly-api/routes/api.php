@@ -79,6 +79,7 @@ Route::prefix('v1')->group(function () {
         Route::delete('/listings/{id}', [ListingController::class, 'destroy']);
         Route::post('/listings/{id}/publish', [ListingController::class, 'publish']);
         Route::post('/listings/{id}/boost', [ListingController::class, 'boost']);
+        Route::post('/listings/{id}/media', [ListingController::class, 'uploadMedia']);
         
         // Media
         Route::post('/media/upload', [\App\Http\Controllers\Api\MediaController::class, 'upload']);
