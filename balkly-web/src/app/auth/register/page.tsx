@@ -37,17 +37,19 @@ export default function RegisterPage() {
       localStorage.setItem("auth_token", response.data.token);
       
       // Store user data
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      if (response.data.user) {
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+      }
       
       // Trigger auth state update event for Header
       window.dispatchEvent(new Event('auth-change'));
       
-      // Check if email is verified
-      if (response.data.user.email_verified_at === null) {
+      // Check if email is verified (safe check)
+      if (response.data.user && response.data.user.email_verified_at === null) {
         // Show verification page
         router.push("/auth/verify-email");
       } else {
-        // Already verified, go to dashboard
+        // Already verified or no user data, go to dashboard
         window.location.href = "/dashboard";
       }
     } catch (err: any) {
