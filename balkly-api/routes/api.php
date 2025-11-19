@@ -63,10 +63,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/profile/insights', [\App\Http\Controllers\Api\ProfileController::class, 'insights']);
         Route::post('/profile/change-password', [\App\Http\Controllers\Api\ProfileController::class, 'changePassword']);
         
-        // 2FA Routes
+        // 2FA Routes (authenticated users only)
         Route::post('/auth/2fa/enable', [AuthController::class, 'enable2FA']);
         Route::post('/auth/2fa/confirm', [AuthController::class, 'confirm2FA']);
-        Route::post('/auth/2fa/verify', [AuthController::class, 'verify2FA']);
         Route::post('/auth/2fa/disable', [AuthController::class, 'disable2FA']);
         Route::get('/auth/2fa/recovery-codes', [AuthController::class, 'get2FARecoveryCodes']);
         
