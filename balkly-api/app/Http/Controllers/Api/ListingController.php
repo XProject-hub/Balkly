@@ -17,16 +17,16 @@ class ListingController extends Controller
             ->with(['user', 'category', 'media'])
             ->where('status', 'active');
 
-        // Filters
-        if ($request->has('category_id')) {
+        // Filters - use filled() to ignore empty strings
+        if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
-        if ($request->has('city')) {
+        if ($request->filled('city')) {
             $query->where('city', $request->city);
         }
 
-        if ($request->has('country')) {
+        if ($request->filled('country')) {
             $query->where('country', $request->country);
         }
 

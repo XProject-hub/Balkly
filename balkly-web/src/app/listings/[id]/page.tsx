@@ -12,7 +12,7 @@ import {
   Flag,
   MessageCircle,
   ArrowLeft,
-  DollarSign,
+  Euro,
   Star,
 } from "lucide-react";
 import { listingsAPI } from "@/lib/api";
@@ -270,7 +270,7 @@ export default function ListingDetailPage() {
                   Contact Seller
                 </Button>
                 <Button variant="outline" className="w-full" size="lg" onClick={() => setShowOfferModal(true)}>
-                  <DollarSign className="mr-2 h-5 w-5" />
+                  <Euro className="mr-2 h-5 w-5" />
                   Make an Offer
                 </Button>
               </CardContent>
@@ -345,7 +345,7 @@ export default function ListingDetailPage() {
               <CardHeader>
                 <CardTitle>Make an Offer</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Original price: €{listing.price?.toFixed(2)}
+                  Original price: €{typeof listing.price === 'number' ? listing.price.toFixed(2) : parseFloat(listing.price || 0).toFixed(2)}
                 </p>
               </CardHeader>
               <CardContent className="space-y-4">
