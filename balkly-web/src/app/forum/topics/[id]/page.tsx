@@ -329,13 +329,33 @@ export default function TopicDetailPage() {
                       <p className="whitespace-pre-wrap">{post.content}</p>
                     </div>
                     <div className="flex gap-4 mt-3 items-center">
-                      <button className="text-sm text-muted-foreground hover:text-foreground flex items-center">
-                        <ThumbsUp className="h-4 w-4 mr-1" />
-                        Like ({post.likes_count || 0})
+                      <button 
+                        onClick={() => handleLikePost(post.id)}
+                        className={`text-sm flex items-center transition-colors ${
+                          post.user_has_liked 
+                            ? 'text-primary font-medium' 
+                            : 'text-muted-foreground hover:text-foreground'
+                        }`}
+                      >
+                        <ThumbsUp className={`h-4 w-4 mr-1 ${post.user_has_liked ? 'fill-current' : ''}`} />
+                        {post.user_has_liked ? 'Liked' : 'Like'} ({post.likes_count || 0})
                       </button>
-                      <button className="text-sm text-muted-foreground hover:text-foreground">
-                        Reply
+                      <button 
+                        onClick={() => handleQuotePost(post)}
+                        className="text-sm text-muted-foreground hover:text-foreground flex items-center"
+                      >
+                        <MessageSquare className="h-4 w-4 mr-1" />
+                        Quote
                       </button>
+                      {currentUser?.id === post.user_id && (
+                        <button
+                          onClick={() => handleEditPost(post)}
+                          className="text-sm text-muted-foreground hover:text-foreground flex items-center"
+                        >
+                          <Edit className="h-4 w-4 mr-1" />
+                          Edit
+                        </button>
+                      )}
                       {currentUser?.role === "admin" && (
                         <button
                           onClick={() => handleDeletePost(post.id)}
