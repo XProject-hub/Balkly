@@ -51,12 +51,13 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
     setUploading(true);
     
     try {
+      // Use simple public storage upload
       const formData = new FormData();
       Array.from(files).forEach(file => {
         formData.append('images[]', file);
       });
 
-      const response = await fetch('/api/v1/media/upload', {
+      const response = await fetch('/api/v1/forum/upload-images', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
@@ -64,17 +65,22 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
         body: formData,
       });
 
+      console.log('Upload response:', response.status);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('Upload data:', data);
         // Insert markdown image tags
-        const imageMarkdown = data.media.map((m: any) => `![Image](${m.url})`).join('\n');
+        const imageMarkdown = data.images?.map((url: string) => `![Image](${url})`).join('\n') || '';
         onChange(value + '\n' + imageMarkdown);
       } else {
-        alert('Failed to upload images. Please try again.');
+        const errorData = await response.json();
+        console.error('Upload error:', errorData);
+        alert('Failed to upload: ' + (errorData.message || 'Unknown error'));
       }
     } catch (error) {
       console.error('Image upload error:', error);
-      alert('Failed to upload images.');
+      alert('Failed to upload images. Check console for details.');
     } finally {
       setUploading(false);
       if (imageInputRef.current) {

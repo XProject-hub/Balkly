@@ -99,6 +99,9 @@ Route::prefix('v1')->group(function () {
         Route::post('/forum/topics', [ForumController::class, 'createTopic']);
         Route::post('/forum/posts', [ForumController::class, 'createPost']);
         Route::post('/forum/posts/{id}/sticky', [ForumController::class, 'makeSticky']);
+        Route::post('/forum/posts/{id}/like', [ForumController::class, 'likePost']);
+        Route::patch('/forum/posts/{id}', [ForumController::class, 'updatePost']);
+        Route::post('/forum/upload-images', [\App\Http\Controllers\Api\ForumImageController::class, 'upload']);
         
         // Events (Organizer)
         Route::post('/events', [EventController::class, 'store']);
