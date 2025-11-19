@@ -30,6 +30,8 @@ export default function ListingDetailPage() {
   const [showOfferModal, setShowOfferModal] = useState(false);
   const [offerAmount, setOfferAmount] = useState("");
   const [offerMessage, setOfferMessage] = useState("");
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [contactMessage, setContactMessage] = useState("");
   const [reviews, setReviews] = useState<any[]>([]);
   const [avgRating, setAvgRating] = useState(0);
 
@@ -93,8 +95,43 @@ export default function ListingDetailPage() {
       return;
     }
     
-    // Redirect to messages with seller
-    router.push(`/dashboard/messages?listing=${listingId}&seller=${listing.user_id}`);
+    // Show contact modal
+    setShowContactModal(true);
+  };
+
+  const handleSendMessage = async () => {
+    if (!contactMessage.trim()) {
+      alert("Please enter a message!");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/v1/chats", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({
+          listing_id: parseInt(listingId),
+          seller_id: listing.user_id,
+          message: contactMessage,
+        }),
+      });
+
+      if (response.ok) {
+        alert("Message sent! The seller will be notified.");
+        setShowContactModal(false);
+        setContactMessage("");
+        router.push("/dashboard/messages");
+      } else {
+        const data = await response.json();
+        alert(data.message || "Failed to send message. Please try again.");
+      }
+    } catch (error) {
+      console.error("Send message error:", error);
+      alert("Failed to send message. Please try again.");
+    }
   };
 
   const handleShare = async () => {
@@ -269,6 +306,10 @@ export default function ListingDetailPage() {
                   <MessageCircle className="mr-2 h-5 w-5" />
                   Contact Seller
                 </Button>
+                <Button variant="outline" className="w-full" size="lg" onClick={() => setShowContactModal(true)}>
+                  <MessageCircle className="mr-2 h-5 w-5" />
+                  Send Message
+                </Button>
                 <Button variant="outline" className="w-full" size="lg" onClick={() => setShowOfferModal(true)}>
                   <Euro className="mr-2 h-5 w-5" />
                   Make an Offer
@@ -338,6 +379,45 @@ export default function ListingDetailPage() {
           </div>
         </div>
 
+        {/* Contact Seller Modal */}
+        {showContactModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-md">
+              <CardHeader>
+                <CardTitle>Contact Seller</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Send a message to {listing.user?.name}
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Your Message</label>
+                  <textarea
+                    value={contactMessage}
+                    onChange={(e) => setContactMessage(e.target.value)}
+                    placeholder="Hi! I'm interested in this listing. Is it still available?"
+                    className="w-full px-4 py-2 border rounded-lg h-32 dark:bg-gray-800 dark:border-gray-700"
+                    rows={5}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Be polite and specific about your inquiry
+                  </p>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button onClick={handleSendMessage} className="flex-1">
+                    <MessageCircle className="mr-2 h-4 w-4" />
+                    Send Message
+                  </Button>
+                  <Button variant="outline" onClick={() => setShowContactModal(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Make Offer Modal */}
         {showOfferModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -356,7 +436,7 @@ export default function ListingDetailPage() {
                     value={offerAmount}
                     onChange={(e) => setOfferAmount(e.target.value)}
                     placeholder="Enter your offer"
-                    className="w-full px-4 py-2 border rounded-lg"
+                    className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                     step="0.01"
                   />
                 </div>
@@ -367,7 +447,7 @@ export default function ListingDetailPage() {
                     value={offerMessage}
                     onChange={(e) => setOfferMessage(e.target.value)}
                     placeholder="Add a message to the seller..."
-                    className="w-full px-4 py-2 border rounded-lg h-24"
+                    className="w-full px-4 py-2 border rounded-lg h-24 dark:bg-gray-800 dark:border-gray-700"
                   />
                 </div>
 
