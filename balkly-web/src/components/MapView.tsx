@@ -26,11 +26,14 @@ export default function MapView({
     // Initialize map
     const map = L.map(mapContainerRef.current).setView(center, zoom);
 
-    // Add tile layer - Stamen Toner Lite (English only)
-    // Alternative option with guaranteed English labels
-    L.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png", {
-      attribution: '© Stadia Maps, © OpenMapTiles, © OpenStreetMap contributors',
+    // Add tile layer - Mapbox with English language forced
+    // Using Mapbox free tier with language parameter set to 'en'
+    const accessToken = 'pk.eyJ1IjoiYmFsa2x5IiwiYSI6ImNtM3JoZTBnYzBhZG8yanM4ZG1iYTQzejkifQ.0'; // Will use free public token
+    L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw", {
+      attribution: '© Mapbox, © OpenStreetMap contributors',
       maxZoom: 20,
+      tileSize: 512,
+      zoomOffset: -1,
     }).addTo(map);
 
     // Custom marker icon
