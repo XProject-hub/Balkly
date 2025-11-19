@@ -26,14 +26,11 @@ export default function MapView({
     // Initialize map
     const map = L.map(mapContainerRef.current).setView(center, zoom);
 
-    // Add tile layer - Mapbox with English language forced
-    // Using Mapbox free tier with language parameter set to 'en'
-    const accessToken = 'pk.eyJ1IjoiYmFsa2x5IiwiYSI6ImNtM3JoZTBnYzBhZG8yanM4ZG1iYTQzejkifQ.0'; // Will use free public token
-    L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw", {
-      attribution: '© Mapbox, © OpenStreetMap contributors',
-      maxZoom: 20,
-      tileSize: 512,
-      zoomOffset: -1,
+    // Add tile layer - OpenStreetMap (labels will be in local language at high zoom)
+    // Using OSM as most reliable free option
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 19,
     }).addTo(map);
 
     // Custom marker icon
