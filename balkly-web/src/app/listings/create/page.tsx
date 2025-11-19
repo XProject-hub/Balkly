@@ -347,7 +347,15 @@ export default function CreateListingPage() {
                     type="text"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="e.g., BMW M3 2020 - Excellent Condition"
+                    placeholder={
+                      selectedCategory?.slug === 'auto' ? 'e.g., BMW M3 2020 - Excellent Condition' :
+                      selectedCategory?.slug === 'nekretnine' ? 'e.g., 2 Bedroom Apartment in JVC' :
+                      selectedCategory?.slug === 'electronics' ? 'e.g., iPhone 15 Pro Max 256GB' :
+                      selectedCategory?.slug === 'fashion' ? 'e.g., Nike Air Jordan Retro 1' :
+                      selectedCategory?.slug === 'home' ? 'e.g., IKEA Sofa Bed - Like New' :
+                      selectedCategory?.slug === 'sports' ? 'e.g., Mountain Bike 27.5" - Shimano' :
+                      'e.g., Describe your item briefly'
+                    }
                     className="w-full px-4 py-2 border rounded-lg"
                     maxLength={100}
                   />

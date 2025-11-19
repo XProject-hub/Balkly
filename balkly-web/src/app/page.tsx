@@ -22,8 +22,8 @@ export default function HomePage() {
 
   const loadFeaturedContent = async () => {
     try {
-      // Load featured listings
-      const listingsRes = await listingsAPI.getAll({ per_page: 6, sort_by: 'views_count' });
+      // Load featured listings - show newest first
+      const listingsRes = await listingsAPI.getAll({ per_page: 6, sort_by: 'created_at', sort_order: 'desc' });
       setFeaturedListings(listingsRes.data.data || []);
 
       // Load upcoming events
