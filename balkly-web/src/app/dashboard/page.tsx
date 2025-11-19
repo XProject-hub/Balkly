@@ -24,7 +24,7 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
-    // Load user from localStorage
+    // Load user from localStorage - safe parse
     const userData = localStorage.getItem("user");
     if (userData && userData !== 'undefined' && userData !== 'null') {
       try {
@@ -32,6 +32,7 @@ export default function DashboardPage() {
       } catch (e) {
         console.error('Failed to parse user data:', e);
         localStorage.removeItem("user");
+        localStorage.removeItem("auth_token");
       }
     }
 

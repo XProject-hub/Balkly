@@ -55,6 +55,12 @@ class AuthController extends Controller
             $user->email_verified_at = now();
             $user->save();
         }
+        
+        // Auto-verify all users for now (email may not be configured)
+        if (!$user->email_verified_at) {
+            $user->email_verified_at = now();
+            $user->save();
+        }
 
         // Send welcome email
         try {
