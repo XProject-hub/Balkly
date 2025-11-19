@@ -30,6 +30,8 @@ export default function TopicDetailPage() {
   const [loading, setLoading] = useState(true);
   const [showStickyModal, setShowStickyModal] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [editingPost, setEditingPost] = useState<any>(null);
+  const [editContent, setEditContent] = useState("");
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
