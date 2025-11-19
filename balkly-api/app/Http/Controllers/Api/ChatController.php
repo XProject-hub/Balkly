@@ -51,6 +51,27 @@ class ChatController extends Controller
         ]);
     }
 
+    public function messages($chatId)
+    {
+        $chat = Chat::findOrFail($chatId);
+
+        // Verify user is part of chat
+        if ($chat->buyer_id !== auth()->id() && $chat->seller_id !== auth()->id()) {
+            return response()->json([
+                'message' => 'Unauthorized',
+            ], 403);
+        }
+
+        $messages = Message::where('chat_id', $chatId)
+            ->with('sender')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return response()->json([
+            'messages' => $messages,
+        ]);
+    }
+
     public function sendMessage(Request $request)
     {
         $validated = $request->validate([
