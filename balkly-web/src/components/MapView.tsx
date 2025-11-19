@@ -26,11 +26,11 @@ export default function MapView({
     // Initialize map
     const map = L.map(mapContainerRef.current).setView(center, zoom);
 
-    // Add tile layer - OpenStreetMap (labels will be in local language at high zoom)
-    // Using OSM as most reliable free option
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '© OpenStreetMap contributors',
-      maxZoom: 19,
+    // Add Google Maps tile layer with English language forced
+    L.tileLayer("https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&hl=en&key=AIzaSyDLDCkbeHxOCWk8XLFaksOSOKOit4t2VQM", {
+      attribution: '© Google Maps',
+      maxZoom: 20,
+      subdomains: ['0', '1', '2', '3'],
     }).addTo(map);
 
     // Custom marker icon
