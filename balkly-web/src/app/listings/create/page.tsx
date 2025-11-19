@@ -193,6 +193,29 @@ export default function CreateListingPage() {
       const listingId = listingResponse.data.listing.id;
       console.log("Listing created with ID:", listingId);
 
+      // Upload images if any
+      if (formData.images.length > 0) {
+        console.log("Uploading", formData.images.length, "images...");
+        const imageFormData = new FormData();
+        
+        formData.images.forEach((file, index) => {
+          imageFormData.append('images[]', file);
+        });
+
+        try {
+          await fetch(`/api/v1/listings/${listingId}/media`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+            },
+            body: imageFormData,
+          });
+          console.log("Images uploaded successfully");
+        } catch (error) {
+          console.error("Failed to upload images:", error);
+        }
+      }
+
       // If a plan is selected, proceed to payment
       if (selectedPlan) {
         const orderResponse = await fetch("/api/v1/orders/listings", {
