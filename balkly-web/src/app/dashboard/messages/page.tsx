@@ -165,7 +165,9 @@ export default function MessagesPage() {
       if (response.ok) {
         setNewMessage("");
         setAttachments([]);
+        setShouldAutoScroll(true); // Enable scroll for user's message
         loadMessages(selectedChat.id);
+        setTimeout(() => setShouldAutoScroll(false), 1000); // Disable after 1s
       }
     } catch (error) {
       console.error("Failed to send message:", error);
