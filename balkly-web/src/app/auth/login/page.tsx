@@ -36,13 +36,7 @@ export default function LoginPage() {
       // Store user data
       localStorage.setItem("user", JSON.stringify(response.data.user));
       
-      // Check if email is verified
-      if (!response.data.user.email_verified_at) {
-        router.push("/auth/verify-email");
-        return;
-      }
-      
-      // Redirect to dashboard
+      // Redirect to dashboard (users are auto-verified)
       router.push("/dashboard");
     } catch (err: any) {
       setError(err.response?.data?.message || "Login failed. Please try again.");
