@@ -403,7 +403,7 @@ export default function ListingsPage() {
                           {listing.description}
                         </CardDescription>
                       </CardHeader>
-                      <CardContent>
+                      <CardContent className="space-y-2">
                         <div className="flex justify-between items-center">
                           <span className="text-2xl font-bold text-primary">
                             {listing.price
@@ -415,6 +415,16 @@ export default function ListingsPage() {
                             {listing.city}
                           </span>
                         </div>
+                        {listing.user && (
+                          <div className="pt-2 border-t flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold">
+                              {listing.user.name?.[0]?.toUpperCase()}
+                            </div>
+                            <span className="text-sm text-muted-foreground">
+                              {listing.user.name}
+                            </span>
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
                   </Link>
