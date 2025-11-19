@@ -349,9 +349,35 @@ export default function TopicDetailPage() {
           ))}
         </div>
 
+        {/* Edit Post Modal */}
+        {editingPost && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-3xl">
+              <CardHeader>
+                <CardTitle>Edit Post</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <textarea
+                  value={editContent}
+                  onChange={(e) => setEditContent(e.target.value)}
+                  className="w-full px-4 py-3 border rounded-lg h-48 dark:bg-gray-800 dark:border-gray-700"
+                />
+                <div className="flex gap-2">
+                  <Button onClick={handleSaveEdit} disabled={!editContent.trim()}>
+                    Save Changes
+                  </Button>
+                  <Button variant="outline" onClick={() => setEditingPost(null)}>
+                    Cancel
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Reply Form */}
         {!topic.is_locked ? (
-          <Card>
+          <Card id="reply-form">
             <CardHeader>
               <CardTitle>Post a Reply</CardTitle>
             </CardHeader>
@@ -361,10 +387,11 @@ export default function TopicDetailPage() {
                   value={reply}
                   onChange={(e) => setReply(e.target.value)}
                   placeholder="Write your reply..."
-                  className="w-full px-4 py-3 border rounded-lg h-32 mb-4"
+                  className="w-full px-4 py-3 border rounded-lg h-32 mb-4 dark:bg-gray-800 dark:border-gray-700"
                   required
                 />
                 <Button type="submit" disabled={!reply.trim()}>
+                  <MessageCircle className="mr-2 h-4 w-4" />
                   Post Reply
                 </Button>
               </form>
