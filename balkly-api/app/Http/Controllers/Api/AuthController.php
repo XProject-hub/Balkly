@@ -183,9 +183,8 @@ class AuthController extends Controller
         $user->markEmailAsVerified();
         event(new Verified($user));
 
-        return response()->json([
-            'message' => 'Email verified successfully',
-        ]);
+        // Redirect to beautiful success page instead of JSON
+        return redirect()->to(env('FRONTEND_URL', 'https://balkly.live') . '/auth/email-verified');
     }
 
     /**
