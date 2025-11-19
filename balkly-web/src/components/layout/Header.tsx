@@ -36,9 +36,17 @@ export default function Header() {
       const token = localStorage.getItem("auth_token");
       const userData = localStorage.getItem("user");
       
-      if (token && userData) {
-        setIsLoggedIn(true);
-        setUser(JSON.parse(userData));
+      if (token && userData && userData !== 'undefined' && userData !== 'null') {
+        try {
+          setIsLoggedIn(true);
+          setUser(JSON.parse(userData));
+        } catch (e) {
+          console.error('Failed to parse user data:', e);
+          setIsLoggedIn(false);
+          setUser(null);
+          localStorage.removeItem("user");
+          localStorage.removeItem("auth_token");
+        }
       } else {
         setIsLoggedIn(false);
         setUser(null);
