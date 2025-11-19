@@ -20,7 +20,8 @@ export default function MyListingsPage() {
     setLoading(true);
     try {
       const token = localStorage.getItem("auth_token");
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const userData = localStorage.getItem("user");
+      const user = userData && userData !== 'undefined' ? JSON.parse(userData) : {};
       
       console.log("Loading listings for user ID:", user.id);
       

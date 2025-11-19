@@ -26,8 +26,13 @@ export default function DashboardPage() {
   useEffect(() => {
     // Load user from localStorage
     const userData = localStorage.getItem("user");
-    if (userData) {
-      setUser(JSON.parse(userData));
+    if (userData && userData !== 'undefined' && userData !== 'null') {
+      try {
+        setUser(JSON.parse(userData));
+      } catch (e) {
+        console.error('Failed to parse user data:', e);
+        localStorage.removeItem("user");
+      }
     }
 
     // Load real stats from API

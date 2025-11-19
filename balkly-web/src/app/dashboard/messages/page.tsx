@@ -33,7 +33,8 @@ export default function MessagesPage() {
   const [uploading, setUploading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const currentUserId = JSON.parse(localStorage.getItem("user") || "{}")?.id;
+  const userData = localStorage.getItem("user");
+  const currentUserId = userData && userData !== 'undefined' ? JSON.parse(userData)?.id : null;
 
   useEffect(() => {
     loadChats();
