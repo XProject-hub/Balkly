@@ -53,6 +53,8 @@ export default function NewTopicPage() {
 
     try {
       console.log("Creating topic with data:", formData);
+      console.log("Category ID being sent:", formData.category_id);
+      
       const response = await forumAPI.createTopic(formData);
       console.log("Topic created:", response.data);
       const topicId = response.data.topic.id;
@@ -60,8 +62,15 @@ export default function NewTopicPage() {
     } catch (error: any) {
       console.error("Failed to create topic:", error);
       console.error("Error response:", error.response?.data);
-      const errorMsg = error.response?.data?.message || error.response?.data?.errors || "Failed to create topic. Please try again.";
-      alert(typeof errorMsg === 'object' ? JSON.stringify(errorMsg) : errorMsg);
+      
+      // Show validation errors
+      if (error.response?.data?.errors) {
+        const errors = Object.values(error.response.data.errors).flat();
+        alert("Validation errors:\n" + errors.join("\n"));
+      } else {
+        const errorMsg = error.response?.data?.message || "Failed to create topic. Please try again.";
+        alert(errorMsg);
+      }
     } finally {
       setLoading(false);
     }
