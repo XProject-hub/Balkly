@@ -13,9 +13,18 @@ interface MarkdownEditorProps {
 export default function MarkdownEditor({ value, onChange, placeholder }: MarkdownEditorProps) {
   const [showPreview, setShowPreview] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
   
-  const emojis = ['😀', '😂', '❤️', '👍', '👏', '🎉', '🔥', '💯', '✅', '❌', '⚠️', '💪', '🙏', '🤝', '👀', '💡', '🚀', '⭐'];
+  const emojis = [
+    '😀', '😂', '🤣', '😊', '😍', '🥰', '😘', '😜', '😎', '🤗', '🤔', '😏', '😌', '😔', '😢', '😭',
+    '😡', '🤬', '😱', '😨', '🤯', '😳', '🥺', '😇', '🤠', '🥳', '🤩', '😴', '🤐', '🤨', '🧐', '🤓',
+    '❤️', '💙', '💚', '💛', '🧡', '💜', '🖤', '🤍', '💔', '❣️', '💕', '💖', '💗', '💓', '💞', '💝',
+    '👍', '👎', '👏', '🙌', '👊', '✊', '🤝', '🙏', '💪', '🦾', '👀', '👁️', '🧠', '🗣️', '👤', '👥',
+    '🎉', '🎊', '🎈', '🎁', '🏆', '🥇', '🥈', '🥉', '⭐', '🌟', '✨', '💫', '🔥', '💯', '✅', '❌',
+    '⚠️', '🚀', '💡', '📢', '📣', '📌', '📍', '🔔', '🔕', '💬', '💭', '🗨️', '🗯️', '💤', '💥', '💢'
+  ];
 
   const insertMarkdown = (before: string, after: string = '') => {
     const textarea = document.querySelector('textarea') as HTMLTextAreaElement;
@@ -33,6 +42,45 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
       textarea.focus();
       textarea.setSelectionRange(start + before.length, start + before.length + selectedText.length);
     }, 0);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    
+    try {
+      const formData = new FormData();
+      Array.from(files).forEach(file => {
+        formData.append('images[]', file);
+      });
+
+      const response = await fetch('/api/v1/media/upload', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Insert markdown image tags
+        const imageMarkdown = data.media.map((m: any) => `![Image](${m.url})`).join('\n');
+        onChange(value + '\n' + imageMarkdown);
+      } else {
+        alert('Failed to upload images. Please try again.');
+      }
+    } catch (error) {
+      console.error('Image upload error:', error);
+      alert('Failed to upload images.');
+    } finally {
+      setUploading(false);
+      if (imageInputRef.current) {
+        imageInputRef.current.value = '';
+      }
+    }
   };
 
   return (
@@ -87,6 +135,26 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
         
         <div className="border-l mx-2" />
         
+        {/* Image Upload */}
+        <input
+          ref={imageInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleImageUpload}
+          className="hidden"
+        />
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost"
+          onClick={() => imageInputRef.current?.click()}
+          title="Upload Image"
+          disabled={uploading}
+        >
+          {uploading ? '⏳' : <Image className="h-4 w-4" />}
+        </Button>
+        
         {/* Emoji Picker */}
         <div className="relative">
           <Button
@@ -99,12 +167,12 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
             <Smile className="h-4 w-4" />
           </Button>
           {showEmojiPicker && (
-            <div className="absolute top-10 left-0 bg-white dark:bg-gray-800 border rounded-lg shadow-lg p-2 z-50 grid grid-cols-6 gap-1">
+            <div className="absolute top-10 left-0 bg-white dark:bg-gray-800 border rounded-lg shadow-lg p-3 z-50 grid grid-cols-8 gap-1 max-h-64 overflow-y-auto">
               {emojis.map((emoji) => (
                 <button
                   key={emoji}
                   type="button"
-                  className="hover:bg-gray-100 dark:hover:bg-gray-700 p-1 rounded text-xl"
+                  className="hover:bg-gray-100 dark:hover:bg-gray-700 p-1 rounded text-xl transition-colors"
                   onClick={() => {
                     onChange(value + emoji);
                     setShowEmojiPicker(false);
