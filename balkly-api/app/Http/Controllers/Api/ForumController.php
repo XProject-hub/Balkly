@@ -91,6 +91,82 @@ class ForumController extends Controller
         ], 201);
     }
 
+    public function likePost(Request $request, $id)
+    {
+        $post = ForumPost::findOrFail($id);
+        
+        // Toggle like
+        $existingLike = \DB::table('forum_post_likes')
+            ->where('post_id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if ($existingLike) {
+            // Unlike
+            \DB::table('forum_post_likes')
+                ->where('post_id', $id)
+                ->where('user_id', auth()->id())
+                ->delete();
+            $post->decrement('likes_count');
+            $liked = false;
+        } else {
+            // Like
+            \DB::table('forum_post_likes')->insert([
+                'post_id' => $id,
+                'user_id' => auth()->id(),
+                'created_at' => now(),
+            ]);
+            $post->increment('likes_count');
+            $liked = true;
+        }
+
+        return response()->json([
+            'liked' => $liked,
+            'likes_count' => $post->fresh()->likes_count,
+        ]);
+    }
+
+    public function updatePost(Request $request, $id)
+    {
+        $post = ForumPost::findOrFail($id);
+
+        // Only author can edit
+        if ($post->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $validated = $request->validate([
+            'content' => 'required|string',
+        ]);
+
+        $post->update([
+            'content' => $validated['content'],
+            'is_edited' => true,
+            'edited_at' => now(),
+        ]);
+
+        return response()->json([
+            'post' => $post->load('user'),
+            'message' => 'Post updated successfully',
+        ]);
+    }
+
+    public function deletePost($id)
+    {
+        $post = ForumPost::findOrFail($id);
+
+        // Only author or admin can delete
+        if ($post->user_id !== auth()->id() && auth()->user()->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $post->delete();
+
+        return response()->json([
+            'message' => 'Post deleted successfully',
+        ]);
+    }
+
     public function createPost(Request $request)
     {
         $validated = $request->validate([
