@@ -86,8 +86,15 @@ export default function ListingDetailPage() {
   };
 
   const handleContactSeller = () => {
-    // TODO: Open chat or redirect to chat page
-    router.push(`/chat?listing=${listingId}`);
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+      alert("Please login to contact the seller!");
+      router.push("/auth/login");
+      return;
+    }
+    
+    // Redirect to messages with seller
+    router.push(`/dashboard/messages?listing=${listingId}&seller=${listing.user_id}`);
   };
 
   const handleShare = async () => {
