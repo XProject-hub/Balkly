@@ -81,6 +81,12 @@ Route::prefix('v1')->group(function () {
         Route::post('/listings/{id}/boost', [ListingController::class, 'boost']);
         Route::post('/listings/{id}/media', [ListingController::class, 'uploadMedia']);
         
+        // Chats & Messages
+        Route::get('/chats', [ChatController::class, 'index']);
+        Route::post('/chats/start/{listingId}', [ChatController::class, 'start']);
+        Route::get('/chats/{id}/messages', [ChatController::class, 'messages']);
+        Route::post('/chats/messages', [ChatController::class, 'sendMessage']);
+        
         // Media
         Route::post('/media/upload', [\App\Http\Controllers\Api\MediaController::class, 'upload']);
         Route::delete('/media/{id}', [\App\Http\Controllers\Api\MediaController::class, 'destroy']);

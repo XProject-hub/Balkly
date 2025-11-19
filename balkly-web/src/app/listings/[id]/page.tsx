@@ -106,26 +106,41 @@ export default function ListingDetailPage() {
     }
 
     try {
-      const response = await fetch("/api/v1/chats", {
+      // Step 1: Start/get chat
+      const chatResponse = await fetch(`/api/v1/chats/start/${listingId}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+
+      if (!chatResponse.ok) {
+        throw new Error("Failed to start chat");
+      }
+
+      const chatData = await chatResponse.json();
+      const chatId = chatData.chat.id;
+
+      // Step 2: Send message
+      const messageResponse = await fetch("/api/v1/chats/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
         body: JSON.stringify({
-          listing_id: parseInt(listingId),
-          seller_id: listing.user_id,
-          message: contactMessage,
+          chat_id: chatId,
+          body: contactMessage,
         }),
       });
 
-      if (response.ok) {
+      if (messageResponse.ok) {
         alert("Message sent! The seller will be notified.");
         setShowContactModal(false);
         setContactMessage("");
         router.push("/dashboard/messages");
       } else {
-        const data = await response.json();
+        const data = await messageResponse.json();
         alert(data.message || "Failed to send message. Please try again.");
       }
     } catch (error) {
