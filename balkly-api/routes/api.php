@@ -28,6 +28,9 @@ Route::prefix('v1')->group(function () {
     Route::get('/auth/verify-email/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
     Route::post('/auth/social-login', [AuthController::class, 'socialLogin']);
     
+    // 2FA Verify - PUBLIC (users verify during login, before they have token)
+    Route::post('/auth/2fa/verify', [AuthController::class, 'verify2FA']);
+    
     // Categories
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{id}/attributes', [CategoryController::class, 'attributes']);
