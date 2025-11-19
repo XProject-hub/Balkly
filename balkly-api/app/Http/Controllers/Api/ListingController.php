@@ -153,13 +153,12 @@ class ListingController extends Controller
             $path = $image->store('listings/' . $listing->id, 'public');
             
             $media = \App\Models\Media::create([
-                'mediable_type' => 'App\\Models\\Listing',
-                'mediable_id' => $listing->id,
-                'file_name' => $image->getClientOriginalName(),
-                'file_path' => $path,
+                'owner_type' => 'App\\Models\\Listing',
+                'owner_id' => $listing->id,
+                'url' => '/storage/' . $path,
+                'type' => 'image',
                 'mime_type' => $image->getMimeType(),
                 'size' => $image->getSize(),
-                'collection_name' => 'images',
                 'order' => $index,
             ]);
 
