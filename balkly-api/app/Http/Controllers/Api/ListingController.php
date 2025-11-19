@@ -152,7 +152,9 @@ class ListingController extends Controller
         foreach ($request->file('images') as $index => $image) {
             $path = $image->store('listings/' . $listing->id, 'public');
             
-            $media = $listing->media()->create([
+            $media = \App\Models\Media::create([
+                'mediable_type' => 'App\\Models\\Listing',
+                'mediable_id' => $listing->id,
                 'file_name' => $image->getClientOriginalName(),
                 'file_path' => $path,
                 'mime_type' => $image->getMimeType(),
