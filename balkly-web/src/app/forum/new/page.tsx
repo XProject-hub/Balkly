@@ -33,15 +33,35 @@ export default function NewTopicPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.category_id) {
+      alert("Please select a category!");
+      return;
+    }
+    
+    if (!formData.title.trim()) {
+      alert("Please enter a title!");
+      return;
+    }
+    
+    if (!formData.content.trim()) {
+      alert("Please enter content!");
+      return;
+    }
+
     setLoading(true);
 
     try {
+      console.log("Creating topic with data:", formData);
       const response = await forumAPI.createTopic(formData);
+      console.log("Topic created:", response.data);
       const topicId = response.data.topic.id;
       router.push(`/forum/topics/${topicId}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to create topic:", error);
-      alert("Failed to create topic. Please try again.");
+      console.error("Error response:", error.response?.data);
+      const errorMsg = error.response?.data?.message || error.response?.data?.errors || "Failed to create topic. Please try again.";
+      alert(typeof errorMsg === 'object' ? JSON.stringify(errorMsg) : errorMsg);
     } finally {
       setLoading(false);
     }
