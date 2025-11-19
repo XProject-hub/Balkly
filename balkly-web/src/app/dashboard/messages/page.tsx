@@ -43,7 +43,10 @@ export default function MessagesPage() {
 
   useEffect(() => {
     if (selectedChat) {
+      setShouldAutoScroll(true); // Scroll to bottom on first load
       loadMessages(selectedChat.id);
+      setTimeout(() => setShouldAutoScroll(false), 1500); // Disable after initial load
+      
       // Set up polling for new messages (simulating real-time)
       const interval = setInterval(() => {
         loadMessages(selectedChat.id);
