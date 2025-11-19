@@ -203,16 +203,27 @@ export default function CreateListingPage() {
         });
 
         try {
-          await fetch(`/api/v1/listings/${listingId}/media`, {
+          const uploadResponse = await fetch(`/api/v1/listings/${listingId}/media`, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
             },
             body: imageFormData,
           });
-          console.log("Images uploaded successfully");
+          
+          console.log("Upload response status:", uploadResponse.status);
+          const uploadData = await uploadResponse.json();
+          console.log("Upload response data:", uploadData);
+          
+          if (uploadResponse.ok) {
+            console.log("✅ Images uploaded successfully:", uploadData.media?.length, "images");
+          } else {
+            console.error("❌ Image upload failed:", uploadData);
+            alert("Images failed to upload: " + (uploadData.message || "Unknown error"));
+          }
         } catch (error) {
           console.error("Failed to upload images:", error);
+          alert("Image upload error! Check console.");
         }
       }
 
