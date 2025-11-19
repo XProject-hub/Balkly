@@ -349,30 +349,5 @@ class ForumController extends Controller
         ]);
     }
 
-    // Admin: Delete post
-    public function deletePost($id)
-    {
-        $post = ForumPost::findOrFail($id);
-        
-        // Update topic reply count
-        $topic = ForumTopic::find($post->topic_id);
-        if ($topic) {
-            $topic->decrement('replies_count');
-        }
-
-        // Log deletion
-        \Illuminate\Support\Facades\Log::info('Forum Post Deleted by Admin', [
-            'post_id' => $id,
-            'topic_id' => $post->topic_id,
-            'deleted_by' => auth()->id(),
-            'admin_name' => auth()->user()->name,
-        ]);
-
-        $post->delete(); // Soft delete
-
-        return response()->json([
-            'message' => 'Post deleted successfully',
-        ]);
-    }
 }
 
