@@ -56,13 +56,27 @@ class ForumController extends Controller
     public function createTopic(Request $request)
     {
         $validated = $request->validate([
-            'category_id' => 'required|exists:forum_categories,id',
+            'category_id' => 'required|integer',
             'title' => 'required|string|max:255',
             'content' => 'required|string',
         ]);
 
+        // Check if it's a subcategory or main category
+        $subcategory = \App\Models\ForumSubcategory::find($validated['category_id']);
+        
+        if ($subcategory) {
+            // It's a subcategory - use parent category
+            $categoryId = $subcategory->forum_category_id;
+            $subcategoryId = $subcategory->id;
+        } else {
+            // It's a main category
+            $categoryId = $validated['category_id'];
+            $subcategoryId = null;
+        }
+
         $topic = ForumTopic::create([
-            'category_id' => $validated['category_id'],
+            'category_id' => $categoryId,
+            'subcategory_id' => $subcategoryId,
             'user_id' => auth()->id(),
             'title' => $validated['title'],
             'slug' => Str::slug($validated['title']) . '-' . Str::random(8),
