@@ -35,6 +35,7 @@ export default function MessagesPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const userData = localStorage.getItem("user");
   const currentUserId = userData && userData !== 'undefined' ? JSON.parse(userData)?.id : null;
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
 
   useEffect(() => {
     loadChats();
@@ -52,8 +53,11 @@ export default function MessagesPage() {
   }, [selectedChat]);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    // Only auto-scroll if user is at bottom or it's first load
+    if (shouldAutoScroll) {
+      scrollToBottom();
+    }
+  }, [messages, shouldAutoScroll]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
