@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Shield, Key, Smartphone, Copy, CheckCircle } from "lucide-react";
+import QRCode from "qrcode";
 
 export default function SecuritySettingsPage() {
   const [user, setUser] = useState<any>(null);
@@ -42,7 +43,18 @@ export default function SecuritySettingsPage() {
 
       const data = await response.json();
       setSecret(data.secret);
-      setQrCode(data.qr_code_url);
+      
+      // Generate QR code image from URL
+      const qrCodeDataUrl = await QRCode.toDataURL(data.qr_code_url, {
+        width: 256,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF'
+        }
+      });
+      
+      setQrCode(qrCodeDataUrl);
       setShowQR(true);
     } catch (error) {
       console.error("Failed to enable 2FA:", error);
