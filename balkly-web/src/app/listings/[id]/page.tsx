@@ -321,10 +321,6 @@ export default function ListingDetailPage() {
                   <MessageCircle className="mr-2 h-5 w-5" />
                   Contact Seller
                 </Button>
-                <Button variant="outline" className="w-full" size="lg" onClick={() => setShowContactModal(true)}>
-                  <MessageCircle className="mr-2 h-5 w-5" />
-                  Send Message
-                </Button>
                 <Button variant="outline" className="w-full" size="lg" onClick={() => setShowOfferModal(true)}>
                   <Euro className="mr-2 h-5 w-5" />
                   Make an Offer
