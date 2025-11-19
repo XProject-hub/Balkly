@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Bold, Italic, Link as LinkIcon, List, Code, Eye } from "lucide-react";
+import { Bold, Italic, Link as LinkIcon, List, Code, Eye, Smile, Image } from "lucide-react";
 
 interface MarkdownEditorProps {
   value: string;
@@ -12,6 +12,10 @@ interface MarkdownEditorProps {
 
 export default function MarkdownEditor({ value, onChange, placeholder }: MarkdownEditorProps) {
   const [showPreview, setShowPreview] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  
+  const emojis = ['😀', '😂', '❤️', '👍', '👏', '🎉', '🔥', '💯', '✅', '❌', '⚠️', '💪', '🙏', '🤝', '👀', '💡', '🚀', '⭐'];
 
   const insertMarkdown = (before: string, after: string = '') => {
     const textarea = document.querySelector('textarea') as HTMLTextAreaElement;
@@ -80,6 +84,38 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
         >
           <Code className="h-4 w-4" />
         </Button>
+        
+        <div className="border-l mx-2" />
+        
+        {/* Emoji Picker */}
+        <div className="relative">
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            title="Emoji"
+          >
+            <Smile className="h-4 w-4" />
+          </Button>
+          {showEmojiPicker && (
+            <div className="absolute top-10 left-0 bg-white dark:bg-gray-800 border rounded-lg shadow-lg p-2 z-50 grid grid-cols-6 gap-1">
+              {emojis.map((emoji) => (
+                <button
+                  key={emoji}
+                  type="button"
+                  className="hover:bg-gray-100 dark:hover:bg-gray-700 p-1 rounded text-xl"
+                  onClick={() => {
+                    onChange(value + emoji);
+                    setShowEmojiPicker(false);
+                  }}
+                >
+                  {emoji}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         
         <div className="ml-auto">
           <Button
