@@ -87,6 +87,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/chats/{id}/messages', [ChatController::class, 'messages']);
         Route::post('/chats/messages', [ChatController::class, 'sendMessage']);
         
+        // Media Upload (generic)
+        Route::post('/media/upload', [ListingController::class, 'uploadGenericMedia']);
+        
         // Media
         Route::post('/media/upload', [\App\Http\Controllers\Api\MediaController::class, 'upload']);
         Route::delete('/media/{id}', [\App\Http\Controllers\Api\MediaController::class, 'destroy']);

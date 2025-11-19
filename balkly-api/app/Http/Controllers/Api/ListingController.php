@@ -136,6 +136,40 @@ class ListingController extends Controller
     }
 
     /**
+     * Generic media upload (for forum, messages, etc.)
+     */
+    public function uploadGenericMedia(Request $request)
+    {
+        $request->validate([
+            'images' => 'required|array|max:10',
+            'images.*' => 'image|mimes:jpeg,jpg,png,gif,webp|max:5120',
+        ]);
+
+        $uploadedMedia = [];
+
+        foreach ($request->file('images') as $index => $image) {
+            $path = $image->store('uploads/' . auth()->id(), 'public');
+            
+            $media = \App\Models\Media::create([
+                'owner_type' => 'App\\Models\\User',
+                'owner_id' => auth()->id(),
+                'url' => '/storage/' . $path,
+                'type' => 'image',
+                'mime_type' => $image->getMimeType(),
+                'size' => $image->getSize(),
+                'order' => $index,
+            ]);
+
+            $uploadedMedia[] = $media;
+        }
+
+        return response()->json([
+            'message' => 'Images uploaded successfully',
+            'media' => $uploadedMedia,
+        ]);
+    }
+
+    /**
      * Upload media for listing
      */
     public function uploadMedia(Request $request, $id)

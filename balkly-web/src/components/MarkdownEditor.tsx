@@ -167,21 +167,27 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
             <Smile className="h-4 w-4" />
           </Button>
           {showEmojiPicker && (
-            <div className="absolute top-10 left-0 bg-white dark:bg-gray-800 border rounded-lg shadow-lg p-3 z-50 grid grid-cols-8 gap-1 max-h-64 overflow-y-auto">
-              {emojis.map((emoji) => (
-                <button
-                  key={emoji}
-                  type="button"
-                  className="hover:bg-gray-100 dark:hover:bg-gray-700 p-1 rounded text-xl transition-colors"
-                  onClick={() => {
-                    onChange(value + emoji);
-                    setShowEmojiPicker(false);
-                  }}
-                >
-                  {emoji}
-                </button>
-              ))}
-            </div>
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setShowEmojiPicker(false)} />
+              <div className="absolute top-10 left-0 bg-white dark:bg-gray-800 border-2 rounded-lg shadow-2xl p-4 z-50 w-80 max-h-96 overflow-y-auto">
+                <div className="grid grid-cols-6 gap-2">
+                  {emojis.map((emoji) => (
+                    <button
+                      key={emoji}
+                      type="button"
+                      className="hover:bg-primary/10 dark:hover:bg-primary/20 p-2 rounded-lg text-3xl transition-all hover:scale-110"
+                      onClick={() => {
+                        onChange(value + emoji);
+                        setShowEmojiPicker(false);
+                      }}
+                      title={emoji}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
           )}
         </div>
         
