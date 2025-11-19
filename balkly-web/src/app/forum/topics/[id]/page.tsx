@@ -14,6 +14,8 @@ import {
   ThumbsUp,
   Flag,
   Star,
+  Edit,
+  MessageSquare,
 } from "lucide-react";
 import { forumAPI } from "@/lib/api";
 
@@ -124,6 +126,55 @@ export default function TopicDetailPage() {
       router.push("/forum");
     } catch (error) {
       alert("Greška pri brisanju topica.");
+    }
+  };
+
+  const handleLikePost = async (postId: number) => {
+    try {
+      await fetch(`/api/v1/forum/posts/${postId}/like`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      loadTopic(); // Reload to update like count
+    } catch (error) {
+      console.error("Failed to like post:", error);
+    }
+  };
+
+  const handleQuotePost = (post: any) => {
+    const quotedText = `> ${post.user?.name} said:\n> ${post.content.split('\n').join('\n> ')}\n\n`;
+    setReply(quotedText);
+    // Scroll to reply form
+    document.getElementById('reply-form')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleEditPost = (post: any) => {
+    setEditingPost(post);
+    setEditContent(post.content);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingPost || !editContent.trim()) return;
+
+    try {
+      await fetch(`/api/v1/forum/posts/${editingPost.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({
+          content: editContent,
+        }),
+      });
+      
+      setEditingPost(null);
+      setEditContent("");
+      loadTopic();
+    } catch (error) {
+      alert("Failed to update post.");
     }
   };
 
