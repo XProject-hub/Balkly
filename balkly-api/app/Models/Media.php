@@ -10,6 +10,8 @@ class Media extends Model
     use HasFactory;
 
     protected $fillable = [
+        'owner_type',
+        'owner_id',
         'mediable_type',
         'mediable_id',
         'file_name',
