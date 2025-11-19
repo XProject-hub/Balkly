@@ -88,27 +88,22 @@ export default function MessagesPage() {
 
   const loadMessages = async (chatId: number) => {
     try {
-      // This would be a real endpoint - simulating for now
-      // const response = await fetch(`/api/v1/chats/${chatId}/messages`);
-      // For now, using mock data
-      setMessages([
-        {
-          id: 1,
-          sender_id: currentUserId === 1 ? 2 : 1,
-          body: "Hi! Is this item still available?",
-          created_at: new Date().toISOString(),
-          sender: { name: "Buyer" },
+      const response = await fetch(`/api/v1/chats/${chatId}/messages`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
-        {
-          id: 2,
-          sender_id: currentUserId,
-          body: "Yes, it's still available! Would you like to see it?",
-          created_at: new Date().toISOString(),
-          sender: { name: "You" },
-        },
-      ]);
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setMessages(data.messages || data.data || []);
+      } else {
+        console.error("Failed to load messages, status:", response.status);
+        setMessages([]);
+      }
     } catch (error) {
       console.error("Failed to load messages:", error);
+      setMessages([]);
     }
   };
 
