@@ -35,8 +35,14 @@ export default function TopicDetailPage() {
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
-    if (userData) {
-      setCurrentUser(JSON.parse(userData));
+    if (userData && userData !== 'undefined' && userData !== 'null') {
+      try {
+        const parsed = JSON.parse(userData);
+        setCurrentUser(parsed);
+        console.log("Current user loaded:", parsed.id, parsed.name);
+      } catch (e) {
+        console.error("Failed to parse user:", e);
+      }
     }
   }, []);
 
@@ -349,7 +355,10 @@ export default function TopicDetailPage() {
                       </button>
                       {currentUser?.id === post.user_id && (
                         <button
-                          onClick={() => handleEditPost(post)}
+                          onClick={() => {
+                            console.log("Edit clicked - Current user:", currentUser?.id, "Post user:", post.user_id);
+                            handleEditPost(post);
+                          }}
                           className="text-sm text-muted-foreground hover:text-foreground flex items-center"
                         >
                           <Edit className="h-4 w-4 mr-1" />
