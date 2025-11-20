@@ -50,23 +50,25 @@ class ForumController extends Controller
 
         $topic->increment('views_count');
 
-        // Add user_has_liked flag for topic
+        // Add user_has_liked flag for topic and posts
+        $topicArray = $topic->toArray();
+        
         if (auth()->check()) {
-            $topic->user_has_liked = \DB::table('forum_topic_likes')
+            $topicArray['user_has_liked'] = \DB::table('forum_topic_likes')
                 ->where('topic_id', $topic->id)
                 ->where('user_id', auth()->id())
                 ->exists();
                 
             // Add user_has_liked for each post
-            foreach ($topic->posts as $post) {
-                $post->user_has_liked = \DB::table('forum_post_likes')
-                    ->where('post_id', $post->id)
+            foreach ($topicArray['posts'] as &$post) {
+                $post['user_has_liked'] = \DB::table('forum_post_likes')
+                    ->where('post_id', $post['id'])
                     ->where('user_id', auth()->id())
                     ->exists();
             }
         }
 
-        return response()->json(['topic' => $topic]);
+        return response()->json(['topic' => $topicArray]);
     }
 
     public function createTopic(Request $request)
