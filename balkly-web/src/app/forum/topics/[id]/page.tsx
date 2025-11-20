@@ -168,15 +168,27 @@ export default function TopicDetailPage() {
 
   const handleLikeTopic = async () => {
     try {
-      await fetch(`/api/v1/forum/topics/${topicId}/like`, {
+      const response = await fetch(`/api/v1/forum/topics/${topicId}/like`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
       });
-      loadTopic();
+      
+      console.log("Like response:", response.status);
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Like data:", data);
+        loadTopic();
+      } else {
+        const error = await response.json();
+        console.error("Like failed:", error);
+        alert("Failed to like: " + (error.message || response.status));
+      }
     } catch (error) {
       console.error("Failed to like topic:", error);
+      alert("Like error - check console!");
     }
   };
 
@@ -189,7 +201,7 @@ export default function TopicDetailPage() {
     if (!editTopicContent.trim()) return;
 
     try {
-      await fetch(`/api/v1/forum/topics/${topicId}`, {
+      const response = await fetch(`/api/v1/forum/topics/${topicId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -200,11 +212,23 @@ export default function TopicDetailPage() {
         }),
       });
       
-      setEditingTopic(false);
-      setEditTopicContent("");
-      loadTopic();
+      console.log("Edit response:", response.status);
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Edit success:", data);
+        setEditingTopic(false);
+        setEditTopicContent("");
+        loadTopic();
+        alert("Topic updated successfully!");
+      } else {
+        const error = await response.json();
+        console.error("Edit failed:", error);
+        alert("Failed to update: " + (error.message || response.status));
+      }
     } catch (error) {
-      alert("Failed to update topic.");
+      console.error("Edit error:", error);
+      alert("Failed to update topic - check console!");
     }
   };
 
