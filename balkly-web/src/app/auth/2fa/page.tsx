@@ -28,6 +28,8 @@ export default function TwoFactorPage() {
     setError("");
 
     try {
+      console.log("Verifying 2FA code for user:", userId);
+      
       const response = await fetch("/api/v1/auth/2fa/verify", {
         method: "POST",
         headers: {
@@ -39,20 +41,30 @@ export default function TwoFactorPage() {
         }),
       });
 
+      console.log("2FA verify response:", response.status);
+
       if (response.ok) {
         const data = await response.json();
+        console.log("2FA success, token received");
         
         // Store token
         localStorage.setItem("auth_token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
         
-        // Redirect to dashboard
-        router.push("/dashboard");
+        // Trigger auth change
+        window.dispatchEvent(new Event('auth-change'));
+        
+        // Force full page reload to dashboard
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 100);
       } else {
         const data = await response.json();
+        console.error("2FA failed:", data);
         setError(data.message || "Invalid code. Please try again.");
       }
     } catch (err) {
+      console.error("2FA error:", err);
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
