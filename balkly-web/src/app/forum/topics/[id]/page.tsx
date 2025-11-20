@@ -142,13 +142,29 @@ export default function TopicDetailPage() {
 
   const handleLikePost = async (postId: number) => {
     try {
-      await fetch(`/api/v1/forum/posts/${postId}/like`, {
+      const response = await fetch(`/api/v1/forum/posts/${postId}/like`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
       });
-      loadTopic(); // Reload to update like count
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Update post state immediately
+        setTopic((prevTopic: any) => ({
+          ...prevTopic,
+          posts: prevTopic.posts.map((p: any) => 
+            p.id === postId 
+              ? { ...p, user_has_liked: data.liked, likes_count: data.likes_count }
+              : p
+          ),
+        }));
+        
+        // Also reload
+        setTimeout(() => loadTopic(), 500);
+      }
     } catch (error) {
       console.error("Failed to like post:", error);
     }
@@ -180,7 +196,16 @@ export default function TopicDetailPage() {
       if (response.ok) {
         const data = await response.json();
         console.log("Like data:", data);
-        loadTopic();
+        
+        // Update topic state immediately
+        setTopic((prevTopic: any) => ({
+          ...prevTopic,
+          user_has_liked: data.liked,
+          likes_count: data.likes_count,
+        }));
+        
+        // Also reload for complete data
+        setTimeout(() => loadTopic(), 500);
       } else {
         const error = await response.json();
         console.error("Like failed:", error);
