@@ -97,6 +97,8 @@ Route::prefix('v1')->group(function () {
         
         // Forum
         Route::post('/forum/topics', [ForumController::class, 'createTopic']);
+        Route::patch('/forum/topics/{id}', [ForumController::class, 'updateTopic']);
+        Route::post('/forum/topics/{id}/like', [ForumController::class, 'likeTopic']);
         Route::post('/forum/posts', [ForumController::class, 'createPost']);
         Route::post('/forum/posts/{id}/sticky', [ForumController::class, 'makeSticky']);
         Route::post('/forum/posts/{id}/like', [ForumController::class, 'likePost']);

@@ -91,6 +91,41 @@ class ForumController extends Controller
         ], 201);
     }
 
+    public function likeTopic(Request $request, $id)
+    {
+        $topic = ForumTopic::findOrFail($id);
+        
+        // Toggle like
+        $existingLike = \DB::table('forum_topic_likes')
+            ->where('topic_id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if ($existingLike) {
+            // Unlike
+            \DB::table('forum_topic_likes')
+                ->where('topic_id', $id)
+                ->where('user_id', auth()->id())
+                ->delete();
+            $topic->decrement('likes_count');
+            $liked = false;
+        } else {
+            // Like
+            \DB::table('forum_topic_likes')->insert([
+                'topic_id' => $id,
+                'user_id' => auth()->id(),
+                'created_at' => now(),
+            ]);
+            $topic->increment('likes_count');
+            $liked = true;
+        }
+
+        return response()->json([
+            'liked' => $liked,
+            'likes_count' => $topic->fresh()->likes_count ?? 0,
+        ]);
+    }
+
     public function likePost(Request $request, $id)
     {
         $post = ForumPost::findOrFail($id);
