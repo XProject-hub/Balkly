@@ -36,8 +36,13 @@ export default function LoginPage() {
       // Store user data
       localStorage.setItem("user", JSON.stringify(response.data.user));
       
-      // Redirect to dashboard (users are auto-verified)
-      router.push("/dashboard");
+      // Trigger auth state update
+      window.dispatchEvent(new Event('auth-change'));
+      
+      // Wait a bit for state to update
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 100);
     } catch (err: any) {
       setError(err.response?.data?.message || "Login failed. Please try again.");
     } finally {

@@ -36,10 +36,14 @@ export default function Header() {
       const token = localStorage.getItem("auth_token");
       const userData = localStorage.getItem("user");
       
+      console.log("Header checkAuth - token:", !!token, "userData:", !!userData);
+      
       if (token && userData && userData !== 'undefined' && userData !== 'null') {
         try {
+          const parsedUser = JSON.parse(userData);
+          console.log("Header - User logged in:", parsedUser.name);
           setIsLoggedIn(true);
-          setUser(JSON.parse(userData));
+          setUser(parsedUser);
         } catch (e) {
           console.error('Failed to parse user data:', e);
           setIsLoggedIn(false);
@@ -48,6 +52,7 @@ export default function Header() {
           localStorage.removeItem("auth_token");
         }
       } else {
+        console.log("Header - No auth found");
         setIsLoggedIn(false);
         setUser(null);
       }
