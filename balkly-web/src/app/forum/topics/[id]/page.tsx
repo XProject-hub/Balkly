@@ -381,14 +381,14 @@ export default function TopicDetailPage() {
             <div className="flex gap-4 mt-4 pt-4 border-t items-center">
               <button 
                 onClick={() => handleLikeTopic()}
-                className={`text-sm flex items-center transition-colors ${
+                className={`text-sm flex items-center transition-all ${
                   topic.user_has_liked 
                     ? 'text-red-500 font-medium' 
                     : 'text-muted-foreground hover:text-red-400'
                 }`}
               >
-                <Heart className={`h-4 w-4 mr-1 ${topic.user_has_liked ? 'fill-red-500' : ''}`} />
-                {topic.user_has_liked ? 'Liked' : 'Like'} ({topic.likes_count || 0})
+                <Heart className={`h-4 w-4 mr-1 transition-all ${topic.user_has_liked ? 'fill-red-500 text-red-500' : 'fill-none'}`} />
+                ({topic.likes_count || 0})
               </button>
               {currentUser?.id === topic.user_id && (
                 <button
@@ -429,14 +429,14 @@ export default function TopicDetailPage() {
                     <div className="flex gap-4 mt-3 items-center">
                       <button 
                         onClick={() => handleLikePost(post.id)}
-                        className={`text-sm flex items-center transition-colors ${
+                        className={`text-sm flex items-center transition-all ${
                           post.user_has_liked 
                             ? 'text-red-500 font-medium' 
                             : 'text-muted-foreground hover:text-red-400'
                         }`}
                       >
-                        <Heart className={`h-4 w-4 mr-1 ${post.user_has_liked ? 'fill-red-500' : ''}`} />
-                        {post.user_has_liked ? 'Liked' : 'Like'} ({post.likes_count || 0})
+                        <Heart className={`h-4 w-4 mr-1 transition-all ${post.user_has_liked ? 'fill-red-500 text-red-500' : 'fill-none'}`} />
+                        ({post.likes_count || 0})
                       </button>
                       <button 
                         onClick={() => handleQuotePost(post)}
