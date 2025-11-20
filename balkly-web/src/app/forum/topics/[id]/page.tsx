@@ -381,13 +381,9 @@ export default function TopicDetailPage() {
             <div className="flex gap-4 mt-4 pt-4 border-t items-center">
               <button 
                 onClick={() => handleLikeTopic()}
-                className={`text-sm flex items-center gap-1 transition-all ${
-                  topic.user_has_liked 
-                    ? 'text-red-500 font-medium' 
-                    : 'text-muted-foreground hover:text-red-400'
-                }`}
+                className="text-sm flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
               >
-                <Heart className={`h-4 w-4 transition-all ${topic.user_has_liked ? 'fill-red-500' : ''}`} />
+                <Heart className={`h-4 w-4 transition-all ${topic.user_has_liked ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} />
                 <span>Like</span>
                 <span>({topic.likes_count || 0})</span>
               </button>
@@ -430,13 +426,9 @@ export default function TopicDetailPage() {
                     <div className="flex gap-4 mt-3 items-center">
                       <button 
                         onClick={() => handleLikePost(post.id)}
-                        className={`text-sm flex items-center gap-1 transition-all ${
-                          post.user_has_liked 
-                            ? 'text-red-500 font-medium' 
-                            : 'text-muted-foreground hover:text-red-400'
-                        }`}
+                        className="text-sm flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
                       >
-                        <Heart className={`h-4 w-4 transition-all ${post.user_has_liked ? 'fill-red-500' : ''}`} />
+                        <Heart className={`h-4 w-4 transition-all ${post.user_has_liked ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} />
                         <span>Like</span>
                         <span>({post.likes_count || 0})</span>
                       </button>
