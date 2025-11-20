@@ -449,6 +449,33 @@ export default function TopicDetailPage() {
           ))}
         </div>
 
+        {/* Edit Topic Modal */}
+        {editingTopic && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-3xl">
+              <CardHeader>
+                <CardTitle>Edit Topic</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <MarkdownEditor
+                  value={editTopicContent}
+                  onChange={setEditTopicContent}
+                  placeholder="Edit your topic..."
+                />
+                <div className="flex gap-2">
+                  <Button onClick={handleSaveTopicEdit} disabled={!editTopicContent.trim()}>
+                    <Edit className="mr-2 h-4 w-4" />
+                    Save Changes
+                  </Button>
+                  <Button variant="outline" onClick={() => setEditingTopic(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Edit Post Modal */}
         {editingPost && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -464,6 +491,7 @@ export default function TopicDetailPage() {
                 />
                 <div className="flex gap-2">
                   <Button onClick={handleSaveEdit} disabled={!editContent.trim()}>
+                    <Edit className="mr-2 h-4 w-4" />
                     Save Changes
                   </Button>
                   <Button variant="outline" onClick={() => setEditingPost(null)}>
