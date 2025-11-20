@@ -11,7 +11,7 @@ import {
   Lock,
   Eye,
   MessageCircle,
-  ThumbsUp,
+  Heart,
   Flag,
   Star,
   Edit,
@@ -383,11 +383,11 @@ export default function TopicDetailPage() {
                 onClick={() => handleLikeTopic()}
                 className={`text-sm flex items-center transition-colors ${
                   topic.user_has_liked 
-                    ? 'text-primary font-medium' 
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'text-red-500 font-medium' 
+                    : 'text-muted-foreground hover:text-red-400'
                 }`}
               >
-                <ThumbsUp className={`h-4 w-4 mr-1 ${topic.user_has_liked ? 'fill-current' : ''}`} />
+                <Heart className={`h-4 w-4 mr-1 ${topic.user_has_liked ? 'fill-red-500' : ''}`} />
                 {topic.user_has_liked ? 'Liked' : 'Like'} ({topic.likes_count || 0})
               </button>
               {currentUser?.id === topic.user_id && (
@@ -431,11 +431,11 @@ export default function TopicDetailPage() {
                         onClick={() => handleLikePost(post.id)}
                         className={`text-sm flex items-center transition-colors ${
                           post.user_has_liked 
-                            ? 'text-primary font-medium' 
-                            : 'text-muted-foreground hover:text-foreground'
+                            ? 'text-red-500 font-medium' 
+                            : 'text-muted-foreground hover:text-red-400'
                         }`}
                       >
-                        <ThumbsUp className={`h-4 w-4 mr-1 ${post.user_has_liked ? 'fill-current' : ''}`} />
+                        <Heart className={`h-4 w-4 mr-1 ${post.user_has_liked ? 'fill-red-500' : ''}`} />
                         {post.user_has_liked ? 'Liked' : 'Like'} ({post.likes_count || 0})
                       </button>
                       <button 
