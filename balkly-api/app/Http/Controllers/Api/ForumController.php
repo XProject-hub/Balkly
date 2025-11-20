@@ -91,6 +91,29 @@ class ForumController extends Controller
         ], 201);
     }
 
+    public function updateTopic(Request $request, $id)
+    {
+        $topic = ForumTopic::findOrFail($id);
+
+        // Only author can edit
+        if ($topic->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $validated = $request->validate([
+            'content' => 'required|string',
+        ]);
+
+        $topic->update([
+            'content' => $validated['content'],
+        ]);
+
+        return response()->json([
+            'topic' => $topic->fresh(['user', 'category']),
+            'message' => 'Topic updated successfully',
+        ]);
+    }
+
     public function likeTopic(Request $request, $id)
     {
         $topic = ForumTopic::findOrFail($id);
