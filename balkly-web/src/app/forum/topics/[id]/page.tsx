@@ -32,6 +32,8 @@ export default function TopicDetailPage() {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [editingPost, setEditingPost] = useState<any>(null);
   const [editContent, setEditContent] = useState("");
+  const [editingTopic, setEditingTopic] = useState(false);
+  const [editTopicContent, setEditTopicContent] = useState("");
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -162,6 +164,48 @@ export default function TopicDetailPage() {
   const handleEditPost = (post: any) => {
     setEditingPost(post);
     setEditContent(post.content);
+  };
+
+  const handleLikeTopic = async () => {
+    try {
+      await fetch(`/api/v1/forum/topics/${topicId}/like`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      loadTopic();
+    } catch (error) {
+      console.error("Failed to like topic:", error);
+    }
+  };
+
+  const handleEditTopic = () => {
+    setEditingTopic(true);
+    setEditTopicContent(topic.content);
+  };
+
+  const handleSaveTopicEdit = async () => {
+    if (!editTopicContent.trim()) return;
+
+    try {
+      await fetch(`/api/v1/forum/topics/${topicId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({
+          content: editTopicContent,
+        }),
+      });
+      
+      setEditingTopic(false);
+      setEditTopicContent("");
+      loadTopic();
+    } catch (error) {
+      alert("Failed to update topic.");
+    }
   };
 
   const handleSaveEdit = async () => {
@@ -307,6 +351,30 @@ export default function TopicDetailPage() {
           <CardContent>
             <div className="prose max-w-none">
               <p className="whitespace-pre-wrap">{topic.content}</p>
+            </div>
+            
+            {/* Topic Actions */}
+            <div className="flex gap-4 mt-4 pt-4 border-t items-center">
+              <button 
+                onClick={() => handleLikeTopic()}
+                className={`text-sm flex items-center transition-colors ${
+                  topic.user_has_liked 
+                    ? 'text-primary font-medium' 
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <ThumbsUp className={`h-4 w-4 mr-1 ${topic.user_has_liked ? 'fill-current' : ''}`} />
+                {topic.user_has_liked ? 'Liked' : 'Like'} ({topic.likes_count || 0})
+              </button>
+              {currentUser?.id === topic.user_id && (
+                <button
+                  onClick={() => handleEditTopic()}
+                  className="text-sm text-muted-foreground hover:text-foreground flex items-center"
+                >
+                  <Edit className="h-4 w-4 mr-1" />
+                  Edit Topic
+                </button>
+              )}
             </div>
           </CardContent>
         </Card>
