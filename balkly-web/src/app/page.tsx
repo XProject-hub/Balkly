@@ -125,7 +125,8 @@ export default function HomePage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search for cars, homes, events, or anything..."
-                    className="w-full pl-12 pr-4 py-4 rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-primary text-gray-900 dark:text-gray-100 bg-transparent placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                    className="w-full pl-12 pr-4 py-4 rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-primary bg-transparent placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                    style={{ color: '#1a202c' }}
                     autoComplete="off"
                   />
                 </div>
