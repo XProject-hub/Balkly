@@ -40,16 +40,27 @@ class SearchController extends Controller
         }
 
         if ($type === 'all' || $type === 'events') {
-            $results['events'] = Event::search($query)
+            // Use DB search for events
+            $results['events'] = Event::with(['organizer'])
                 ->where('status', 'published')
-                ->take(10)
+                ->where(function($q) use ($query) {
+                    $q->where('title', 'LIKE', "%{$query}%")
+                      ->orWhere('description', 'LIKE', "%{$query}%")
+                      ->orWhere('venue', 'LIKE', "%{$query}%");
+                })
+                ->take(20)
                 ->get();
         }
 
         if ($type === 'all' || $type === 'forum') {
-            $results['forum'] = ForumTopic::search($query)
+            // Use DB search for forum
+            $results['forum'] = ForumTopic::with(['user', 'category'])
                 ->where('status', 'active')
-                ->take(10)
+                ->where(function($q) use ($query) {
+                    $q->where('title', 'LIKE', "%{$query}%")
+                      ->orWhere('content', 'LIKE', "%{$query}%");
+                })
+                ->take(20)
                 ->get();
         }
 
