@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import TrackingScript from "@/components/TrackingScript";
+import AutoTranslate from "@/components/AutoTranslate";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -56,32 +57,10 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <TrackingScript />
+        <AutoTranslate />
         <Header />
         <main>{children}</main>
         <Footer />
-        
-        {/* Load auto-translate library */}
-        <Script id="load-translate" strategy="afterInteractive">
-          {`
-            // Import and expose translatePage function
-            import('/lib/auto-translate').then(module => {
-              window.translatePage = module.translatePage;
-              
-              // Auto-translate on load if non-English
-              const currentLang = localStorage.getItem('language') || 'en';
-              if (currentLang !== 'en') {
-                setTimeout(() => {
-                  window.translatePage(currentLang);
-                }, 1000);
-              }
-              
-              // Listen for language changes
-              window.addEventListener('language-change', (e) => {
-                window.translatePage(e.detail.language);
-              });
-            });
-          `}
-        </Script>
         
         {/* Register Service Worker */}
         <Script id="register-sw" strategy="afterInteractive">
