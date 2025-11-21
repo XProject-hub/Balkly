@@ -60,14 +60,25 @@ export default function RootLayout({
         <main>{children}</main>
         <Footer />
         
-        {/* Auto-translate on language change */}
-        <Script id="auto-translate" strategy="afterInteractive">
+        {/* Load auto-translate library */}
+        <Script id="load-translate" strategy="afterInteractive">
           {`
-            window.addEventListener('load', function() {
+            // Import and expose translatePage function
+            import('/lib/auto-translate').then(module => {
+              window.translatePage = module.translatePage;
+              
+              // Auto-translate on load if non-English
               const currentLang = localStorage.getItem('language') || 'en';
-              if (currentLang !== 'en' && typeof window.translatePage === 'function') {
-                window.translatePage(currentLang);
+              if (currentLang !== 'en') {
+                setTimeout(() => {
+                  window.translatePage(currentLang);
+                }, 1000);
               }
+              
+              // Listen for language changes
+              window.addEventListener('language-change', (e) => {
+                window.translatePage(e.detail.language);
+              });
             });
           `}
         </Script>
