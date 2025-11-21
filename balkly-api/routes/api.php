@@ -52,6 +52,10 @@ Route::prefix('v1')->group(function () {
     // Search
     Route::get('/search', [SearchController::class, 'search']);
     
+    // Translation (public - anyone can translate)
+    Route::post('/translate', [\App\Http\Controllers\Api\TranslationController::class, 'translate']);
+    Route::post('/translate/batch', [\App\Http\Controllers\Api\TranslationController::class, 'translateBatch']);
+    
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {
         // Auth
