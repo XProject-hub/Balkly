@@ -602,12 +602,15 @@ export default function CreateListingPage() {
                   <label className="block text-sm font-medium mb-2">Price *</label>
                   <div className="flex gap-2">
                     <input
-                      type="number"
-                      value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                      placeholder="0.00"
+                      type="text"
+                      value={formData.price ? parseFloat(formData.price.replace(/\./g, '').replace(',', '.')).toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : ''}
+                      onChange={(e) => {
+                        // Remove formatting, keep only numbers and one comma/dot
+                        const raw = e.target.value.replace(/[^\d,]/g, '').replace(',', '.');
+                        setFormData({ ...formData, price: raw });
+                      }}
+                      placeholder="0,00"
                       className="flex-1 px-4 py-2 border rounded-lg"
-                      step="0.01"
                     />
                     <select
                       value={formData.currency}
