@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, Plus, MapPin, Eye, Star } from "lucide-react";
+import { Search, Plus, MapPin, Eye, Star, Package } from "lucide-react";
 import { listingsAPI } from "@/lib/api";
 
 export default function AutoPage() {
