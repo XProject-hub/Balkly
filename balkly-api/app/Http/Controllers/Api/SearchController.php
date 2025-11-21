@@ -25,9 +25,17 @@ class SearchController extends Controller
         $results = [];
 
         if ($type === 'all' || $type === 'listings') {
-            $results['listings'] = Listing::search($query)
+            // Use direct DB search instead of Scout (simpler, works immediately)
+            $results['listings'] = Listing::with(['user', 'category', 'media'])
                 ->where('status', 'active')
-                ->take(10)
+                ->where(function($q) use ($query) {
+                    $q->where('title', 'LIKE', "%{$query}%")
+                      ->orWhere('description', 'LIKE', "%{$query}%")
+                      ->orWhereHas('listingAttributes', function($attr) use ($query) {
+                          $attr->where('value', 'LIKE', "%{$query}%");
+                      });
+                })
+                ->take(20)
                 ->get();
         }
 
