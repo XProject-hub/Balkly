@@ -55,12 +55,12 @@ export default function MessagesPage() {
     }
   }, [selectedChat]);
 
-  useEffect(() => {
-    // Only auto-scroll if user is at bottom or it's first load
-    if (shouldAutoScroll) {
-      scrollToBottom();
-    }
-  }, [messages, shouldAutoScroll]);
+  // DISABLED - no auto-scroll to prevent losing scroll position
+  // useEffect(() => {
+  //   if (shouldAutoScroll) {
+  //     scrollToBottom();
+  //   }
+  // }, [messages, shouldAutoScroll]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -163,9 +163,9 @@ export default function MessagesPage() {
       if (response.ok) {
         setNewMessage("");
         setAttachments([]);
-        setShouldAutoScroll(true); // Enable scroll for user's message
         loadMessages(selectedChat.id);
-        setTimeout(() => setShouldAutoScroll(false), 1000); // Disable after 1s
+        // Scroll manually only after sending
+        setTimeout(() => scrollToBottom(), 300);
       }
     } catch (error) {
       console.error("Failed to send message:", error);

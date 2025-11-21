@@ -193,12 +193,6 @@ export default function Header() {
             
             {isLoggedIn ? (
               <>
-                <Button variant="outline" size="sm" asChild className="hidden md:flex">
-                  <Link href="/listings/create">
-                    <Package className="h-4 w-4 mr-2" />
-                    Post Listing
-                  </Link>
-                </Button>
                 
                 <div className="relative group">
                   <Button variant="ghost" size="sm" className="hidden md:flex">
@@ -333,14 +327,6 @@ export default function Header() {
             {isLoggedIn ? (
                 <>
                   <div className="border-t my-2" />
-                  <Link
-                    href="/listings/create"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center px-4 py-2 text-sm font-medium hover:bg-accent rounded-lg"
-                  >
-                    <Package className="h-4 w-4 mr-2" />
-                    Post Listing
-                  </Link>
                   <Link
                     href="/dashboard"
                     onClick={() => setIsMenuOpen(false)}
