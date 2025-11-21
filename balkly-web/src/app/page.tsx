@@ -15,6 +15,12 @@ export default function HomePage() {
   const [featuredListings, setFeaturedListings] = useState<any[]>([]);
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
   const [trendingTopics, setTrendingTopics] = useState<any[]>([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  useEffect(() => {
+    const token = localStorage.getItem("auth_token");
+    setIsLoggedIn(!!token);
+  }, []);
 
   useEffect(() => {
     loadFeaturedContent();
@@ -119,7 +125,7 @@ export default function HomePage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search for cars, homes, events, or anything..."
-                    className="w-full pl-12 pr-4 py-4 rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-primary text-foreground bg-transparent"
+                    className="w-full pl-12 pr-4 py-4 rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-primary text-gray-900 bg-transparent placeholder:text-gray-500"
                     autoComplete="off"
                   />
                 </div>
@@ -452,9 +458,15 @@ export default function HomePage() {
             </CardHeader>
             <CardContent>
               <div className="flex gap-4 justify-center">
-                <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 font-bold" asChild>
-                  <Link href="/auth/register">Create Account</Link>
-                </Button>
+                {!isLoggedIn ? (
+                  <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 font-bold" asChild>
+                    <Link href="/auth/register">Create Account</Link>
+                  </Button>
+                ) : (
+                  <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 font-bold" asChild>
+                    <Link href="/dashboard">Go to Dashboard</Link>
+                  </Button>
+                )}
                 <Button size="lg" variant="outline" className="bg-white/10 text-white border-white/50 hover:bg-white/20 font-bold" asChild>
                   <Link href="/listings/create">Post a Listing</Link>
                 </Button>
