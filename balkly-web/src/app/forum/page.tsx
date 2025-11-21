@@ -183,32 +183,37 @@ export default function ForumPage() {
                         className="block hover:bg-gray-50 transition-colors"
                       >
                         <div className="p-5">
-                          <div className="flex gap-4">
-                            {/* User Avatar */}
-                            <div className="flex-shrink-0">
-                              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-balkly-blue to-teal-glow flex items-center justify-center text-white font-bold text-lg">
-                                {topic.user?.name?.[0]?.toUpperCase()}
-                              </div>
-                            </div>
+                    <div className="flex gap-4">
+                      {/* User Avatar */}
+                      <div className="flex-shrink-0">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-balkly-blue to-teal-glow flex items-center justify-center text-white font-bold text-lg">
+                          {topic.user?.name?.[0]?.toUpperCase()}
+                        </div>
+                      </div>
 
-                            {/* Topic Content */}
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-start justify-between gap-4">
-                                <div className="flex-1">
-                                  {/* Title with badges */}
-                                  <div className="flex items-center gap-2 mb-1">
-                                    {topic.is_sticky && (
-                                      <Pin className="h-4 w-4 text-iris-purple" />
-                                    )}
-                                    <h3 className="font-bold text-gray-900 hover:text-balkly-blue transition-colors">
-                                      {topic.title}
-                                    </h3>
-                                    {topic.is_sticky && (
-                                      <span className="px-2 py-0.5 bg-iris-purple text-white text-xs rounded-full font-medium">
-                                        STICKY
-                                      </span>
-                                    )}
-                                  </div>
+                      {/* Topic Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            {/* Title with badges */}
+                            <div className="flex items-center gap-2 mb-1 flex-wrap">
+                              {topic.is_sticky && (
+                                <Pin className="h-4 w-4 text-iris-purple" />
+                              )}
+                              <h3 className="font-bold text-gray-900 dark:text-gray-100 hover:text-balkly-blue transition-colors">
+                                {topic.title}
+                              </h3>
+                              {topic.is_sticky && (
+                                <span className="px-2 py-0.5 bg-iris-purple text-white text-xs rounded-full font-medium">
+                                  STICKY
+                                </span>
+                              )}
+                              {topic.category && (
+                                <span className="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-medium">
+                                  {topic.category.name}
+                                </span>
+                              )}
+                            </div>
 
                                   {/* Meta Info */}
                                   <div className="flex items-center gap-4 text-sm text-gray-500">
