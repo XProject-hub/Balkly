@@ -173,6 +173,9 @@ export default function Header() {
 
           {/* User Actions */}
           <div className="flex items-center space-x-2">
+            {/* Notifications */}
+            {isLoggedIn && <NotificationBell />}
+            
             {/* Language & Currency Switchers */}
             <LanguageSwitcher />
             <CurrencySwitcher />
