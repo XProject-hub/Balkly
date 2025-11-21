@@ -27,7 +27,7 @@ export default function LanguageSwitcher() {
     }
   }, []);
 
-  const handleLanguageChange = (langCode: string) => {
+  const handleLanguageChange = async (langCode: string) => {
     const lang = languages.find(l => l.code === langCode);
     if (!lang) return;
 
@@ -46,6 +46,11 @@ export default function LanguageSwitcher() {
     
     // Close dropdown
     setIsOpen(false);
+    
+    // Trigger auto-translation
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('language-change', { detail: { language: langCode } }));
+    }
     
     // Reload page to apply language
     window.location.reload();
