@@ -60,6 +60,18 @@ export default function RootLayout({
         <main>{children}</main>
         <Footer />
         
+        {/* Auto-translate on language change */}
+        <Script id="auto-translate" strategy="afterInteractive">
+          {`
+            window.addEventListener('load', function() {
+              const currentLang = localStorage.getItem('language') || 'en';
+              if (currentLang !== 'en' && typeof window.translatePage === 'function') {
+                window.translatePage(currentLang);
+              }
+            });
+          `}
+        </Script>
+        
         {/* Register Service Worker */}
         <Script id="register-sw" strategy="afterInteractive">
           {`
