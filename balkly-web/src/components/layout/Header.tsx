@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import CurrencySwitcher from "@/components/CurrencySwitcher";
+import NotificationBell from "@/components/NotificationBell";
 import { useTranslation } from "@/lib/i18n/translations";
 
 export default function Header() {
