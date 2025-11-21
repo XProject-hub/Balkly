@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 
 const currencies = [
-  { code: 'EUR', symbol: '€', name: 'Euro' },
   { code: 'AED', symbol: 'د.إ', name: 'UAE Dirham' },
+  { code: 'EUR', symbol: '€', name: 'Euro' },
 ];
 
 export default function CurrencySwitcher() {

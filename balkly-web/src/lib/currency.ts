@@ -12,7 +12,6 @@ export function getCurrencySymbol(currency?: string): string {
     'EUR': '€',
     'AED': 'د.إ',
     'USD': '€', // Changed to € as requested
-    'BAM': 'KM',
   };
   
   return symbols[curr] || '€';
@@ -22,6 +21,12 @@ export function formatPrice(amount: number, currency?: string): string {
   const curr = currency || getCurrency();
   const symbol = getCurrencySymbol(curr);
   
-  return `${symbol}${amount.toLocaleString()}`;
+  // European format: 1.000.000,00 (dots for thousands, comma for decimals)
+  const formatted = amount.toLocaleString('de-DE', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  
+  return `${symbol}${formatted}`;
 }
 
