@@ -229,29 +229,48 @@ export default function CreateListingPage() {
 
       // If a plan is selected, proceed to payment
       if (selectedPlan) {
-        const orderResponse = await fetch("/api/v1/orders/listings", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-          },
-          body: JSON.stringify({
-            listing_id: listingId,
-            plan_id: selectedPlan.id,
-          }),
-        });
-
-        const orderData = await orderResponse.json();
+        console.log("Creating order for listing:", listingId, "with plan:", selectedPlan.id);
         
-        // Redirect to Stripe Checkout
-        if (orderData.checkout_url) {
-          window.location.href = orderData.checkout_url;
+        try {
+          const orderResponse = await fetch("/api/v1/orders/listings", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+            },
+            body: JSON.stringify({
+              listing_id: listingId,
+              plan_id: selectedPlan.id,
+            }),
+          });
+
+          console.log("Order response status:", orderResponse.status);
+
+          if (orderResponse.ok) {
+            const orderData = await orderResponse.json();
+            console.log("Order data:", orderData);
+            
+            // Redirect to Stripe Checkout
+            if (orderData.checkout_url) {
+              window.location.href = orderData.checkout_url;
+            } else {
+              alert("Payment processing error. Listing created but not promoted.");
+              window.location.href = `/dashboard/listings`;
+            }
+          } else {
+            const errorData = await orderResponse.json();
+            console.error("Order failed:", errorData);
+            alert("Payment setup failed: " + (errorData.message || "Unknown error"));
+            // Listing is created, redirect anyway
+            window.location.href = `/dashboard/listings`;
+          }
+        } catch (orderError) {
+          console.error("Order error:", orderError);
+          alert("Payment setup error. Listing created without promotion.");
+          window.location.href = `/dashboard/listings`;
         }
       } else {
         // No plan selected, listing is already active
-        // Don't call publish as it might set to pending_review
-        
-        // Redirect to dashboard
         alert("✅ Listing created successfully! View it in My Listings.");
         window.location.href = `/dashboard/listings`;
       }
