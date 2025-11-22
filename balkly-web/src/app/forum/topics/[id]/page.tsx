@@ -282,14 +282,14 @@ export default function TopicDetailPage() {
                       handleLike();
                     }}
                     className={`flex items-center gap-2 transition ${
-                      topic.user_has_liked 
+                      topic?.user_has_liked === true
                         ? 'text-red-500' 
                         : 'text-gray-600 dark:text-gray-400 hover:text-red-500'
                     }`}
                   >
-                    <Heart className={`h-4 w-4 transition-all ${topic.user_has_liked ? 'fill-red-500' : ''}`} />
-                    <span className="font-medium">{topic.user_has_liked ? 'Liked' : 'Like'}</span>
-                    {topic.likes_count > 0 && <span className="text-gray-500">({topic.likes_count})</span>}
+                    <Heart className={`h-4 w-4 transition-all ${topic?.user_has_liked === true ? 'fill-red-500 text-red-500' : ''}`} />
+                    <span className="font-medium">{topic?.user_has_liked === true ? 'Liked' : 'Like'}</span>
+                    {(topic?.likes_count || 0) > 0 && <span className="text-gray-500">({topic.likes_count})</span>}
                   </button>
                   <button className="text-gray-600 dark:text-gray-400 hover:text-primary transition">
                     <Flag className="h-4 w-4 inline mr-1" />
@@ -339,14 +339,14 @@ export default function TopicDetailPage() {
                       handleLike(post.id);
                     }}
                     className={`flex items-center gap-2 transition ${
-                      post.user_has_liked 
+                      post?.user_has_liked === true
                         ? 'text-red-500' 
                         : 'text-gray-600 dark:text-gray-400 hover:text-red-500'
                     }`}
                   >
-                    <Heart className={`h-4 w-4 transition-all ${post.user_has_liked ? 'fill-red-500' : ''}`} />
-                    <span className="font-medium">{post.user_has_liked ? 'Liked' : 'Like'}</span>
-                    {post.likes_count > 0 && <span className="text-gray-500">({post.likes_count})</span>}
+                    <Heart className={`h-4 w-4 transition-all ${post?.user_has_liked === true ? 'fill-red-500 text-red-500' : ''}`} />
+                    <span className="font-medium">{post?.user_has_liked === true ? 'Liked' : 'Like'}</span>
+                    {(post?.likes_count || 0) > 0 && <span className="text-gray-500">({post.likes_count})</span>}
                   </button>
                     <button
                       onClick={() => setReply(`> ${post.user?.name} wrote:\n> ${post.content}\n\n`)}
