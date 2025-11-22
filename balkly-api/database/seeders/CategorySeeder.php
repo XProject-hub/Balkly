@@ -196,6 +196,71 @@ class CategorySeeder extends Seeder
             'is_searchable' => true,
             'order' => 2,
         ]);
+
+        // Sports & Hobbies Category
+        $sports = Category::create([
+            'slug' => 'sports',
+            'name' => 'Sports & Hobbies',
+            'icon' => 'activity',
+            'description' => 'Sports equipment and hobby items',
+            'order' => 4,
+            'is_active' => true,
+        ]);
+
+        Attribute::create([
+            'category_id' => $sports->id,
+            'name' => 'Sport Type',
+            'slug' => 'sport_type',
+            'type' => 'select',
+            'options_json' => [
+                // Ball Sports
+                'Football / Soccer', 'Basketball', 'Volleyball', 'Handball', 'Tennis', 
+                'Table Tennis', 'Badminton', 'Baseball', 'Rugby', 'American Football',
+                // Water Sports
+                'Swimming', 'Diving', 'Water Polo', 'Surfing', 'Kayaking', 'Sailing',
+                'Jet Ski', 'Scuba Diving', 'Snorkeling', 'Kitesurfing',
+                // Winter Sports
+                'Skiing', 'Snowboarding', 'Ice Hockey', 'Ice Skating', 'Figure Skating',
+                // Fitness & Gym
+                'Gym Equipment', 'Weights', 'Cardio', 'Yoga', 'Pilates', 'CrossFit',
+                // Outdoor Sports
+                'Cycling', 'Mountain Biking', 'Running', 'Hiking', 'Camping', 
+                'Rock Climbing', 'Skateboarding', 'Rollerblading',
+                // Racket Sports
+                'Squash', 'Racquetball', 'Padel',
+                // Combat Sports
+                'Boxing', 'MMA', 'Karate', 'Judo', 'Taekwondo', 'Kickboxing', 'Wrestling',
+                // Golf & Others
+                'Golf', 'Cricket', 'Archery', 'Shooting', 'Fishing', 'Hunting',
+                // Hobbies
+                'Arts & Crafts', 'Photography', 'Music Instruments', 'Board Games', 
+                'Video Games', 'RC Models', 'Drones', 'Collectibles',
+            ],
+            'is_required' => true,
+            'is_searchable' => true,
+            'order' => 1,
+        ]);
+
+        Attribute::create([
+            'category_id' => $sports->id,
+            'name' => 'Condition',
+            'slug' => 'condition',
+            'type' => 'select',
+            'options_json' => ['New', 'Like New', 'Good', 'Fair', 'Used'],
+            'is_required' => true,
+            'is_searchable' => true,
+            'order' => 2,
+        ]);
+
+        Attribute::create([
+            'category_id' => $sports->id,
+            'name' => 'Brand',
+            'slug' => 'sports_brand',
+            'type' => 'text',
+            'is_required' => false,
+            'is_searchable' => true,
+            'order' => 3,
+        ]);
     }
 }
 
