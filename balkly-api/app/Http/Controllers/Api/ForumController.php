@@ -181,9 +181,12 @@ class ForumController extends Controller
             );
         }
 
+        $freshTopic = $topic->fresh();
+        
         return response()->json([
             'liked' => $liked,
-            'likes_count' => $topic->fresh()->likes_count ?? 0,
+            'likes_count' => $freshTopic->likes_count ?? 0,
+            'user_has_liked' => $liked, // Explicitly return the current state
         ]);
     }
 
@@ -227,9 +230,12 @@ class ForumController extends Controller
             );
         }
 
+        $freshPost = $post->fresh();
+        
         return response()->json([
             'liked' => $liked,
-            'likes_count' => $post->fresh()->likes_count,
+            'likes_count' => $freshPost->likes_count ?? 0,
+            'user_has_liked' => $liked, // Explicitly return the current state
         ]);
     }
 
