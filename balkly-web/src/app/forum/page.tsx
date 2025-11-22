@@ -44,7 +44,7 @@ export default function ForumPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <div className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
-        <div className="container mx-auto px-4 py-6">
+        <div className="w-full max-w-[1400px] mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Community Forum</h1>
@@ -60,10 +60,11 @@ export default function ForumPage() {
         </div>
       </div>
 
-      {/* Main Forum Layout - Flarum Style */}
-      <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Left Sidebar - Categories (Flarum Style) */}
+      {/* Main Forum Layout - XenForo Style */}
+      <div className="w-full px-4 py-6">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Left Sidebar - Categories */}
           <div className="lg:col-span-1">
             <Card className="bg-white dark:bg-gray-800 sticky top-20">
               <CardContent className="p-0">

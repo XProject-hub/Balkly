@@ -456,5 +456,142 @@ class ForumController extends Controller
         ]);
     }
 
+    // React to topic or post
+    public function react(Request $request)
+    {
+        $validated = $request->validate([
+            'type' => 'required|in:like,love,haha,wow,sad,angry',
+            'reactable_type' => 'required|in:topic,post',
+            'reactable_id' => 'required|integer',
+        ]);
+
+        $reactableClass = $validated['reactable_type'] === 'topic' 
+            ? \App\Models\ForumTopic::class 
+            : \App\Models\ForumPost::class;
+
+        // Toggle reaction
+        $existing = \App\Models\ForumReaction::where([
+            'user_id' => auth()->id(),
+            'reactable_type' => $reactableClass,
+            'reactable_id' => $validated['reactable_id'],
+        ])->first();
+
+        if ($existing) {
+            if ($existing->type === $validated['type']) {
+                // Remove reaction
+                $existing->delete();
+                return response()->json(['reacted' => false]);
+            } else {
+                // Change reaction
+                $existing->update(['type' => $validated['type']]);
+                return response()->json(['reacted' => true, 'type' => $validated['type']]);
+            }
+        }
+
+        // Add new reaction
+        \App\Models\ForumReaction::create([
+            'user_id' => auth()->id(),
+            'reactable_type' => $reactableClass,
+            'reactable_id' => $validated['reactable_id'],
+            'type' => $validated['type'],
+        ]);
+
+        return response()->json(['reacted' => true, 'type' => $validated['type']]);
+    }
+
+    // Watch/unwatch thread
+    public function toggleWatch(Request $request, $topicId)
+    {
+        $topic = ForumTopic::findOrFail($topicId);
+
+        $existing = \DB::table('forum_thread_watchers')
+            ->where('user_id', auth()->id())
+            ->where('topic_id', $topicId)
+            ->first();
+
+        if ($existing) {
+            \DB::table('forum_thread_watchers')
+                ->where('user_id', auth()->id())
+                ->where('topic_id', $topicId)
+                ->delete();
+            $topic->decrement('watchers_count');
+            $watching = false;
+        } else {
+            \DB::table('forum_thread_watchers')->insert([
+                'user_id' => auth()->id(),
+                'topic_id' => $topicId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            $topic->increment('watchers_count');
+            $watching = true;
+        }
+
+        return response()->json([
+            'watching' => $watching,
+            'watchers_count' => $topic->fresh()->watchers_count,
+        ]);
+    }
+
+    // Mark post as best answer
+    public function markBestAnswer(Request $request, $postId)
+    {
+        $post = ForumPost::findOrFail($postId);
+        $topic = $post->topic;
+
+        // Only topic owner can mark best answer
+        if ($topic->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Only topic owner can mark best answer'], 403);
+        }
+
+        // Toggle best answer
+        if ($topic->best_answer_id === $postId) {
+            $topic->update(['best_answer_id' => null, 'is_solved' => false]);
+            $post->update(['is_best_answer' => false]);
+            $message = 'Best answer removed';
+        } else {
+            // Remove previous best answer
+            if ($topic->best_answer_id) {
+                ForumPost::find($topic->best_answer_id)?->update(['is_best_answer' => false]);
+            }
+            
+            $topic->update(['best_answer_id' => $postId, 'is_solved' => true]);
+            $post->update(['is_best_answer' => true]);
+            
+            // Add reputation to answer author
+            $reputation = \App\Models\UserReputation::firstOrCreate(
+                ['user_id' => $post->user_id],
+                ['points' => 0, 'posts_count' => 0, 'topics_count' => 0, 'solutions_count' => 0, 'helpful_count' => 0]
+            );
+            $reputation->increment('helpful_count');
+            $reputation->addPoints(10);
+            
+            $message = 'Best answer marked';
+        }
+
+        return response()->json([
+            'message' => $message,
+            'topic' => $topic->fresh(['posts']),
+        ]);
+    }
+
+    // Lock/unlock thread
+    public function toggleLock(Request $request, $topicId)
+    {
+        $topic = ForumTopic::findOrFail($topicId);
+
+        // Only admin or topic owner can lock
+        if ($topic->user_id !== auth()->id() && !auth()->user()->isAdmin()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $topic->update(['is_locked' => !$topic->is_locked]);
+
+        return response()->json([
+            'locked' => $topic->is_locked,
+            'message' => $topic->is_locked ? 'Thread locked' : 'Thread unlocked',
+        ]);
+    }
+
 }
 

@@ -19,6 +19,10 @@ import {
 } from "lucide-react";
 import { forumAPI } from "@/lib/api";
 import MarkdownEditor from "@/components/MarkdownEditor";
+import ReactionPicker from "@/components/forum/ReactionPicker";
+import QuoteReply from "@/components/forum/QuoteReply";
+import ThreadPrefix from "@/components/forum/ThreadPrefix";
+import { renderMentions } from "@/lib/mentions";
 
 export default function TopicDetailPage() {
   const params = useParams();
@@ -34,6 +38,7 @@ export default function TopicDetailPage() {
   const [editContent, setEditContent] = useState("");
   const [editingTopic, setEditingTopic] = useState(false);
   const [editTopicContent, setEditTopicContent] = useState("");
+  const [quotedText, setQuotedText] = useState("");
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -290,11 +295,80 @@ export default function TopicDetailPage() {
           Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
       });
-      loadTopic(); // Reload to show changes
+      loadTopic();
       alert("Post obrisan!");
     } catch (error) {
       alert("Greška pri brisanju posta.");
     }
+  };
+
+  const handleReact = async (type: 'topic' | 'post', id: number, reaction: string) => {
+    try {
+      await fetch('/api/v1/forum/react', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({
+          type: reaction,
+          reactable_type: type,
+          reactable_id: id,
+        }),
+      });
+      loadTopic();
+    } catch (error) {
+      console.error("Failed to react:", error);
+    }
+  };
+
+  const handleToggleWatch = async () => {
+    try {
+      await fetch(`/api/v1/forum/topics/${topicId}/watch`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      loadTopic();
+    } catch (error) {
+      console.error("Failed to toggle watch:", error);
+    }
+  };
+
+  const handleToggleLock = async () => {
+    try {
+      await fetch(`/api/v1/forum/topics/${topicId}/lock`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      loadTopic();
+    } catch (error) {
+      console.error("Failed to toggle lock:", error);
+    }
+  };
+
+  const handleMarkBestAnswer = async (postId: number) => {
+    try {
+      await fetch(`/api/v1/forum/posts/${postId}/best-answer`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      loadTopic();
+    } catch (error) {
+      console.error("Failed to mark best answer:", error);
+    }
+  };
+
+  const handleQuote = (authorName: string, content: string) => {
+    const quotedText = `> **${authorName} wrote:**\n> ${content.split('\n').join('\n> ')}\n\n`;
+    setReply(quotedText + reply);
+    // Scroll to reply box
+    document.getElementById('reply-editor')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   if (loading) {
@@ -326,7 +400,7 @@ export default function TopicDetailPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="w-full max-w-[1400px] mx-auto px-4 py-8">
         <Button
           variant="ghost"
           className="mb-4"
@@ -341,12 +415,18 @@ export default function TopicDetailPage() {
           <CardHeader>
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  {topic.prefix && <ThreadPrefix prefix={topic.prefix} />}
                   {topic.is_sticky && (
                     <Pin className="h-5 w-5 text-primary" />
                   )}
                   {topic.is_locked && (
                     <Lock className="h-5 w-5 text-muted-foreground" />
+                  )}
+                  {topic.is_solved && (
+                    <span className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 text-xs font-bold rounded">
+                      ✓ SOLVED
+                    </span>
                   )}
                   <CardTitle className="text-3xl">{topic.title}</CardTitle>
                 </div>
@@ -402,23 +482,35 @@ export default function TopicDetailPage() {
               <p className="whitespace-pre-wrap">{topic.content}</p>
             </div>
             
-            {/* Topic Actions */}
-            <div className="flex gap-4 mt-4 pt-4 border-t items-center">
-              <button 
-                onClick={() => handleLikeTopic()}
-                className="text-sm flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+            {/* Topic Actions - XenForo Style */}
+            <div className="flex gap-4 mt-4 pt-4 border-t items-center flex-wrap">
+              <ReactionPicker 
+                onReact={(type) => handleReact('topic', topic.id, type)}
+                currentReaction={topic.user_reaction}
+              />
+              <button
+                onClick={() => handleToggleWatch()}
+                className="text-sm text-gray-500 hover:text-primary transition-colors flex items-center gap-1"
+                title="Watch thread"
               >
-                <Heart className={`h-4 w-4 transition-all ${topic.user_has_liked ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} />
-                <span>Like</span>
-                <span>({topic.likes_count || 0})</span>
+                <Eye className={`h-4 w-4 ${topic.user_watching ? 'fill-primary text-primary' : ''}`} />
+                {topic.user_watching ? 'Watching' : 'Watch'}
               </button>
               {currentUser?.id === topic.user_id && (
                 <button
                   onClick={() => handleEditTopic()}
-                  className="text-sm text-muted-foreground hover:text-foreground flex items-center"
+                  className="text-sm text-gray-500 hover:text-primary transition-colors flex items-center gap-1"
                 >
-                  <Edit className="h-4 w-4 mr-1" />
-                  Edit Topic
+                  <Edit className="h-4 w-4" />
+                  Edit
+                </button>
+              )}
+              {(currentUser?.id === topic.user_id || currentUser?.role === 'admin') && (
+                <button
+                  onClick={() => handleToggleLock()}
+                  className="text-sm text-gray-500 hover:text-primary transition-colors"
+                >
+                  {topic.is_locked ? 'Unlock' : 'Lock'}
                 </button>
               )}
             </div>
@@ -430,8 +522,13 @@ export default function TopicDetailPage() {
           <h2 className="text-2xl font-bold">Replies ({topic.replies_count})</h2>
           
           {topic.posts?.map((post: any) => (
-            <Card key={post.id}>
+            <Card key={post.id} className={post.is_best_answer ? 'border-2 border-green-500' : ''}>
               <CardContent className="p-4">
+                {post.is_best_answer && (
+                  <div className="mb-3 px-3 py-2 bg-green-50 dark:bg-green-900/20 rounded-lg text-green-700 dark:text-green-300 text-sm font-medium">
+                    ✓ Best Answer
+                  </div>
+                )}
                 <div className="flex gap-4">
                   <div className="flex-shrink-0">
                     <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">

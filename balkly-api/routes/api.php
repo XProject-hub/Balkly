@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\AIController;
 use App\Http\Controllers\Api\CurrencyController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -110,11 +111,15 @@ Route::prefix('v1')->group(function () {
         Route::post('/forum/topics', [ForumController::class, 'createTopic']);
         Route::patch('/forum/topics/{id}', [ForumController::class, 'updateTopic']);
         Route::post('/forum/topics/{id}/like', [ForumController::class, 'likeTopic']);
+        Route::post('/forum/topics/{id}/watch', [ForumController::class, 'toggleWatch']);
+        Route::post('/forum/topics/{id}/lock', [ForumController::class, 'toggleLock']);
         Route::post('/forum/posts', [ForumController::class, 'createPost']);
         Route::post('/forum/posts/{id}/sticky', [ForumController::class, 'makeSticky']);
         Route::post('/forum/posts/{id}/like', [ForumController::class, 'likePost']);
+        Route::post('/forum/posts/{id}/best-answer', [ForumController::class, 'markBestAnswer']);
         Route::patch('/forum/posts/{id}', [ForumController::class, 'updatePost']);
         Route::post('/forum/upload-images', [\App\Http\Controllers\Api\ForumImageController::class, 'upload']);
+        Route::post('/forum/react', [ForumController::class, 'react']);
         
         // Events (Organizer)
         Route::post('/events', [EventController::class, 'store']);
@@ -265,6 +270,10 @@ Route::prefix('v1')->group(function () {
     Route::get('/banners/{position}', [\App\Http\Controllers\Api\AdBannerController::class, 'getByPosition']);
     Route::post('/banners/{id}/impression', [\App\Http\Controllers\Api\AdBannerController::class, 'trackImpression']);
     Route::post('/banners/{id}/click', [\App\Http\Controllers\Api\AdBannerController::class, 'trackClick']);
+    
+    // User profiles and reputation (public)
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::get('/users/leaderboard', [UserController::class, 'leaderboard']);
     
     // Online users tracking
     Route::get('/online/count', [\App\Http\Controllers\Api\OnlineUsersController::class, 'count']);
