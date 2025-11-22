@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Pin, Lock, Eye, Heart, Flag, MessageSquare, CheckCircle } from "lucide-react";
+import { ArrowLeft, Pin, Lock, Eye, Heart, Flag, MessageSquare, CheckCircle, MessageCircle } from "lucide-react";
 import { forumAPI } from "@/lib/api";
 import MarkdownEditor from "@/components/MarkdownEditor";
 
