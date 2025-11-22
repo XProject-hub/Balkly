@@ -1,0 +1,66 @@
+========================================
+DEPLOY AI HELPER - OpenAI Integration
+========================================
+
+NA VPS-u uradi ovo:
+
+1. Pull latest code:
+   cd /var/www/balkly
+   git pull origin main
+
+2. Dodaj OpenAI API key u .env:
+   nano balkly-api/.env
+   
+   Dodaj na kraj fajla:
+   
+   OPENAI_API_KEY=<your_openai_api_key>
+   OPENAI_MODEL=gpt-4o-mini
+   
+   (API key je u Slack/Email - ne čuvaj ga u Git!)
+   
+   Sačuvaj (Ctrl+O, Enter, Ctrl+X)
+
+3. Restart backend:
+   docker-compose restart api
+   sleep 5
+
+4. Clear cache:
+   docker exec balkly_api php artisan config:clear
+   docker exec balkly_api php artisan cache:clear
+
+5. Test:
+   - Idi na https://balkly.live/listings/create
+   - Unesi naslov i opis
+   - Klikni "Auto-Enhance Listing"
+   - Treba da AI poboljša tekst BEZ EMOJIS!
+
+========================================
+ŠTA RADI:
+========================================
+
+✅ GPT-4 AI Enhancement
+✅ Professional title writing (max 70 chars)
+✅ Smart description formatting
+✅ Bullet points for features
+✅ Keyword extraction
+✅ NO EMOJIS - samo čist profesionalni tekst
+
+========================================
+PRIJE:
+bmw x5 2020
+car in good condition contact me
+
+POSLIJE:
+BMW X5 2020 - Excellent Condition
+
+Overview:
+This BMW X5 from 2020 is in excellent condition and ready for its next owner.
+
+Key Features:
+• Well-maintained vehicle
+• Great performance
+• Excellent value for money
+
+Contact me for more details or to schedule a viewing.
+========================================
+
