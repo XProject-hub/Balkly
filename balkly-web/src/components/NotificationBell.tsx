@@ -23,7 +23,22 @@ export default function NotificationBell() {
       const token = localStorage.getItem("auth_token");
       if (!token) return;
 
-      const response = await fetch("/api/v1/notifications", {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+
+      // Fetch unread count
+      const countResponse = await fetch(`${API_URL}/notifications/unread-count`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (countResponse.ok) {
+        const countData = await countResponse.json();
+        setUnreadCount(countData.count || 0);
+      }
+
+      // Fetch notifications
+      const response = await fetch(`${API_URL}/notifications?per_page=10`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -31,8 +46,7 @@ export default function NotificationBell() {
 
       if (response.ok) {
         const data = await response.json();
-        setNotifications(data.notifications || []);
-        setUnreadCount(data.unread_count || 0);
+        setNotifications(data.data || []);
       }
     } catch (error) {
       console.error("Failed to load notifications:", error);
@@ -41,7 +55,8 @@ export default function NotificationBell() {
 
   const markAsRead = async (notificationId: number) => {
     try {
-      await fetch(`/api/v1/notifications/${notificationId}/read`, {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+      await fetch(`${API_URL}/notifications/${notificationId}/read`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
@@ -86,17 +101,24 @@ export default function NotificationBell() {
                 {notifications.slice(0, 10).map((notif) => (
                   <Link
                     key={notif.id}
-                    href={notif.link || "#"}
+                    href={notif.data?.link || "#"}
                     onClick={() => {
                       markAsRead(notif.id);
                       setShowDropdown(false);
                     }}
                     className={`block p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                      !notif.read_at ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                      !notif.is_read ? 'bg-blue-50 dark:bg-blue-900/20' : ''
                     }`}
                   >
                     <div className="flex gap-2">
-                      <div className="text-2xl">{notif.icon || '🔔'}</div>
+                      <div className="text-2xl">
+                        {notif.type === 'forum_like' ? '❤️' :
+                         notif.type === 'forum_reply' ? '💬' :
+                         notif.type === 'message' ? '✉️' :
+                         notif.type === 'offer' ? '💰' :
+                         notif.type === 'offer_accepted' ? '✅' :
+                         notif.type === 'offer_rejected' ? '❌' : '🔔'}
+                      </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                           {notif.title}
@@ -108,7 +130,7 @@ export default function NotificationBell() {
                           {new Date(notif.created_at).toLocaleString()}
                         </p>
                       </div>
-                      {!notif.read_at && (
+                      {!notif.is_read && (
                         <div className="w-2 h-2 bg-blue-500 rounded-full mt-2" />
                       )}
                     </div>

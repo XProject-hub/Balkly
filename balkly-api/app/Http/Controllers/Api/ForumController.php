@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ForumCategory;
 use App\Models\ForumTopic;
 use App\Models\ForumPost;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -159,6 +160,16 @@ class ForumController extends Controller
             ]);
             $topic->increment('likes_count');
             $liked = true;
+            
+            // Send notification to topic owner
+            $notificationService = app(NotificationService::class);
+            $notificationService->forumLike(
+                $id, 
+                'topic', 
+                auth()->user(), 
+                $topic->user_id, 
+                $topic->title
+            );
         }
 
         return response()->json([
@@ -194,6 +205,17 @@ class ForumController extends Controller
             ]);
             $post->increment('likes_count');
             $liked = true;
+            
+            // Send notification to post owner
+            $topic = $post->topic;
+            $notificationService = app(NotificationService::class);
+            $notificationService->forumLike(
+                $topic->id, 
+                'post', 
+                auth()->user(), 
+                $post->user_id, 
+                substr($post->content, 0, 50) . '...'
+            );
         }
 
         return response()->json([
@@ -262,6 +284,15 @@ class ForumController extends Controller
         $topic = ForumTopic::find($validated['topic_id']);
         $topic->increment('replies_count');
         $topic->update(['last_post_at' => now()]);
+
+        // Send notification to topic owner
+        $notificationService = app(NotificationService::class);
+        $notificationService->forumReply(
+            $topic->id,
+            $topic->user_id,
+            auth()->user(),
+            $topic->title
+        );
 
         return response()->json([
             'post' => $post->load('user'),

@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\AIController;
 use App\Http\Controllers\Api\CurrencyController;
+use App\Http\Controllers\Api\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -183,6 +184,13 @@ Route::prefix('v1')->group(function () {
         
         // Analytics tracking
         Route::post('/analytics/track', [\App\Http\Controllers\Api\AnalyticsController::class, 'trackVisit']);
+        
+        // Notifications
+        Route::get('/notifications', [NotificationController::class, 'index']);
+        Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
+        Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+        Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+        Route::delete('/notifications/{id}', [NotificationController::class, 'destroy']);
         
         // KB Article Feedback
         Route::post('/kb/{id}/feedback', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'feedback']);

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\Listing;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
@@ -98,6 +99,19 @@ class ChatController extends Controller
 
         // Update chat last message time
         $chat->update(['last_message_at' => now()]);
+
+        // Send notification to receiver
+        $receiverId = $chat->buyer_id === auth()->id() ? $chat->seller_id : $chat->buyer_id;
+        $listing = $chat->listing;
+        
+        $notificationService = app(NotificationService::class);
+        $notificationService->newMessage(
+            $chat->id,
+            auth()->id(),
+            $receiverId,
+            auth()->user()->name,
+            $listing->title
+        );
 
         return response()->json([
             'message' => $message->load('sender'),
