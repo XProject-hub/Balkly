@@ -262,9 +262,15 @@ export default function HomePage() {
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredListings.slice(0, 6).map((listing) => (
-              <Link key={listing.id} href={`/listings/${listing.id}`}>
+          {featuredListings.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground">
+              <Package className="h-16 w-16 mx-auto mb-3 opacity-20" />
+              <p>No featured listings yet</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredListings.slice(0, 6).map((listing) => (
+                <Link key={listing.id} href={`/listings/${listing.id}`}>
                 <Card className="hover:shadow-2xl transition-all group overflow-hidden">
                   <div className="aspect-video bg-gradient-to-br from-muted to-muted/50 relative overflow-hidden">
                     {listing.media?.[0] ? (
@@ -310,8 +316,9 @@ export default function HomePage() {
                   </CardContent>
                 </Card>
               </Link>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -328,8 +335,14 @@ export default function HomePage() {
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {upcomingEvents.slice(0, 4).map((event) => (
+          {upcomingEvents.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground">
+              <Calendar className="h-16 w-16 mx-auto mb-3 opacity-20" />
+              <p>No events scheduled</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {upcomingEvents.slice(0, 4).map((event) => (
               <Link key={event.id} href={`/events/${event.id}`}>
                 <Card className="hover:shadow-2xl transition-all group overflow-hidden h-full">
                   <div className="aspect-square bg-gradient-to-br from-primary/20 to-primary/5 relative overflow-hidden">
@@ -362,8 +375,9 @@ export default function HomePage() {
                   </CardHeader>
                 </Card>
               </Link>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -380,8 +394,14 @@ export default function HomePage() {
             </Button>
           </div>
           
-          <div className="space-y-4">
-            {trendingTopics.slice(0, 5).map((topic) => (
+          {trendingTopics.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground">
+              <MessageCircle className="h-16 w-16 mx-auto mb-3 opacity-20" />
+              <p>No discussions yet</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {trendingTopics.slice(0, 5).map((topic) => (
               <Link key={topic.id} href={`/forum/topics/${topic.id}`}>
                 <Card className="hover:shadow-lg transition-all hover:border-primary">
                   <CardContent className="p-6">
@@ -409,8 +429,9 @@ export default function HomePage() {
                   </CardContent>
                 </Card>
               </Link>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
