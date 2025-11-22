@@ -4,25 +4,9 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  ArrowLeft,
-  Pin,
-  Lock,
-  Eye,
-  MessageCircle,
-  Heart,
-  Flag,
-  Star,
-  Edit,
-  MessageSquare,
-} from "lucide-react";
+import { ArrowLeft, Pin, Lock, Eye, Heart, Flag, MessageSquare, CheckCircle } from "lucide-react";
 import { forumAPI } from "@/lib/api";
 import MarkdownEditor from "@/components/MarkdownEditor";
-import ReactionPicker from "@/components/forum/ReactionPicker";
-import QuoteReply from "@/components/forum/QuoteReply";
-import ThreadPrefix from "@/components/forum/ThreadPrefix";
-import { renderMentions } from "@/lib/mentions";
 
 export default function TopicDetailPage() {
   const params = useParams();
@@ -32,21 +16,13 @@ export default function TopicDetailPage() {
   const [topic, setTopic] = useState<any>(null);
   const [reply, setReply] = useState("");
   const [loading, setLoading] = useState(true);
-  const [showStickyModal, setShowStickyModal] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [editingPost, setEditingPost] = useState<any>(null);
-  const [editContent, setEditContent] = useState("");
-  const [editingTopic, setEditingTopic] = useState(false);
-  const [editTopicContent, setEditTopicContent] = useState("");
-  const [quotedText, setQuotedText] = useState("");
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
-    if (userData && userData !== 'undefined' && userData !== 'null') {
+    if (userData && userData !== 'undefined') {
       try {
-        const parsed = JSON.parse(userData);
-        setCurrentUser(parsed);
-        console.log("Current user loaded:", parsed.id, parsed.name);
+        setCurrentUser(JSON.parse(userData));
       } catch (e) {
         console.error("Failed to parse user:", e);
       }
@@ -71,313 +47,47 @@ export default function TopicDetailPage() {
     }
   };
 
-  const handleReply = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleReply = async () => {
+    if (!reply.trim()) return;
+    
     try {
       await forumAPI.createPost({
         topic_id: topicId,
         content: reply,
       });
       setReply("");
-      loadTopic(); // Reload to show new reply
+      loadTopic();
     } catch (error) {
-      console.error("Failed to post reply:", error);
+      alert("Failed to post reply");
     }
   };
 
-  const handleMakeSticky = async (duration: number) => {
+  const handleLike = async (postId?: number) => {
     try {
-      const response = await fetch(`/api/v1/orders/sticky`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-        body: JSON.stringify({
-          topic_id: topicId,
-          plan_id: duration === 7 ? 6 : 7, // 6 = 7 days, 7 = 30 days
-        }),
-      });
-
-      const data = await response.json();
-      
-      if (data.checkout_url) {
-        window.location.href = data.checkout_url;
-      }
-    } catch (error) {
-      console.error("Failed to purchase sticky:", error);
-    }
-  };
-
-  const handleReport = async () => {
-    const reason = prompt("Razlog prijave:");
-    if (!reason) return;
-
-    try {
-      await fetch(`/api/v1/forum/topics/${topicId}/report`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-        body: JSON.stringify({ reason }),
-      });
-      alert("Prijava poslana! Moderatori će pregledati u roku 24h.");
-    } catch (error) {
-      alert("Greška pri slanju prijave.");
-    }
-  };
-
-  const handleDeleteTopic = async () => {
-    if (!confirm("Sigurno želite obrisati ovaj topic?")) return;
-
-    try {
-      await fetch(`/api/v1/admin/forum/topics/${topicId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-      });
-      alert("Topic obrisan!");
-      router.push("/forum");
-    } catch (error) {
-      alert("Greška pri brisanju topica.");
-    }
-  };
-
-  const handleLikePost = async (postId: number) => {
-    try {
-      const response = await fetch(`/api/v1/forum/posts/${postId}/like`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        
-        // Update post state immediately
-        setTopic((prevTopic: any) => ({
-          ...prevTopic,
-          posts: prevTopic.posts.map((p: any) => 
-            p.id === postId 
-              ? { ...p, user_has_liked: data.liked, likes_count: data.likes_count }
-              : p
-          ),
-        }));
-        
-        // Also reload
-        setTimeout(() => loadTopic(), 500);
-      }
-    } catch (error) {
-      console.error("Failed to like post:", error);
-    }
-  };
-
-  const handleQuotePost = (post: any) => {
-    const quotedText = `> ${post.user?.name} said:\n> ${post.content.split('\n').join('\n> ')}\n\n`;
-    setReply(quotedText);
-    // Scroll to reply form
-    document.getElementById('reply-form')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleEditPost = (post: any) => {
-    setEditingPost(post);
-    setEditContent(post.content);
-  };
-
-  const handleLikeTopic = async () => {
-    try {
-      const response = await fetch(`/api/v1/forum/topics/${topicId}/like`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-      });
-      
-      console.log("Like response:", response.status);
-      
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Like data:", data);
-        
-        // Update topic state immediately
-        setTopic((prevTopic: any) => ({
-          ...prevTopic,
-          user_has_liked: data.liked,
-          likes_count: data.likes_count,
-        }));
-        
-        // Also reload for complete data
-        setTimeout(() => loadTopic(), 500);
+      if (postId) {
+        await fetch(`/api/v1/forum/posts/${postId}/like`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${localStorage.getItem("auth_token")}` },
+        });
       } else {
-        const error = await response.json();
-        console.error("Like failed:", error);
-        alert("Failed to like: " + (error.message || response.status));
+        await fetch(`/api/v1/forum/topics/${topicId}/like`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${localStorage.getItem("auth_token")}` },
+        });
       }
-    } catch (error) {
-      console.error("Failed to like topic:", error);
-      alert("Like error - check console!");
-    }
-  };
-
-  const handleEditTopic = () => {
-    setEditingTopic(true);
-    setEditTopicContent(topic.content);
-  };
-
-  const handleSaveTopicEdit = async () => {
-    if (!editTopicContent.trim()) return;
-
-    try {
-      const response = await fetch(`/api/v1/forum/topics/${topicId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-        body: JSON.stringify({
-          content: editTopicContent,
-        }),
-      });
-      
-      console.log("Edit response:", response.status);
-      
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Edit success:", data);
-        setEditingTopic(false);
-        setEditTopicContent("");
-        loadTopic();
-        alert("Topic updated successfully!");
-      } else {
-        const error = await response.json();
-        console.error("Edit failed:", error);
-        alert("Failed to update: " + (error.message || response.status));
-      }
-    } catch (error) {
-      console.error("Edit error:", error);
-      alert("Failed to update topic - check console!");
-    }
-  };
-
-  const handleSaveEdit = async () => {
-    if (!editingPost || !editContent.trim()) return;
-
-    try {
-      await fetch(`/api/v1/forum/posts/${editingPost.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-        body: JSON.stringify({
-          content: editContent,
-        }),
-      });
-      
-      setEditingPost(null);
-      setEditContent("");
       loadTopic();
     } catch (error) {
-      alert("Failed to update post.");
+      console.error("Failed to like:", error);
     }
-  };
-
-  const handleDeletePost = async (postId: number) => {
-    if (!confirm("Sigurno želite obrisati ovaj post?")) return;
-
-    try {
-      await fetch(`/api/v1/admin/forum/posts/${postId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-      });
-      loadTopic();
-      alert("Post obrisan!");
-    } catch (error) {
-      alert("Greška pri brisanju posta.");
-    }
-  };
-
-  const handleReact = async (type: 'topic' | 'post', id: number, reaction: string) => {
-    try {
-      await fetch('/api/v1/forum/react', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-        body: JSON.stringify({
-          type: reaction,
-          reactable_type: type,
-          reactable_id: id,
-        }),
-      });
-      loadTopic();
-    } catch (error) {
-      console.error("Failed to react:", error);
-    }
-  };
-
-  const handleToggleWatch = async () => {
-    try {
-      await fetch(`/api/v1/forum/topics/${topicId}/watch`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-      });
-      loadTopic();
-    } catch (error) {
-      console.error("Failed to toggle watch:", error);
-    }
-  };
-
-  const handleToggleLock = async () => {
-    try {
-      await fetch(`/api/v1/forum/topics/${topicId}/lock`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-      });
-      loadTopic();
-    } catch (error) {
-      console.error("Failed to toggle lock:", error);
-    }
-  };
-
-  const handleMarkBestAnswer = async (postId: number) => {
-    try {
-      await fetch(`/api/v1/forum/posts/${postId}/best-answer`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-      });
-      loadTopic();
-    } catch (error) {
-      console.error("Failed to mark best answer:", error);
-    }
-  };
-
-  const handleQuote = (authorName: string, content: string) => {
-    const quotedText = `> **${authorName} wrote:**\n> ${content.split('\n').join('\n> ')}\n\n`;
-    setReply(quotedText + reply);
-    // Scroll to reply box
-    document.getElementById('reply-editor')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background py-8">
-        <div className="container mx-auto px-4 max-w-4xl">
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-950 py-8">
+        <div className="max-w-[1200px] mx-auto px-6">
           <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-muted rounded w-3/4" />
-            <div className="h-4 bg-muted rounded w-1/2" />
+            <div className="h-8 bg-gray-200 dark:bg-gray-800 rounded w-3/4" />
+            <div className="h-64 bg-gray-200 dark:bg-gray-800 rounded" />
           </div>
         </div>
       </div>
@@ -386,347 +96,187 @@ export default function TopicDetailPage() {
 
   if (!topic) {
     return (
-      <div className="min-h-screen bg-background py-8">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-2xl font-bold mb-4">Topic not found</h1>
-          <Button onClick={() => router.push("/forum")}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Forum
-          </Button>
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-950 py-8">
+        <div className="max-w-[1200px] mx-auto px-6 text-center">
+          <h1 className="text-2xl font-bold mb-4">Thread not found</h1>
+          <Button onClick={() => router.push("/forum")}>Back to Forum</Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="w-full max-w-[1400px] mx-auto px-4 py-8">
-        <Button
-          variant="ghost"
-          className="mb-4"
-          onClick={() => router.push("/forum")}
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Forum
-        </Button>
-
-        {/* Topic Header */}
-        <Card className="mb-6">
-          <CardHeader>
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  {topic.prefix && <ThreadPrefix prefix={topic.prefix} />}
-                  {topic.is_sticky && (
-                    <Pin className="h-5 w-5 text-primary" />
-                  )}
-                  {topic.is_locked && (
-                    <Lock className="h-5 w-5 text-muted-foreground" />
-                  )}
-                  {topic.is_solved && (
-                    <span className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 text-xs font-bold rounded">
-                      ✓ SOLVED
-                    </span>
-                  )}
-                  <CardTitle className="text-3xl">{topic.title}</CardTitle>
-                </div>
-                
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <span>Posted by {topic.user?.name}</span>
-                  <span className="flex items-center">
-                    <Eye className="h-3 w-3 mr-1" />
-                    {topic.views_count} views
-                  </span>
-                  <span className="flex items-center">
-                    <MessageCircle className="h-3 w-3 mr-1" />
-                    {topic.replies_count} replies
-                  </span>
-                  <span>{new Date(topic.created_at).toLocaleString()}</span>
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                {!topic.is_sticky && topic.user_id === currentUser?.id && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setShowStickyModal(true)}
-                  >
-                    <Star className="h-4 w-4 mr-2" />
-                    Make Sticky
-                  </Button>
-                )}
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={handleReport}
-                  title="Prijavi topic"
-                >
-                  <Flag className="h-4 w-4" />
-                </Button>
-                {currentUser?.role === "admin" && (
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={handleDeleteTopic}
-                    title="Obriši topic (Admin)"
-                  >
-                    🗑️ Delete
-                  </Button>
-                )}
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="prose max-w-none">
-              <p className="whitespace-pre-wrap">{topic.content}</p>
-            </div>
-            
-            {/* Topic Actions - XenForo Style */}
-            <div className="flex gap-4 mt-4 pt-4 border-t items-center flex-wrap">
-              <ReactionPicker 
-                onReact={(type) => handleReact('topic', topic.id, type)}
-                currentReaction={topic.user_reaction}
-              />
-              <button
-                onClick={() => handleToggleWatch()}
-                className="text-sm text-gray-500 hover:text-primary transition-colors flex items-center gap-1"
-                title="Watch thread"
-              >
-                <Eye className={`h-4 w-4 ${topic.user_watching ? 'fill-primary text-primary' : ''}`} />
-                {topic.user_watching ? 'Watching' : 'Watch'}
-              </button>
-              {currentUser?.id === topic.user_id && (
-                <button
-                  onClick={() => handleEditTopic()}
-                  className="text-sm text-gray-500 hover:text-primary transition-colors flex items-center gap-1"
-                >
-                  <Edit className="h-4 w-4" />
-                  Edit
-                </button>
-              )}
-              {(currentUser?.id === topic.user_id || currentUser?.role === 'admin') && (
-                <button
-                  onClick={() => handleToggleLock()}
-                  className="text-sm text-gray-500 hover:text-primary transition-colors"
-                >
-                  {topic.is_locked ? 'Unlock' : 'Lock'}
-                </button>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Replies */}
-        <div className="space-y-4 mb-6">
-          <h2 className="text-2xl font-bold">Replies ({topic.replies_count})</h2>
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-950">
+      {/* XenForo Header */}
+      <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-800 shadow-sm">
+        <div className="max-w-[1200px] mx-auto px-6 py-4">
+          <Button variant="ghost" onClick={() => router.push("/forum")} className="mb-3">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to forum
+          </Button>
           
-          {topic.posts?.map((post: any) => (
-            <Card key={post.id} className={post.is_best_answer ? 'border-2 border-green-500' : ''}>
-              <CardContent className="p-4">
-                {post.is_best_answer && (
-                  <div className="mb-3 px-3 py-2 bg-green-50 dark:bg-green-900/20 rounded-lg text-green-700 dark:text-green-300 text-sm font-medium">
-                    ✓ Best Answer
+          <div className="flex items-center gap-2 mb-2">
+            {topic.is_sticky && <Pin className="h-5 w-5 text-amber-500" />}
+            {topic.is_locked && <Lock className="h-5 w-5 text-gray-400" />}
+            {topic.is_solved && <CheckCircle className="h-5 w-5 text-green-500" />}
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">{topic.title}</h1>
+          </div>
+          
+          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+            <span className="flex items-center gap-1">
+              <Eye className="h-4 w-4" />
+              {topic.views_count} views
+            </span>
+            <span className="flex items-center gap-1">
+              <MessageCircle className="h-4 w-4" />
+              {topic.replies_count} replies
+            </span>
+            <span className="flex items-center gap-1">
+              <Heart className="h-4 w-4" />
+              {topic.likes_count || 0} likes
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* XenForo Thread Content */}
+      <div className="max-w-[1200px] mx-auto px-6 py-6 space-y-4">
+        
+        {/* Original Post - XenForo Style */}
+        <div className="bg-white dark:bg-gray-900 rounded-lg border dark:border-gray-800 overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-12">
+            {/* User Info - Left Sidebar (XenForo style) */}
+            <div className="md:col-span-3 bg-gray-50 dark:bg-gray-800/50 p-6 border-r dark:border-gray-800">
+              <div className="text-center">
+                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white font-bold text-3xl shadow-lg mb-3">
+                  {topic.user?.name?.[0]?.toUpperCase()}
+                </div>
+                <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-1">{topic.user?.name}</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Member</p>
+                <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
+                  <div className="flex justify-between">
+                    <span>Messages:</span>
+                    <span className="font-medium">0</span>
                   </div>
-                )}
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">
-                      {post.user?.name?.[0]?.toUpperCase()}
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="font-medium">{post.user?.name}</span>
-                      <span className="text-sm text-muted-foreground">
-                        {new Date(post.created_at).toLocaleString()}
-                      </span>
-                    </div>
-                    <div className="prose max-w-none">
-                      <p className="whitespace-pre-wrap">{post.content}</p>
-                    </div>
-                    <div className="flex gap-4 mt-3 items-center">
-                      <button 
-                        onClick={() => handleLikePost(post.id)}
-                        className="text-sm flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        <Heart className={`h-4 w-4 transition-all ${post.user_has_liked ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} />
-                        <span>Like</span>
-                        <span>({post.likes_count || 0})</span>
-                      </button>
-                      <button 
-                        onClick={() => handleQuotePost(post)}
-                        className="text-sm text-muted-foreground hover:text-foreground flex items-center"
-                      >
-                        <MessageSquare className="h-4 w-4 mr-1" />
-                        Quote
-                      </button>
-                      {currentUser?.id === post.user_id && (
-                        <button
-                          onClick={() => {
-                            console.log("Edit clicked - Current user:", currentUser?.id, "Post user:", post.user_id);
-                            handleEditPost(post);
-                          }}
-                          className="text-sm text-muted-foreground hover:text-foreground flex items-center"
-                        >
-                          <Edit className="h-4 w-4 mr-1" />
-                          Edit
-                        </button>
-                      )}
-                      {currentUser?.role === "admin" && (
-                        <button
-                          onClick={() => handleDeletePost(post.id)}
-                          className="text-sm text-red-600 hover:text-red-700 font-medium ml-auto"
-                        >
-                          🗑️ Delete (Admin)
-                        </button>
-                      )}
-                    </div>
+                  <div className="flex justify-between">
+                    <span>Reaction score:</span>
+                    <span className="font-medium">{topic.likes_count || 0}</span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+              </div>
+            </div>
+
+            {/* Post Content - Right Side */}
+            <div className="md:col-span-9 p-6">
+              <div className="flex justify-between items-start mb-4">
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  {new Date(topic.created_at).toLocaleString()}
+                </div>
+                <div className="text-xs text-gray-400">
+                  #{topic.id}
+                </div>
+              </div>
+
+              <div className="prose max-w-none dark:prose-invert mb-6">
+                <div className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
+                  {topic.content}
+                </div>
+              </div>
+
+              {/* Post Actions - XenForo Style */}
+              <div className="pt-4 border-t dark:border-gray-800">
+                <div className="flex items-center gap-4 text-sm">
+                  <button
+                    onClick={() => handleLike()}
+                    className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-primary transition"
+                  >
+                    <Heart className={`h-4 w-4 ${topic.user_has_liked ? 'fill-red-500 text-red-500' : ''}`} />
+                    <span>Like</span>
+                    {topic.likes_count > 0 && <span>({topic.likes_count})</span>}
+                  </button>
+                  <button className="text-gray-600 dark:text-gray-400 hover:text-primary transition">
+                    <Flag className="h-4 w-4 inline mr-1" />
+                    Report
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Edit Topic Modal */}
-        {editingTopic && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <Card className="w-full max-w-3xl">
-              <CardHeader>
-                <CardTitle>Edit Topic</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <MarkdownEditor
-                  value={editTopicContent}
-                  onChange={setEditTopicContent}
-                  placeholder="Edit your topic..."
-                />
-                <div className="flex gap-2">
-                  <Button onClick={handleSaveTopicEdit} disabled={!editTopicContent.trim()}>
-                    <Edit className="mr-2 h-4 w-4" />
-                    Save Changes
-                  </Button>
-                  <Button variant="outline" onClick={() => setEditingTopic(false)}>
-                    Cancel
-                  </Button>
+        {/* Replies */}
+        {topic.posts?.map((post: any) => (
+          <div key={post.id} className="bg-white dark:bg-gray-900 rounded-lg border dark:border-gray-800 overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-12">
+              {/* User Info - Left */}
+              <div className="md:col-span-3 bg-gray-50 dark:bg-gray-800/50 p-6 border-r dark:border-gray-800">
+                <div className="text-center">
+                  <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white font-bold text-2xl shadow-lg mb-3">
+                    {post.user?.name?.[0]?.toUpperCase()}
+                  </div>
+                  <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-1">{post.user?.name}</h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Member</p>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+              </div>
 
-        {/* Edit Post Modal */}
-        {editingPost && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <Card className="w-full max-w-3xl">
-              <CardHeader>
-                <CardTitle>Edit Post</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <MarkdownEditor
-                  value={editContent}
-                  onChange={setEditContent}
-                  placeholder="Edit your post..."
-                />
-                <div className="flex gap-2">
-                  <Button onClick={handleSaveEdit} disabled={!editContent.trim()}>
-                    <Edit className="mr-2 h-4 w-4" />
-                    Save Changes
-                  </Button>
-                  <Button variant="outline" onClick={() => setEditingPost(null)}>
-                    Cancel
-                  </Button>
+              {/* Post Content */}
+              <div className="md:col-span-9 p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                    {new Date(post.created_at).toLocaleString()}
+                  </div>
+                  <div className="text-xs text-gray-400">#{post.id}</div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
 
-        {/* Reply Form */}
-        {!topic.is_locked ? (
-          <Card id="reply-form">
-            <CardHeader>
-              <CardTitle>Post a Reply</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleReply}>
-                <div className="mb-4">
-                  <MarkdownEditor
-                    value={reply}
-                    onChange={setReply}
-                    placeholder="Write your reply... Use toolbar for formatting, emojis, and images!"
-                  />
+                <div className="prose max-w-none dark:prose-invert mb-6">
+                  <div className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
+                    {post.content}
+                  </div>
                 </div>
-                <Button type="submit" disabled={!reply.trim()}>
-                  <MessageCircle className="mr-2 h-4 w-4" />
-                  Post Reply
+
+                <div className="pt-4 border-t dark:border-gray-800">
+                  <div className="flex items-center gap-4 text-sm">
+                    <button
+                      onClick={() => handleLike(post.id)}
+                      className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-primary transition"
+                    >
+                      <Heart className={`h-4 w-4 ${post.user_has_liked ? 'fill-red-500 text-red-500' : ''}`} />
+                      <span>Like</span>
+                      {post.likes_count > 0 && <span>({post.likes_count})</span>}
+                    </button>
+                    <button
+                      onClick={() => setReply(`> ${post.user?.name} wrote:\n> ${post.content}\n\n`)}
+                      className="text-gray-600 dark:text-gray-400 hover:text-primary transition"
+                    >
+                      Quote
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {/* Reply Form - XenForo Style */}
+        <div className="bg-white dark:bg-gray-900 rounded-lg border dark:border-gray-800 p-6">
+          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100 mb-4">Post a reply</h3>
+          {topic.is_locked && currentUser?.role !== 'admin' ? (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+              This thread is locked. Only moderators can reply.
+            </div>
+          ) : (
+            <>
+              <MarkdownEditor value={reply} onChange={setReply} placeholder="Write your reply..." />
+              <div className="flex justify-end mt-4">
+                <Button onClick={handleReply} disabled={!reply.trim()}>
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Post reply
                 </Button>
-              </form>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card>
-            <CardContent className="py-8 text-center text-muted-foreground">
-              <Lock className="h-8 w-8 mx-auto mb-2" />
-              <p>This topic is locked and cannot receive new replies.</p>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Sticky Payment Modal */}
-        {showStickyModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <Card className="w-full max-w-2xl">
-              <CardHeader>
-                <CardTitle>Make Topic Sticky</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Keep your topic at the top of the list for increased visibility
-                </p>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  <button
-                    onClick={() => handleMakeSticky(7)}
-                    className="p-6 border-2 rounded-lg hover:border-primary transition-all text-left"
-                  >
-                    <h3 className="font-bold text-lg mb-2">7 Days</h3>
-                    <p className="text-3xl font-bold text-primary mb-2">€2.99</p>
-                    <p className="text-sm text-muted-foreground">
-                      Stay pinned for one week
-                    </p>
-                  </button>
-                  
-                  <button
-                    onClick={() => handleMakeSticky(30)}
-                    className="p-6 border-2 rounded-lg hover:border-primary transition-all text-left"
-                  >
-                    <h3 className="font-bold text-lg mb-2">30 Days</h3>
-                    <p className="text-3xl font-bold text-primary mb-2">€9.99</p>
-                    <p className="text-sm text-muted-foreground">
-                      Stay pinned for one month
-                    </p>
-                    <span className="inline-block mt-2 px-2 py-1 bg-primary text-primary-foreground text-xs rounded-full">
-                      BEST VALUE
-                    </span>
-                  </button>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => setShowStickyModal(false)}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
 }
-
