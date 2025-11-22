@@ -67,7 +67,7 @@ export default function LanguageSwitcher() {
         className="flex items-center gap-2 px-2"
       >
         {currentLanguage.isBalkly ? (
-          <div className="w-6 h-6 flex items-center justify-center">
+          <div className="w-8 h-8 flex items-center justify-center">
             <img 
               src="/balkly-logo-icon.png"
               alt="Balkly"
@@ -102,7 +102,7 @@ export default function LanguageSwitcher() {
                 }`}
               >
                 {lang.isBalkly ? (
-                  <div className="w-8 h-8 flex items-center justify-center">
+                  <div className="w-10 h-10 flex items-center justify-center">
                     <img 
                       src="/balkly-logo-icon.png"
                       alt="Balkly"
