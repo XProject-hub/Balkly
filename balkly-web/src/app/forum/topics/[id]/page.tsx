@@ -63,32 +63,46 @@ export default function TopicDetailPage() {
   };
 
   const handleLike = async (postId?: number) => {
+    // Optimistic update FIRST - update UI immediately
+    if (postId) {
+      setTopic((prev: any) => ({
+        ...prev,
+        posts: prev.posts.map((p: any) => 
+          p.id === postId 
+            ? { 
+                ...p, 
+                user_has_liked: !p.user_has_liked,
+                likes_count: p.user_has_liked ? (p.likes_count - 1) : (p.likes_count + 1)
+              }
+            : p
+        )
+      }));
+    } else {
+      setTopic((prev: any) => ({
+        ...prev,
+        user_has_liked: !prev.user_has_liked,
+        likes_count: prev.user_has_liked ? (prev.likes_count - 1) : (prev.likes_count + 1)
+      }));
+    }
+
+    // Then send API request
     try {
-      let response;
-      if (postId) {
-        response = await fetch(`/api/v1/forum/posts/${postId}/like`, {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem("auth_token")}` 
-          },
-        });
-      } else {
-        response = await fetch(`/api/v1/forum/topics/${topicId}/like`, {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem("auth_token")}` 
-          },
-        });
-      }
+      const url = postId 
+        ? `/api/v1/forum/posts/${postId}/like`
+        : `/api/v1/forum/topics/${topicId}/like`;
+        
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}` 
+        },
+      });
 
       if (response.ok) {
         const data = await response.json();
-        
-        // Optimistic UI update
+        // Update with server response to be sure
         if (postId) {
-          // Update specific post
           setTopic((prev: any) => ({
             ...prev,
             posts: prev.posts.map((p: any) => 
@@ -98,11 +112,28 @@ export default function TopicDetailPage() {
             )
           }));
         } else {
-          // Update topic
           setTopic((prev: any) => ({
             ...prev,
             user_has_liked: data.liked,
             likes_count: data.likes_count || 0
+          }));
+        }
+      } else {
+        // Revert on error
+        if (postId) {
+          setTopic((prev: any) => ({
+            ...prev,
+            posts: prev.posts.map((p: any) => 
+              p.id === postId 
+                ? { ...p, user_has_liked: !p.user_has_liked, likes_count: p.user_has_liked ? (p.likes_count + 1) : (p.likes_count - 1) }
+                : p
+            )
+          }));
+        } else {
+          setTopic((prev: any) => ({
+            ...prev,
+            user_has_liked: !prev.user_has_liked,
+            likes_count: prev.user_has_liked ? (prev.likes_count + 1) : (prev.likes_count - 1)
           }));
         }
       }
