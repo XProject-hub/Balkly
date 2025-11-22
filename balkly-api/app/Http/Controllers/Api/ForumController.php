@@ -165,7 +165,12 @@ class ForumController extends Controller
                 ->where('topic_id', $id)
                 ->where('user_id', auth()->id())
                 ->delete();
-            $topic->decrement('likes_count');
+            
+            // Decrement and get new count
+            \DB::table('forum_topics')
+                ->where('id', $id)
+                ->decrement('likes_count');
+            
             $liked = false;
             \Log::info('Unliked topic');
         } else {
@@ -175,7 +180,12 @@ class ForumController extends Controller
                 'user_id' => auth()->id(),
                 'created_at' => now(),
             ]);
-            $topic->increment('likes_count');
+            
+            // Increment and get new count
+            \DB::table('forum_topics')
+                ->where('id', $id)
+                ->increment('likes_count');
+            
             $liked = true;
             \Log::info('Liked topic');
             
@@ -192,11 +202,14 @@ class ForumController extends Controller
             }
         }
 
-        $freshTopic = $topic->fresh();
+        // Get fresh count from database
+        $currentCount = \DB::table('forum_topics')
+            ->where('id', $id)
+            ->value('likes_count');
         
         $response = [
             'liked' => $liked,
-            'likes_count' => $freshTopic->likes_count ?? 0,
+            'likes_count' => $currentCount ?? 0,
             'user_has_liked' => $liked,
         ];
         
