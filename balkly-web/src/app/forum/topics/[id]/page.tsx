@@ -63,29 +63,6 @@ export default function TopicDetailPage() {
   };
 
   const handleLike = async (postId?: number) => {
-    // Optimistic update FIRST - update UI immediately
-    if (postId) {
-      setTopic((prev: any) => ({
-        ...prev,
-        posts: prev.posts.map((p: any) => 
-          p.id === postId 
-            ? { 
-                ...p, 
-                user_has_liked: !p.user_has_liked,
-                likes_count: p.user_has_liked ? (p.likes_count - 1) : (p.likes_count + 1)
-              }
-            : p
-        )
-      }));
-    } else {
-      setTopic((prev: any) => ({
-        ...prev,
-        user_has_liked: !prev.user_has_liked,
-        likes_count: prev.user_has_liked ? (prev.likes_count - 1) : (prev.likes_count + 1)
-      }));
-    }
-
-    // Then send API request
     try {
       const url = postId 
         ? `/api/v1/forum/posts/${postId}/like`
@@ -101,7 +78,8 @@ export default function TopicDetailPage() {
 
       if (response.ok) {
         const data = await response.json();
-        // Update with server response to be sure
+        
+        // Update with server response (single source of truth)
         if (postId) {
           setTopic((prev: any) => ({
             ...prev,
@@ -116,24 +94,6 @@ export default function TopicDetailPage() {
             ...prev,
             user_has_liked: data.liked,
             likes_count: data.likes_count || 0
-          }));
-        }
-      } else {
-        // Revert on error
-        if (postId) {
-          setTopic((prev: any) => ({
-            ...prev,
-            posts: prev.posts.map((p: any) => 
-              p.id === postId 
-                ? { ...p, user_has_liked: !p.user_has_liked, likes_count: p.user_has_liked ? (p.likes_count + 1) : (p.likes_count - 1) }
-                : p
-            )
-          }));
-        } else {
-          setTopic((prev: any) => ({
-            ...prev,
-            user_has_liked: !prev.user_has_liked,
-            likes_count: prev.user_has_liked ? (prev.likes_count + 1) : (prev.likes_count - 1)
           }));
         }
       }
