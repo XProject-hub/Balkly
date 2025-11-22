@@ -141,10 +141,17 @@ export default function CreateListingPage() {
         });
         
         const enhanceType = data.enhanced_locally 
-          ? "✨ Listing enhanced with smart formatting!" 
-          : "🤖 Listing enhanced with AI!";
+          ? "Listing enhanced with smart formatting!" 
+          : "Listing enhanced with AI!";
         
-        alert(`${enhanceType}\n\nChanges made:\n${titleChanged ? '✓ Title improved\n' : ''}${descChanged ? '✓ Description enhanced' : ''}`);
+        let changes = "Changes made:\n";
+        if (titleChanged) changes += "✓ Title improved\n";
+        if (descChanged) changes += "✓ Description enhanced\n";
+        if (data.tags && data.tags.length > 0) {
+          changes += `✓ Keywords: ${data.tags.join(', ')}`;
+        }
+        
+        alert(`${enhanceType}\n\n${changes}`);
       } else {
         alert("Your listing looks good as-is! ✨");
       }

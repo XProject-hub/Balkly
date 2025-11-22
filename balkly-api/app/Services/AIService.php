@@ -91,17 +91,9 @@ class AIService
         // Capitalize first letter of each word
         $title = ucwords(strtolower(trim($title)));
         
-        // Add emoji based on category
-        $emoji = $this->getCategoryEmoji($category);
-        
         // Limit to 70 characters
         if (strlen($title) > 70) {
             $title = substr($title, 0, 67) . '...';
-        }
-        
-        // Add emoji if not already present and category is known
-        if ($emoji && !preg_match('/[\x{1F000}-\x{1F9FF}]/u', $title)) {
-            $title = $emoji . ' ' . $title;
         }
         
         return $title;
@@ -116,7 +108,7 @@ class AIService
         
         // If description is too short, suggest structure
         if (strlen($description) < 100) {
-            return $description . "\n\n✨ Key Features:\n• Excellent condition\n• Ready for immediate use\n• Great value for money\n\n📍 Location & Contact:\nFeel free to message with any questions!";
+            return $description . "\n\nKey Features:\n• Excellent condition\n• Ready for immediate use\n• Great value for money\n\nFeel free to message with any questions!";
         }
         
         // Split into sentences
@@ -124,9 +116,9 @@ class AIService
         
         // Add structure with bullet points if not already formatted
         if (strpos($description, '•') === false && strpos($description, '-') === false) {
-            $improved = "📝 Description:\n";
+            $improved = "Description:\n";
             $improved .= implode(' ', array_slice($sentences, 0, 2)) . "\n\n";
-            $improved .= "✨ Features:\n";
+            $improved .= "Features:\n";
             
             foreach (array_slice($sentences, 2) as $sentence) {
                 if (strlen(trim($sentence)) > 10) {
@@ -134,7 +126,7 @@ class AIService
                 }
             }
             
-            $improved .= "\n💬 Contact me for more details!";
+            $improved .= "\nContact me for more details!";
             
             return $improved;
         }
@@ -163,50 +155,6 @@ class AIService
         return array_values($tags);
     }
 
-    /**
-     * Get category emoji
-     */
-    protected function getCategoryEmoji($category)
-    {
-        if (!$category) return null;
-        
-        $category = strtolower($category);
-        
-        $emojis = [
-            'auto' => '🚗',
-            'car' => '🚗',
-            'vehicle' => '🚗',
-            'real estate' => '🏠',
-            'house' => '🏠',
-            'apartment' => '🏢',
-            'property' => '🏘️',
-            'electronics' => '📱',
-            'phone' => '📱',
-            'computer' => '💻',
-            'laptop' => '💻',
-            'fashion' => '👗',
-            'clothing' => '👕',
-            'shoes' => '👟',
-            'furniture' => '🛋️',
-            'home' => '🏡',
-            'sports' => '⚽',
-            'fitness' => '💪',
-            'gym' => '🏋️',
-            'jobs' => '💼',
-            'work' => '💼',
-            'events' => '🎉',
-            'ticket' => '🎫',
-            'concert' => '🎵',
-        ];
-        
-        foreach ($emojis as $keyword => $emoji) {
-            if (strpos($category, $keyword) !== false) {
-                return $emoji;
-            }
-        }
-        
-        return null;
-    }
 
     /**
      * Classify listing category and attributes
@@ -290,17 +238,20 @@ class AIService
     protected function buildListingPrompt($title, $description, $category, $locale)
     {
         return <<<PROMPT
-Improve this marketplace listing:
+Improve this marketplace listing for Balkly platform:
 
 Title: {$title}
 Description: {$description}
 Category: {$category}
 Target Locale: {$locale}
 
-Requirements:
-1. Create a compelling title (max 70 characters)
-2. Improve description with bullet points and clear benefits
-3. Translate to English, Bosnian, and German
+IMPORTANT RULES:
+1. NO EMOJIS! Do not use any emoji characters.
+2. Create a compelling title (max 70 characters, professional tone)
+3. Improve description with bullet points and clear benefits
+4. Use proper grammar and punctuation
+5. Make it persuasive but honest
+6. Keep the original language ({$locale})
 4. Suggest relevant tags (max 8)
 5. Flag any safety concerns
 
