@@ -170,9 +170,5 @@ export function getSupportedCurrencies() {
   return [
     { code: 'EUR', symbol: '€', name: 'Euro' },
     { code: 'AED', symbol: 'د.إ', name: 'UAE Dirham' },
-    { code: 'USD', symbol: '$', name: 'US Dollar' },
-    { code: 'GBP', symbol: '£', name: 'British Pound' },
-    { code: 'BAM', symbol: 'KM', name: 'Bosnian Mark' },
-    { code: 'RSD', symbol: 'din', name: 'Serbian Dinar' },
   ];
 }

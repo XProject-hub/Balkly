@@ -17,7 +17,7 @@ class CurrencyService
     /**
      * Supported currencies
      */
-    private const SUPPORTED_CURRENCIES = ['EUR', 'AED', 'USD', 'GBP', 'BAM', 'RSD', 'HRK'];
+    private const SUPPORTED_CURRENCIES = ['EUR', 'AED'];
     
     /**
      * Get all exchange rates (base is EUR)
@@ -80,12 +80,7 @@ class CurrencyService
     {
         return [
             'EUR' => 1.0,      // Base
-            'AED' => 4.0,      // 1 EUR ≈ 4 AED
-            'USD' => 1.09,     // 1 EUR ≈ 1.09 USD
-            'GBP' => 0.86,     // 1 EUR ≈ 0.86 GBP
-            'BAM' => 1.96,     // 1 EUR ≈ 1.96 BAM (fixed rate)
-            'RSD' => 117.0,    // 1 EUR ≈ 117 RSD
-            'HRK' => 7.53,     // 1 EUR ≈ 7.53 HRK (fixed rate, Croatia uses EUR now)
+            'AED' => 4.0,      // 1 EUR ≈ 4 AED (real rate)
         ];
     }
     
