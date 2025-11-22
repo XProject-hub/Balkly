@@ -63,6 +63,37 @@ export default function TopicDetailPage() {
   };
 
   const handleLike = async (postId?: number) => {
+    // Get current state
+    const currentLiked = postId 
+      ? topic.posts?.find((p: any) => p.id === postId)?.user_has_liked
+      : topic.user_has_liked;
+    
+    const currentCount = postId
+      ? topic.posts?.find((p: any) => p.id === postId)?.likes_count || 0
+      : topic.likes_count || 0;
+
+    // INSTANT UI UPDATE - before API call
+    const newLiked = !currentLiked;
+    const newCount = newLiked ? currentCount + 1 : currentCount - 1;
+
+    if (postId) {
+      setTopic((prev: any) => ({
+        ...prev,
+        posts: prev.posts.map((p: any) => 
+          p.id === postId 
+            ? { ...p, user_has_liked: newLiked, likes_count: newCount }
+            : p
+        )
+      }));
+    } else {
+      setTopic((prev: any) => ({
+        ...prev,
+        user_has_liked: newLiked,
+        likes_count: newCount
+      }));
+    }
+
+    // Then confirm with server
     try {
       const url = postId 
         ? `/api/v1/forum/posts/${postId}/like`
@@ -78,8 +109,9 @@ export default function TopicDetailPage() {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('Like response:', data);
         
-        // Update with server response (single source of truth)
+        // Sync with server if different
         if (postId) {
           setTopic((prev: any) => ({
             ...prev,
@@ -96,9 +128,44 @@ export default function TopicDetailPage() {
             likes_count: data.likes_count || 0
           }));
         }
+      } else {
+        // Revert on error
+        if (postId) {
+          setTopic((prev: any) => ({
+            ...prev,
+            posts: prev.posts.map((p: any) => 
+              p.id === postId 
+                ? { ...p, user_has_liked: currentLiked, likes_count: currentCount }
+                : p
+            )
+          }));
+        } else {
+          setTopic((prev: any) => ({
+            ...prev,
+            user_has_liked: currentLiked,
+            likes_count: currentCount
+          }));
+        }
       }
     } catch (error) {
       console.error("Failed to like:", error);
+      // Revert on error
+      if (postId) {
+        setTopic((prev: any) => ({
+          ...prev,
+          posts: prev.posts.map((p: any) => 
+            p.id === postId 
+              ? { ...p, user_has_liked: currentLiked, likes_count: currentCount }
+              : p
+          )
+        }));
+      } else {
+        setTopic((prev: any) => ({
+          ...prev,
+          user_has_liked: currentLiked,
+          likes_count: currentCount
+        }));
+      }
     }
   };
 
