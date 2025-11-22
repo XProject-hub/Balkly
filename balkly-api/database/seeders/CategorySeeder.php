@@ -115,6 +115,46 @@ class CategorySeeder extends Seeder
             'order' => 5,
         ]);
 
+        Attribute::create([
+            'category_id' => $auto->id,
+            'name' => 'Body Type',
+            'slug' => 'body_type',
+            'type' => 'select',
+            'options_json' => [
+                'Sedan', 'Hatchback', 'SUV', 'Coupe', 'Convertible', 
+                'Wagon', 'Van', 'Pickup Truck', 'Minivan', 'Limuzina', 
+                'Crossover', 'Sports Car', 'Luxury Car'
+            ],
+            'is_required' => false,
+            'is_searchable' => true,
+            'order' => 6,
+        ]);
+
+        Attribute::create([
+            'category_id' => $auto->id,
+            'name' => 'Transmission',
+            'slug' => 'transmission',
+            'type' => 'select',
+            'options_json' => ['Automatic', 'Manual', 'Semi-Automatic'],
+            'is_required' => false,
+            'is_searchable' => true,
+            'order' => 7,
+        ]);
+
+        Attribute::create([
+            'category_id' => $auto->id,
+            'name' => 'Color',
+            'slug' => 'color',
+            'type' => 'select',
+            'options_json' => [
+                'Black', 'White', 'Silver', 'Gray', 'Red', 'Blue', 
+                'Green', 'Yellow', 'Orange', 'Brown', 'Gold', 'Beige', 'Other'
+            ],
+            'is_required' => false,
+            'is_searchable' => true,
+            'order' => 8,
+        ]);
+
         // Real Estate Category
         $realEstate = Category::create([
             'slug' => 'real-estate',
