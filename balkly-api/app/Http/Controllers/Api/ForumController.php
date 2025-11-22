@@ -61,11 +61,20 @@ class ForumController extends Controller
                 ->exists();
                 
             // Add user_has_liked for each post
-            foreach ($topicArray['posts'] as &$post) {
-                $post['user_has_liked'] = \DB::table('forum_post_likes')
-                    ->where('post_id', $post['id'])
-                    ->where('user_id', auth()->id())
-                    ->exists();
+            if (isset($topicArray['posts']) && is_array($topicArray['posts'])) {
+                foreach ($topicArray['posts'] as &$post) {
+                    $post['user_has_liked'] = \DB::table('forum_post_likes')
+                        ->where('post_id', $post['id'])
+                        ->where('user_id', auth()->id())
+                        ->exists();
+                }
+            }
+        } else {
+            $topicArray['user_has_liked'] = false;
+            if (isset($topicArray['posts']) && is_array($topicArray['posts'])) {
+                foreach ($topicArray['posts'] as &$post) {
+                    $post['user_has_liked'] = false;
+                }
             }
         }
 

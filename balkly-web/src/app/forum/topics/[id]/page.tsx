@@ -64,18 +64,48 @@ export default function TopicDetailPage() {
 
   const handleLike = async (postId?: number) => {
     try {
+      let response;
       if (postId) {
-        await fetch(`/api/v1/forum/posts/${postId}/like`, {
+        response = await fetch(`/api/v1/forum/posts/${postId}/like`, {
           method: 'POST',
-          headers: { Authorization: `Bearer ${localStorage.getItem("auth_token")}` },
+          headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}` 
+          },
         });
       } else {
-        await fetch(`/api/v1/forum/topics/${topicId}/like`, {
+        response = await fetch(`/api/v1/forum/topics/${topicId}/like`, {
           method: 'POST',
-          headers: { Authorization: `Bearer ${localStorage.getItem("auth_token")}` },
+          headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}` 
+          },
         });
       }
-      loadTopic();
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Optimistic UI update
+        if (postId) {
+          // Update specific post
+          setTopic((prev: any) => ({
+            ...prev,
+            posts: prev.posts.map((p: any) => 
+              p.id === postId 
+                ? { ...p, user_has_liked: data.liked, likes_count: data.likes_count }
+                : p
+            )
+          }));
+        } else {
+          // Update topic
+          setTopic((prev: any) => ({
+            ...prev,
+            user_has_liked: data.liked,
+            likes_count: data.likes_count || 0
+          }));
+        }
+      }
     } catch (error) {
       console.error("Failed to like:", error);
     }
