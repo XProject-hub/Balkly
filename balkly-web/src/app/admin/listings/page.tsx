@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Eye, Check, X } from "lucide-react";
+import PriceDisplay from "@/components/PriceDisplay";
 
 export default function AdminListingsPage() {
   const [listings, setListings] = useState<any[]>([]);
@@ -84,7 +85,15 @@ export default function AdminListingsPage() {
                       <h3 className="font-bold text-lg text-gray-900">{listing.title}</h3>
                       <p className="text-sm text-gray-600 line-clamp-2 mt-1">{listing.description}</p>
                       <div className="flex gap-4 mt-3 text-sm">
-                        <span className="font-bold text-balkly-blue">€{listing.price?.toLocaleString()}</span>
+                        {listing.price ? (
+                          <PriceDisplay
+                            amount={listing.price}
+                            currency={listing.currency || 'EUR'}
+                            className="font-bold text-balkly-blue"
+                          />
+                        ) : (
+                          <span className="font-bold text-balkly-blue">Contact</span>
+                        )}
                         <span className="text-gray-500">{listing.city}</span>
                         <span className={`px-2 py-1 rounded-full text-xs ${
                           listing.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'

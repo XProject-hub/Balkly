@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Package } from "lucide-react";
 import { listingsAPI } from "@/lib/api";
+import PriceDisplay from "@/components/PriceDisplay";
 
 export default function FashionPage() {
   const [listings, setListings] = useState<any[]>([]);
@@ -101,7 +102,27 @@ export default function FashionPage() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {listings.map((listing) => (
-                  <Link key={listing.id} href={`/listings/${listing.id}`}><Card className="hover:shadow-xl bg-white group"><div className="aspect-video bg-gray-100">{listing.media?.[0] && <img src={listing.media[0].url} alt={listing.title} className="w-full h-full object-cover" />}</div><CardHeader className="p-4"><CardTitle className="text-lg group-hover:text-balkly-blue">{listing.title}</CardTitle></CardHeader><CardContent className="px-4 pb-4"><span className="text-2xl font-bold text-balkly-blue">€{listing.price?.toLocaleString()}</span></CardContent></Card></Link>
+                  <Link key={listing.id} href={`/listings/${listing.id}`}>
+                    <Card className="hover:shadow-xl bg-white group">
+                      <div className="aspect-video bg-gray-100">
+                        {listing.media?.[0] && <img src={listing.media[0].url} alt={listing.title} className="w-full h-full object-cover" />}
+                      </div>
+                      <CardHeader className="p-4">
+                        <CardTitle className="text-lg group-hover:text-balkly-blue">{listing.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent className="px-4 pb-4">
+                        {listing.price ? (
+                          <PriceDisplay
+                            amount={listing.price}
+                            currency={listing.currency || 'EUR'}
+                            className="text-2xl font-bold text-balkly-blue"
+                          />
+                        ) : (
+                          <span className="text-2xl font-bold text-balkly-blue">Contact</span>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </Link>
                 ))}
               </div>
             )}

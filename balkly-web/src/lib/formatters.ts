@@ -2,14 +2,13 @@
  * Utility functions for formatting data
  */
 
+import { formatCurrency as formatCurrencyNew } from './currency';
+
 /**
- * Format currency
+ * Format currency (legacy function, use currency.ts for new code)
  */
 export function formatCurrency(amount: number, currency: string = 'EUR'): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: currency,
-  }).format(amount);
+  return formatCurrencyNew(amount, currency);
 }
 
 /**

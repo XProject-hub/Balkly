@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, MapPin, Star, Home as HomeIcon, Package } from "lucide-react";
 import { listingsAPI } from "@/lib/api";
+import PriceDisplay from "@/components/PriceDisplay";
 
 export default function RealEstatePage() {
   const [listings, setListings] = useState<any[]>([]);
@@ -237,7 +238,15 @@ export default function RealEstatePage() {
                       </CardHeader>
                       <CardContent className="px-4 pb-4">
                         <div className="flex justify-between items-center">
-                          <span className="text-2xl font-bold text-balkly-blue">€{listing.price?.toLocaleString()}</span>
+                          {listing.price ? (
+                            <PriceDisplay
+                              amount={listing.price}
+                              currency={listing.currency || 'EUR'}
+                              className="text-2xl font-bold text-balkly-blue"
+                            />
+                          ) : (
+                            <span className="text-2xl font-bold text-balkly-blue">Contact</span>
+                          )}
                           <span className="text-sm text-gray-500">{listing.city}</span>
                         </div>
                       </CardContent>

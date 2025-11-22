@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, MapPin, Package } from "lucide-react";
 import { listingsAPI } from "@/lib/api";
+import PriceDisplay from "@/components/PriceDisplay";
 
 export default function ElectronicsPage() {
   const [listings, setListings] = useState<any[]>([]);
@@ -127,7 +128,15 @@ export default function ElectronicsPage() {
                         <CardTitle className="text-lg line-clamp-1 group-hover:text-balkly-blue">{listing.title}</CardTitle>
                       </CardHeader>
                       <CardContent className="px-4 pb-4">
-                        <span className="text-2xl font-bold text-balkly-blue">€{listing.price?.toLocaleString()}</span>
+                        {listing.price ? (
+                          <PriceDisplay
+                            amount={listing.price}
+                            currency={listing.currency || 'EUR'}
+                            className="text-2xl font-bold text-balkly-blue"
+                          />
+                        ) : (
+                          <span className="text-2xl font-bold text-balkly-blue">Contact</span>
+                        )}
                       </CardContent>
                     </Card>
                   </Link>

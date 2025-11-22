@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search, MapPin, Package, Calendar, MessageCircle } from "lucide-react";
 import { searchAPI } from "@/lib/api";
+import PriceDisplay from "@/components/PriceDisplay";
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
@@ -129,9 +130,15 @@ export default function SearchPage() {
                             {listing.description}
                           </p>
                           <div className="flex justify-between items-center">
-                            <span className="font-bold text-primary">
-                              €{listing.price?.toLocaleString()}
-                            </span>
+                            {listing.price ? (
+                              <PriceDisplay
+                                amount={listing.price}
+                                currency={listing.currency || 'EUR'}
+                                className="font-bold text-primary"
+                              />
+                            ) : (
+                              <span className="font-bold text-primary">Contact</span>
+                            )}
                             <span className="text-sm text-muted-foreground flex items-center">
                               <MapPin className="h-3 w-3 mr-1" />
                               {listing.city}

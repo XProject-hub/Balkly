@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Plus, Edit, Trash2, Eye, Pause, Play, TrendingUp } from "lucide-react";
 import { listingsAPI } from "@/lib/api";
+import PriceDisplay from "@/components/PriceDisplay";
 
 export default function MyListingsPage() {
   const [listings, setListings] = useState<any[]>([]);
@@ -202,9 +203,15 @@ export default function MyListingsPage() {
                             {listing.description}
                           </p>
                           <div className="flex items-center gap-4 text-sm">
-                            <span className="font-bold text-primary text-xl">
-                              €{listing.price?.toLocaleString()}
-                            </span>
+                            {listing.price ? (
+                              <PriceDisplay
+                                amount={listing.price}
+                                currency={listing.currency || 'EUR'}
+                                className="font-bold text-primary text-xl"
+                              />
+                            ) : (
+                              <span className="font-bold text-primary text-xl">Contact</span>
+                            )}
                             <span className="flex items-center text-muted-foreground">
                               <Eye className="h-4 w-4 mr-1" />
                               {listing.views_count} views

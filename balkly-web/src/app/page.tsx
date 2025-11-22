@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Car, Home, Calendar, MessageCircle, Search, TrendingUp, Star, MapPin, Eye, Package } from "lucide-react";
 import { listingsAPI, eventsAPI, forumAPI } from "@/lib/api";
 import AdBanner from "@/components/AdBanner";
+import PriceDisplay from "@/components/PriceDisplay";
 
 export default function HomePage() {
   const router = useRouter();
@@ -292,9 +293,15 @@ export default function HomePage() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex justify-between items-center">
-                      <span className="text-2xl font-bold text-primary">
-                        €{listing.price?.toLocaleString() || "Contact"}
-                      </span>
+                      {listing.price ? (
+                        <PriceDisplay
+                          amount={listing.price}
+                          currency={listing.currency || 'EUR'}
+                          className="text-2xl font-bold text-primary"
+                        />
+                      ) : (
+                        <span className="text-2xl font-bold text-primary">Contact</span>
+                      )}
                       <span className="text-sm text-muted-foreground flex items-center">
                         <MapPin className="h-3 w-3 mr-1" />
                         {listing.city}

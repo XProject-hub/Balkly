@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search, Filter, MapPin, Plus, Map } from "lucide-react";
 import { listingsAPI, categoriesAPI } from "@/lib/api";
+import PriceDisplay from "@/components/PriceDisplay";
 
 export default function ListingsPage() {
   const [listings, setListings] = useState<any[]>([]);
@@ -405,11 +406,15 @@ export default function ListingsPage() {
                       </CardHeader>
                       <CardContent className="space-y-2">
                         <div className="flex justify-between items-center">
-                          <span className="text-2xl font-bold text-primary">
-                            {listing.price
-                              ? `€${listing.price.toLocaleString()}`
-                              : "Contact for price"}
-                          </span>
+                          {listing.price ? (
+                            <PriceDisplay
+                              amount={listing.price}
+                              currency={listing.currency || 'EUR'}
+                              className="text-2xl font-bold text-primary"
+                            />
+                          ) : (
+                            <span className="text-2xl font-bold text-primary">Contact for price</span>
+                          )}
                           <span className="text-sm text-muted-foreground flex items-center">
                             <MapPin className="h-4 w-4 mr-1" />
                             {listing.city}

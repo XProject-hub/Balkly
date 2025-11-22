@@ -18,6 +18,7 @@ import {
 import { listingsAPI } from "@/lib/api";
 import FavoriteButton from "@/components/FavoriteButton";
 import VerifiedBadge from "@/components/VerifiedBadge";
+import PriceDisplay from "@/components/PriceDisplay";
 
 export default function ListingDetailPage() {
   const params = useParams();
@@ -309,11 +310,15 @@ export default function ListingDetailPage() {
             {/* Price & CTA */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-4xl text-primary">
-                  €{listing.price?.toLocaleString() || "Contact"}
-                </CardTitle>
-                {listing.currency && (
-                  <CardDescription>{listing.currency}</CardDescription>
+                {listing.price ? (
+                  <PriceDisplay
+                    amount={listing.price}
+                    currency={listing.currency || 'EUR'}
+                    className="text-4xl text-primary font-bold"
+                    showOriginal={true}
+                  />
+                ) : (
+                  <CardTitle className="text-4xl text-primary">Contact</CardTitle>
                 )}
               </CardHeader>
               <CardContent className="space-y-3">
@@ -435,9 +440,14 @@ export default function ListingDetailPage() {
             <Card className="w-full max-w-md">
               <CardHeader>
                 <CardTitle>Make an Offer</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Original price: €{typeof listing.price === 'number' ? listing.price.toFixed(2) : parseFloat(listing.price || 0).toFixed(2)}
-                </p>
+                {listing.price && (
+                  <p className="text-sm text-muted-foreground">
+                    Original price: <PriceDisplay
+                      amount={typeof listing.price === 'number' ? listing.price : parseFloat(listing.price || 0)}
+                      currency={listing.currency || 'EUR'}
+                    />
+                  </p>
+                )}
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, MapPin, Briefcase } from "lucide-react";
 import { listingsAPI } from "@/lib/api";
+import PriceDisplay from "@/components/PriceDisplay";
 
 export default function JobsPage() {
   const [listings, setListings] = useState<any[]>([]);
@@ -105,7 +106,24 @@ export default function JobsPage() {
             ) : (
               <div className="space-y-4">
                 {listings.map((listing) => (
-                  <Link key={listing.id} href={`/listings/${listing.id}`}><Card className="hover:shadow-lg bg-white"><CardContent className="p-6"><h3 className="font-bold text-xl text-gray-900 hover:text-balkly-blue">{listing.title}</h3><p className="text-sm text-gray-600 mt-2">{listing.description}</p><div className="flex gap-4 mt-4 text-sm"><span className="font-bold text-balkly-blue text-lg">€{listing.price}/month</span><span className="text-gray-500">{listing.city}</span></div></CardContent></Card></Link>
+                  <Link key={listing.id} href={`/listings/${listing.id}`}>
+                    <Card className="hover:shadow-lg bg-white">
+                      <CardContent className="p-6">
+                        <h3 className="font-bold text-xl text-gray-900 hover:text-balkly-blue">{listing.title}</h3>
+                        <p className="text-sm text-gray-600 mt-2">{listing.description}</p>
+                        <div className="flex gap-4 mt-4 text-sm">
+                          {listing.price ? (
+                            <span className="font-bold text-balkly-blue text-lg">
+                              <PriceDisplay amount={listing.price} currency={listing.currency || 'EUR'} />/month
+                            </span>
+                          ) : (
+                            <span className="font-bold text-balkly-blue text-lg">Contact</span>
+                          )}
+                          <span className="text-gray-500">{listing.city}</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 ))}
               </div>
             )}

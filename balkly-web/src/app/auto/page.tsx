@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search, Plus, MapPin, Eye, Star, Package } from "lucide-react";
 import { listingsAPI } from "@/lib/api";
+import PriceDisplay from "@/components/PriceDisplay";
 
 export default function AutoPage() {
   const [listings, setListings] = useState<any[]>([]);
@@ -312,9 +313,15 @@ export default function AutoPage() {
                       </CardHeader>
                       <CardContent className="px-4 pb-4">
                         <div className="flex justify-between items-center">
-                          <span className="text-2xl font-bold text-balkly-blue">
-                            €{listing.price?.toLocaleString() || "Contact"}
-                          </span>
+                          {listing.price ? (
+                            <PriceDisplay
+                              amount={listing.price}
+                              currency={listing.currency || 'EUR'}
+                              className="text-2xl font-bold text-balkly-blue"
+                            />
+                          ) : (
+                            <span className="text-2xl font-bold text-balkly-blue">Contact</span>
+                          )}
                           <span className="text-sm text-gray-500 flex items-center">
                             <MapPin className="h-3 w-3 mr-1" />
                             {listing.city}

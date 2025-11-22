@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\AIController;
+use App\Http\Controllers\Api\CurrencyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +52,11 @@ Route::prefix('v1')->group(function () {
     
     // Search
     Route::get('/search', [SearchController::class, 'search']);
+    
+    // Currency (public - anyone can get rates and convert)
+    Route::get('/currency/rates', [CurrencyController::class, 'getRates']);
+    Route::post('/currency/convert', [CurrencyController::class, 'convert']);
+    Route::get('/currency/supported', [CurrencyController::class, 'getSupportedCurrencies']);
     
     // Translation (public - anyone can translate)
     Route::post('/translate', [\App\Http\Controllers\Api\TranslationController::class, 'translate']);
