@@ -139,9 +139,14 @@ export default function CreateListingPage() {
           title: data.improved_title || formData.title,
           description: data.improved_description || formData.description,
         });
-        alert("✨ Listing enhanced with AI suggestions! Check the updated title and description.");
+        
+        const enhanceType = data.enhanced_locally 
+          ? "✨ Listing enhanced with smart formatting!" 
+          : "🤖 Listing enhanced with AI!";
+        
+        alert(`${enhanceType}\n\nChanges made:\n${titleChanged ? '✓ Title improved\n' : ''}${descChanged ? '✓ Description enhanced' : ''}`);
       } else {
-        alert("AI is not configured or didn't suggest changes. Your listing looks good as-is!");
+        alert("Your listing looks good as-is! ✨");
       }
     } catch (error: any) {
       console.error("AI helper failed:", error);
