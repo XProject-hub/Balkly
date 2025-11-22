@@ -146,11 +146,18 @@ class ForumController extends Controller
     {
         $topic = ForumTopic::findOrFail($id);
         
+        \Log::info('Like topic attempt', [
+            'topic_id' => $id,
+            'user_id' => auth()->id(),
+        ]);
+        
         // Toggle like
         $existingLike = \DB::table('forum_topic_likes')
             ->where('topic_id', $id)
             ->where('user_id', auth()->id())
             ->first();
+
+        \Log::info('Existing like?', ['exists' => !!$existingLike]);
 
         if ($existingLike) {
             // Unlike
@@ -160,6 +167,7 @@ class ForumController extends Controller
                 ->delete();
             $topic->decrement('likes_count');
             $liked = false;
+            \Log::info('Unliked topic');
         } else {
             // Like
             \DB::table('forum_topic_likes')->insert([
@@ -169,25 +177,32 @@ class ForumController extends Controller
             ]);
             $topic->increment('likes_count');
             $liked = true;
+            \Log::info('Liked topic');
             
             // Send notification to topic owner
-            $notificationService = app(NotificationService::class);
-            $notificationService->forumLike(
-                $id, 
-                'topic', 
-                auth()->user(), 
-                $topic->user_id, 
-                $topic->title
-            );
+            if (auth()->id() !== $topic->user_id) {
+                $notificationService = app(NotificationService::class);
+                $notificationService->forumLike(
+                    $id, 
+                    'topic', 
+                    auth()->user(), 
+                    $topic->user_id, 
+                    $topic->title
+                );
+            }
         }
 
         $freshTopic = $topic->fresh();
         
-        return response()->json([
+        $response = [
             'liked' => $liked,
             'likes_count' => $freshTopic->likes_count ?? 0,
-            'user_has_liked' => $liked, // Explicitly return the current state
-        ]);
+            'user_has_liked' => $liked,
+        ];
+        
+        \Log::info('Like response', $response);
+        
+        return response()->json($response);
     }
 
     public function likePost(Request $request, $id)

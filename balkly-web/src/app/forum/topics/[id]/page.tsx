@@ -110,6 +110,8 @@ export default function TopicDetailPage() {
       if (response.ok) {
         const data = await response.json();
         console.log('Like response:', data);
+        console.log('Current liked state before:', currentLiked);
+        console.log('New liked state from server:', data.liked);
         
         // Sync with server if different
         if (postId) {
