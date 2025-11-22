@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Bold, Italic, Link as LinkIcon, List, Code, Eye, Smile, Image } from "lucide-react";
+import { Bold, Italic, Link as LinkIcon, List, Code, Eye, Smile, Image, Film } from "lucide-react";
 
 interface MarkdownEditorProps {
   value: string;
@@ -10,20 +10,56 @@ interface MarkdownEditorProps {
   placeholder?: string;
 }
 
+// Popular GIFs for quick access
+const quickGifs = [
+  'https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif', // thumbs up
+  'https://media.giphy.com/media/g9582DNuQppxC/giphy.gif', // clapping
+  'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif', // laughing
+  'https://media.giphy.com/media/XreQmk7ETCak0/giphy.gif', // shocked
+  'https://media.giphy.com/media/26u4cqiYI30juCOGY/giphy.gif', // thinking
+  'https://media.giphy.com/media/3ohzdIuqJoo8QdKlnW/giphy.gif', // party
+  'https://media.giphy.com/media/111ebonMs90YLu/giphy.gif', // love
+  'https://media.giphy.com/media/ZfK4cXKJTTay1Ava29/giphy.gif', // celebrate
+];
+
 export default function MarkdownEditor({ value, onChange, placeholder }: MarkdownEditorProps) {
   const [showPreview, setShowPreview] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showGifPicker, setShowGifPicker] = useState(false);
+  const [gifSearch, setGifSearch] = useState('');
   const [uploading, setUploading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   
   const emojis = [
-    '😀', '😂', '🤣', '😊', '😍', '🥰', '😘', '😜', '😎', '🤗', '🤔', '😏', '😌', '😔', '😢', '😭',
-    '😡', '🤬', '😱', '😨', '🤯', '😳', '🥺', '😇', '🤠', '🥳', '🤩', '😴', '🤐', '🤨', '🧐', '🤓',
-    '❤️', '💙', '💚', '💛', '🧡', '💜', '🖤', '🤍', '💔', '❣️', '💕', '💖', '💗', '💓', '💞', '💝',
-    '👍', '👎', '👏', '🙌', '👊', '✊', '🤝', '🙏', '💪', '🦾', '👀', '👁️', '🧠', '🗣️', '👤', '👥',
-    '🎉', '🎊', '🎈', '🎁', '🏆', '🥇', '🥈', '🥉', '⭐', '🌟', '✨', '💫', '🔥', '💯', '✅', '❌',
-    '⚠️', '🚀', '💡', '📢', '📣', '📌', '📍', '🔔', '🔕', '💬', '💭', '🗨️', '🗯️', '💤', '💥', '💢'
+    // Smileys & Emotion
+    '😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '🙃', '😉', '😊', '😇', '🥰', '😍', '🤩',
+    '😘', '😗', '😚', '😙', '🥲', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '🤭', '🤫', '🤔', '🤐',
+    '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😌', '😔', '😪', '🤤', '😴', '😷', '🤒',
+    '🤕', '🤢', '🤮', '🤧', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳', '🥸', '😎', '🤓', '🧐', '😕',
+    '😟', '🙁', '☹️', '😮', '😯', '😲', '😳', '🥺', '😦', '😧', '😨', '😰', '😥', '😢', '😭', '😱',
+    '😖', '😣', '😞', '😓', '😩', '😫', '🥱', '😤', '😡', '😠', '🤬', '😈', '👿', '💀', '☠️', '💩',
+    // Hearts & Love
+    '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖',
+    '💘', '💝', '💟', '♥️', '💌', '💋',
+    // Hands & Body
+    '👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆',
+    '🖕', '👇', '☝️', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏', '💪',
+    '🦾', '🦿', '🦵', '🦶',
+    // Symbols & Objects
+    '❤️', '🔥', '⭐', '🌟', '✨', '💫', '💥', '💢', '💯', '✅', '❌', '❗', '❓', '⚠️', '🚫', '💬',
+    '💭', '🗨️', '🗯️', '💤', '💡', '🔔', '🔕', '📢', '📣', '📌', '📍', '🚀', '🎯', '🎁', '🎉', '🎊',
+    '🎈', '🎀', '🏆', '🥇', '🥈', '🥉', '⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🥏', '🎱',
+    '🏓', '🏸', '🏒', '🏑', '🥍', '🏏', '🥅', '⛳', '🏹', '🎣', '🤿', '🥊', '🥋', '⛸️', '🛹', '🛼',
+    // Food & Drink
+    '🍕', '🍔', '🍟', '🌭', '🍿', '🧈', '🍖', '🍗', '🥩', '🥓', '🍞', '🥐', '🥨', '🧀', '🥚', '🍳',
+    '🧇', '🥞', '🧈', '🍤', '🍱', '🍣', '🍛', '🍝', '🍜', '🍲', '🍥', '🥮', '🍡', '🥟', '🥠', '🥡',
+    '🦀', '🦞', '🦐', '🦑', '🦪', '🍦', '🍧', '🍨', '🍩', '🍪', '🎂', '🍰', '🧁', '🥧', '🍫', '🍬',
+    '🍭', '🍮', '☕', '🍵', '🧃', '🥤', '🧋', '🍶', '🍺', '🍻', '🥂', '🍷', '🥃', '🍸', '🍹', '🧉',
+    // Nature & Animals
+    '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🙈',
+    '🙉', '🙊', '🐔', '🐧', '🐦', '🐤', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🪱',
+    '🐛', '🦋', '🐌', '🐞', '🐜', '🦟', '🪰', '🪲', '🦗', '🕷️', '🦂', '🐢', '🐍', '🦎', '🐙', '🦑'
   ];
 
   const insertMarkdown = (before: string, after: string = '') => {
@@ -167,7 +203,10 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
             type="button"
             size="sm"
             variant="ghost"
-            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            onClick={() => {
+              setShowEmojiPicker(!showEmojiPicker);
+              setShowGifPicker(false);
+            }}
             title="Emoji"
           >
             <Smile className="h-4 w-4" />
@@ -175,13 +214,14 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
           {showEmojiPicker && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setShowEmojiPicker(false)} />
-              <div className="absolute top-10 left-0 bg-white dark:bg-gray-800 border-2 rounded-lg shadow-2xl p-4 z-50 w-80 max-h-96 overflow-y-auto">
-                <div className="grid grid-cols-6 gap-2">
+              <div className="absolute top-10 left-0 bg-white dark:bg-gray-800 border-2 rounded-lg shadow-2xl p-3 z-50 w-96 max-h-80 overflow-y-auto">
+                <div className="mb-2 text-xs font-semibold text-gray-500">Click to insert</div>
+                <div className="grid grid-cols-10 gap-1">
                   {emojis.map((emoji) => (
                     <button
                       key={emoji}
                       type="button"
-                      className="hover:bg-primary/10 dark:hover:bg-primary/20 p-2 rounded-lg text-3xl transition-all hover:scale-110"
+                      className="hover:bg-primary/10 dark:hover:bg-primary/20 p-1 rounded text-xl transition-all hover:scale-125"
                       onClick={() => {
                         onChange(value + emoji);
                         setShowEmojiPicker(false);
@@ -192,6 +232,60 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
                     </button>
                   ))}
                 </div>
+              </div>
+            </>
+          )}
+        </div>
+        
+        {/* GIF Picker */}
+        <div className="relative">
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            onClick={() => {
+              setShowGifPicker(!showGifPicker);
+              setShowEmojiPicker(false);
+            }}
+            title="Insert GIF"
+          >
+            <Film className="h-4 w-4" />
+          </Button>
+          {showGifPicker && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setShowGifPicker(false)} />
+              <div className="absolute top-10 left-0 bg-white dark:bg-gray-800 border-2 rounded-lg shadow-2xl p-3 z-50 w-96 max-h-96 overflow-y-auto">
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    placeholder="Search GIFs... (e.g., happy, party, laugh)"
+                    value={gifSearch}
+                    onChange={(e) => setGifSearch(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg text-sm"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Or choose from popular GIFs below</p>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {quickGifs.map((gif, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      className="hover:opacity-80 transition-opacity border rounded overflow-hidden"
+                      onClick={() => {
+                        onChange(value + `\n![GIF](${gif})\n`);
+                        setShowGifPicker(false);
+                      }}
+                    >
+                      <img src={gif} alt="GIF" className="w-full h-24 object-cover" />
+                    </button>
+                  ))}
+                </div>
+                {gifSearch && (
+                  <div className="mt-3 p-4 text-center text-sm text-gray-500">
+                    <p>Enter Giphy URL or paste GIF link directly:</p>
+                    <p className="text-xs mt-1">![GIF](your-gif-url)</p>
+                  </div>
+                )}
               </div>
             </>
           )}
