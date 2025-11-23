@@ -615,39 +615,46 @@ export default function CreateListingPage() {
                   <div className="flex gap-2">
                     <input
                       type="text"
-                      value={(() => {
-                        if (!formData.price || formData.price === '') return '';
-                        
-                        // Parse stored value (stored as: "15000.50")
-                        const num = parseFloat(formData.price);
-                        if (isNaN(num)) return '';
-                        
-                        // Format as: 15.000,50 (de-DE locale)
-                        return num.toLocaleString('de-DE', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
-                        });
-                      })()}
+                      value={formData.price}
                       onChange={(e) => {
-                        let value = e.target.value;
-                        
-                        // If empty, clear price
-                        if (value === '') {
-                          setFormData({ ...formData, price: '' });
-                          return;
-                        }
-                        
-                        // Remove all non-digit characters except comma
-                        // This removes dots (thousands separators) and keeps only comma
-                        value = value.replace(/[^\d,]/g, '');
-                        
-                        // Replace comma with dot for internal storage
-                        value = value.replace(',', '.');
-                        
-                        // Store the raw number (no formatting)
-                        setFormData({ ...formData, price: value });
+                        // Just store what user types - no formatting during typing
+                        const value = e.target.value;
+                        // Allow only digits, comma, and dot
+                        const cleaned = value.replace(/[^\d,.]/g, '');
+                        setFormData({ ...formData, price: cleaned });
                       }}
-                      placeholder="15.000,00"
+                      onBlur={(e) => {
+                        // Format when user leaves the field
+                        const value = e.target.value;
+                        if (!value) return;
+                        
+                        // Parse: remove dots, replace comma with dot
+                        const parsed = value.replace(/\./g, '').replace(',', '.');
+                        const num = parseFloat(parsed);
+                        
+                        if (!isNaN(num)) {
+                          // Format as: 1.000.000,00
+                          const formatted = num.toLocaleString('de-DE', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                          });
+                          setFormData({ ...formData, price: formatted });
+                        }
+                      }}
+                      onFocus={(e) => {
+                        // Unformat when user focuses (easier to edit)
+                        const value = e.target.value;
+                        if (!value) return;
+                        
+                        // Convert 1.000,00 → 1000
+                        const unformatted = value.replace(/\./g, '').replace(',', '.');
+                        const num = parseFloat(unformatted);
+                        
+                        if (!isNaN(num)) {
+                          setFormData({ ...formData, price: num.toString() });
+                        }
+                      }}
+                      placeholder="15000"
                       className="flex-1 px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                     />
                     <select
@@ -659,9 +666,6 @@ export default function CreateListingPage() {
                       <option value="EUR">EUR €</option>
                     </select>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Example: Type "15000" → shows "15.000,00"
-                  </p>
                 </div>
 
                 <div>
