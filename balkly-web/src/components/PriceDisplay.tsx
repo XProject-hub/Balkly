@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { formatPrice, getPreferredCurrency, formatCurrency } from "@/lib/currency";
+import { formatPrice, getPreferredCurrency, formatCurrency, convertCurrency, getCurrencySymbol } from "@/lib/currency";
 
 interface PriceDisplayProps {
   amount: number;
@@ -24,19 +24,36 @@ export default function PriceDisplay({
     const loadPrice = async () => {
       const preferredCurrency = getPreferredCurrency();
       
-      // Format original price
-      const original = formatCurrency(amount, currency);
-      setOriginalPrice(original);
+      // Convert if needed
+      let displayAmount = amount;
+      if (currency !== preferredCurrency) {
+        displayAmount = await convertCurrency(amount, currency, preferredCurrency);
+      }
       
-      // Format price in preferred currency (with conversion if needed)
-      const formatted = await formatPrice(amount, currency, preferredCurrency);
-      setDisplayPrice(formatted);
+      // Format with de-DE locale: 1.000.000,00
+      const symbol = getCurrencySymbol(preferredCurrency);
+      const formatted = displayAmount.toLocaleString('de-DE', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      
+      setDisplayPrice(preferredCurrency === 'AED' ? `${symbol} ${formatted}` : `${symbol}${formatted}`);
+      
+      // Original price if different currency
+      if (currency !== preferredCurrency) {
+        const originalFormatted = amount.toLocaleString('de-DE', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+        const originalSymbol = getCurrencySymbol(currency);
+        setOriginalPrice(currency === 'AED' ? `${originalSymbol} ${originalFormatted}` : `${originalSymbol}${originalFormatted}`);
+      }
+      
       setLoading(false);
     };
 
     loadPrice();
 
-    // Listen for currency changes
     const handleCurrencyChange = () => {
       setLoading(true);
       loadPrice();
@@ -47,7 +64,12 @@ export default function PriceDisplay({
   }, [amount, currency]);
 
   if (loading) {
-    return <span className={className}>{formatCurrency(amount, currency)}</span>;
+    const symbol = getCurrencySymbol(currency);
+    const formatted = amount.toLocaleString('de-DE', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    return <span className={className}>{currency === 'AED' ? `${symbol} ${formatted}` : `${symbol}${formatted}`}</span>;
   }
 
   const preferredCurrency = getPreferredCurrency();
