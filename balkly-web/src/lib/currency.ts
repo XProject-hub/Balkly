@@ -96,6 +96,7 @@ export function getCurrencySymbol(currency: string): string {
 
 /**
  * Format currency with symbol and proper locale
+ * ALWAYS uses de-DE format: 1.000.000,00
  */
 export function formatCurrency(
   amount: number,
@@ -104,23 +105,22 @@ export function formatCurrency(
 ): string {
   const symbol = getCurrencySymbol(currency);
   
-  // Use de-DE locale for proper formatting: 1.000.000,00
-  const formatted = amount.toLocaleString('de-DE', {
+  // FORCE de-DE locale: 1.000.000,00 (tačke za hiljade, zarez za decimale)
+  const formatted = new Intl.NumberFormat('de-DE', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  });
+  }).format(amount);
 
   if (!showSymbol) {
     return formatted;
   }
 
-  // Different formatting based on currency
-  switch (currency) {
-    case 'AED':
-      return `${symbol} ${formatted}`;
-    default:
-      return `${symbol}${formatted}`;
+  // Add symbol
+  if (currency === 'AED') {
+    return `${symbol} ${formatted}`;
   }
+  
+  return `${symbol}${formatted}`;
 }
 
 /**
