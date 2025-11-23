@@ -615,46 +615,39 @@ export default function CreateListingPage() {
                   <div className="flex gap-2">
                     <input
                       type="text"
-                      value={formData.price ? (() => {
-                        // Format: 1.000.000,00
-                        const num = parseFloat(formData.price.replace(/\./g, '').replace(',', '.'));
-                        if (isNaN(num)) return '';
-                        return num.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                      })() : ''}
-                      onChange={(e) => {
-                        const value = e.target.value;
+                      value={(() => {
+                        if (!formData.price || formData.price === '') return '';
                         
-                        // Allow empty (for deleting)
+                        // Parse stored value (stored as: "15000.50")
+                        const num = parseFloat(formData.price);
+                        if (isNaN(num)) return '';
+                        
+                        // Format as: 15.000,50 (de-DE locale)
+                        return num.toLocaleString('de-DE', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        });
+                      })()}
+                      onChange={(e) => {
+                        let value = e.target.value;
+                        
+                        // If empty, clear price
                         if (value === '') {
                           setFormData({ ...formData, price: '' });
                           return;
                         }
                         
-                        // Remove all formatting, keep only digits and comma
-                        const cleaned = value.replace(/[^\d,]/g, '');
+                        // Remove all non-digit characters except comma
+                        // This removes dots (thousands separators) and keeps only comma
+                        value = value.replace(/[^\d,]/g, '');
                         
-                        // Replace comma with dot for storage
-                        const withDot = cleaned.replace(',', '.');
+                        // Replace comma with dot for internal storage
+                        value = value.replace(',', '.');
                         
-                        // Validate it's a number
-                        if (withDot && !isNaN(parseFloat(withDot))) {
-                          setFormData({ ...formData, price: withDot });
-                        } else if (withDot === '') {
-                          setFormData({ ...formData, price: '' });
-                        }
+                        // Store the raw number (no formatting)
+                        setFormData({ ...formData, price: value });
                       }}
-                      onKeyDown={(e) => {
-                        // Allow: backspace, delete, tab, escape, enter
-                        if ([8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
-                            // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-                            (e.keyCode === 65 && e.ctrlKey === true) ||
-                            (e.keyCode === 67 && e.ctrlKey === true) ||
-                            (e.keyCode === 86 && e.ctrlKey === true) ||
-                            (e.keyCode === 88 && e.ctrlKey === true)) {
-                          return;
-                        }
-                      }}
-                      placeholder="1.000,00"
+                      placeholder="15.000,00"
                       className="flex-1 px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                     />
                     <select
@@ -667,7 +660,7 @@ export default function CreateListingPage() {
                     </select>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
-                    Format: 1.000.000,00 (use comma for decimals)
+                    Example: Type "15000" → shows "15.000,00"
                   </p>
                 </div>
 
