@@ -63,6 +63,11 @@ export default function TopicDetailPage() {
   };
 
   const handleLike = async (postId?: number) => {
+    console.log('=== LIKE DEBUG ===');
+    console.log('postId:', postId);
+    console.log('topicId:', topicId);
+    console.log('topic object:', topic);
+    
     // Get current state
     const currentLiked = postId 
       ? topic.posts?.find((p: any) => p.id === postId)?.user_has_liked
@@ -98,6 +103,8 @@ export default function TopicDetailPage() {
       const url = postId 
         ? `/api/v1/forum/posts/${postId}/like`
         : `/api/v1/forum/topics/${topicId}/like`;
+      
+      console.log('API URL being called:', url);
         
       const response = await fetch(url, {
         method: 'POST',
