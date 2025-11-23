@@ -69,10 +69,20 @@ export default function EditListingPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
+      // Parse price properly: 15.000,00 → 15000.00
+      let priceValue = 0;
+      if (formData.price) {
+        const cleanedPrice = formData.price.toString().replace(/\./g, '').replace(',', '.');
+        priceValue = parseFloat(cleanedPrice) || 0;
+      }
+      
+      console.log("Raw price:", formData.price);
+      console.log("Parsed price:", priceValue);
+      
       await listingsAPI.update(listingId, {
         title: formData.title,
         description: formData.description,
-        price: parseFloat(formData.price),
+        price: priceValue,
         currency: formData.currency,
         city: formData.city,
         country: formData.country,
@@ -81,9 +91,10 @@ export default function EditListingPage() {
 
       alert("Listing updated successfully!");
       router.push(`/listings/${listingId}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to update listing:", error);
-      alert("Failed to update listing. Please try again.");
+      console.error("Error response:", error.response?.data);
+      alert("Failed to update listing: " + (error.response?.data?.message || error.message));
     } finally {
       setSaving(false);
     }
@@ -147,11 +158,43 @@ export default function EditListingPage() {
               <div>
                 <label className="block text-sm font-medium mb-2">Price *</label>
                 <input
-                  type="number"
+                  type="text"
                   value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    const filtered = value.replace(/[^\d,.]/g, '');
+                    setFormData({ ...formData, price: filtered });
+                  }}
+                  onBlur={(e) => {
+                    // Format on blur
+                    let value = e.target.value;
+                    if (!value) return;
+                    
+                    value = value.replace(/\./g, '').replace(',', '.');
+                    const num = parseFloat(value);
+                    
+                    if (!isNaN(num)) {
+                      const formatted = num.toLocaleString('de-DE', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      });
+                      setFormData({ ...formData, price: formatted });
+                    }
+                  }}
+                  onFocus={(e) => {
+                    // Unformat on focus
+                    let value = e.target.value;
+                    if (!value) return;
+                    
+                    value = value.replace(/\./g, '').replace(',', '.');
+                    const num = parseFloat(value);
+                    
+                    if (!isNaN(num)) {
+                      setFormData({ ...formData, price: num.toString() });
+                    }
+                  }}
+                  placeholder="15000"
                   className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
-                  step="0.01"
                 />
               </div>
               <div>
