@@ -615,24 +615,60 @@ export default function CreateListingPage() {
                   <div className="flex gap-2">
                     <input
                       type="text"
-                      value={formData.price ? parseFloat(formData.price.replace(/\./g, '').replace(',', '.')).toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : ''}
+                      value={formData.price ? (() => {
+                        // Format: 1.000.000,00
+                        const num = parseFloat(formData.price.replace(/\./g, '').replace(',', '.'));
+                        if (isNaN(num)) return '';
+                        return num.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                      })() : ''}
                       onChange={(e) => {
-                        // Remove formatting, keep only numbers and one comma/dot
-                        const raw = e.target.value.replace(/[^\d,]/g, '').replace(',', '.');
-                        setFormData({ ...formData, price: raw });
+                        const value = e.target.value;
+                        
+                        // Allow empty (for deleting)
+                        if (value === '') {
+                          setFormData({ ...formData, price: '' });
+                          return;
+                        }
+                        
+                        // Remove all formatting, keep only digits and comma
+                        const cleaned = value.replace(/[^\d,]/g, '');
+                        
+                        // Replace comma with dot for storage
+                        const withDot = cleaned.replace(',', '.');
+                        
+                        // Validate it's a number
+                        if (withDot && !isNaN(parseFloat(withDot))) {
+                          setFormData({ ...formData, price: withDot });
+                        } else if (withDot === '') {
+                          setFormData({ ...formData, price: '' });
+                        }
                       }}
-                      placeholder="0,00"
-                      className="flex-1 px-4 py-2 border rounded-lg"
+                      onKeyDown={(e) => {
+                        // Allow: backspace, delete, tab, escape, enter
+                        if ([8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
+                            // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                            (e.keyCode === 65 && e.ctrlKey === true) ||
+                            (e.keyCode === 67 && e.ctrlKey === true) ||
+                            (e.keyCode === 86 && e.ctrlKey === true) ||
+                            (e.keyCode === 88 && e.ctrlKey === true)) {
+                          return;
+                        }
+                      }}
+                      placeholder="1.000,00"
+                      className="flex-1 px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                     />
                     <select
                       value={formData.currency}
                       onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                      className="px-4 py-2 border rounded-lg"
+                      className="px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                     >
                       <option value="AED">AED د.إ</option>
                       <option value="EUR">EUR €</option>
                     </select>
                   </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Format: 1.000.000,00 (use comma for decimals)
+                  </p>
                 </div>
 
                 <div>
