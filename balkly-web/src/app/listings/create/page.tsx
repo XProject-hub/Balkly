@@ -184,12 +184,22 @@ export default function CreateListingPage() {
     try {
       console.log("Creating listing with data:", formData);
       
+      // Parse price properly: 15.000,00 → 15000.00
+      let priceValue = 0;
+      if (formData.price) {
+        const cleanedPrice = formData.price.replace(/\./g, '').replace(',', '.');
+        priceValue = parseFloat(cleanedPrice) || 0;
+      }
+      
+      console.log("Raw price:", formData.price);
+      console.log("Parsed price:", priceValue);
+      
       // Create listing
       const listingResponse = await listingsAPI.create({
         category_id: formData.category_id,
         title: formData.title,
         description: formData.description,
-        price: parseFloat(formData.price) || 0,
+        price: priceValue,
         currency: formData.currency,
         city: formData.city,
         country: formData.country,
