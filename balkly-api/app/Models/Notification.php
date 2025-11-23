@@ -14,18 +14,24 @@ class Notification extends Model
         'type',
         'title',
         'message',
-        'data',
-        'is_read',
+        'link',
+        'icon',
         'read_at',
     ];
 
     protected function casts(): array
     {
         return [
-            'data' => 'array',
-            'is_read' => 'boolean',
             'read_at' => 'datetime',
         ];
+    }
+    
+    /**
+     * Check if notification is read
+     */
+    public function getIsReadAttribute()
+    {
+        return !is_null($this->read_at);
     }
 
     public function user()
@@ -52,9 +58,8 @@ class Notification extends Model
      */
     public function markAsRead()
     {
-        if (!$this->is_read) {
+        if (is_null($this->read_at)) {
             $this->update([
-                'is_read' => true,
                 'read_at' => now(),
             ]);
         }

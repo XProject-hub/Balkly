@@ -138,7 +138,7 @@ class NotificationService
     public function getUnreadCount($userId)
     {
         return Notification::where('user_id', $userId)
-            ->where('is_read', false)
+            ->whereNull('read_at')
             ->count();
     }
 
@@ -148,9 +148,8 @@ class NotificationService
     public function markAllAsRead($userId)
     {
         Notification::where('user_id', $userId)
-            ->where('is_read', false)
+            ->whereNull('read_at')
             ->update([
-                'is_read' => true,
                 'read_at' => now(),
             ]);
     }
