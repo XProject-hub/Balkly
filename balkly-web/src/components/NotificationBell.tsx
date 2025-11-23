@@ -99,15 +99,18 @@ export default function NotificationBell() {
             ) : (
               <div className="divide-y dark:divide-gray-700">
                 {notifications.slice(0, 10).map((notif) => (
-                  <Link
+                  <button
                     key={notif.id}
-                    href={notif.data?.link || "#"}
                     onClick={() => {
                       markAsRead(notif.id);
                       setShowDropdown(false);
+                      // Navigate to link
+                      if (notif.link) {
+                        window.location.href = notif.link;
+                      }
                     }}
-                    className={`block p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                      !notif.is_read ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                    className={`w-full text-left block p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                      !notif.read_at ? 'bg-blue-50 dark:bg-blue-900/20' : ''
                     }`}
                   >
                     <div className="flex gap-2">
@@ -134,7 +137,7 @@ export default function NotificationBell() {
                         <div className="w-2 h-2 bg-blue-500 rounded-full mt-2" />
                       )}
                     </div>
-                  </Link>
+                  </button>
                 ))}
               </div>
             )}

@@ -16,22 +16,16 @@ class NotificationService
             return; // Don't notify yourself
         }
 
-        $link = $type === 'topic' 
-            ? "/forum/topics/{$topicOrPostId}" 
-            : "/forum/topics/{$topicOrPostId}"; // You'd need post's topic_id
+        $link = "/forum/topics/{$topicOrPostId}";
 
-        Notification::createForUser(
-            $ownerUserId,
-            'forum_like',
-            '❤️ Someone liked your post',
-            "{$likerUser->name} liked your {$type}: \"{$title}\"",
-            [
-                'liker_id' => $likerUser->id,
-                'liker_name' => $likerUser->name,
-                'type' => $type,
-                'link' => $link,
-            ]
-        );
+        Notification::create([
+            'user_id' => $ownerUserId,
+            'type' => 'forum_like',
+            'title' => 'Someone liked your post',
+            'message' => "{$likerUser->name} liked your {$type}: \"{$title}\"",
+            'link' => $link,
+            'icon' => '❤️',
+        ]);
     }
 
     /**
@@ -43,18 +37,14 @@ class NotificationService
             return; // Don't notify yourself
         }
 
-        Notification::createForUser(
-            $topicOwnerId,
-            'forum_reply',
-            '💬 New reply on your topic',
-            "{$replierUser->name} replied to: \"{$topicTitle}\"",
-            [
-                'replier_id' => $replierUser->id,
-                'replier_name' => $replierUser->name,
-                'topic_id' => $topicId,
-                'link' => "/forum/topics/{$topicId}",
-            ]
-        );
+        Notification::create([
+            'user_id' => $topicOwnerId,
+            'type' => 'forum_reply',
+            'title' => 'New reply on your topic',
+            'message' => "{$replierUser->name} replied to: \"{$topicTitle}\"",
+            'link' => "/forum/topics/{$topicId}",
+            'icon' => '💬',
+        ]);
     }
 
     /**
@@ -62,18 +52,14 @@ class NotificationService
      */
     public function newMessage($chatId, $senderId, $receiverId, $senderName, $listingTitle)
     {
-        Notification::createForUser(
-            $receiverId,
-            'message',
-            '✉️ New message',
-            "{$senderName} sent you a message about: \"{$listingTitle}\"",
-            [
-                'sender_id' => $senderId,
-                'sender_name' => $senderName,
-                'chat_id' => $chatId,
-                'link' => "/dashboard/messages/{$chatId}",
-            ]
-        );
+        Notification::create([
+            'user_id' => $receiverId,
+            'type' => 'message',
+            'title' => 'New message',
+            'message' => "{$senderName} sent you a message about: \"{$listingTitle}\"",
+            'link' => "/dashboard/messages",
+            'icon' => '✉️',
+        ]);
     }
 
     /**
