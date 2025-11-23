@@ -106,13 +106,19 @@ export default function TopicDetailPage() {
       
       console.log('API URL being called:', url);
         
+      const token = localStorage.getItem("auth_token");
+      console.log('Auth token:', token);
+      
       const response = await fetch(url, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}` 
+          Authorization: `Bearer ${token}` 
         },
       });
+      
+      console.log('Response status:', response.status);
+      console.log('Response OK:', response.ok);
 
       if (response.ok) {
         const data = await response.json();
