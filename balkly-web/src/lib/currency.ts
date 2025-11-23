@@ -103,7 +103,9 @@ export function formatCurrency(
   showSymbol: boolean = true
 ): string {
   const symbol = getCurrencySymbol(currency);
-  const formatted = amount.toLocaleString('en-US', {
+  
+  // Use de-DE locale for proper formatting: 1.000.000,00
+  const formatted = amount.toLocaleString('de-DE', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
@@ -116,9 +118,6 @@ export function formatCurrency(
   switch (currency) {
     case 'AED':
       return `${symbol} ${formatted}`;
-    case 'RSD':
-    case 'BAM':
-      return `${formatted} ${symbol}`;
     default:
       return `${symbol}${formatted}`;
   }

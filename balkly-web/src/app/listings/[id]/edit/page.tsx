@@ -84,8 +84,8 @@ export default function EditListingPage() {
         description: formData.description,
         price: priceValue,
         currency: formData.currency,
-        city: formData.city,
-        country: formData.country,
+        city: formData.city || '',
+        country: formData.country || 'AE',
         attributes: formData.attributes,
       });
 
