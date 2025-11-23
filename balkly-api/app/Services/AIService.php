@@ -28,7 +28,13 @@ class AIService
         try {
             $prompt = $this->buildListingPrompt($title, $description, $category, $locale);
             
-            $response = Http::withHeaders([
+            \Log::info('OpenAI Request', [
+                'key_present' => !empty($this->apiKey),
+                'model' => $this->model,
+                'title' => $title,
+            ]);
+            
+            $response = Http::timeout(30)->withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
                 'Content-Type' => 'application/json',
             ])->post('https://api.openai.com/v1/chat/completions', [
@@ -36,7 +42,7 @@ class AIService
                 'messages' => [
                     [
                         'role' => 'system',
-                        'content' => 'You are Balkly\'s listing editor. Improve titles and descriptions. Output valid JSON only.',
+                        'content' => 'You are a professional listing editor. Improve titles and descriptions for marketplace listings. Return ONLY valid JSON without any emojis.',
                     ],
                     [
                         'role' => 'user',
@@ -47,17 +53,33 @@ class AIService
                 'temperature' => 0.7,
             ]);
 
+            \Log::info('OpenAI Response Status', ['status' => $response->status()]);
+
+            if (!$response->successful()) {
+                \Log::error('OpenAI API Error', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
+                throw new \Exception('OpenAI API returned error: ' . $response->status());
+            }
+
             $result = $response->json();
+            \Log::info('OpenAI Result', ['has_choices' => isset($result['choices'])]);
+            
             $content = json_decode($result['choices'][0]['message']['content'], true);
 
             return [
                 'improved_title' => $content['title'] ?? $title,
                 'improved_description' => $content['description'] ?? $description,
-                'translations' => $content['translations'] ?? [],
+                'translations' => [],
                 'tags' => $content['tags'] ?? [],
-                'safety_flags' => $content['safety_flags'] ?? [],
+                'safety_flags' => [],
             ];
         } catch (\Exception $e) {
+            \Log::error('OpenAI Enhancement Failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             // Fallback to local enhancement if API fails
             return $this->localEnhancement($title, $description, $category);
         }
