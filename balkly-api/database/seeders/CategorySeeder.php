@@ -122,7 +122,7 @@ class CategorySeeder extends Seeder
             'type' => 'select',
             'options_json' => [
                 'Sedan', 'Hatchback', 'SUV', 'Coupe', 'Convertible', 
-                'Wagon', 'Van', 'Pickup Truck', 'Minivan', 'Limuzina', 
+                'Wagon', 'Van', 'Pickup Truck', 'Minivan', 'Limousine', 
                 'Crossover', 'Sports Car', 'Luxury Car'
             ],
             'is_required' => false,
