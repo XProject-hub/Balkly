@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Pin, Lock, Eye, Heart, Flag, MessageSquare, CheckCircle, MessageCircle } from "lucide-react";
+import { ArrowLeft, Pin, Lock, Eye, Heart, Flag, MessageSquare, CheckCircle, MessageCircle, Edit, X } from "lucide-react";
 import { forumAPI } from "@/lib/api";
 import MarkdownEditor from "@/components/MarkdownEditor";
 
@@ -17,6 +17,8 @@ export default function TopicDetailPage() {
   const [reply, setReply] = useState("");
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [editingPost, setEditingPost] = useState<any>(null);
+  const [editContent, setEditContent] = useState("");
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -59,6 +61,32 @@ export default function TopicDetailPage() {
       loadTopic();
     } catch (error) {
       alert("Failed to post reply");
+    }
+  };
+
+  const handleEditPost = (post: any) => {
+    setEditingPost(post);
+    setEditContent(post.content);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editContent.trim() || !editingPost) return;
+    
+    try {
+      await fetch(`/api/v1/forum/posts/${editingPost.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({ content: editContent }),
+      });
+      
+      setEditingPost(null);
+      setEditContent("");
+      loadTopic();
+    } catch (error) {
+      alert("Failed to save edit");
     }
   };
 
@@ -361,12 +389,21 @@ export default function TopicDetailPage() {
                     <span className="font-medium">{post?.user_has_liked === true ? 'Liked' : 'Like'}</span>
                     {(post?.likes_count || 0) > 0 && <span className="text-gray-500">({post.likes_count})</span>}
                   </button>
+                  <button
+                    onClick={() => setReply(`> ${post.user?.name} wrote:\n> ${post.content}\n\n`)}
+                    className="text-gray-600 dark:text-gray-400 hover:text-primary transition"
+                  >
+                    Quote
+                  </button>
+                  {currentUser?.id === post.user_id && (
                     <button
-                      onClick={() => setReply(`> ${post.user?.name} wrote:\n> ${post.content}\n\n`)}
-                      className="text-gray-600 dark:text-gray-400 hover:text-primary transition"
+                      onClick={() => handleEditPost(post)}
+                      className="text-gray-600 dark:text-gray-400 hover:text-primary transition flex items-center gap-1"
                     >
-                      Quote
+                      <Edit className="h-4 w-4" />
+                      Edit
                     </button>
+                  )}
                   </div>
                 </div>
               </div>
@@ -393,6 +430,38 @@ export default function TopicDetailPage() {
             </>
           )}
         </div>
+
+        {/* Edit Post Modal */}
+        {editingPost && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white dark:bg-gray-900 rounded-lg max-w-3xl w-full p-6 border dark:border-gray-800">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">Edit Post</h3>
+                <button
+                  onClick={() => setEditingPost(null)}
+                  className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+              
+              <MarkdownEditor 
+                value={editContent} 
+                onChange={setEditContent} 
+                placeholder="Edit your post..." 
+              />
+              
+              <div className="flex justify-end gap-2 mt-4">
+                <Button variant="outline" onClick={() => setEditingPost(null)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleSaveEdit} disabled={!editContent.trim()}>
+                  Save changes
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
