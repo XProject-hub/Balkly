@@ -67,11 +67,11 @@ export default function LanguageSwitcher() {
         className="flex items-center gap-2 px-2"
       >
         {currentLanguage.isBalkly ? (
-          <div className="w-10 h-10 bg-white dark:bg-gray-800 rounded-md p-1 flex items-center justify-center shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="w-8 h-8 bg-gradient-to-br from-balkly-blue to-teal-glow rounded-md p-1.5 flex items-center justify-center shadow-md">
             <img 
               src="/balkly-logo-icon.png"
               alt="Balkly"
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain drop-shadow-sm"
             />
           </div>
         ) : (
@@ -102,11 +102,11 @@ export default function LanguageSwitcher() {
                 }`}
               >
                 {lang.isBalkly ? (
-                  <div className="w-12 h-12 bg-white dark:bg-gray-900 rounded-lg p-2 flex items-center justify-center shadow-sm border-2 border-primary/20">
+                  <div className="w-12 h-12 bg-gradient-to-br from-balkly-blue to-teal-glow rounded-lg p-2 flex items-center justify-center shadow-lg">
                     <img 
                       src="/balkly-logo-icon.png"
                       alt="Balkly"
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-contain drop-shadow-md"
                     />
                   </div>
                 ) : (
