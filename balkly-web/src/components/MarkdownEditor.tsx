@@ -64,15 +64,29 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
 
   const insertMarkdown = (before: string, after: string = '') => {
     const textarea = textareaRef.current;
+    
+    console.log('insertMarkdown called', { before, after, textarea });
+    
     if (!textarea) {
-      console.error('Textarea ref not found');
+      console.error('Textarea ref is null!');
+      alert('Editor error - please refresh page');
       return;
     }
 
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
+    const start = textarea.selectionStart || 0;
+    const end = textarea.selectionEnd || 0;
     const selectedText = value.substring(start, end) || 'text';
-    const newText = value.substring(0, start) + before + selectedText + after + value.substring(end);
+    const beforeText = value.substring(0, start);
+    const afterText = value.substring(end);
+    
+    const newText = beforeText + before + selectedText + after + afterText;
+    
+    console.log('Inserting markdown', { 
+      start, 
+      end, 
+      selectedText, 
+      newText: newText.substring(0, 50) + '...' 
+    });
     
     onChange(newText);
     
@@ -81,7 +95,7 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
       textarea.focus();
       const newCursorPos = start + before.length + selectedText.length + after.length;
       textarea.setSelectionRange(newCursorPos, newCursorPos);
-    }, 10);
+    }, 0);
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
