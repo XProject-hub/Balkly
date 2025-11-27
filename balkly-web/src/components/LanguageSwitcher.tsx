@@ -67,13 +67,11 @@ export default function LanguageSwitcher() {
         className="flex items-center gap-2 px-2"
       >
         {currentLanguage.isBalkly ? (
-          <div className="w-8 h-8 bg-gradient-to-br from-balkly-blue to-teal-glow rounded-md p-1.5 flex items-center justify-center shadow-md">
-            <img 
-              src="/balkly-logo-icon.png"
-              alt="Balkly"
-              className="w-full h-full object-contain drop-shadow-sm"
-            />
-          </div>
+          <img 
+            src="/balkly-logo-icon.png"
+            alt="Balkly"
+            className="w-6 h-4 object-contain"
+          />
         ) : (
           <img 
             src={`https://flagcdn.com/w20/${currentLanguage.flagCode.toLowerCase()}.png`}
@@ -102,13 +100,11 @@ export default function LanguageSwitcher() {
                 }`}
               >
                 {lang.isBalkly ? (
-                  <div className="w-12 h-12 bg-gradient-to-br from-balkly-blue to-teal-glow rounded-lg p-2 flex items-center justify-center shadow-lg">
-                    <img 
-                      src="/balkly-logo-icon.png"
-                      alt="Balkly"
-                      className="w-full h-full object-contain drop-shadow-md"
-                    />
-                  </div>
+                  <img 
+                    src="/balkly-logo-icon.png"
+                    alt="Balkly"
+                    className="w-8 h-6 object-cover rounded shadow-sm"
+                  />
                 ) : (
                   <img 
                     src={`https://flagcdn.com/w40/${lang.flagCode.toLowerCase()}.png`}
