@@ -63,8 +63,11 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
   ];
 
   const insertMarkdown = (before: string, after: string = '') => {
-    const textarea = document.querySelector('textarea') as HTMLTextAreaElement;
-    if (!textarea) return;
+    const textarea = textareaRef.current;
+    if (!textarea) {
+      console.error('Textarea ref not found');
+      return;
+    }
 
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
@@ -73,11 +76,12 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
     
     onChange(newText);
     
-    // Focus back
+    // Focus back and set cursor position
     setTimeout(() => {
       textarea.focus();
-      textarea.setSelectionRange(start + before.length, start + before.length + selectedText.length);
-    }, 0);
+      const newCursorPos = start + before.length + selectedText.length + after.length;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+    }, 10);
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -317,10 +321,11 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
         </div>
       ) : (
         <textarea
+          ref={textareaRef}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder || "Write your message... (Markdown supported)"}
-          className="w-full p-4 min-h-[200px] resize-y focus:outline-none"
+          className="w-full p-4 min-h-[200px] resize-y focus:outline-none dark:bg-gray-900 dark:text-gray-100"
         />
       )}
 
