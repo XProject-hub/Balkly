@@ -70,7 +70,7 @@ export default function LanguageSwitcher() {
           <img 
             src="/balkly-logo-icon.png"
             alt="Balkly"
-            className="w-6 h-4 object-contain"
+            className="w-8 h-8 object-contain"
           />
         ) : (
           <img 
@@ -103,7 +103,7 @@ export default function LanguageSwitcher() {
                   <img 
                     src="/balkly-logo-icon.png"
                     alt="Balkly"
-                    className="w-8 h-6 object-cover rounded shadow-sm"
+                    className="w-10 h-10 object-contain"
                   />
                 ) : (
                   <img 
