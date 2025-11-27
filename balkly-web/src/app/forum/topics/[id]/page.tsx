@@ -309,9 +309,17 @@ export default function TopicDetailPage() {
               </div>
 
               <div className="prose max-w-none dark:prose-invert mb-6">
-                <div className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
-                  {topic.content}
-                </div>
+                <div 
+                  className="text-gray-800 dark:text-gray-200"
+                  dangerouslySetInnerHTML={{
+                    __html: topic.content
+                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                      .replace(/`(.*?)`/g, '<code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm">$1</code>')
+                      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary hover:underline" target="_blank">$1</a>')
+                      .replace(/\n/g, '<br/>')
+                  }}
+                />
               </div>
 
               {/* Post Actions - XenForo Style */}
@@ -367,9 +375,18 @@ export default function TopicDetailPage() {
                 </div>
 
                 <div className="prose max-w-none dark:prose-invert mb-6">
-                  <div className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
-                    {post.content}
-                  </div>
+                  <div 
+                    className="text-gray-800 dark:text-gray-200"
+                    dangerouslySetInnerHTML={{
+                      __html: post.content
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                        .replace(/`(.*?)`/g, '<code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm">$1</code>')
+                        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary hover:underline" target="_blank">$1</a>')
+                        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="max-w-full rounded-lg my-2" />')
+                        .replace(/\n/g, '<br/>')
+                    }}
+                  />
                 </div>
 
                 <div className="pt-4 border-t dark:border-gray-800">
