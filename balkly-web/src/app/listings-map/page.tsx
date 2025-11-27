@@ -22,6 +22,11 @@ export default function ListingsMapPage() {
   const [listings, setListings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<"map" | "list">("map");
+  const [filters, setFilters] = useState({
+    category_id: "",
+    min_price: "",
+    max_price: "",
+  });
 
   useEffect(() => {
     loadListings();
@@ -30,13 +35,22 @@ export default function ListingsMapPage() {
   const loadListings = async () => {
     setLoading(true);
     try {
-      const response = await listingsAPI.getAll({ per_page: 100 });
+      const params: any = { per_page: 100 };
+      if (filters.category_id) params.category_id = filters.category_id;
+      if (filters.min_price) params.min_price = filters.min_price;
+      if (filters.max_price) params.max_price = filters.max_price;
+      
+      const response = await listingsAPI.getAll(params);
       setListings(response.data.data || []);
     } catch (error) {
       console.error("Failed to load listings:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const applyFilters = () => {
+    loadListings();
   };
 
   return (
@@ -86,11 +100,18 @@ export default function ListingsMapPage() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">Category</label>
-                  <select className="w-full px-3 py-2 border rounded-lg">
+                  <select 
+                    className="w-full px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+                    value={filters.category_id}
+                    onChange={(e) => setFilters({ ...filters, category_id: e.target.value })}
+                  >
                     <option value="">All Categories</option>
                     <option value="1">Auto</option>
                     <option value="2">Real Estate</option>
-                    <option value="3">Events</option>
+                    <option value="3">Electronics</option>
+                    <option value="4">Fashion</option>
+                    <option value="5">Home & Garden</option>
+                    <option value="6">Sports & Hobbies</option>
                   </select>
                 </div>
 
@@ -100,17 +121,23 @@ export default function ListingsMapPage() {
                     <input
                       type="number"
                       placeholder="Min"
-                      className="px-3 py-2 border rounded-lg"
+                      className="px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+                      value={filters.min_price}
+                      onChange={(e) => setFilters({ ...filters, min_price: e.target.value })}
                     />
                     <input
                       type="number"
                       placeholder="Max"
-                      className="px-3 py-2 border rounded-lg"
+                      className="px-3 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+                      value={filters.max_price}
+                      onChange={(e) => setFilters({ ...filters, max_price: e.target.value })}
                     />
                   </div>
                 </div>
 
-                <Button className="w-full">Apply Filters</Button>
+                <Button className="w-full" onClick={applyFilters}>
+                  Apply Filters
+                </Button>
               </div>
             </Card>
 
