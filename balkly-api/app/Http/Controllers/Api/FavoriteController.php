@@ -22,10 +22,13 @@ class FavoriteController extends Controller
             $result = $favorites->map(function($favorite) {
                 $item = null;
                 
-                if ($favorite->favoritable_type === 'App\\Models\\Listing') {
+                // Handle both App\Models\Listing and App\\Models\\Listing formats
+                $type = str_replace('\\\\', '\\', $favorite->favoritable_type);
+                
+                if ($type === 'App\Models\Listing' || strpos($type, 'Listing') !== false) {
                     $item = \App\Models\Listing::with(['user', 'category', 'media'])
                         ->find($favorite->favoritable_id);
-                } elseif ($favorite->favoritable_type === 'App\\Models\\Event') {
+                } elseif ($type === 'App\Models\Event' || strpos($type, 'Event') !== false) {
                     $item = \App\Models\Event::find($favorite->favoritable_id);
                 }
                 
