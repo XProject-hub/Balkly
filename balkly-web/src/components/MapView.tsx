@@ -57,10 +57,21 @@ export default function MapView({
 
     // Add markers for listings
     listings.forEach((listing) => {
+      // Check for either location_geo or separate latitude/longitude
+      let lat, lng;
+      
       if (listing.location_geo) {
-        const [lat, lng] = listing.location_geo.split(",").map(parseFloat);
-        
-        const marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+        [lat, lng] = listing.location_geo.split(",").map(parseFloat);
+      } else if (listing.latitude && listing.longitude) {
+        lat = parseFloat(listing.latitude);
+        lng = parseFloat(listing.longitude);
+      } else {
+        return; // Skip if no location data
+      }
+      
+      if (isNaN(lat) || isNaN(lng)) return;
+      
+      const marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
 
         // Popup content
         const popupContent = `
@@ -74,7 +85,7 @@ export default function MapView({
                 : ""
             }
             <p style="margin: 0; font-size: 18px; font-weight: bold; color: #0f172a;">
-              €${listing.price?.toLocaleString() || "Contact"}
+              ${listing.currency === 'AED' ? 'د.إ' : '€'}${parseFloat(listing.price || 0).toLocaleString('de-DE', {minimumFractionDigits: 2}) || "Contact"}
             </p>
             <p style="margin: 4px 0 8px 0; font-size: 12px; color: #6b7280;">
               ${listing.city}
