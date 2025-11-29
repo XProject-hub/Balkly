@@ -275,6 +275,10 @@ Route::prefix('v1')->group(function () {
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::get('/users/leaderboard', [UserController::class, 'leaderboard']);
     
+    // Plans (public)
+    Route::get('/plans', [\App\Http\Controllers\Api\PlanController::class, 'index']);
+    Route::get('/plans/category/{categoryId}', [\App\Http\Controllers\Api\PlanController::class, 'byCategory']);
+    
     // Online users tracking
     Route::get('/online/count', [\App\Http\Controllers\Api\OnlineUsersController::class, 'count']);
     Route::post('/online/track', [\App\Http\Controllers\Api\OnlineUsersController::class, 'track']);
