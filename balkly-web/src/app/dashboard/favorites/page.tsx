@@ -23,6 +23,7 @@ export default function FavoritesPage() {
         },
       });
       const data = await response.json();
+      console.log('Favorites API response:', data);
       setFavorites(data.data || []);
     } catch (error) {
       console.error("Failed to load favorites:", error);
@@ -113,8 +114,13 @@ export default function FavoritesPage() {
                     <div className="flex-1">
                       <Link href={getLink(favorite)}>
                         <h3 className="font-bold hover:text-primary transition-colors">
-                          {favorite.favoritable?.title || 'Item'}
+                          {favorite.favoritable?.title || favorite.favoritable?.name || 'Loading...'}
                         </h3>
+                        {favorite.favoritable?.price && (
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            €{favorite.favoritable.price}
+                          </p>
+                        )}
                       </Link>
                       <p className="text-sm text-muted-foreground">
                         Saved {new Date(favorite.created_at).toLocaleDateString()}
