@@ -35,6 +35,7 @@ export default function ListingDetailPage() {
   const [contactMessage, setContactMessage] = useState("");
   const [reviews, setReviews] = useState<any[]>([]);
   const [avgRating, setAvgRating] = useState(0);
+  const [similarListings, setSimilarListings] = useState<any[]>([]);
 
   useEffect(() => {
     if (listingId) {
@@ -54,6 +55,17 @@ export default function ListingDetailPage() {
         const reviewsData = await reviewsResponse.json();
         setReviews(reviewsData.reviews?.data || []);
         setAvgRating(reviewsData.average_rating || 0);
+      }
+      
+      // Load similar listings from same category
+      if (response.data.listing?.category_id) {
+        const similarRes = await listingsAPI.getAll({ 
+          category_id: response.data.listing.category_id,
+          per_page: 4,
+          status: 'active'
+        });
+        const similar = (similarRes.data.data || []).filter((l: any) => l.id !== listingId);
+        setSimilarListings(similar.slice(0, 4));
       }
     } catch (error) {
       console.error("Failed to load listing:", error);
@@ -512,21 +524,45 @@ export default function ListingDetailPage() {
           />
         )}
 
-        {/* Related/Similar Listings */}
-        <div className="container mx-auto px-4 py-12 bg-muted/30">
-          <h2 className="text-3xl font-bold mb-8">Similar Listings</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {[1, 2, 3, 4].map((i) => (
-              <Card key={i} className="hover:shadow-lg transition-shadow">
-                <div className="aspect-video bg-muted" />
-                <CardContent className="p-4">
-                  <p className="font-medium line-clamp-1">Similar Item {i}</p>
-                  <p className="text-primary font-bold">€XX,XXX</p>
-                </CardContent>
-              </Card>
-            ))}
+        {/* Similar Listings */}
+        {similarListings.length > 0 && (
+          <div className="container mx-auto px-4 py-12 bg-muted/30">
+            <h2 className="text-3xl font-bold mb-8">Similar Listings</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {similarListings.map((item) => (
+                <Link key={item.id} href={`/listings/${item.id}`}>
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="aspect-video bg-muted relative overflow-hidden">
+                      {item.media?.[0] ? (
+                        <img 
+                          src={item.media[0].url} 
+                          alt={item.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <Package className="h-12 w-12 text-muted-foreground/30" />
+                        </div>
+                      )}
+                    </div>
+                    <CardContent className="p-4">
+                      <p className="font-medium line-clamp-2 mb-2">{item.title}</p>
+                      <PriceDisplay
+                        amount={item.price}
+                        currency={item.currency || 'EUR'}
+                        className="text-primary font-bold"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        <MapPin className="h-3 w-3 inline mr-1" />
+                        {item.city}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
