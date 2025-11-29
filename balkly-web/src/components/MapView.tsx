@@ -73,8 +73,8 @@ export default function MapView({
       
       const marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
 
-        // Popup content
-        const popupContent = `
+      // Popup content
+      const popupContent = `
           <div style="min-width: 200px;">
             <h3 style="margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">
               ${listing.title}
