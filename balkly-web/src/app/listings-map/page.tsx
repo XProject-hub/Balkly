@@ -30,6 +30,7 @@ export default function ListingsMapPage() {
 
   useEffect(() => {
     loadListings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadListings = async () => {

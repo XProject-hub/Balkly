@@ -55,8 +55,11 @@ export default function MapView({
       iconAnchor: [30, 30],
     });
 
+    // Track used positions to avoid overlapping markers
+    const usedPositions = new Map<string, number>();
+    
     // Add markers for listings
-    listings.forEach((listing) => {
+    listings.forEach((listing, index) => {
       // Check for either location_geo or separate latitude/longitude
       let lat, lng;
       
@@ -71,7 +74,16 @@ export default function MapView({
       
       if (isNaN(lat) || isNaN(lng)) return;
       
-      const marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+      // Offset markers at same location
+      const posKey = `${lat.toFixed(4)},${lng.toFixed(4)}`;
+      const offset = usedPositions.get(posKey) || 0;
+      usedPositions.set(posKey, offset + 1);
+      
+      // Add small offset (0.001 degrees ≈ 100m) for overlapping markers
+      const offsetLat = lat + (offset * 0.002);
+      const offsetLng = lng + (offset * 0.002);
+      
+      const marker = L.marker([offsetLat, offsetLng], { icon: customIcon }).addTo(map);
 
       // Popup content
       const popupContent = `
