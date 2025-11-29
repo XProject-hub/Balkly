@@ -103,8 +103,7 @@ export default function MapView({
           </div>
         `;
 
-        marker.bindPopup(popupContent);
-      }
+      marker.bindPopup(popupContent);
     });
 
     mapRef.current = map;
