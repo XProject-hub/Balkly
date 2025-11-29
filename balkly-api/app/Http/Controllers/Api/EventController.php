@@ -17,7 +17,16 @@ class EventController extends Controller
         $query = Event::with(['organizer', 'tickets'])
             ->where('status', 'published');
 
-        // Only filter if value is NOT empty string
+        // Only show UPCOMING events (start_at >= today OR end_at >= today)
+        $query->where(function($q) {
+            $q->where('start_at', '>=', now()->startOfDay())
+              ->orWhere(function($subQ) {
+                  $subQ->where('end_at', '>=', now()->startOfDay())
+                       ->whereNotNull('end_at');
+              });
+        });
+
+        // Filters
         if ($request->filled('type')) {
             $query->where('type', $request->type);
         }
@@ -30,8 +39,7 @@ class EventController extends Controller
             $query->where('category', $request->category);
         }
 
-        // Show all events (Platinumlist has long-running attractions)
-        // Don't filter by date at all - let frontend handle it
+        // Order by soonest first
         $query->orderBy('start_at', 'asc');
 
         $events = $query->paginate($request->input('per_page', 20));
