@@ -13,12 +13,25 @@ class FavoriteController extends Controller
      */
     public function index()
     {
-        $favorites = Favorite::where('user_id', auth()->id())
-            ->with('favoritable')
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        try {
+            $favorites = Favorite::where('user_id', auth()->id())
+                ->orderBy('created_at', 'desc')
+                ->get();
+            
+            // Manually load favoritable items
+            $favorites->each(function($favorite) {
+                if ($favorite->favoritable_type === 'App\\Models\\Listing') {
+                    $favorite->favoritable = \App\Models\Listing::find($favorite->favoritable_id);
+                } elseif ($favorite->favoritable_type === 'App\\Models\\Event') {
+                    $favorite->favoritable = \App\Models\Event::find($favorite->favoritable_id);
+                }
+            });
 
-        return response()->json($favorites);
+            return response()->json(['data' => $favorites]);
+        } catch (\Exception $e) {
+            \Log::error('Favorites error: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
