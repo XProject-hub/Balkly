@@ -365,7 +365,22 @@ export default function HomePage() {
                     <CardDescription className="text-xs space-y-1">
                       <div className="flex items-center">
                         <Calendar className="h-3 w-3 mr-1" />
-                        {new Date(event.start_at).toLocaleDateString()}
+                        {(() => {
+                          const now = new Date();
+                          const start = new Date(event.start_at);
+                          const end = event.end_at ? new Date(event.end_at) : null;
+                          
+                          // If event hasn't started yet
+                          if (start > now) {
+                            return `Starts: ${start.toLocaleDateString()}`;
+                          }
+                          // If event is ongoing
+                          if (end && end >= now) {
+                            return `Valid until: ${end.toLocaleDateString()}`;
+                          }
+                          // Fallback
+                          return start.toLocaleDateString();
+                        })()}
                       </div>
                       <div className="flex items-center">
                         <MapPin className="h-3 w-3 mr-1" />
