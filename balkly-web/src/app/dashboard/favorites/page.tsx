@@ -118,7 +118,11 @@ export default function FavoritesPage() {
                         </h3>
                         {favorite.favoritable?.price && (
                           <p className="text-sm text-gray-600 dark:text-gray-400">
-                            €{favorite.favoritable.price}
+                            {favorite.favoritable.currency === 'AED' ? 'د.إ' : '€'}
+                            {parseFloat(favorite.favoritable.price).toLocaleString('de-DE', {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2
+                            })}
                           </p>
                         )}
                       </Link>
