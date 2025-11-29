@@ -35,13 +35,25 @@ export default function ListingsMapPage() {
   const loadListings = async () => {
     setLoading(true);
     try {
-      const params: any = { per_page: 100 };
+      const params: any = { 
+        per_page: 100,
+        status: 'active' // Only active listings
+      };
+      
+      // Add filters only if set
       if (filters.category_id) params.category_id = filters.category_id;
       if (filters.min_price) params.min_price = filters.min_price;
       if (filters.max_price) params.max_price = filters.max_price;
       
+      console.log('Map API params:', params);
+      
       const response = await listingsAPI.getAll(params);
-      setListings(response.data.data || []);
+      const data = response.data.data || [];
+      
+      console.log('Map listings loaded:', data.length);
+      console.log('Listings with coords:', data.filter((l: any) => l.latitude && l.longitude).length);
+      
+      setListings(data);
     } catch (error) {
       console.error("Failed to load listings:", error);
     } finally {
@@ -50,7 +62,17 @@ export default function ListingsMapPage() {
   };
 
   const applyFilters = () => {
+    console.log('Applying filters:', filters);
     loadListings();
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      category_id: "",
+      min_price: "",
+      max_price: "",
+    });
+    setTimeout(() => loadListings(), 100);
   };
 
   return (
@@ -135,9 +157,18 @@ export default function ListingsMapPage() {
                   </div>
                 </div>
 
-                <Button className="w-full" onClick={applyFilters}>
-                  Apply Filters
-                </Button>
+                <div className="space-y-2">
+                  <Button className="w-full" onClick={applyFilters}>
+                    Apply Filters
+                  </Button>
+                  <Button 
+                    className="w-full" 
+                    variant="outline" 
+                    onClick={clearFilters}
+                  >
+                    Clear Filters
+                  </Button>
+                </div>
               </div>
             </Card>
 
