@@ -46,7 +46,7 @@ export default function ListingsMapPage() {
       if (filters.min_price) params.min_price = filters.min_price;
       if (filters.max_price) params.max_price = filters.max_price;
       
-      console.log('Map API params:', params);
+      console.log('Map API params:', JSON.stringify(params, null, 2));
       
       const response = await listingsAPI.getAll(params);
       const data = response.data.data || [];
