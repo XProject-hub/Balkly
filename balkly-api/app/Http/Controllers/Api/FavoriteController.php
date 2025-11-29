@@ -18,16 +18,27 @@ class FavoriteController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
             
-            // Manually load favoritable items
-            $favorites->each(function($favorite) {
+            // Load favoritable items with full data
+            $result = $favorites->map(function($favorite) {
+                $item = null;
+                
                 if ($favorite->favoritable_type === 'App\\Models\\Listing') {
-                    $favorite->favoritable = \App\Models\Listing::find($favorite->favoritable_id);
+                    $item = \App\Models\Listing::with(['user', 'category', 'media'])
+                        ->find($favorite->favoritable_id);
                 } elseif ($favorite->favoritable_type === 'App\\Models\\Event') {
-                    $favorite->favoritable = \App\Models\Event::find($favorite->favoritable_id);
+                    $item = \App\Models\Event::find($favorite->favoritable_id);
                 }
+                
+                return [
+                    'id' => $favorite->id,
+                    'favoritable_type' => $favorite->favoritable_type,
+                    'favoritable_id' => $favorite->favoritable_id,
+                    'favoritable' => $item,
+                    'created_at' => $favorite->created_at,
+                ];
             });
 
-            return response()->json(['data' => $favorites]);
+            return response()->json(['data' => $result]);
         } catch (\Exception $e) {
             \Log::error('Favorites error: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
