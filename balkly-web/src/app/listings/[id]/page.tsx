@@ -15,6 +15,7 @@ import {
   ArrowLeft,
   Euro,
   Star,
+  Package,
 } from "lucide-react";
 import { listingsAPI } from "@/lib/api";
 import FavoriteButton from "@/components/FavoriteButton";
