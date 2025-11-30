@@ -18,9 +18,9 @@ class FetchPlatinumlistEventsAPI extends Command
         $this->info('🎪 Fetching events from Platinumlist API v7...');
 
         try {
-            $apiKey = 'a580a83b-bd1b-4073-a285-aa8bbbe82dee';
+            $apiKey = env('PLATINUMLIST_API_KEY');
             $baseUrl = 'https://api.platinumlist.net/v/7/events';
-            $affiliate_ref = 'zjblytn';
+            $affiliate_ref = env('PLATINUMLIST_AFFILIATE_REF', 'zjblytn');
             
             $page = 1;
             $totalImported = 0;
