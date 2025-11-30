@@ -113,7 +113,12 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
       
       console.log('Uploading files:', files.length);
 
-      const response = await fetch('/api/v1/forum/upload-images', {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || window.location.origin + '/api/v1';
+      const uploadUrl = `${API_URL}/forum/upload-images`;
+      
+      console.log('Upload URL:', uploadUrl);
+      
+      const response = await fetch(uploadUrl, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
