@@ -383,8 +383,8 @@ export default function TopicDetailPage() {
                         .replaceAll(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                         .replaceAll(/\*(.*?)\*/g, '<em>$1</em>')
                         .replaceAll(/`(.*?)`/g, '<code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm">$1</code>')
-                        .replaceAll(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary hover:underline" target="_blank">$1</a>')
                         .replaceAll(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="max-w-full rounded-lg my-2" />')
+                        .replaceAll(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary hover:underline" target="_blank">$1</a>')
                         .replaceAll('\n', '<br/>')
                     }}
                   />
