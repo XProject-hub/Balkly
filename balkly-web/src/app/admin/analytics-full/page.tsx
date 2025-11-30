@@ -149,7 +149,7 @@ export default function FullAnalyticsPage() {
             </div>
             <select
               value={period}
-              onChange={(e) => setPeriod(parseInt(e.target.value))}
+              onChange={(e) => setPeriod(Number.parseInt(e.target.value, 10))}
               className="px-4 py-2 rounded-lg bg-white text-gray-900 font-medium"
             >
               <option value="7">Last 7 days</option>
@@ -520,7 +520,7 @@ export default function FullAnalyticsPage() {
                         borderRadius: '8px',
                         boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
                       }}
-                      formatter={(value: any) => [`€${parseFloat(value).toFixed(2)}`, 'Revenue']}
+                      formatter={(value: any) => [`€${Number.parseFloat(value).toFixed(2)}`, 'Revenue']}
                     />
                     <Area 
                       type="monotone" 
