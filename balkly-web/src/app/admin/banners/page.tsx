@@ -207,24 +207,26 @@ export default function AdminBannersPage() {
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Link URL (optional)</label>
+                  <label htmlFor="banner-link-url" className="block text-sm font-medium mb-2">Link URL (optional)</label>
                   <input
+                    id="banner-link-url"
                     type="url"
                     value={formData.link_url}
                     onChange={(e) => setFormData({ ...formData, link_url: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg"
+                    className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                     placeholder="https://example.com/promotion"
                   />
                 </div>
 
                 <div className="flex items-center">
                   <input
+                    id="banner-is-active"
                     type="checkbox"
                     checked={formData.is_active}
                     onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
                     className="mr-2"
                   />
-                  <label className="text-sm font-medium">Active</label>
+                  <label htmlFor="banner-is-active" className="text-sm font-medium cursor-pointer">Active</label>
                 </div>
 
                 <Button type="submit" className="w-full">
