@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>Invoice {{ $invoice->invoice_number }}</title>
@@ -156,18 +156,26 @@
 
     <div class="totals">
         <table>
-            <tr>
-                <td>Subtotal:</td>
-                <td style="text-align: right;">{{ number_format($order->subtotal, 2) }} {{ $order->currency }}</td>
-            </tr>
-            <tr>
-                <td>VAT ({{ number_format($invoice->vat_rate, 0) }}%):</td>
-                <td style="text-align: right;">{{ number_format($order->tax, 2) }} {{ $order->currency }}</td>
-            </tr>
-            <tr class="total-row">
-                <td>Total:</td>
-                <td style="text-align: right;">{{ number_format($order->total, 2) }} {{ $order->currency }}</td>
-            </tr>
+            <thead>
+                <tr>
+                    <th scope="col" style="background: none; border: none; text-align: left;">Item</th>
+                    <th scope="col" style="background: none; border: none; text-align: right;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Subtotal:</td>
+                    <td style="text-align: right;">{{ number_format($order->subtotal, 2) }} {{ $order->currency }}</td>
+                </tr>
+                <tr>
+                    <td>VAT ({{ number_format($invoice->vat_rate, 0) }}%):</td>
+                    <td style="text-align: right;">{{ number_format($order->tax, 2) }} {{ $order->currency }}</td>
+                </tr>
+                <tr class="total-row">
+                    <td>Total:</td>
+                    <td style="text-align: right;">{{ number_format($order->total, 2) }} {{ $order->currency }}</td>
+                </tr>
+            </tbody>
         </table>
     </div>
 
