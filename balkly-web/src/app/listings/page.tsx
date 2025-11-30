@@ -33,7 +33,7 @@ export default function ListingsPage() {
     "Infiniti", "Acura", "Subaru", "Mitsubishi", "Isuzu", "Land Rover",
     "Jaguar", "Mini", "Smart", "Aston Martin", "Bentley", "Rolls-Royce",
     "Ferrari", "Lamborghini", "Maserati", "Bugatti", "McLaren",
-  ].sort();
+  ].sort((a, b) => a.localeCompare(b));
 
   const [realEstateFilters, setRealEstateFilters] = useState({
     listing_type: "",

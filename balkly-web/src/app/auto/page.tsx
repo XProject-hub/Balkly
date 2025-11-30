@@ -30,7 +30,7 @@ export default function AutoPage() {
     "Renault", "Peugeot", "Citroën", "Fiat", "Alfa Romeo", "Lancia",
     "Volvo", "Seat", "Skoda", "Dacia", "Chevrolet", "Jeep", "Tesla",
     "Ferrari", "Lamborghini", "Porsche", "Bugatti", "McLaren", "Aston Martin",
-  ].sort();
+  ].sort((a, b) => a.localeCompare(b));
 
   useEffect(() => {
     loadListings();

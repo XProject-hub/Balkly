@@ -20,7 +20,7 @@ export default function ElectronicsPage() {
     city: "",
   });
 
-  const electronicsBrands = ["Apple", "Samsung", "Huawei", "Xiaomi", "OnePlus", "Sony", "LG", "Google", "Nokia", "Motorola", "Asus", "Dell", "HP", "Lenovo", "Acer", "MSI"].sort();
+  const electronicsBrands = ["Apple", "Samsung", "Huawei", "Xiaomi", "OnePlus", "Sony", "LG", "Google", "Nokia", "Motorola", "Asus", "Dell", "HP", "Lenovo", "Acer", "MSI"].sort((a, b) => a.localeCompare(b));
 
   useEffect(() => {
     loadListings();
