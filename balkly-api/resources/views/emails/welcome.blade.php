@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
+    <title>Welcome to Balkly</title>
     <style>
         body {
             font-family: Arial, sans-serif;
