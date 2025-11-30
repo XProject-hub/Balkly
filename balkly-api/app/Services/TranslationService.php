@@ -11,7 +11,7 @@ class TranslationService
     
     public function __construct()
     {
-        $this->apiKey = env('GOOGLE_TRANSLATE_API_KEY', 'AIzaSyBSzI9EzG4J7cloixYYGk0alUZLfR7Skjo');
+        $this->apiKey = env('GOOGLE_TRANSLATE_API_KEY');
     }
     
     /**
