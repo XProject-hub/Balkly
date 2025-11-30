@@ -35,34 +35,33 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
-      .then((response) => {
-        // Cache hit - return response
-        if (response) {
-          return response;
+      .then((cachedResponse) => {
+        if (cachedResponse) {
+          return cachedResponse; // Return cached
         }
 
-        return fetch(event.request).then((response) => {
-          // Don't cache API calls or non-GET requests
-          if (!response || response.status !== 200 || response.type === 'error') {
-            return response;
-          }
+        return fetch(event.request)
+          .then((networkResponse) => {
+            const shouldCache = networkResponse && 
+              networkResponse.status === 200 && 
+              networkResponse.type !== 'error' &&
+              event.request.method === 'GET' && 
+              !event.request.url.includes('/api/');
 
-          if (event.request.method !== 'GET' || event.request.url.includes('/api/')) {
-            return response;
-          }
+            if (shouldCache) {
+              const responseToCache = networkResponse.clone();
+              caches.open(CACHE_NAME).then((cache) => {
+                cache.put(event.request, responseToCache);
+              });
+            }
 
-          // Clone response and cache it
-          const responseToCache = response.clone();
-          caches.open(CACHE_NAME)
-            .then((cache) => {
-              cache.put(event.request, responseToCache);
+            return networkResponse; // Return fresh
+          })
+          .catch(() => {
+            return caches.match('/offline').then((offline) => {
+              return offline || new Response('Offline', { status: 503 }); // Return offline or error
             });
-
-          return response;
-        }).catch(() => {
-          // Return offline page if available
-          return caches.match('/offline');
-        });
+          });
       })
   );
 });
