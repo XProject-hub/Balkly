@@ -1,19 +1,19 @@
 FROM php:8.3-fpm-alpine
 
-# Install system dependencies
+# Install system dependencies (sorted alphabetically)
 RUN apk add --no-cache \
     bash \
     curl \
     freetype-dev \
+    git \
     libjpeg-turbo-dev \
     libpng-dev \
     libzip-dev \
-    zip \
-    unzip \
-    git \
     mysql-client \
+    nginx \
     supervisor \
-    nginx
+    unzip \
+    zip
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -28,10 +28,10 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         pcntl
 
 # Install Redis extension
-RUN apk add --no-cache pcre-dev $PHPIZE_DEPS \
+RUN apk add --no-cache pcre-dev "$PHPIZE_DEPS" \
     && pecl install redis \
     && docker-php-ext-enable redis \
-    && apk del pcre-dev $PHPIZE_DEPS
+    && apk del pcre-dev "$PHPIZE_DEPS"
 
 # Install Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
@@ -48,16 +48,14 @@ RUN mkdir -p /var/www/.composer && chown -R www-data:www-data /var/www/.composer
 # Copy existing application directory
 COPY . .
 
-# Create Laravel directories if they don't exist
+# Create Laravel directories and set permissions (merged for efficiency)
 RUN mkdir -p /var/www/storage/framework/cache \
     && mkdir -p /var/www/storage/framework/sessions \
     && mkdir -p /var/www/storage/framework/views \
     && mkdir -p /var/www/storage/logs \
     && mkdir -p /var/www/storage/app/public \
-    && mkdir -p /var/www/bootstrap/cache
-
-# Set permissions
-RUN chown -R www-data:www-data /var/www \
+    && mkdir -p /var/www/bootstrap/cache \
+    && chown -R www-data:www-data /var/www \
     && chmod -R 775 /var/www/storage \
     && chmod -R 775 /var/www/bootstrap/cache
 
