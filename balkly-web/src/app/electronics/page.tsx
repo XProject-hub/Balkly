@@ -54,8 +54,8 @@ export default function ElectronicsPage() {
               <CardHeader><CardTitle className="text-gray-900">Filters</CardTitle></CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-900">Device Type</label>
-                  <select value={filters.device_type} onChange={(e) => setFilters({ ...filters, device_type: e.target.value })} className="w-full px-4 py-2 border rounded-lg">
+                  <label htmlFor="electronics-device-type" className="block text-sm font-semibold mb-2 text-gray-900">Device Type</label>
+                  <select id="electronics-device-type" value={filters.device_type} onChange={(e) => setFilters({ ...filters, device_type: e.target.value })} className="w-full px-4 py-2 border rounded-lg">
                     <option value="">All Types</option>
                     <option value="phone">Mobile Phones</option>
                     <option value="laptop">Laptops</option>
@@ -68,8 +68,8 @@ export default function ElectronicsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-900">Brand</label>
-                  <select value={filters.brand} onChange={(e) => setFilters({ ...filters, brand: e.target.value })} className="w-full px-4 py-2 border rounded-lg">
+                  <label htmlFor="electronics-brand" className="block text-sm font-semibold mb-2 text-gray-900">Brand</label>
+                  <select id="electronics-brand" value={filters.brand} onChange={(e) => setFilters({ ...filters, brand: e.target.value })} className="w-full px-4 py-2 border rounded-lg">
                     <option value="">All Brands</option>
                     {electronicsBrands.map((brand) => (
                       <option key={brand} value={brand}>{brand}</option>
@@ -101,8 +101,8 @@ export default function ElectronicsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-900">City</label>
-                  <input type="text" value={filters.city} onChange={(e) => setFilters({ ...filters, city: e.target.value })} placeholder="e.g., Dubai" className="w-full px-4 py-2 border rounded-lg" />
+                  <label htmlFor="electronics-city" className="block text-sm font-semibold mb-2 text-gray-900">City</label>
+                  <input id="electronics-city" type="text" value={filters.city} onChange={(e) => setFilters({ ...filters, city: e.target.value })} placeholder="e.g., Dubai" className="w-full px-4 py-2 border rounded-lg" />
                 </div>
 
                 <Button className="w-full bg-gradient-to-r from-balkly-blue to-iris-purple text-white" asChild>

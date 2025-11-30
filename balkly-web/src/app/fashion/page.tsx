@@ -85,8 +85,8 @@ export default function FashionPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2">City</label>
-                <input type="text" value={filters.city} onChange={(e) => setFilters({ ...filters, city: e.target.value })} placeholder="e.g., Dubai" className="w-full px-4 py-2 border rounded-lg" />
+                <label htmlFor="fashion-city" className="block text-sm font-semibold mb-2">City</label>
+                <input id="fashion-city" type="text" value={filters.city} onChange={(e) => setFilters({ ...filters, city: e.target.value })} placeholder="e.g., Dubai" className="w-full px-4 py-2 border rounded-lg" />
               </div>
 
               <Button className="w-full bg-gradient-to-r from-balkly-blue to-iris-purple text-white" asChild>
