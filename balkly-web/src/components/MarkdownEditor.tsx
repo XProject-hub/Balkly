@@ -123,15 +123,24 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
       });
 
       console.log('Upload response:', response.status);
+      console.log('Content-Type:', response.headers.get('content-type'));
+      
+      const responseText = await response.text();
+      console.log('Response text (first 500 chars):', responseText.substring(0, 500));
       
       if (response.ok) {
-        const data = await response.json();
-        console.log('Upload data:', data);
-        // Insert markdown image tags
-        const imageMarkdown = data.images?.map((url: string) => `![Image](${url})`).join('\n') || '';
-        onChange(value + '\n' + imageMarkdown);
+        try {
+          const data = JSON.parse(responseText);
+          console.log('Upload data:', data);
+          // Insert markdown image tags
+          const imageMarkdown = data.images?.map((url: string) => `![Image](${url})`).join('\n') || '';
+          onChange(value + '\n' + imageMarkdown);
+        } catch (parseError) {
+          console.error('JSON parse error:', parseError);
+          alert('Upload response is not valid JSON. Response: ' + responseText.substring(0, 200));
+        }
       } else {
-        const errorData = await response.json();
+        console.error('Upload failed:', responseText.substring(0, 200));
         console.error('Upload error:', errorData);
         alert('Failed to upload: ' + (errorData.message || 'Unknown error'));
       }
