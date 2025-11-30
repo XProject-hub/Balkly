@@ -90,8 +90,8 @@ export default function OffersPage() {
                         </Link>
                       </CardTitle>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Offered: €{parseFloat(offer.amount).toLocaleString('de-DE', {minimumFractionDigits: 2})} | 
-                        Original: €{parseFloat(offer.listing?.price || 0).toLocaleString('de-DE', {minimumFractionDigits: 2})}
+                        Offered: €{Number.parseFloat(offer.amount).toLocaleString('de-DE', {minimumFractionDigits: 2})} | 
+                        Original: €{Number.parseFloat(offer.listing?.price || 0).toLocaleString('de-DE', {minimumFractionDigits: 2})}
                       </p>
                     </div>
                     <span className={`px-3 py-1 rounded-full text-xs font-bold ${getStatusColor(offer.status)}`}>
