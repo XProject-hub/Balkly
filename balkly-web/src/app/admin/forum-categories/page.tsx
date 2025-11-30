@@ -180,7 +180,7 @@ export default function AdminForumCategoriesPage() {
         },
         body: JSON.stringify({
           ...formData,
-          slug: formData.slug || formData.name.toLowerCase().replace(/\s+/g, '-'),
+          slug: formData.slug || formData.name.toLowerCase().replaceAll(' ', '-'),
         }),
       });
 
@@ -343,7 +343,7 @@ export default function AdminForumCategoriesPage() {
                   <label className="block text-sm font-medium mb-2">Parent Category (optional)</label>
                   <select
                     value={formData.parent_id || ""}
-                    onChange={(e) => setFormData({ ...formData, parent_id: e.target.value ? parseInt(e.target.value) : null })}
+                    onChange={(e) => setFormData({ ...formData, parent_id: e.target.value ? Number.parseInt(e.target.value, 10) : null })}
                     className="w-full px-4 py-2 border rounded-lg"
                   >
                     <option value="">None (Main Category)</option>
