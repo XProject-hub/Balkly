@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Plus, Edit, Trash2, MessageCircle, GripVertical, Save, X } from "lucide-react";
+import { ArrowLeft, Plus, Edit, Trash2, MessageCircle, GripVertical, Save } from "lucide-react";
 import {
   DndContext,
   closestCenter,
