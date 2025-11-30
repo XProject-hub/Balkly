@@ -71,7 +71,7 @@ export default function AutoPage() {
               <CardContent className="space-y-4">
                 {/* Vehicle Type */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-900">Vehicle Type</label>
+                  <label htmlFor="auto-vehicle-type" className="block text-sm font-semibold mb-2 text-gray-900">Vehicle Type</label>
                   <div className="grid grid-cols-3 gap-2">
                     {['Cars', 'Motors', 'Trucks'].map((type) => (
                       <button
@@ -106,7 +106,7 @@ export default function AutoPage() {
 
                 {/* Year Range */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-900">Year</label>
+                  <label htmlFor="auto-year" className="block text-sm font-semibold mb-2 text-gray-900">Year</label>
                   <div className="grid grid-cols-2 gap-2">
                     <select
                       value={filters.year_from}
@@ -133,7 +133,7 @@ export default function AutoPage() {
 
                 {/* Fuel Type */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-900">Fuel Type</label>
+                  <label htmlFor="auto-fuel" className="block text-sm font-semibold mb-2 text-gray-900">Fuel Type</label>
                   <select
                     value={filters.fuel_type}
                     onChange={(e) => setFilters({ ...filters, fuel_type: e.target.value })}
@@ -150,7 +150,7 @@ export default function AutoPage() {
 
                 {/* Transmission */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-900">Transmission</label>
+                  <label htmlFor="auto-transmission" className="block text-sm font-semibold mb-2 text-gray-900">Transmission</label>
                   <div className="grid grid-cols-2 gap-2">
                     {['Manual', 'Automatic'].map((trans) => (
                       <button
