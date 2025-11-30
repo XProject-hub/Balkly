@@ -109,24 +109,26 @@ export default function ResetPasswordPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium mb-2">Email</label>
+              <label htmlFor="reset-email" className="block text-sm font-medium mb-2">Email</label>
               <input
+                id="reset-email"
                 type="email"
                 value={email}
                 disabled
-                className="w-full px-4 py-2 border rounded-lg bg-muted"
+                className="w-full px-4 py-2 border rounded-lg bg-muted dark:bg-gray-800"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">New Password</label>
+              <label htmlFor="reset-new-password" className="block text-sm font-medium mb-2">New Password</label>
               <input
+                id="reset-new-password"
                 type="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
                 minLength={8}
-                className="w-full px-4 py-2 border rounded-lg"
+                className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                 placeholder="••••••••"
               />
               <p className="text-xs text-muted-foreground mt-1">
@@ -135,15 +137,16 @@ export default function ResetPasswordPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Confirm Password</label>
+              <label htmlFor="reset-confirm-password" className="block text-sm font-medium mb-2">Confirm Password</label>
               <input
+                id="reset-confirm-password"
                 type="password"
                 value={formData.password_confirmation}
                 onChange={(e) =>
                   setFormData({ ...formData, password_confirmation: e.target.value })
                 }
                 required
-                className="w-full px-4 py-2 border rounded-lg"
+                className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                 placeholder="••••••••"
               />
             </div>
