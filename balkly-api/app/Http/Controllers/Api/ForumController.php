@@ -159,7 +159,7 @@ class ForumController extends Controller
             ->where('user_id', auth()->id())
             ->first();
 
-        \Log::info('Existing like?', ['exists' => !!$existingLike]);
+        \Log::info('Existing like?', ['exists' => (bool)$existingLike]);
 
         if ($existingLike) {
             // Unlike
