@@ -118,21 +118,23 @@ export default function AdminContentPage() {
                 {activeTab === "blog" && (
                   <>
                     <div>
-                      <label className="block text-sm font-medium mb-2">Excerpt</label>
+                      <label htmlFor="blog-excerpt" className="block text-sm font-medium mb-2">Excerpt</label>
                       <textarea
+                        id="blog-excerpt"
                         value={formData.excerpt}
                         onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                        className="w-full px-4 py-2 border rounded-lg h-20"
+                        className="w-full px-4 py-2 border rounded-lg h-20 dark:bg-gray-800 dark:border-gray-700"
                         placeholder="Short excerpt..."
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium mb-2">Category</label>
+                      <label htmlFor="blog-category" className="block text-sm font-medium mb-2">Category</label>
                       <select
+                        id="blog-category"
                         value={formData.category}
                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                        className="w-full px-4 py-2 border rounded-lg"
+                        className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                       >
                         <option value="news">News</option>
                         <option value="tutorial">Tutorial</option>
@@ -142,12 +144,13 @@ export default function AdminContentPage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium mb-2">Featured Image URL</label>
+                      <label htmlFor="blog-featured-image" className="block text-sm font-medium mb-2">Featured Image URL</label>
                       <input
+                        id="blog-featured-image"
                         type="url"
                         value={formData.featured_image}
                         onChange={(e) => setFormData({ ...formData, featured_image: e.target.value })}
-                        className="w-full px-4 py-2 border rounded-lg"
+                        className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                         placeholder="https://example.com/image.jpg"
                       />
                     </div>
@@ -156,12 +159,13 @@ export default function AdminContentPage() {
 
                 {activeTab === "kb" && (
                   <div>
-                    <label className="block text-sm font-medium mb-2">Video Tutorial URL (YouTube/Vimeo)</label>
+                    <label htmlFor="kb-video-url" className="block text-sm font-medium mb-2">Video Tutorial URL (YouTube/Vimeo)</label>
                     <input
+                      id="kb-video-url"
                       type="url"
                       value={formData.video_url}
                       onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
-                      className="w-full px-4 py-2 border rounded-lg"
+                      className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                       placeholder="https://www.youtube.com/embed/..."
                     />
                     <p className="text-xs text-muted-foreground mt-1">
@@ -171,12 +175,13 @@ export default function AdminContentPage() {
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Content</label>
+                  <label htmlFor="content-main" className="block text-sm font-medium mb-2">Content</label>
                   <textarea
+                    id="content-main"
                     value={formData.content}
                     onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                     required
-                    className="w-full px-4 py-2 border rounded-lg h-64 font-mono text-sm"
+                    className="w-full px-4 py-2 border rounded-lg h-64 font-mono text-sm dark:bg-gray-800 dark:border-gray-700"
                     placeholder="Write your content here (HTML supported)..."
                   />
                 </div>
