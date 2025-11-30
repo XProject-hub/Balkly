@@ -68,6 +68,7 @@ class ForumController extends Controller
                         ->where('user_id', auth()->id())
                         ->exists();
                 }
+                unset($post); // Clear reference
             }
         } else {
             $topicArray['user_has_liked'] = false;
@@ -75,6 +76,7 @@ class ForumController extends Controller
                 foreach ($topicArray['posts'] as &$post) {
                     $post['user_has_liked'] = false;
                 }
+                unset($post); // Clear reference
             }
         }
 
