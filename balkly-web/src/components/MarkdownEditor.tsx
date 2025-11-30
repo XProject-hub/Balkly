@@ -107,14 +107,17 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
     try {
       // Use simple public storage upload
       const formData = new FormData();
-      Array.from(files).forEach(file => {
-        formData.append('images[]', file);
+      Array.from(files).forEach((file, index) => {
+        formData.append('images[]', file, file.name);
       });
+      
+      console.log('Uploading files:', files.length);
 
       const response = await fetch('/api/v1/forum/upload-images', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+          // Don't set Content-Type - let browser set it with boundary for multipart/form-data
         },
         body: formData,
       });
