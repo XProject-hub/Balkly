@@ -18,7 +18,8 @@ class ForumImageController extends Controller
 
         foreach ($request->file('images') as $image) {
             $path = $image->store('forum/' . auth()->id(), 'public');
-            $url = url('/storage/' . $path);
+            // Use secure_url or build proper URL
+            $url = config('app.url') . '/storage/' . $path;
             $uploadedUrls[] = $url;
         }
 
