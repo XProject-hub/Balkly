@@ -103,13 +103,14 @@ export default function AdminContentPage() {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Title</label>
+                  <label htmlFor="content-title" className="block text-sm font-medium mb-2">Title</label>
                   <input
+                    id="content-title"
                     type="text"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     required
-                    className="w-full px-4 py-2 border rounded-lg"
+                    className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                     placeholder="Enter title..."
                   />
                 </div>
