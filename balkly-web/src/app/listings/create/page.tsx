@@ -187,7 +187,7 @@ export default function CreateListingPage() {
       // Parse price properly: 15.000,00 → 15000.00
       let priceValue = 0;
       if (formData.price) {
-        const cleanedPrice = formData.price.replace(/\./g, '').replace(',', '.');
+        const cleanedPrice = formData.price.replaceAll('.', '').replace(',', '.');
         priceValue = parseFloat(cleanedPrice) || 0;
       }
       

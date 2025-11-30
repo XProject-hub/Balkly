@@ -72,7 +72,7 @@ export default function EditListingPage() {
       // Parse price properly: 15.000,00 → 15000.00
       let priceValue = 0;
       if (formData.price) {
-        const cleanedPrice = formData.price.toString().replace(/\./g, '').replace(',', '.');
+        const cleanedPrice = formData.price.toString().replaceAll('.', '').replace(',', '.');
         priceValue = parseFloat(cleanedPrice) || 0;
       }
       
@@ -173,7 +173,7 @@ export default function EditListingPage() {
                     value = value.replace(/\./g, '').replace(',', '.');
                     const num = parseFloat(value);
                     
-                    if (!isNaN(num)) {
+                    if (!Number.isNaN(num)) {
                       const formatted = num.toLocaleString('de-DE', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
@@ -189,7 +189,7 @@ export default function EditListingPage() {
                     value = value.replace(/\./g, '').replace(',', '.');
                     const num = parseFloat(value);
                     
-                    if (!isNaN(num)) {
+                    if (!Number.isNaN(num)) {
                       setFormData({ ...formData, price: num.toString() });
                     }
                   }}
