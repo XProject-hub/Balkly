@@ -135,13 +135,23 @@ class FetchPlatinumlistEventsAPI extends Command
 
     private function extractCity($url)
     {
-        if (str_contains($url, 'dubai')) return 'Dubai';
-        if (str_contains($url, 'abu-dhabi')) return 'Abu Dhabi';
-        if (str_contains($url, 'sharjah')) return 'Sharjah';
-        if (str_contains($url, 'ajman')) return 'Ajman';
-        if (str_contains($url, 'ras-al-khaimah') || str_contains($url, 'rak')) return 'Ras Al Khaimah';
-        if (str_contains($url, 'al-ain')) return 'Al Ain';
-        return 'Dubai';
+        $cityMap = [
+            'dubai' => 'Dubai',
+            'abu-dhabi' => 'Abu Dhabi',
+            'sharjah' => 'Sharjah',
+            'ajman' => 'Ajman',
+            'ras-al-khaimah' => 'Ras Al Khaimah',
+            'rak' => 'Ras Al Khaimah',
+            'al-ain' => 'Al Ain',
+        ];
+
+        foreach ($cityMap as $key => $city) {
+            if (str_contains($url, $key)) {
+                return $city;
+            }
+        }
+
+        return 'Dubai'; // Default
     }
 }
 
