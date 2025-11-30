@@ -84,8 +84,9 @@ export default function RegisterPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium mb-2">Full Name</label>
+              <label htmlFor="register-name" className="block text-sm font-medium mb-2">Full Name</label>
               <input
+                id="register-name"
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -96,8 +97,9 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Email</label>
+              <label htmlFor="register-email" className="block text-sm font-medium mb-2">Email</label>
               <input
+                id="register-email"
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -108,8 +110,9 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Password</label>
+              <label htmlFor="register-password" className="block text-sm font-medium mb-2">Password</label>
               <input
+                id="register-password"
                 type="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -124,8 +127,9 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Confirm Password</label>
+              <label htmlFor="register-confirm" className="block text-sm font-medium mb-2">Confirm Password</label>
               <input
+                id="register-confirm"
                 type="password"
                 value={formData.password_confirmation}
                 onChange={(e) =>
@@ -138,8 +142,9 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Preferred Language</label>
+              <label htmlFor="register-locale" className="block text-sm font-medium mb-2">Preferred Language</label>
               <select
+                id="register-locale"
                 value={formData.locale}
                 onChange={(e) => setFormData({ ...formData, locale: e.target.value })}
                 className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
