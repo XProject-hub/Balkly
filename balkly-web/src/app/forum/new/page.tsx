@@ -98,8 +98,9 @@ export default function NewTopicPage() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium mb-2">Category *</label>
+                <label htmlFor="topic-category" className="block text-sm font-medium mb-2">Category *</label>
                 <select
+                  id="topic-category"
                   value={formData.category_id}
                   onChange={(e) =>
                     setFormData({ ...formData, category_id: e.target.value })
@@ -124,8 +125,9 @@ export default function NewTopicPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Title *</label>
+                <label htmlFor="topic-title" className="block text-sm font-medium mb-2">Title *</label>
                 <input
+                  id="topic-title"
                   type="text"
                   value={formData.title}
                   onChange={(e) =>
@@ -134,7 +136,7 @@ export default function NewTopicPage() {
                   required
                   maxLength={200}
                   placeholder="What's your topic about?"
-                  className="w-full px-4 py-2 border rounded-lg"
+                  className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                 />
                 <p className="text-xs text-muted-foreground mt-1">
                   {formData.title.length}/200 characters
@@ -142,7 +144,7 @@ export default function NewTopicPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Content *</label>
+                <label htmlFor="topic-content" className="block text-sm font-medium mb-2">Content *</label>
                 <MarkdownEditor
                   value={formData.content}
                   onChange={(content) => setFormData({ ...formData, content })}
