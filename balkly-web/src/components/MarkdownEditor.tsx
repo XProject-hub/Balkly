@@ -102,6 +102,30 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    // Validate file count
+    if (files.length > 5) {
+      alert('You can upload maximum 5 images at once.');
+      if (imageInputRef.current) imageInputRef.current.value = '';
+      return;
+    }
+
+    // Validate each file
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    
+    for (const file of Array.from(files)) {
+      if (!allowedTypes.includes(file.type)) {
+        alert(`File "${file.name}" is not a valid image. Allowed: JPEG, PNG, GIF, WebP`);
+        if (imageInputRef.current) imageInputRef.current.value = '';
+        return;
+      }
+      if (file.size > maxSize) {
+        alert(`File "${file.name}" is too large. Maximum size: 5MB`);
+        if (imageInputRef.current) imageInputRef.current.value = '';
+        return;
+      }
+    }
+
     setUploading(true);
     
     try {
@@ -146,8 +170,12 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
         }
       } else {
         console.error('Upload failed:', responseText.substring(0, 200));
-        console.error('Upload error:', errorData);
-        alert('Failed to upload: ' + (errorData.message || 'Unknown error'));
+        try {
+          const errorData = JSON.parse(responseText);
+          alert('Failed to upload: ' + (errorData.message || 'Unknown error'));
+        } catch {
+          alert('Failed to upload images. Please try again.');
+        }
       }
     } catch (error) {
       console.error('Image upload error:', error);
@@ -216,7 +244,7 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
         <input
           ref={imageInputRef}
           type="file"
-          accept="image/*"
+          accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
           multiple
           onChange={handleImageUpload}
           className="hidden"
@@ -346,7 +374,9 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
             __html: value
               .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
               .replace(/\*(.*?)\*/g, '<em>$1</em>')
-              .replace(/`(.*?)`/g, '<code>$1</code>')
+              .replace(/`(.*?)`/g, '<code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm">$1</code>')
+              .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="max-w-full rounded-lg my-2" />')
+              .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary hover:underline" target="_blank">$1</a>')
               .replace(/\n/g, '<br/>')
           }} />
         </div>
