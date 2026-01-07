@@ -125,8 +125,19 @@ class PayPalService
         }
         
         try {
+            Log::info('PayPal Capture Request', ['order_id' => $orderId]);
+            
+            // IMPORTANT: Capture endpoint does NOT accept request body - it's POST but empty body!
             $response = Http::withToken($token)
-                ->post("{$this->baseUrl}/v2/checkout/orders/{$orderId}/capture");
+                ->withHeaders([
+                    'Content-Type' => 'application/json',
+                ])
+                ->post("{$this->baseUrl}/v2/checkout/orders/{$orderId}/capture", []); // Empty array = no body
+            
+            Log::info('PayPal Capture Response', [
+                'status' => $response->status(),
+                'body' => $response->json(),
+            ]);
             
             if ($response->successful()) {
                 $data = $response->json();
@@ -139,7 +150,10 @@ class PayPalService
                 ];
             }
             
-            Log::error('PayPal capture failed', ['response' => $response->json()]);
+            Log::error('PayPal capture failed', [
+                'status' => $response->status(),
+                'response' => $response->json()
+            ]);
             throw new \Exception('Failed to capture PayPal payment');
             
         } catch (\Exception $e) {
