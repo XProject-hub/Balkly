@@ -147,6 +147,9 @@ Route::prefix('v1')->group(function () {
         Route::post('/orders/tickets', [OrderController::class, 'createTicketOrder']);
         Route::post('/orders/{id}/refund', [OrderController::class, 'refund']);
         
+        // PayPal Checkout (authenticated users)
+        Route::post('/paypal/checkout', [\App\Http\Controllers\Api\PayPalController::class, 'createCheckout']);
+        
         // Invoices
         Route::get('/invoices/{id}', [OrderController::class, 'invoice']);
         Route::get('/invoices/{id}/download', [OrderController::class, 'downloadInvoice']);
