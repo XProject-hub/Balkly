@@ -22,19 +22,33 @@ class TranslationService
         
         try {
             // MyMemory Free Translation API (no API key needed!)
-            $response = Http::get('https://api.mymemory.translated.net/get', [
-                'q' => $text,
+            $response = Http::timeout(10)->get('https://api.mymemory.translated.net/get', [
+                'q' => substr($text, 0, 500), // Max 500 bytes
                 'langpair' => $sourceLang . '|' . $this->mapLanguageCode($targetLang),
             ]);
             
-            if ($response->successful() && $response->json()['responseStatus'] == 200) {
-                $translatedText = $response->json()['responseData']['translatedText'];
+            \Log::info('Translation request', [
+                'text' => substr($text, 0, 50),
+                'target' => $targetLang,
+                'status' => $response->status(),
+            ]);
+            
+            if ($response->successful()) {
+                $data = $response->json();
                 
-                // Cache for 30 days
-                Cache::put($cacheKey, $translatedText, now()->addDays(30));
-                
-                return $translatedText;
+                if (isset($data['responseData']['translatedText'])) {
+                    $translatedText = $data['responseData']['translatedText'];
+                    
+                    // Cache for 30 days
+                    Cache::put($cacheKey, $translatedText, now()->addDays(30));
+                    
+                    \Log::info('Translation success', ['translated' => substr($translatedText, 0, 50)]);
+                    
+                    return $translatedText;
+                }
             }
+            
+            \Log::warning('Translation API response invalid', ['response' => $response->json()]);
         } catch (\Exception $e) {
             \Log::error('Translation failed: ' . $e->getMessage());
         }
