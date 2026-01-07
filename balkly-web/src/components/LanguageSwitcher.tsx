@@ -13,7 +13,7 @@ export default function LanguageSwitcher() {
   const [currentLang, setCurrentLang] = useState('en');
   const [isOpen, setIsOpen] = useState(false);
 
-  // Load saved language on mount
+  // Load saved language on mount - DEFAULT to English
   useEffect(() => {
     const saved = localStorage.getItem('language');
     if (saved) {
@@ -24,6 +24,10 @@ export default function LanguageSwitcher() {
       } else {
         setCurrentLang(saved);
       }
+    } else {
+      // No saved language - default to English
+      localStorage.setItem('language', 'en');
+      setCurrentLang('en');
     }
   }, []);
 
