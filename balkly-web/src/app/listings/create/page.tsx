@@ -89,11 +89,11 @@ export default function CreateListingPage() {
     try {
       const response = await categoriesAPI.getAttributes(categoryId);
       setSelectedCategory(response.data.category);
-      // Load plans for this category (mock for now)
+      // Load plans for this category
       setPlans([
-        { id: 1, name: "Standard", price: 4.99, duration_days: 30 },
-        { id: 2, name: "Featured", price: 14.99, duration_days: 30 },
-        { id: 3, name: "Boost", price: 4.99, duration_days: 7 },
+        { id: 2, name: "Standard", price: 4.99, duration_days: 15, description: "15 days in Featured section + Blue badge" },
+        { id: 3, name: "Featured", price: 14.99, duration_days: 30, description: "30 days in Featured section + Gold badge + Priority" },
+        { id: 4, name: "Boost", price: 4.99, duration_days: 7, description: "7 days boost in search results" },
       ]);
     } catch (error) {
       console.error("Failed to load category:", error);
