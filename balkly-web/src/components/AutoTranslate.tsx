@@ -51,10 +51,10 @@ async function translatePage(targetLang: string) {
     return;
   }
   
-  // Determine source language from current page content
-  // Homepage has Balkly (bs/sr/hr) content, so source is 'balkly'
-  const currentPageLang = localStorage.getItem('language') || 'en';
-  const sourceLang = currentPageLang === 'balkly' ? 'en' : 'balkly'; // Translate FROM opposite language
+  // Determine source language
+  // If translating TO English, source is Balkly content (Bosnian)
+  // If translating TO Balkly, source is English
+  const sourceLang = targetLang === 'en' ? 'bs' : 'en';
   
   console.log('🌍 Source language:', sourceLang, '→ Target:', targetLang);
   
@@ -66,9 +66,26 @@ async function translatePage(targetLang: string) {
   
   elements.forEach((el) => {
     const htmlEl = el as HTMLElement;
-    // Skip if has children or empty
-    if (htmlEl.children.length === 0 && htmlEl.textContent && htmlEl.textContent.trim().length > 1) {
-      const original = htmlEl.getAttribute('data-original-text') || htmlEl.textContent;
+    const text = htmlEl.textContent?.trim() || '';
+    
+    // Skip if:
+    // - Has children
+    // - Empty or too short
+    // - Is a currency code (EUR, AED, USD, GBP, etc.)
+    // - Is only numbers or symbols
+    const skipPatterns = [
+      /^(EUR|AED|USD|GBP|BAM|RSD|د\.إ|€|\$|£)$/i,  // Currency codes
+      /^\d+$/,  // Only numbers
+      /^[\d\s\.\,\-]+$/,  // Numbers with formatting
+      /^[€\$£د\.إ\d\s\.\,]+$/,  // Prices
+    ];
+    
+    const shouldSkip = htmlEl.children.length > 0 || 
+                      text.length < 2 || 
+                      skipPatterns.some(pattern => pattern.test(text));
+    
+    if (!shouldSkip) {
+      const original = htmlEl.getAttribute('data-original-text') || text;
       htmlEl.setAttribute('data-original-text', original);
       textsToTranslate.push(original);
       elementsMap.push(htmlEl);
