@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Pin, Lock, Eye, Heart, Flag, MessageSquare, CheckCircle, MessageCircle, Edit, X } from "lucide-react";
+import { ArrowLeft, Pin, Lock, Eye, Heart, Flag, MessageSquare, CheckCircle, MessageCircle, Edit, X, Trash2 } from "lucide-react";
 import { forumAPI } from "@/lib/api";
 import MarkdownEditor from "@/components/MarkdownEditor";
 
@@ -87,6 +87,38 @@ export default function TopicDetailPage() {
       loadTopic();
     } catch (error) {
       alert("Failed to save edit");
+    }
+  };
+
+  const handleDeletePost = async (postId: number) => {
+    if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) return;
+    
+    try {
+      await fetch(`/api/v1/admin/forum/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      loadTopic();
+    } catch (error) {
+      alert('Failed to delete post');
+    }
+  };
+
+  const handleDeleteTopic = async () => {
+    if (!confirm('Are you sure you want to delete this entire topic? This action cannot be undone.')) return;
+    
+    try {
+      await fetch(`/api/v1/admin/forum/topics/${topicId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      router.push('/forum');
+    } catch (error) {
+      alert('Failed to delete topic');
     }
   };
 
@@ -241,10 +273,24 @@ export default function TopicDetailPage() {
       {/* XenForo Header */}
       <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-800 shadow-sm">
         <div className="max-w-[1200px] mx-auto px-6 py-4">
-          <Button variant="ghost" onClick={() => router.push("/forum")} className="mb-3">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to forum
-          </Button>
+          <div className="flex justify-between items-center mb-3">
+            <Button variant="ghost" onClick={() => router.push("/forum")}>
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to forum
+            </Button>
+            
+            {currentUser?.role === 'admin' && (
+              <Button 
+                variant="destructive" 
+                size="sm"
+                onClick={handleDeleteTopic}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete Topic
+              </Button>
+            )}
+          </div>
           
           <div className="flex items-center gap-2 mb-2">
             {topic.is_sticky && <Pin className="h-5 w-5 text-amber-500" />}
@@ -420,6 +466,15 @@ export default function TopicDetailPage() {
                     >
                       <Edit className="h-4 w-4" />
                       Edit
+                    </button>
+                  )}
+                  {currentUser?.role === 'admin' && (
+                    <button
+                      onClick={() => handleDeletePost(post.id)}
+                      className="text-gray-600 dark:text-gray-400 hover:text-red-500 transition flex items-center gap-1"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Delete
                     </button>
                   )}
                   </div>
