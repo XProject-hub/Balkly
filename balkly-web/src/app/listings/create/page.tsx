@@ -686,15 +686,20 @@ export default function CreateListingPage() {
                         boxShadow: selectedPlan === null ? '0 10px 15px -3px rgba(30, 99, 255, 0.3)' : 'none',
                       }}
                       className="p-6 border-2 rounded-lg transition-all cursor-pointer"
-                    >
-                      <h4 className="font-bold text-lg mb-2">Free Listing</h4>
-                      <p className="text-3xl font-bold text-primary mb-2">
-                        FREE
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Basic listing visibility
-                      </p>
-                    </button>
+                      >
+                        {selectedPlan === null && (
+                          <div className="absolute top-2 right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs font-bold">✓</span>
+                          </div>
+                        )}
+                        <h4 className="font-bold text-lg mb-2">Free Listing</h4>
+                        <p className="text-3xl font-bold text-primary mb-2">
+                          FREE
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Basic listing visibility
+                        </p>
+                      </button>
                     
                     {plans.map((plan) => (
                       <button
@@ -709,8 +714,13 @@ export default function CreateListingPage() {
                           backgroundColor: selectedPlan?.id === plan.id ? 'rgba(30, 99, 255, 0.1)' : 'transparent',
                           boxShadow: selectedPlan?.id === plan.id ? '0 10px 15px -3px rgba(30, 99, 255, 0.3)' : 'none',
                         }}
-                        className="p-6 border-2 rounded-lg transition-all cursor-pointer"
+                        className="p-6 border-2 rounded-lg transition-all cursor-pointer relative"
                       >
+                        {selectedPlan?.id === plan.id && (
+                          <div className="absolute top-2 right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs font-bold">✓</span>
+                          </div>
+                        )}
                         <h4 className="font-bold text-lg mb-2">{plan.name}</h4>
                         <p className="text-3xl font-bold text-primary mb-2">
                           €{plan.price}
