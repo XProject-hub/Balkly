@@ -453,19 +453,6 @@ export default function CreateListingPage() {
                   </p>
                 </div>
 
-                <Button
-                  onClick={handleAIHelper}
-                  disabled={aiLoading || !formData.title}
-                  variant="outline"
-                  className="w-full"
-                >
-                  <Sparkles className="mr-2 h-4 w-4" />
-                  {aiLoading ? "Enhancing..." : "Auto-Enhance Listing"}
-                </Button>
-                <p className="text-xs text-muted-foreground text-center">
-                  Improve your title and description automatically
-                </p>
-
                 <div>
                   <label className="block text-sm font-medium mb-2">Photos & Videos</label>
                   <div className="border-2 border-dashed rounded-lg p-8 text-center hover:border-primary transition-colors">
