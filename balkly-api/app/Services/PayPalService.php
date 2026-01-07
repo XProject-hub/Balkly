@@ -127,12 +127,13 @@ class PayPalService
         try {
             Log::info('PayPal Capture Request', ['order_id' => $orderId]);
             
-            // IMPORTANT: Capture endpoint does NOT accept request body - it's POST but empty body!
+            // IMPORTANT: Capture endpoint does NOT accept request body!
+            // Use send() with POST method but no body parameter
             $response = Http::withToken($token)
                 ->withHeaders([
                     'Content-Type' => 'application/json',
                 ])
-                ->post("{$this->baseUrl}/v2/checkout/orders/{$orderId}/capture", []); // Empty array = no body
+                ->send('POST', "{$this->baseUrl}/v2/checkout/orders/{$orderId}/capture");
             
             Log::info('PayPal Capture Response', [
                 'status' => $response->status(),
