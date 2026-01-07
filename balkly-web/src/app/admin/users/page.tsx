@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Search, UserX, Shield, Mail } from "lucide-react";
+import { ArrowLeft, Search, UserX, Shield, Mail, Trash2 } from "lucide-react";
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<any[]>([]);
@@ -51,6 +51,29 @@ export default function AdminUsersPage() {
       loadUsers();
     } catch (error) {
       alert("Failed to ban user");
+    }
+  };
+
+  const handleDeleteUser = async (userId: number, userName: string) => {
+    if (!confirm(`⚠️ PERMANENTLY DELETE ${userName}?\n\nThis will delete:\n- User account\n- All listings\n- All posts\n- All messages\n\nThis CANNOT be undone!`)) return;
+    
+    const confirmAgain = prompt(`Type "${userName}" to confirm deletion:`);
+    if (confirmAgain !== userName) {
+      alert('Cancelled - name did not match');
+      return;
+    }
+
+    try {
+      await fetch(`/api/v1/admin/users/${userId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      alert("User deleted permanently");
+      loadUsers();
+    } catch (error) {
+      alert("Failed to delete user");
     }
   };
 
@@ -160,9 +183,19 @@ export default function AdminUsersPage() {
                             size="sm"
                             variant="destructive"
                             onClick={() => handleBanUser(user.id, user.name)}
+                            className="bg-orange-600 hover:bg-orange-700"
                           >
                             <UserX className="h-4 w-4 mr-2" />
                             Ban
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => handleDeleteUser(user.id, user.name)}
+                            className="bg-red-600 hover:bg-red-700"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete
                           </Button>
                           <Button
                             size="sm"
