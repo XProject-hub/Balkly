@@ -638,5 +638,27 @@ class ForumController extends Controller
         ]);
     }
 
+    // Pin/unpin thread (Admin only)
+    public function togglePin(Request $request, $topicId)
+    {
+        // Only admin can pin
+        if (!auth()->user()->isAdmin()) {
+            return response()->json(['message' => 'Only admins can pin topics'], 403);
+        }
+
+        $topic = ForumTopic::findOrFail($topicId);
+        $newState = !$topic->is_sticky;
+
+        $topic->update([
+            'is_sticky' => $newState,
+            'sticky_until' => $newState ? null : null, // Permanent pin for admin (no expiry)
+        ]);
+
+        return response()->json([
+            'pinned' => $topic->is_sticky,
+            'message' => $topic->is_sticky ? 'Thread pinned to top' : 'Thread unpinned',
+        ]);
+    }
+
 }
 

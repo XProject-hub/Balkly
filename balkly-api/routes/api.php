@@ -240,6 +240,10 @@ Route::prefix('v1')->group(function () {
             Route::delete('/forum/topics/{id}', [ForumController::class, 'deleteTopic']);
             Route::delete('/forum/posts/{id}', [ForumController::class, 'deletePost']);
             
+            // Forum Admin - Pin/Lock Topics
+            Route::post('/forum/topics/{id}/pin', [ForumController::class, 'togglePin']);
+            Route::post('/forum/topics/{id}/lock', [ForumController::class, 'toggleLock']);
+            
             // Event Admin - Delete Events
             Route::delete('/events/{id}', [\App\Http\Controllers\Api\EventController::class, 'destroy']);
             
