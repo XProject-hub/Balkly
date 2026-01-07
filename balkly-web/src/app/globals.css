@@ -91,6 +91,41 @@
   }
 }
 
+/* Admin Panel - Force Dark Theme */
+[href*="/admin"] ~ *,
+.admin-panel,
+body:has([href*="/admin"][aria-current]) {
+  color-scheme: dark;
+}
+
+/* Admin Dark Theme - All Cards */
+.dark .bg-white,
+.dark .bg-mist-50,
+.dark .bg-gray-50 {
+  background-color: rgb(17 24 39) !important;
+  border-color: rgb(31 41 55) !important;
+  color: rgb(243 244 246) !important;
+}
+
+/* Admin Dark Theme - Text Colors */
+.dark .text-gray-700,
+.dark .text-gray-600,
+.dark .text-muted-foreground {
+  color: rgb(156 163 175) !important;
+}
+
+.dark .text-gray-900 {
+  color: rgb(243 244 246) !important;
+}
+
+/* Admin Dark Theme - Cards and Containers */
+.dark Card,
+.dark [class*="rounded-lg"],
+.dark .card {
+  background-color: rgb(17 24 39) !important;
+  border-color: rgb(31 41 55) !important;
+}
+
 @layer base {
   :root {
     /* Balkly Brand Colors - Light Mode (Default) */
