@@ -64,6 +64,10 @@ Route::prefix('v1')->group(function () {
     Route::post('/translate', [\App\Http\Controllers\Api\TranslationController::class, 'translate']);
     Route::post('/translate/batch', [\App\Http\Controllers\Api\TranslationController::class, 'translateBatch']);
     
+    // PayPal Callbacks (public - PayPal calls these)
+    Route::get('/paypal/success', [\App\Http\Controllers\Api\PayPalController::class, 'handleSuccess'])->name('api.paypal.success');
+    Route::get('/paypal/cancel', [\App\Http\Controllers\Api\PayPalController::class, 'handleCancel'])->name('api.paypal.cancel');
+    
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {
         // Auth
