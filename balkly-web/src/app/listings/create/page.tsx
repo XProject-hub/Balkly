@@ -254,7 +254,7 @@ export default function CreateListingPage() {
         console.log("Creating order for listing:", listingId, "with plan:", selectedPlan.id);
         
         try {
-          const orderResponse = await fetch("/api/v1/orders/listings", {
+          const orderResponse = await fetch("/api/v1/paypal/checkout", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -263,6 +263,7 @@ export default function CreateListingPage() {
             body: JSON.stringify({
               listing_id: listingId,
               plan_id: selectedPlan.id,
+              amount: selectedPlan.price,
             }),
           });
 
@@ -272,9 +273,10 @@ export default function CreateListingPage() {
             const orderData = await orderResponse.json();
             console.log("Order data:", orderData);
             
-            // Redirect to Stripe Checkout
-            if (orderData.checkout_url) {
-              window.location.href = orderData.checkout_url;
+            // Redirect to PayPal Checkout
+            if (orderData.approval_url) {
+              console.log("Redirecting to PayPal...");
+              window.location.href = orderData.approval_url;
             } else {
               alert("Payment processing error. Listing created but not promoted.");
               window.location.href = `/dashboard/listings`;
