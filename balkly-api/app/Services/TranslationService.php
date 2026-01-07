@@ -10,7 +10,7 @@ class TranslationService
     /**
      * Translate text to target language using FREE MyMemory API
      */
-    public function translate(string $text, string $targetLang, string $sourceLang = 'auto'): ?string
+    public function translate(string $text, string $targetLang, string $sourceLang = 'bs'): ?string
     {
         // Cache key
         $cacheKey = "translation_" . md5($text . $targetLang);
@@ -21,19 +21,18 @@ class TranslationService
         }
         
         try {
-            // Auto-detect source language if not specified
-            if ($sourceLang === 'auto') {
-                // MyMemory auto-detects if we don't specify source
-                // Use generic langpair for auto-detection
-                $langpair = 'auto|' . $this->mapLanguageCode($targetLang);
-            } else {
-                $langpair = $this->mapLanguageCode($sourceLang) . '|' . $this->mapLanguageCode($targetLang);
+            $source = $this->mapLanguageCode($sourceLang);
+            $target = $this->mapLanguageCode($targetLang);
+            
+            // Don't translate if source and target are the same
+            if ($source === $target) {
+                return $text;
             }
             
             // MyMemory Free Translation API (no API key needed!)
             $response = Http::timeout(10)->get('https://api.mymemory.translated.net/get', [
                 'q' => substr($text, 0, 500), // Max 500 bytes
-                'langpair' => $langpair,
+                'langpair' => $source . '|' . $target,
             ]);
             
             \Log::info('Translation request', [

@@ -40,6 +40,11 @@ async function translatePage(targetLang: string) {
     return;
   }
   
+  // Determine source language from current page content
+  // Homepage has Balkly (bs/sr/hr) content, so source is 'balkly'
+  const currentPageLang = localStorage.getItem('language') || 'en';
+  const sourceLang = currentPageLang === 'balkly' ? 'en' : 'balkly'; // Translate FROM opposite language
+  
   // Collect text elements
   const selectors = 'h1, h2, h3, h4, h5, h6, p, span, label, button, a';
   const elements = document.querySelectorAll(selectors);
@@ -66,6 +71,7 @@ async function translatePage(targetLang: string) {
         body: JSON.stringify({
           texts: textsToTranslate.slice(0, 100),
           target: targetLang,
+          source: sourceLang, // Send source language
         }),
       });
       

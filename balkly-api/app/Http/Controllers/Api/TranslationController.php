@@ -46,16 +46,20 @@ class TranslationController extends Controller
             'texts' => 'required|array|max:100',
             'texts.*' => 'required|string|max:5000',
             'target' => 'required|string|in:en,balkly,ar',
+            'source' => 'nullable|string|in:en,balkly,ar,bs',
         ]);
 
+        $source = $validated['source'] ?? 'bs'; // Default source is Balkly content
         $translations = [];
+        
         foreach ($validated['texts'] as $key => $text) {
-            $translations[$key] = $this->translator->translate($text, $validated['target']) ?? $text;
+            $translations[$key] = $this->translator->translate($text, $validated['target'], $source) ?? $text;
         }
 
         return response()->json([
             'translations' => $translations,
             'target_language' => $validated['target'],
+            'source_language' => $source,
         ]);
     }
 }
