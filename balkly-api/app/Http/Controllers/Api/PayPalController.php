@@ -115,17 +115,26 @@ class PayPalController extends Controller
                 
                 if ($listing && isset($metadata['plan_id'])) {
                     $planDurations = [
-                        2 => 30, // Standard
-                        3 => 30, // Featured
-                        4 => 7,  // Boost
+                        2 => 30, // Standard - 30 days
+                        3 => 30, // Featured - 30 days
+                        4 => 7,  // Boost - 7 days
                     ];
                     
                     $days = $planDurations[$metadata['plan_id']] ?? 30;
                     
                     $listing->update([
-                        'is_featured' => $metadata['plan_id'] == 3,
-                        'is_boosted' => $metadata['plan_id'] == 4,
+                        'is_featured' => $metadata['plan_id'] == 3,  // Only Featured gets this
+                        'is_boosted' => $metadata['plan_id'] == 4,   // Only Boost gets this
+                        'is_promoted' => in_array($metadata['plan_id'], [2, 3, 4]), // All paid plans
                         'featured_until' => now()->addDays($days),
+                        'status' => 'active', // Ensure it's active
+                    ]);
+                    
+                    \Log::info('Listing promoted', [
+                        'listing_id' => $listing->id,
+                        'plan' => $metadata['plan_id'],
+                        'is_featured' => $listing->is_featured,
+                        'is_boosted' => $listing->is_boosted,
                     ]);
                 }
                 
