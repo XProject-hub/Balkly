@@ -50,21 +50,45 @@
   }
 }
 
-/* Improve Light Mode Input Visibility */
-input:not(.dark input),
-textarea:not(.dark textarea),
-select:not(.dark select) {
-  border-color: rgb(209 213 219);
-  background-color: white;
-  color: rgb(17 24 39);
-}
+/* Light Mode - Better Visibility */
+@layer components {
+  /* Inputs and Form Fields */
+  :root:not(.dark) input,
+  :root:not(.dark) textarea,
+  :root:not(.dark) select {
+    border: 1.5px solid rgb(209 213 219);
+    background-color: white;
+    color: rgb(17 24 39);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  }
 
-input:not(.dark input):focus,
-textarea:not(.dark textarea):focus,
-select:not(.dark select):focus {
-  border-color: hsl(var(--primary));
-  outline: none;
-  box-shadow: 0 0 0 3px hsla(var(--primary), 0.1);
+  :root:not(.dark) input:focus,
+  :root:not(.dark) textarea:focus,
+  :root:not(.dark) select:focus {
+    border-color: hsl(var(--primary));
+    outline: none;
+    box-shadow: 0 0 0 3px hsla(var(--primary), 0.15), 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  }
+  
+  /* Cards - Stronger borders and shadows */
+  :root:not(.dark) .card,
+  :root:not(.dark) [class*="rounded-lg"] {
+    border: 1.5px solid rgb(229 231 235);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  }
+  
+  /* Category Cards */
+  :root:not(.dark) .bg-white {
+    border: 1.5px solid rgb(229 231 235);
+    box-shadow: 0 2px 4px 0 rgb(0 0 0 / 0.08);
+  }
+  
+  /* Hover effect for cards */
+  :root:not(.dark) .card:hover,
+  :root:not(.dark) .bg-white:hover {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    border-color: rgb(209 213 219);
+  }
 }
 
 @layer base {
