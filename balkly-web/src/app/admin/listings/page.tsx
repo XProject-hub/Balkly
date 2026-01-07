@@ -3,9 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Eye, Check, X } from "lucide-react";
-import PriceDisplay from "@/components/PriceDisplay";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowLeft, Trash2, Eye, Edit, CheckCircle, XCircle, Clock } from "lucide-react";
 
 export default function AdminListingsPage() {
   const [listings, setListings] = useState<any[]>([]);
@@ -19,7 +18,7 @@ export default function AdminListingsPage() {
   const loadListings = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/v1/listings", {
+      const response = await fetch(`/api/v1/listings?per_page=50&status=${filter === 'all' ? '' : filter}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
@@ -33,9 +32,42 @@ export default function AdminListingsPage() {
     }
   };
 
+  const handleDelete = async (id: number, title: string) => {
+    if (!confirm(`Delete listing: "${title}"?\n\nThis cannot be undone!`)) return;
+
+    try {
+      await fetch(`/api/v1/listings/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      alert("Listing deleted");
+      loadListings();
+    } catch (error) {
+      alert("Failed to delete listing");
+    }
+  };
+
+  const handleApprove = async (id: number) => {
+    try {
+      await fetch(`/api/v1/admin/content/approve`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({ type: "listing", id, action: "approve" }),
+      });
+      loadListings();
+    } catch (error) {
+      alert("Failed to approve");
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-mist-50">
-      <div className="text-white py-8" style={{background: 'linear-gradient(135deg, #0F172A 0%, #111827 100%)'}}>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-8 border-b border-gray-700">
         <div className="container mx-auto px-4">
           <Link href="/admin">
             <Button variant="secondary" size="sm" className="mb-2">
@@ -43,68 +75,116 @@ export default function AdminListingsPage() {
               Admin Dashboard
             </Button>
           </Link>
-          <h1 className="text-4xl font-bold mb-2">All Listings</h1>
-          <p className="text-lg opacity-90">View and manage platform listings</p>
+          <h1 className="text-4xl font-bold mb-2">Listings Management</h1>
+          <p className="text-lg opacity-90">Manage all platform listings</p>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        {/* Filter Tabs */}
-        <div className="flex gap-2 mb-6">
-          <Button variant={filter === "all" ? "default" : "outline"} onClick={() => setFilter("all")}>
+      <div className="container mx-auto px-4 py-8">
+        {/* Filters */}
+        <div className="flex gap-4 mb-6">
+          <Button 
+            variant={filter === 'all' ? 'default' : 'outline'}
+            onClick={() => setFilter('all')}
+          >
             All ({listings.length})
           </Button>
-          <Button variant={filter === "active" ? "default" : "outline"} onClick={() => setFilter("active")}>
-            Active ({listings.filter(l => l.status === 'active').length})
+          <Button 
+            variant={filter === 'active' ? 'default' : 'outline'}
+            onClick={() => setFilter('active')}
+          >
+            Active
           </Button>
-          <Button variant={filter === "pending" ? "default" : "outline"} onClick={() => setFilter("pending")}>
-            Pending ({listings.filter(l => l.status === 'pending_review').length})
+          <Button 
+            variant={filter === 'pending' ? 'default' : 'outline'}
+            onClick={() => setFilter('pending')}
+          >
+            Pending
+          </Button>
+          <Button 
+            variant={filter === 'rejected' ? 'default' : 'outline'}
+            onClick={() => setFilter('rejected')}
+          >
+            Rejected
           </Button>
         </div>
 
+        {/* Listings Table */}
         {loading ? (
-          <p>Loading...</p>
+          <div className="text-center py-12">
+            <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+          </div>
         ) : listings.length === 0 ? (
-          <Card className="bg-white">
-            <CardContent className="py-12 text-center">
-              <p className="text-gray-600">No listings yet</p>
-            </CardContent>
-          </Card>
+          <div className="text-center py-12">
+            <p className="text-gray-600 dark:text-gray-400">No listings found</p>
+          </div>
         ) : (
           <div className="space-y-4">
-            {listings.filter(l => filter === "all" || l.status === filter || (filter === "pending" && l.status === "pending_review")).map((listing) => (
-              <Card key={listing.id} className="bg-white">
+            {listings.map((listing) => (
+              <Card key={listing.id} className="bg-white dark:bg-gray-900 border dark:border-gray-800">
                 <CardContent className="p-6">
-                  <div className="flex gap-4">
-                    <div className="w-32 h-32 bg-gray-100 rounded-lg flex-shrink-0">
-                      {listing.media?.[0] && (
-                        <img src={listing.media[0].url} alt={listing.title} className="w-full h-full object-cover rounded-lg" />
-                      )}
-                    </div>
+                  <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <h3 className="font-bold text-lg text-gray-900">{listing.title}</h3>
-                      <p className="text-sm text-gray-600 line-clamp-2 mt-1">{listing.description}</p>
-                      <div className="flex gap-4 mt-3 text-sm">
-                        {listing.price ? (
-                          <PriceDisplay
-                            amount={listing.price}
-                            currency={listing.currency || 'EUR'}
-                            className="font-bold text-balkly-blue"
-                          />
-                        ) : (
-                          <span className="font-bold text-balkly-blue">Contact</span>
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                          {listing.title}
+                        </h3>
+                        {listing.status === 'active' && (
+                          <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded text-xs font-medium">
+                            Active
+                          </span>
                         )}
-                        <span className="text-gray-500">{listing.city}</span>
-                        <span className={`px-2 py-1 rounded-full text-xs ${
-                          listing.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {listing.status.toUpperCase()}
-                        </span>
+                        {listing.status === 'pending' && (
+                          <span className="px-2 py-0.5 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 rounded text-xs font-medium">
+                            Pending
+                          </span>
+                        )}
+                        {listing.status === 'rejected' && (
+                          <span className="px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded text-xs font-medium">
+                            Rejected
+                          </span>
+                        )}
                       </div>
+                      
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        ID: {listing.id} | Category: {listing.category?.name} | 
+                        User: {listing.user?.name} | 
+                        Price: €{listing.price?.toLocaleString('de-DE')}
+                      </p>
+                      
+                      <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">
+                        {listing.description}
+                      </p>
                     </div>
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline" asChild>
-                        <Link href={`/listings/${listing.id}`}><Eye className="h-4 w-4" /></Link>
+
+                    <div className="flex gap-2 ml-4">
+                      <Link href={`/listings/${listing.id}`} target="_blank">
+                        <Button size="sm" variant="outline">
+                          <Eye className="h-4 w-4 mr-2" />
+                          View
+                        </Button>
+                      </Link>
+                      
+                      {listing.status === 'pending' && (
+                        <Button 
+                          size="sm" 
+                          variant="default"
+                          onClick={() => handleApprove(listing.id)}
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Approve
+                        </Button>
+                      )}
+                      
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDelete(listing.id, listing.title)}
+                        className="bg-red-600 hover:bg-red-700"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete
                       </Button>
                     </div>
                   </div>
@@ -117,4 +197,3 @@ export default function AdminListingsPage() {
     </div>
   );
 }
-
