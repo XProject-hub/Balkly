@@ -680,11 +680,12 @@ export default function CreateListingPage() {
                         console.log('💳 Free plan selected');
                         setSelectedPlan(null);
                       }}
-                      className={`p-6 border-2 rounded-lg transition-all cursor-pointer ${
-                        selectedPlan === null
-                          ? "!border-primary !bg-primary/10 shadow-lg"
-                          : "border-gray-700 hover:border-primary/50 hover:shadow-md"
-                      }`}
+                      style={{
+                        borderColor: selectedPlan === null ? '#1E63FF' : '#374151',
+                        backgroundColor: selectedPlan === null ? 'rgba(30, 99, 255, 0.1)' : 'transparent',
+                        boxShadow: selectedPlan === null ? '0 10px 15px -3px rgba(30, 99, 255, 0.3)' : 'none',
+                      }}
+                      className="p-6 border-2 rounded-lg transition-all cursor-pointer"
                     >
                       <h4 className="font-bold text-lg mb-2">Free Listing</h4>
                       <p className="text-3xl font-bold text-primary mb-2">
@@ -703,11 +704,12 @@ export default function CreateListingPage() {
                           console.log('💳 Plan selected:', plan);
                           setSelectedPlan(plan);
                         }}
-                        className={`p-6 border-2 rounded-lg transition-all cursor-pointer ${
-                          selectedPlan?.id === plan.id
-                            ? "!border-primary !bg-primary/10 shadow-lg"
-                            : "border-gray-700 hover:border-primary/50 hover:shadow-md"
-                        }`}
+                        style={{
+                          borderColor: selectedPlan?.id === plan.id ? '#1E63FF' : '#374151',
+                          backgroundColor: selectedPlan?.id === plan.id ? 'rgba(30, 99, 255, 0.1)' : 'transparent',
+                          boxShadow: selectedPlan?.id === plan.id ? '0 10px 15px -3px rgba(30, 99, 255, 0.3)' : 'none',
+                        }}
+                        className="p-6 border-2 rounded-lg transition-all cursor-pointer"
                       >
                         <h4 className="font-bold text-lg mb-2">{plan.name}</h4>
                         <p className="text-3xl font-bold text-primary mb-2">
