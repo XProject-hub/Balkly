@@ -206,22 +206,6 @@ export default function ListingDetailPage() {
     }
   };
 
-  const handleDeleteListing = async () => {
-    if (!confirm('Are you sure you want to delete this listing? This action cannot be undone.')) return;
-    
-    try {
-      await fetch(`/api/v1/listings/${listingId}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-      });
-      router.push('/listings');
-    } catch (error) {
-      alert('Failed to delete listing');
-    }
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-background py-8">
