@@ -128,17 +128,37 @@ export default function ListingDetailPage() {
   };
 
   const handleDeleteListing = async () => {
-    if (!confirm('Are you sure you want to delete this listing? This action cannot be undone.')) return;
+    console.log('🗑️ handleDeleteListing called for listing:', listingId);
+    
+    if (!confirm('Are you sure you want to delete this listing? This action cannot be undone.')) {
+      console.log('🗑️ User cancelled deletion');
+      return;
+    }
+    
+    console.log('🗑️ User confirmed deletion, calling API...');
     
     try {
-      await fetch(`/api/v1/listings/${listingId}`, {
+      const response = await fetch(`/api/v1/listings/${listingId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
       });
-      router.push('/listings');
+      
+      console.log('🗑️ API response status:', response.status);
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('🗑️ Listing deleted:', data);
+        alert('Listing deleted successfully!');
+        router.push('/listings');
+      } else {
+        const errorText = await response.text();
+        console.error('🗑️ Delete failed:', errorText);
+        alert('Failed to delete listing');
+      }
     } catch (error) {
+      console.error('🗑️ Delete error:', error);
       alert('Failed to delete listing');
     }
   };

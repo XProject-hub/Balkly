@@ -33,18 +33,35 @@ export default function AdminListingsPage() {
   };
 
   const handleDelete = async (id: number, title: string) => {
-    if (!confirm(`Delete listing: "${title}"?\n\nThis cannot be undone!`)) return;
+    console.log('🗑️ Admin delete called for listing:', id, title);
+    
+    if (!confirm(`Delete listing: "${title}"?\n\nThis cannot be undone!`)) {
+      console.log('🗑️ Admin cancelled deletion');
+      return;
+    }
+    
+    console.log('🗑️ Admin confirmed, calling API...');
 
     try {
-      await fetch(`/api/v1/listings/${id}`, {
+      const response = await fetch(`/api/v1/listings/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
       });
-      alert("Listing deleted");
-      loadListings();
+      
+      console.log('🗑️ API response:', response.status);
+      
+      if (response.ok) {
+        alert("Listing deleted successfully!");
+        loadListings();
+      } else {
+        const errorText = await response.text();
+        console.error('🗑️ Failed:', errorText);
+        alert("Failed to delete listing");
+      }
     } catch (error) {
+      console.error('🗑️ Error:', error);
       alert("Failed to delete listing");
     }
   };
