@@ -35,6 +35,8 @@ class PayPalController extends Controller
             'buyer_id' => auth()->id(),
             'seller_id' => $listing->user_id,
             'listing_id' => $listing->id,
+            'subtotal' => $validated['amount'],
+            'tax' => 0,
             'total' => $validated['amount'],
             'currency' => env('PAYPAL_CURRENCY', 'EUR'),
             'payment_method' => 'paypal',
