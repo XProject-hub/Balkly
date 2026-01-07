@@ -672,6 +672,20 @@ export default function CreateListingPage() {
                   <p className="text-sm text-muted-foreground mb-4">
                     Boost your listing visibility with a premium plan, or continue with basic free listing.
                   </p>
+                  {selectedPlan && (
+                    <div className="mb-4 p-3 bg-green-100 dark:bg-green-900/30 border-2 border-green-500 rounded-lg">
+                      <p className="text-green-800 dark:text-green-300 font-bold">
+                        ✓ Selected: {selectedPlan.name} - €{selectedPlan.price} ({selectedPlan.duration_days} days)
+                      </p>
+                    </div>
+                  )}
+                  {selectedPlan === null && (
+                    <div className="mb-4 p-3 bg-blue-100 dark:bg-blue-900/30 border-2 border-blue-500 rounded-lg">
+                      <p className="text-blue-800 dark:text-blue-300 font-bold">
+                        ✓ Selected: Free Listing (No payment required)
+                      </p>
+                    </div>
+                  )}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* Free Plan */}
                     <button
