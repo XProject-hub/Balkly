@@ -73,11 +73,13 @@ async function translatePage(targetLang: string) {
     // - Empty or too short
     // - Is a currency code (EUR, AED, USD, GBP, etc.)
     // - Is only numbers or symbols
+    // - Contains price/currency symbols
     const skipPatterns = [
-      /^(EUR|AED|USD|GBP|BAM|RSD|د\.إ|€|\$|£)$/i,  // Currency codes
+      /^(EUR|AED|USD|GBP|BAM|RSD|EVP|د\.إ|€|\$|£)$/i,  // Currency codes (added EVP)
       /^\d+$/,  // Only numbers
       /^[\d\s\.\,\-]+$/,  // Numbers with formatting
       /^[€\$£د\.إ\d\s\.\,]+$/,  // Prices
+      /(EUR|AED|USD|EVP)/i,  // Contains currency code anywhere
     ];
     
     const shouldSkip = htmlEl.children.length > 0 || 
