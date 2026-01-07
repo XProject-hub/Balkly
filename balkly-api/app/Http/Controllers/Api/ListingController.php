@@ -227,7 +227,14 @@ class ListingController extends Controller
 
     public function destroy($id)
     {
-        $listing = Listing::where('user_id', auth()->id())->findOrFail($id);
+        // Admin can delete any listing, users can only delete their own
+        if (auth()->user()->isAdmin()) {
+            $listing = Listing::findOrFail($id);
+            \Log::info('Admin deleted listing', ['listing_id' => $id, 'admin_id' => auth()->id()]);
+        } else {
+            $listing = Listing::where('user_id', auth()->id())->findOrFail($id);
+        }
+        
         $listing->delete();
 
         return response()->json(['message' => 'Listing deleted successfully']);
