@@ -67,12 +67,15 @@ class TranslationService
     
     /**
      * Map app language codes to translation API codes
+     * IMPORTANT: Use 'bs' (Bosnian) for Balkly to ALWAYS get Latin script, never Cyrillic!
      */
     private function mapLanguageCode(string $code): string
     {
         $map = [
-            'balkly' => 'sr',  // Serbian
+            'balkly' => 'bs',  // Bosnian (LATIN script only, never Cyrillic!)
             'bs' => 'bs',      // Bosnian
+            'sr' => 'bs',      // Serbian → Bosnian (avoid Cyrillic)
+            'hr' => 'bs',      // Croatian → Bosnian (same language)
             'en' => 'en',      // English
             'ar' => 'ar',      // Arabic
             'de' => 'de',      // German
