@@ -52,9 +52,9 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-mist-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       {/* Header */}
-      <div className="text-white py-8" style={{background: 'linear-gradient(135deg, #0F172A 0%, #111827 100%)'}}>
+      <div className="bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-950 dark:to-gray-900 text-white py-8 border-b border-gray-700">
         <div className="container mx-auto px-4">
           <h1 className="text-4xl font-bold mb-2">Admin Dashboard</h1>
           <p className="text-lg opacity-90">Platform overview and management</p>
@@ -64,20 +64,20 @@ export default function AdminDashboardPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-white">
+          <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-700">Total Users</CardTitle>
-              <Users className="h-4 w-4 text-gray-500" />
+              <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">Total Users</CardTitle>
+              <Users className="h-4 w-4 text-gray-500 dark:text-gray-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-900">{stats.total_users?.toLocaleString() || 0}</div>
-              <p className="text-xs text-gray-500">
+              <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.total_users?.toLocaleString() || 0}</div>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 +{stats.new_users_today || 0} today
               </p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white">
+          <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-700">Active Listings</CardTitle>
               <Package className="h-4 w-4 text-gray-500" />
