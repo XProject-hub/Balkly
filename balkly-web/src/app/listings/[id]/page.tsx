@@ -16,6 +16,7 @@ import {
   Euro,
   Star,
   Package,
+  Trash2,
 } from "lucide-react";
 import { listingsAPI } from "@/lib/api";
 import FavoriteButton from "@/components/FavoriteButton";
@@ -38,6 +39,18 @@ export default function ListingDetailPage() {
   const [reviews, setReviews] = useState<any[]>([]);
   const [avgRating, setAvgRating] = useState(0);
   const [similarListings, setSimilarListings] = useState<any[]>([]);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData && userData !== 'undefined') {
+      try {
+        setCurrentUser(JSON.parse(userData));
+      } catch (e) {
+        console.error("Failed to parse user:", e);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (listingId) {
@@ -114,6 +127,22 @@ export default function ListingDetailPage() {
     setShowContactModal(true);
   };
 
+  const handleDeleteListing = async () => {
+    if (!confirm('Are you sure you want to delete this listing? This action cannot be undone.')) return;
+    
+    try {
+      await fetch(`/api/v1/listings/${listingId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      router.push('/listings');
+    } catch (error) {
+      alert('Failed to delete listing');
+    }
+  };
+
   const handleSendMessage = async () => {
     if (!contactMessage.trim()) {
       alert("Please enter a message!");
@@ -177,6 +206,22 @@ export default function ListingDetailPage() {
     }
   };
 
+  const handleDeleteListing = async () => {
+    if (!confirm('Are you sure you want to delete this listing? This action cannot be undone.')) return;
+    
+    try {
+      await fetch(`/api/v1/listings/${listingId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      router.push('/listings');
+    } catch (error) {
+      alert('Failed to delete listing');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background py-8">
@@ -210,14 +255,27 @@ export default function ListingDetailPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
-        <Button
-          variant="ghost"
-          className="mb-4"
-          onClick={() => router.push("/listings")}
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Listings
-        </Button>
+        <div className="flex justify-between items-center mb-4">
+          <Button
+            variant="ghost"
+            onClick={() => router.push("/listings")}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Listings
+          </Button>
+          
+          {currentUser?.role === 'admin' && (
+            <Button 
+              variant="destructive" 
+              size="sm"
+              onClick={handleDeleteListing}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete Listing
+            </Button>
+          )}
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
