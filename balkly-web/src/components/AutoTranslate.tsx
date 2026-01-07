@@ -94,7 +94,7 @@ async function translatePage(targetLang: string) {
     }
   });
   
-  // Batch translate in smaller chunks (20 at a time for faster response)
+  // Batch translate ALL texts in chunks
   console.log('🌍 Found', textsToTranslate.length, 'texts to translate');
   
   if (textsToTranslate.length > 0) {
@@ -106,44 +106,57 @@ async function translatePage(targetLang: string) {
     document.body.appendChild(loadingDiv);
     
     try {
-      console.log('🌍 Calling API /api/v1/translate/batch with', Math.min(textsToTranslate.length, 20), 'texts');
-      const response = await fetch('/api/v1/translate/batch', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          texts: textsToTranslate.slice(0, 20), // Only 20 at a time for speed
-          target: targetLang,
-          source: sourceLang,
-        }),
-      });
+      // Translate in batches of 50
+      const batchSize = 50;
+      let translatedCount = 0;
       
-      console.log('🌍 API response status:', response.status);
-      
-      if (response.ok) {
-        const data = await response.json();
-        console.log('🌍 Translation data received:', data);
-        Object.keys(data.translations).forEach((index) => {
-          const idx = Number.parseInt(index, 10);
-          if (elementsMap[idx]) {
-            elementsMap[idx].textContent = data.translations[index];
-          }
-        });
-        console.log(`✅ Translated ${Object.keys(data.translations).length} elements to ${targetLang}`);
+      for (let i = 0; i < textsToTranslate.length; i += batchSize) {
+        const batch = textsToTranslate.slice(i, i + batchSize);
+        console.log(`🌍 Translating batch ${Math.floor(i/batchSize) + 1} (${batch.length} texts)`);
         
-        // Remove loading indicator
-        setTimeout(() => {
+        const response = await fetch('/api/v1/translate/batch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            texts: batch,
+            target: targetLang,
+            source: sourceLang,
+          }),
+        });
+      
+        console.log('🌍 API response status:', response.status);
+        
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Apply translations for this batch
+          Object.keys(data.translations).forEach((index) => {
+            const globalIdx = i + Number.parseInt(index, 10);
+            if (elementsMap[globalIdx]) {
+              elementsMap[globalIdx].textContent = data.translations[index];
+            }
+          });
+          
+          translatedCount += Object.keys(data.translations).length;
+          
+          // Update loading indicator
           const loader = document.getElementById('translation-loading');
-          if (loader) loader.remove();
-        }, 500);
-      } else {
-        console.error('🌍 API response not OK:', await response.text());
-        const loader = document.getElementById('translation-loading');
-        if (loader) {
-          loader.style.background = '#EF4444';
-          loader.textContent = '❌ Translation failed';
-          setTimeout(() => loader.remove(), 2000);
+          if (loader) {
+            loader.textContent = `🌍 Translated ${translatedCount}/${textsToTranslate.length}...`;
+          }
+        } else {
+          console.error('🌍 Batch failed:', await response.text());
         }
       }
+      
+      console.log(`✅ Translation complete! Translated ${translatedCount} elements to ${targetLang}`);
+      
+      // Remove loading indicator
+      setTimeout(() => {
+        const loader = document.getElementById('translation-loading');
+        if (loader) loader.remove();
+      }, 500);
+      
     } catch (error) {
       console.error('🌍 Translation failed:', error);
       const loader = document.getElementById('translation-loading');
