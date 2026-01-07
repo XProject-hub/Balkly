@@ -675,8 +675,12 @@ export default function CreateListingPage() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* Free Plan */}
                     <button
-                      onClick={() => setSelectedPlan(null)}
-                      className={`p-6 border-2 rounded-lg transition-all ${
+                      type="button"
+                      onClick={() => {
+                        console.log('💳 Free plan selected');
+                        setSelectedPlan(null);
+                      }}
+                      className={`p-6 border-2 rounded-lg transition-all cursor-pointer ${
                         selectedPlan === null
                           ? "border-primary bg-primary/5"
                           : "border-border hover:border-primary/50"
@@ -694,8 +698,12 @@ export default function CreateListingPage() {
                     {plans.map((plan) => (
                       <button
                         key={plan.id}
-                        onClick={() => setSelectedPlan(plan)}
-                        className={`p-6 border-2 rounded-lg transition-all ${
+                        type="button"
+                        onClick={() => {
+                          console.log('💳 Plan selected:', plan);
+                          setSelectedPlan(plan);
+                        }}
+                        className={`p-6 border-2 rounded-lg transition-all cursor-pointer ${
                           selectedPlan?.id === plan.id
                             ? "border-primary bg-primary/5"
                             : "border-border hover:border-primary/50"
