@@ -373,30 +373,47 @@ export default function CreateListingPage() {
           <CardContent className="space-y-6">
             {/* Step 1: Category Selection */}
             {currentStep === 1 && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {categories.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => {
-                      setFormData({ ...formData, category_id: category.id });
-                      setSelectedCategory(category);
-                    }}
-                    className={`p-6 border-2 rounded-lg transition-all hover:border-primary hover:shadow-lg ${
-                      formData.category_id === category.id
-                        ? "border-primary bg-primary/5 shadow-lg"
-                        : "border-border"
-                    }`}
-                  >
-                    <div className="mb-4 text-primary">
-                      {getIconComponent(category.icon)}
-                    </div>
-                    <h3 className="font-bold text-lg">{category.name}</h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {category.description}
+              <>
+                {formData.category_id && (
+                  <div className="mb-4 p-4 bg-green-100 dark:bg-green-900/30 border-2 border-green-500 rounded-lg">
+                    <p className="text-green-800 dark:text-green-300 font-bold text-center">
+                      ✓ Selected: {selectedCategory?.name || 'Category selected'}
                     </p>
-                  </button>
-                ))}
-              </div>
+                  </div>
+                )}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {categories.map((category) => (
+                    <button
+                      key={category.id}
+                      type="button"
+                      onClick={() => {
+                        console.log('📁 Category selected:', category.name);
+                        setFormData({ ...formData, category_id: category.id });
+                        setSelectedCategory(category);
+                      }}
+                      style={{
+                        borderColor: formData.category_id === category.id ? '#1E63FF' : '#374151',
+                        backgroundColor: formData.category_id === category.id ? 'rgba(30, 99, 255, 0.1)' : 'transparent',
+                        boxShadow: formData.category_id === category.id ? '0 10px 15px -3px rgba(30, 99, 255, 0.3)' : 'none',
+                      }}
+                      className="p-6 border-2 rounded-lg transition-all hover:border-primary hover:shadow-lg relative"
+                    >
+                      {formData.category_id === category.id && (
+                        <div className="absolute top-2 right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                          <span className="text-white font-bold">✓</span>
+                        </div>
+                      )}
+                      <div className="mb-4 text-primary">
+                        {getIconComponent(category.icon)}
+                      </div>
+                      <h3 className="font-bold text-lg">{category.name}</h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {category.description}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              </>
             )}
 
             {/* Step 2: Title, Description, Photos */}
