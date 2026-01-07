@@ -122,6 +122,22 @@ export default function TopicDetailPage() {
     }
   };
 
+  const handleTogglePin = async () => {
+    try {
+      const response = await fetch(`/api/v1/admin/forum/topics/${topicId}/pin`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      const data = await response.json();
+      alert(data.message);
+      loadTopic();
+    } catch (error) {
+      alert('Failed to pin/unpin topic');
+    }
+  };
+
   const handleLike = async (postId?: number) => {
     console.log('=== LIKE DEBUG ===');
     console.log('postId:', postId);
@@ -280,15 +296,26 @@ export default function TopicDetailPage() {
             </Button>
             
             {currentUser?.role === 'admin' && (
-              <Button 
-                variant="destructive" 
-                size="sm"
-                onClick={handleDeleteTopic}
-                className="bg-red-600 hover:bg-red-700"
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                Delete Topic
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  variant={topic?.is_sticky ? "secondary" : "default"}
+                  size="sm"
+                  onClick={handleTogglePin}
+                  className={topic?.is_sticky ? "bg-amber-600 hover:bg-amber-700" : ""}
+                >
+                  <Pin className="mr-2 h-4 w-4" />
+                  {topic?.is_sticky ? 'Unpin' : 'Pin'}
+                </Button>
+                <Button 
+                  variant="destructive" 
+                  size="sm"
+                  onClick={handleDeleteTopic}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete Topic
+                </Button>
+              </div>
             )}
           </div>
           
