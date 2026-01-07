@@ -240,6 +240,12 @@ Route::prefix('v1')->group(function () {
             Route::delete('/forum/topics/{id}', [ForumController::class, 'deleteTopic']);
             Route::delete('/forum/posts/{id}', [ForumController::class, 'deletePost']);
             
+            // Event Admin - Delete Events
+            Route::delete('/events/{id}', [\App\Http\Controllers\Api\EventController::class, 'destroy']);
+            
+            // Listing Admin - Delete Listings
+            Route::delete('/listings/{id}', [ListingController::class, 'destroy']);
+            
             // Visitor Details - Real-time (unique by IP, last 5 min)
             Route::get('/visits', function(Request $request) {
                 // Get unique visitors from last 5 minutes, grouped by IP
