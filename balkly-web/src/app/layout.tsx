@@ -69,7 +69,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <TrackingScript />
-        {/* <AutoTranslate /> - DISABLED: Slows down page, will implement better later */}
+        <AutoTranslate />
         <Header />
         <main>{children}</main>
         <Footer />
