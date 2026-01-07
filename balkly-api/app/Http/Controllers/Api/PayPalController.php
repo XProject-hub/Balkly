@@ -102,9 +102,9 @@ class PayPalController extends Controller
             $capture = $this->paypal->captureOrder($paypalOrderId);
             
             if ($capture['status'] === 'COMPLETED') {
-                // Update order
+                // Update order status to 'paid'
                 $order->update([
-                    'status' => 'completed',
+                    'status' => 'paid',
                     'payment_id' => $capture['transaction_id'],
                     'paid_at' => now(),
                 ]);
