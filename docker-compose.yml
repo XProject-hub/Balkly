@@ -121,11 +121,11 @@ services:
     networks:
       - balkly
     healthcheck:
-      test: ["CMD", "php", "-v"]
-      interval: 10s
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/categories"]
+      interval: 30s
       timeout: 5s
-      retries: 5
-    command: sh -c "sleep infinity"
+      retries: 3
+    command: sh -c "php artisan serve --host=0.0.0.0 --port=8000"
 
   queue:
     build:
