@@ -14,6 +14,7 @@ import {
   Share2,
   Plus,
   Minus,
+  Trash2,
 } from "lucide-react";
 import { eventsAPI } from "@/lib/api";
 import { trackAffiliateClick } from "@/lib/platinumlist";
@@ -27,6 +28,18 @@ export default function EventDetailPage() {
   const [loading, setLoading] = useState(true);
   const [selectedTickets, setSelectedTickets] = useState<Record<number, number>>({});
   const [purchasing, setPurchasing] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData && userData !== 'undefined') {
+      try {
+        setCurrentUser(JSON.parse(userData));
+      } catch (e) {
+        console.error("Failed to parse user:", e);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (eventId) {
@@ -65,6 +78,22 @@ export default function EventDetailPage() {
     }, 0);
   };
 
+  const handleDeleteEvent = async () => {
+    if (!confirm('Are you sure you want to delete this event? This action cannot be undone.')) return;
+    
+    try {
+      await fetch(`/api/v1/admin/events/${eventId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      router.push('/events');
+    } catch (error) {
+      alert('Failed to delete event');
+    }
+  };
+
   const handlePurchase = async () => {
     setPurchasing(true);
     
@@ -72,7 +101,7 @@ export default function EventDetailPage() {
       const ticketsArray = Object.entries(selectedTickets)
         .filter(([_, quantity]) => quantity > 0)
         .map(([ticketId, quantity]) => ({
-          ticket_id: parseInt(ticketId),
+          ticket_id: Number.parseInt(ticketId, 10),
           quantity,
         }));
 
@@ -139,6 +168,21 @@ export default function EventDetailPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Admin Delete Button */}
+      {currentUser?.role === 'admin' && (
+        <div className="container mx-auto px-4 pt-4">
+          <Button 
+            variant="destructive" 
+            size="sm"
+            onClick={handleDeleteEvent}
+            className="bg-red-600 hover:bg-red-700"
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            Delete Event
+          </Button>
+        </div>
+      )}
+      
       {/* Hero Image */}
       <div className="relative h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:from-primary/10 dark:to-gray-900">
         {event.image_url ? (
