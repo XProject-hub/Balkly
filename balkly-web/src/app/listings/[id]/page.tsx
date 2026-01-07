@@ -138,7 +138,9 @@ export default function ListingDetailPage() {
     console.log('🗑️ User confirmed deletion, calling API...');
     
     try {
-      const response = await fetch(`/api/v1/listings/${listingId}`, {
+      // Use full URL to bypass Next.js routing
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || window.location.origin + '/api/v1';
+      const response = await fetch(`${API_URL}/listings/${listingId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
