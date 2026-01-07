@@ -682,8 +682,8 @@ export default function CreateListingPage() {
                       }}
                       className={`p-6 border-2 rounded-lg transition-all cursor-pointer ${
                         selectedPlan === null
-                          ? "border-primary bg-primary/5"
-                          : "border-border hover:border-primary/50"
+                          ? "!border-primary !bg-primary/10 shadow-lg"
+                          : "border-gray-700 hover:border-primary/50 hover:shadow-md"
                       }`}
                     >
                       <h4 className="font-bold text-lg mb-2">Free Listing</h4>
@@ -705,8 +705,8 @@ export default function CreateListingPage() {
                         }}
                         className={`p-6 border-2 rounded-lg transition-all cursor-pointer ${
                           selectedPlan?.id === plan.id
-                            ? "border-primary bg-primary/5"
-                            : "border-border hover:border-primary/50"
+                            ? "!border-primary !bg-primary/10 shadow-lg"
+                            : "border-gray-700 hover:border-primary/50 hover:shadow-md"
                         }`}
                       >
                         <h4 className="font-bold text-lg mb-2">{plan.name}</h4>
