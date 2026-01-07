@@ -60,24 +60,33 @@ class PayPalService
         }
         
         try {
-            $response = Http::withToken($token)
-                ->post("{$this->baseUrl}/v2/checkout/orders", [
-                    'intent' => 'CAPTURE',
-                    'purchase_units' => [[
-                        'amount' => [
-                            'currency_code' => $currency,
-                            'value' => number_format($amount, 2, '.', ''),
-                        ],
-                        'description' => $description,
-                    ]],
-                    'application_context' => [
-                        'brand_name' => 'Balkly',
-                        'landing_page' => 'BILLING',
-                        'user_action' => 'PAY_NOW',
-                        'return_url' => $returnUrl,
-                        'cancel_url' => $cancelUrl,
+            $orderData = [
+                'intent' => 'CAPTURE',
+                'purchase_units' => [[
+                    'amount' => [
+                        'currency_code' => $currency,
+                        'value' => number_format($amount, 2, '.', ''),
                     ],
-                ]);
+                    'description' => substr($description, 0, 127), // Max 127 chars
+                ]],
+                'application_context' => [
+                    'brand_name' => 'Balkly',
+                    'landing_page' => 'BILLING',
+                    'user_action' => 'PAY_NOW',
+                    'return_url' => $returnUrl,
+                    'cancel_url' => $cancelUrl,
+                ],
+            ];
+            
+            Log::info('PayPal Order Request', $orderData);
+            
+            $response = Http::withToken($token)
+                ->post("{$this->baseUrl}/v2/checkout/orders", $orderData);
+            
+            Log::info('PayPal Order Response', [
+                'status' => $response->status(),
+                'body' => $response->json(),
+            ]);
             
             if ($response->successful()) {
                 $data = $response->json();
@@ -92,8 +101,11 @@ class PayPalService
                 ];
             }
             
-            Log::error('PayPal create order failed', ['response' => $response->json()]);
-            throw new \Exception('Failed to create PayPal order');
+            Log::error('PayPal create order failed', [
+                'status' => $response->status(),
+                'response' => $response->json()
+            ]);
+            throw new \Exception('PayPal API error: ' . json_encode($response->json()));
             
         } catch (\Exception $e) {
             Log::error('PayPal order error: ' . $e->getMessage());
