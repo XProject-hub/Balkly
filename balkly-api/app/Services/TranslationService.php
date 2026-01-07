@@ -7,17 +7,10 @@ use Illuminate\Support\Facades\Cache;
 
 class TranslationService
 {
-    private $apiKey;
-    
-    public function __construct()
-    {
-        $this->apiKey = env('GOOGLE_TRANSLATE_API_KEY');
-    }
-    
     /**
-     * Translate text to target language
+     * Translate text to target language using FREE MyMemory API
      */
-    public function translate(string $text, string $targetLang, string $sourceLang = 'auto'): ?string
+    public function translate(string $text, string $targetLang, string $sourceLang = 'en'): ?string
     {
         // Cache key
         $cacheKey = "translation_" . md5($text . $targetLang);
@@ -28,18 +21,17 @@ class TranslationService
         }
         
         try {
-            $response = Http::get('https://translation.googleapis.com/language/translate/v2', [
-                'key' => $this->apiKey,
+            // MyMemory Free Translation API (no API key needed!)
+            $response = Http::get('https://api.mymemory.translated.net/get', [
                 'q' => $text,
-                'target' => $this->mapLanguageCode($targetLang),
-                'format' => 'text',
+                'langpair' => $sourceLang . '|' . $this->mapLanguageCode($targetLang),
             ]);
             
-            if ($response->successful()) {
-                $translatedText = $response->json()['data']['translations'][0]['translatedText'];
+            if ($response->successful() && $response->json()['responseStatus'] == 200) {
+                $translatedText = $response->json()['responseData']['translatedText'];
                 
-                // Cache for 7 days
-                Cache::put($cacheKey, $translatedText, now()->addDays(7));
+                // Cache for 30 days
+                Cache::put($cacheKey, $translatedText, now()->addDays(30));
                 
                 return $translatedText;
             }
@@ -47,18 +39,21 @@ class TranslationService
             \Log::error('Translation failed: ' . $e->getMessage());
         }
         
-        return null;
+        // Fallback to original text
+        return $text;
     }
     
     /**
-     * Map app language codes to Google Translate codes
+     * Map app language codes to translation API codes
      */
     private function mapLanguageCode(string $code): string
     {
         $map = [
-            'balkly' => 'sr', // Serbian (Cyrillic/Latin)
-            'en' => 'en',
-            'ar' => 'ar',
+            'balkly' => 'sr',  // Serbian
+            'bs' => 'bs',      // Bosnian
+            'en' => 'en',      // English
+            'ar' => 'ar',      // Arabic
+            'de' => 'de',      // German
         ];
         
         return $map[$code] ?? $code;
