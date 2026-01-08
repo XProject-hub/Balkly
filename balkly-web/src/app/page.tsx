@@ -289,10 +289,25 @@ export default function HomePage() {
                         <Package className="h-16 w-16 text-muted-foreground/50" />
                       </div>
                     )}
-                    <div className="absolute top-3 right-3 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                      <Star className="h-3 w-3 fill-current" />
-                      FEATURED
-                    </div>
+                    {/* Badge based on plan type */}
+                    {listing.is_featured && !listing.is_boosted && (
+                      <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
+                        <Star className="h-3 w-3 fill-current" />
+                        FEATURED
+                      </div>
+                    )}
+                    {listing.is_promoted && !listing.is_featured && !listing.is_boosted && (
+                      <div className="absolute top-3 right-3 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
+                        <Star className="h-3 w-3 fill-current" />
+                        STANDARD
+                      </div>
+                    )}
+                    {listing.is_boosted && (
+                      <div className="absolute top-3 right-3 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg animate-pulse">
+                        <TrendingUp className="h-3 w-3" />
+                        BOOSTED
+                      </div>
+                    )}
                   </div>
                   <CardHeader>
                     <CardTitle className="line-clamp-1 group-hover:text-primary transition-colors">
