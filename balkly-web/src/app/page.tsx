@@ -32,7 +32,7 @@ export default function HomePage() {
       // Load ONLY promoted/featured listings (paid plans)
       const listingsRes = await listingsAPI.getAll({ 
         per_page: 6, 
-        is_featured: 1,  // Only featured/promoted listings
+        is_promoted: 1,  // Only promoted listings (Standard, Featured, Boost)
         sort_by: 'created_at', 
         sort_order: 'desc' 
       });

@@ -38,18 +38,14 @@ class ListingController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
         
-        // Filter by promotion status
-        if ($request->filled('is_featured')) {
-            $query->where('is_featured', (bool)$request->is_featured);
-        }
-        
+        // Filter by promotion status (is_promoted = Standard, Featured, or Boosted)
         if ($request->filled('is_promoted')) {
             $query->where('is_promoted', (bool)$request->is_promoted);
         }
 
-        // Sorting - Featured first, then by selected sort
-        if ($request->get('is_featured')) {
-            $query->orderBy('is_featured', 'desc')
+        // Sorting - Promoted first, then by selected sort
+        if ($request->get('is_promoted')) {
+            $query->orderBy('is_promoted', 'desc')
                   ->orderBy('created_at', 'desc');
         } else {
             $sortBy = $request->get('sort_by', 'created_at');
