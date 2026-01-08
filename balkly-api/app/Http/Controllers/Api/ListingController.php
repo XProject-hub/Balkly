@@ -37,11 +37,25 @@ class ListingController extends Controller
         if ($request->filled('max_price')) {
             $query->where('price', '<=', $request->max_price);
         }
+        
+        // Filter by promotion status
+        if ($request->filled('is_featured')) {
+            $query->where('is_featured', (bool)$request->is_featured);
+        }
+        
+        if ($request->filled('is_promoted')) {
+            $query->where('is_promoted', (bool)$request->is_promoted);
+        }
 
-        // Sorting
-        $sortBy = $request->get('sort_by', 'created_at');
-        $sortOrder = $request->get('sort_order', 'desc');
-        $query->orderBy($sortBy, $sortOrder);
+        // Sorting - Featured first, then by selected sort
+        if ($request->get('is_featured')) {
+            $query->orderBy('is_featured', 'desc')
+                  ->orderBy('created_at', 'desc');
+        } else {
+            $sortBy = $request->get('sort_by', 'created_at');
+            $sortOrder = $request->get('sort_order', 'desc');
+            $query->orderBy($sortBy, $sortOrder);
+        }
 
         $listings = $query->paginate($request->get('per_page', 20));
 
