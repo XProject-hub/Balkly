@@ -130,7 +130,7 @@ export default function Footer() {
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-400">
           <p>&copy; {new Date().getFullYear()} Balkly. All rights reserved.</p>
           <p className="mt-2">
-            Built with ❤️ by NLD | Secure payments powered by Stripe
+            Built with ❤️ by NLD | Secure payments powered by PayPal
           </p>
         </div>
       </div>
