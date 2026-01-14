@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { MessageCircle, Plus, Pin, Eye, Lock, CheckCircle } from "lucide-react";
 import { forumAPI } from "@/lib/api";
+import AdBanner from "@/components/AdBanner";
 
 export default function ForumPage() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -74,6 +75,9 @@ export default function ForumPage() {
           </div>
         </div>
       </div>
+
+      {/* Ad Banner - Forum Top */}
+      <AdBanner position="forum_top" className="max-w-[1400px] mx-auto px-6 pt-6" />
 
       {/* XenForo Style Main Layout */}
       <div className="max-w-[1400px] mx-auto px-6 py-6">

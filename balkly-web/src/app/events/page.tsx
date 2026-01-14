@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, MapPin, Clock, Ticket, Plus, Filter } from "lucide-react";
 import { eventsAPI } from "@/lib/api";
+import AdBanner from "@/components/AdBanner";
 
 export default function EventsPage() {
   const [events, setEvents] = useState<any[]>([]);
@@ -79,6 +80,9 @@ export default function EventsPage() {
           </div>
         </div>
       </div>
+
+      {/* Ad Banner - Events Top */}
+      <AdBanner position="events_top" className="container mx-auto px-4 py-4" />
 
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

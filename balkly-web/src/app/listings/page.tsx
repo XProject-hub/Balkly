@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Search, Filter, MapPin, Plus, Map } from "lucide-react";
 import { listingsAPI, categoriesAPI } from "@/lib/api";
 import PriceDisplay from "@/components/PriceDisplay";
+import AdBanner from "@/components/AdBanner";
 
 export default function ListingsPage() {
   const [listings, setListings] = useState<any[]>([]);
@@ -100,10 +101,13 @@ export default function ListingsPage() {
         </div>
       </div>
 
+      {/* Ad Banner - Listings Top */}
+      <AdBanner position="listings_top" className="container mx-auto px-4 py-4" />
+
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Sidebar Filters */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-4">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -342,6 +346,9 @@ export default function ListingsPage() {
                 </Button>
               </CardContent>
             </Card>
+            
+            {/* Sidebar Ad Banner */}
+            <AdBanner position="listings_sidebar" className="hidden lg:block" />
           </div>
 
           {/* Listings Grid */}
