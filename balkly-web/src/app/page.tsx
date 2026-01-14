@@ -163,9 +163,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Ad Banner - Homepage Top */}
-      <AdBanner position="homepage_top" className="container mx-auto px-4 py-4" />
-
       {/* Categories Section */}
       <section className="py-20 bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4">
@@ -265,6 +262,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Ad Banner - After Categories */}
+      <AdBanner position="homepage_top" className="py-6 bg-gray-50 dark:bg-gray-800" />
+
       {/* Featured Listings Section */}
       <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto px-4">
@@ -278,9 +278,6 @@ export default function HomePage() {
             </Button>
           </div>
           
-          <div className="flex gap-6">
-          {/* Main Content */}
-          <div className="flex-1">
           {featuredListings.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Package className="h-16 w-16 mx-auto mb-3 opacity-20" />
@@ -353,13 +350,6 @@ export default function HomePage() {
               ))}
             </div>
           )}
-          </div>
-          
-          {/* Sidebar Ad Banner */}
-          <div className="hidden lg:block w-72 flex-shrink-0">
-            <AdBanner position="homepage_sidebar" className="sticky top-32" />
-          </div>
-          </div>
         </div>
       </section>
 
@@ -436,6 +426,9 @@ export default function HomePage() {
           )}
         </div>
       </section>
+
+      {/* Ad Banner - Middle of page */}
+      <AdBanner position="homepage_middle" className="py-8 bg-white dark:bg-gray-900" />
 
       {/* Trending Forum Section */}
       <section className="py-20 bg-gray-50 dark:bg-gray-800">
