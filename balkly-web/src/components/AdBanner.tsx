@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+
 interface AdBannerProps {
   position: string;
   className?: string;
@@ -16,13 +18,13 @@ export default function AdBanner({ position, className = "" }: AdBannerProps) {
 
   const loadBanners = async () => {
     try {
-      const response = await fetch(`/api/v1/banners/${position}`);
+      const response = await fetch(`${API_URL}/banners/${position}`);
       const data = await response.json();
       setBanners(data.banners || []);
       
       // Track impressions
       data.banners?.forEach((banner: any) => {
-        fetch(`/api/v1/banners/${banner.id}/impression`, { method: "POST" });
+        fetch(`${API_URL}/banners/${banner.id}/impression`, { method: "POST" });
       });
     } catch (error) {
       console.error("Failed to load banners:", error);
@@ -30,7 +32,7 @@ export default function AdBanner({ position, className = "" }: AdBannerProps) {
   };
 
   const handleClick = async (banner: any) => {
-    await fetch(`/api/v1/banners/${banner.id}/click`, { method: "POST" });
+    await fetch(`${API_URL}/banners/${banner.id}/click`, { method: "POST" });
     if (banner.link_url) {
       window.open(banner.link_url, banner.open_new_tab ? "_blank" : "_self");
     }

@@ -109,14 +109,25 @@ export default function HomePage() {
               >
                 <Link href="/listings">Browse Listings</Link>
               </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="text-lg px-8 py-6 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 transition-transform border-white font-bold" 
-                asChild
-              >
-                <Link href="/auth/register">Get Started Free</Link>
-              </Button>
+              {!isLoggedIn ? (
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="text-lg px-8 py-6 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 transition-transform border-white font-bold" 
+                  asChild
+                >
+                  <Link href="/auth/register">Get Started Free</Link>
+                </Button>
+              ) : (
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="text-lg px-8 py-6 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 transition-transform border-white font-bold" 
+                  asChild
+                >
+                  <Link href="/dashboard">Go to Dashboard</Link>
+                </Button>
+              )}
             </div>
 
             {/* Search Bar */}
@@ -267,6 +278,9 @@ export default function HomePage() {
             </Button>
           </div>
           
+          <div className="flex gap-6">
+          {/* Main Content */}
+          <div className="flex-1">
           {featuredListings.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Package className="h-16 w-16 mx-auto mb-3 opacity-20" />
@@ -339,6 +353,13 @@ export default function HomePage() {
               ))}
             </div>
           )}
+          </div>
+          
+          {/* Sidebar Ad Banner */}
+          <div className="hidden lg:block w-72 flex-shrink-0">
+            <AdBanner position="homepage_sidebar" className="sticky top-32" />
+          </div>
+          </div>
         </div>
       </section>
 
