@@ -87,18 +87,18 @@ export default function HomePage() {
             
             {/* Balkans Community Heading */}
             <h2 className="text-2xl md:text-3xl font-bold mb-3 text-teal-glow">
-              Ujedinjeni Balkanci u Emiratima
+              United Balkans in the Emirates
             </h2>
             
             {/* Subtitle */}
             <p className="text-lg md:text-xl mb-6 text-white/90 font-medium">
-              Jedna zajednica. Jedna platforma. Bez granica.
+              One community. One platform. No borders.
             </p>
             
             {/* Description */}
             <p className="text-base mb-8 text-white/80 max-w-2xl mx-auto">
-              Kupujte, prodajte i povežite se sa Balkancima širom UAE.
-              Vaša lokalna zajednica u Dubaiju, Abu Dhabiju i šire.
+              Buy, sell, and connect with the Balkans community across the UAE.
+              Your local community in Dubai, Abu Dhabi, and beyond.
             </p>
             <div className="flex gap-4 justify-center flex-wrap mb-12">
               <Button 

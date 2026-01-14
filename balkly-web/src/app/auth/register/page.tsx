@@ -16,7 +16,6 @@ export default function RegisterPage() {
     email: "",
     password: "",
     password_confirmation: "",
-    locale: "en",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -139,20 +138,6 @@ export default function RegisterPage() {
                 className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                 placeholder="••••••••"
               />
-            </div>
-
-            <div>
-              <label htmlFor="register-locale" className="block text-sm font-medium mb-2">Preferred Language</label>
-              <select
-                id="register-locale"
-                value={formData.locale}
-                onChange={(e) => setFormData({ ...formData, locale: e.target.value })}
-                className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
-              >
-                <option value="en">🇬🇧 English</option>
-                <option value="balkly">🇧🇦 Balkly (Bosanski, Srpski, Hrvatski)</option>
-                <option value="ar">🇦🇪 العربية (Arabic)</option>
-              </select>
             </div>
 
             <div className="flex items-start">

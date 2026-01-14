@@ -4,7 +4,6 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import TrackingScript from "@/components/TrackingScript";
-import AutoTranslate from "@/components/AutoTranslate";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -69,7 +68,6 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <TrackingScript />
-        <AutoTranslate />
         <Header />
         <main>{children}</main>
         <Footer />

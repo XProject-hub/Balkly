@@ -19,10 +19,10 @@ export default function Footer() {
               <span className="text-xs font-bold text-white">Balkly Community</span>
             </div>
             <p className="text-sm text-gray-400">
-              Ujedinjeni Balkanci u Emiratima
+              United Balkans in the Emirates
             </p>
             <p className="text-xs text-gray-500 mt-2">
-              Jedna zajednica. Jedna platforma. Bez granica.
+              One community. One platform. No borders.
             </p>
             <div className="flex gap-3 mt-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">

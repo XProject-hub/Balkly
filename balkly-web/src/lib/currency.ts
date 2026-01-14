@@ -105,7 +105,7 @@ export function formatCurrency(
 ): string {
   const symbol = getCurrencySymbol(currency);
   
-  // FORCE de-DE locale: 1.000.000,00 (tačke za hiljade, zarez za decimale)
+  // FORCE de-DE locale: 1.000.000,00 (dots for thousands, comma for decimals)
   const formatted = new Intl.NumberFormat('de-DE', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
