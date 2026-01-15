@@ -50,16 +50,8 @@ class AuthController extends Controller
             event(new Registered($user));
             $user->sendEmailVerificationNotification();
         } catch (\Exception $e) {
-            // Email failed but don't block registration - auto-verify instead
+            // Log email failure but don't auto-verify - user must verify via email
             \Log::warning('Verification email failed: ' . $e->getMessage());
-            $user->email_verified_at = now();
-            $user->save();
-        }
-        
-        // Auto-verify all users for now (email may not be configured)
-        if (!$user->email_verified_at) {
-            $user->email_verified_at = now();
-            $user->save();
         }
 
         // Send welcome email

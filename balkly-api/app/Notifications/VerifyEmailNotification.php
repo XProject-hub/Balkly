@@ -29,6 +29,7 @@ class VerifyEmailNotification extends Notification implements ShouldQueue
         $verificationUrl = $this->verificationUrl($notifiable);
 
         return (new MailMessage)
+            ->from('info@balkly.live', 'Balkly')
             ->subject('Verify Your Email Address - Balkly')
             ->greeting('Hello ' . $notifiable->name . '!')
             ->line('Welcome to Balkly! Please verify your email address to get started.')
