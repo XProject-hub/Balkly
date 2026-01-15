@@ -1,27 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, CheckCircle, AlertCircle } from "lucide-react";
+import { Mail, CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
+  
+  const email = searchParams.get("email") || "";
+  const isNewRegistration = searchParams.get("registered") === "true";
 
   const handleResend = async () => {
+    if (!email) {
+      setStatus("error");
+      setMessage("No email address provided. Please try registering again.");
+      return;
+    }
+
     setLoading(true);
     try {
-      const response = await fetch("/api/v1/auth/send-verification", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.balkly.live'}/api/v1/auth/resend-verification`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({ email }),
       });
 
       if (response.ok) {
@@ -52,39 +62,50 @@ export default function VerifyEmailPage() {
               <Mail className="h-8 w-8 text-primary" />
             )}
           </div>
-          <CardTitle className="text-2xl">Verify Your Email</CardTitle>
+          <CardTitle className="text-2xl">
+            {isNewRegistration ? "Registration Successful!" : "Verify Your Email"}
+          </CardTitle>
           <CardDescription>
-            {status === "idle" && "We've sent a verification link to your email address"}
+            {status === "idle" && (
+              <>
+                {isNewRegistration 
+                  ? "We've sent a verification link to your email address."
+                  : "Please verify your email to continue."}
+              </>
+            )}
             {status === "success" && message}
             {status === "error" && message}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {email && (
+            <div className="bg-muted/50 px-4 py-3 rounded-lg text-center">
+              <p className="text-sm text-muted-foreground mb-1">Verification email sent to:</p>
+              <p className="font-medium">{email}</p>
+            </div>
+          )}
+
           {status === "idle" && (
             <>
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 px-4 py-3 rounded-lg">
+                <p className="text-sm text-blue-700 dark:text-blue-300">
+                  <strong>Important:</strong> You must verify your email before you can log in.
+                  Click the link in the email we sent you.
+                </p>
+              </div>
+
               <p className="text-sm text-muted-foreground text-center">
-                Click the link in the email to verify your account. If you didn't receive the email, you can request a new one.
+                Didn't receive the email? Check your spam folder or request a new one.
               </p>
 
               <Button
                 onClick={handleResend}
-                disabled={loading}
+                disabled={loading || !email}
                 className="w-full"
                 variant="outline"
               >
                 {loading ? "Sending..." : "Resend Verification Email"}
               </Button>
-              
-              <p className="text-xs text-center text-muted-foreground">
-                Or{" "}
-                <button
-                  onClick={() => window.location.href = "/dashboard"}
-                  className="text-primary hover:underline font-medium"
-                >
-                  skip for now
-                </button>
-                {" "}and verify later
-              </p>
             </>
           )}
 
@@ -93,15 +114,15 @@ export default function VerifyEmailPage() {
               <p className="text-sm text-muted-foreground mb-4">
                 Check your email and click the verification link to continue.
               </p>
-              <Button onClick={() => router.push("/dashboard")} className="w-full">
-                Go to Dashboard
-              </Button>
             </div>
           )}
 
-          <div className="text-center text-sm">
-            <Link href="/dashboard" className="text-primary hover:underline">
-              Skip for now
+          <div className="pt-4 border-t">
+            <Link href="/auth/login">
+              <Button variant="ghost" className="w-full group">
+                Go to Login
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
             </Link>
           </div>
         </CardContent>
@@ -110,3 +131,14 @@ export default function VerifyEmailPage() {
   );
 }
 
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
+      </div>
+    }>
+      <VerifyEmailContent />
+    </Suspense>
+  );
+}

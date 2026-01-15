@@ -54,20 +54,13 @@ class AuthController extends Controller
             \Log::warning('Verification email failed: ' . $e->getMessage());
         }
 
-        // Send welcome email
-        try {
-            $user->notify(new \App\Notifications\WelcomeNotification());
-        } catch (\Exception $e) {
-            \Log::warning('Welcome email failed: ' . $e->getMessage());
-        }
+        // Note: Welcome email will be sent after verification
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
+        // DON'T give token - user must verify email first
         return response()->json([
-            'user' => $user,
-            'token' => $token,
-            'token_type' => 'Bearer',
-            'message' => 'Registration successful! Please check your email to verify your account.',
+            'message' => 'Registration successful! Please check your email to verify your account before logging in.',
+            'email' => $user->email,
+            'requires_verification' => true,
         ], 201);
     }
 
@@ -87,6 +80,15 @@ class AuthController extends Controller
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
+        }
+
+        // Check if email is verified - BLOCK login until verified
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json([
+                'email_not_verified' => true,
+                'email' => $user->email,
+                'message' => 'Please verify your email address before logging in. Check your inbox for the verification link.',
+            ], 403);
         }
 
         // Check if 2FA is enabled
@@ -129,7 +131,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Send email verification notification
+     * Send email verification notification (authenticated user)
      */
     public function sendVerificationEmail(Request $request)
     {
@@ -145,6 +147,41 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Verification email sent',
+        ]);
+    }
+
+    /**
+     * Resend verification email by email address (no auth required)
+     */
+    public function resendVerificationEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            // Don't reveal if email exists
+            return response()->json([
+                'message' => 'If this email is registered, a verification link has been sent.',
+            ]);
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Email already verified. You can login now.',
+            ]);
+        }
+
+        try {
+            $user->sendEmailVerificationNotification();
+        } catch (\Exception $e) {
+            \Log::warning('Resend verification email failed: ' . $e->getMessage());
+        }
+
+        return response()->json([
+            'message' => 'Verification email sent! Please check your inbox.',
         ]);
     }
 

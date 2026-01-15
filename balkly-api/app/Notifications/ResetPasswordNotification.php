@@ -37,6 +37,7 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
         $resetUrl = config('app.url') . '/auth/reset-password?token=' . $this->token . '&email=' . urlencode($notifiable->email);
 
         return (new MailMessage)
+            ->from('info@balkly.live', 'Balkly')
             ->subject('Reset Your Password - Balkly')
             ->greeting('Hello ' . $notifiable->name . '!')
             ->line('You are receiving this email because we received a password reset request for your account.')

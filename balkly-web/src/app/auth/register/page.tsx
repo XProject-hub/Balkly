@@ -32,25 +32,9 @@ export default function RegisterPage() {
     try {
       const response = await authAPI.register(formData);
       
-      // Store token
-      localStorage.setItem("auth_token", response.data.token);
-      
-      // Store user data
-      if (response.data.user) {
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-      }
-      
-      // Trigger auth state update event for Header
-      window.dispatchEvent(new Event('auth-change'));
-      
-      // Check if email is verified (safe check)
-      if (response.data.user && response.data.user.email_verified_at === null) {
-        // Show verification page
-        router.push("/auth/verify-email");
-      } else {
-        // Already verified or no user data, go to dashboard
-        window.location.href = "/dashboard";
-      }
+      // Registration successful - user must verify email before logging in
+      // Redirect to check email page with the email address
+      router.push(`/auth/verify-email?email=${encodeURIComponent(formData.email)}&registered=true`);
     } catch (err: any) {
       console.error("Registration error:", err);
       const errorMsg = err.response?.data?.message || err.response?.data?.errors || "Registration failed. Please try again.";

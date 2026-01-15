@@ -34,6 +34,9 @@ Route::prefix('v1')->group(function () {
     // 2FA Verify - PUBLIC (users verify during login, before they have token)
     Route::post('/auth/2fa/verify', [AuthController::class, 'verify2FA']);
     
+    // Resend verification email - PUBLIC (users can't login to resend)
+    Route::post('/auth/resend-verification', [AuthController::class, 'resendVerificationEmail']);
+    
     // Categories
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{id}/attributes', [CategoryController::class, 'attributes']);

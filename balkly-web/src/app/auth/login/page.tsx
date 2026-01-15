@@ -6,20 +6,46 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { authAPI } from "@/lib/api";
+import { Mail, AlertCircle, CheckCircle } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const [error, setError] = useState("");
+  const [emailNotVerified, setEmailNotVerified] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState("");
+  const [resendSuccess, setResendSuccess] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  const handleResendVerification = async () => {
+    setResending(true);
+    setResendSuccess(false);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.balkly.live'}/api/v1/auth/resend-verification`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: unverifiedEmail }),
+      });
+      if (response.ok) {
+        setResendSuccess(true);
+      }
+    } catch (err) {
+      console.error('Failed to resend verification email');
+    } finally {
+      setResending(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setEmailNotVerified(false);
+    setResendSuccess(false);
 
     try {
       const response = await authAPI.login(formData);
@@ -44,7 +70,14 @@ export default function LoginPage() {
         window.location.href = "/dashboard";
       }, 100);
     } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed. Please try again.");
+      // Check if email is not verified
+      if (err.response?.data?.email_not_verified) {
+        setEmailNotVerified(true);
+        setUnverifiedEmail(err.response.data.email || formData.email);
+        setError("");
+      } else {
+        setError(err.response?.data?.message || "Login failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -62,6 +95,40 @@ export default function LoginPage() {
             {error && (
               <div className="bg-destructive/10 text-destructive px-4 py-3 rounded-lg text-sm">
                 {error}
+              </div>
+            )}
+
+            {/* Email Not Verified Warning */}
+            {emailNotVerified && (
+              <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 px-4 py-4 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <Mail className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h4 className="font-medium text-amber-800 dark:text-amber-200 mb-1">
+                      Email Verification Required
+                    </h4>
+                    <p className="text-sm text-amber-700 dark:text-amber-300 mb-3">
+                      Please verify your email address before logging in. Check your inbox for the verification link.
+                    </p>
+                    {resendSuccess ? (
+                      <div className="flex items-center gap-2 text-green-600 dark:text-green-400 text-sm">
+                        <CheckCircle className="h-4 w-4" />
+                        Verification email sent! Check your inbox.
+                      </div>
+                    ) : (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleResendVerification}
+                        disabled={resending}
+                        className="border-amber-300 hover:bg-amber-100 dark:border-amber-700 dark:hover:bg-amber-900/30"
+                      >
+                        {resending ? "Sending..." : "Resend Verification Email"}
+                      </Button>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
 
