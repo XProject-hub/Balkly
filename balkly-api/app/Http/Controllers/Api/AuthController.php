@@ -188,31 +188,27 @@ class AuthController extends Controller
     /**
      * Verify email with token
      */
-    public function verifyEmail(Request $request)
+    public function verifyEmail(Request $request, $id, $hash)
     {
-        $request->validate([
-            'id' => 'required|integer',
-            'hash' => 'required|string',
-        ]);
+        $user = User::find($id);
 
-        $user = User::findOrFail($request->id);
+        if (!$user) {
+            return redirect()->to(env('FRONTEND_URL', 'https://balkly.live') . '/auth/verify-email?error=user_not_found');
+        }
 
-        if (!hash_equals((string) $request->hash, sha1($user->getEmailForVerification()))) {
-            return response()->json([
-                'message' => 'Invalid verification link',
-            ], 400);
+        if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            return redirect()->to(env('FRONTEND_URL', 'https://balkly.live') . '/auth/verify-email?error=invalid_link');
         }
 
         if ($user->hasVerifiedEmail()) {
-            return response()->json([
-                'message' => 'Email already verified',
-            ]);
+            // Already verified - just redirect to success
+            return redirect()->to(env('FRONTEND_URL', 'https://balkly.live') . '/auth/email-verified?already=true');
         }
 
         $user->markEmailAsVerified();
         event(new Verified($user));
 
-        // Redirect to beautiful success page instead of JSON
+        // Redirect to success page
         return redirect()->to(env('FRONTEND_URL', 'https://balkly.live') . '/auth/email-verified');
     }
 
