@@ -107,13 +107,16 @@ export default function LoginPage() {
                     <h4 className="font-medium text-amber-800 dark:text-amber-200 mb-1">
                       Email Verification Required
                     </h4>
+                    <p className="text-sm text-amber-700 dark:text-amber-300 mb-2">
+                      Please verify your email address before logging in. Check your inbox for the verification link from <strong>info@balkly.live</strong>.
+                    </p>
                     <p className="text-sm text-amber-700 dark:text-amber-300 mb-3">
-                      Please verify your email address before logging in. Check your inbox for the verification link.
+                      📧 <strong>Also check your Spam/Junk folder!</strong>
                     </p>
                     {resendSuccess ? (
                       <div className="flex items-center gap-2 text-green-600 dark:text-green-400 text-sm">
                         <CheckCircle className="h-4 w-4" />
-                        Verification email sent! Check your inbox.
+                        Verification email sent! Check your inbox and spam folder.
                       </div>
                     ) : (
                       <Button

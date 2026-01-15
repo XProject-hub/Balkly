@@ -94,8 +94,14 @@ function VerifyEmailContent() {
                 </p>
               </div>
 
+              <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 px-4 py-3 rounded-lg">
+                <p className="text-sm text-amber-700 dark:text-amber-300">
+                  <strong>📧 Check your Spam/Junk folder!</strong> The verification email from <span className="font-medium">info@balkly.live</span> might be there.
+                </p>
+              </div>
+
               <p className="text-sm text-muted-foreground text-center">
-                Didn't receive the email? Check your spam folder or request a new one.
+                Didn't receive the email? Request a new verification link below.
               </p>
 
               <Button
