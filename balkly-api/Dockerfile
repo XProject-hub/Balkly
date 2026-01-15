@@ -28,10 +28,32 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         pcntl
 
 # Install Redis extension
-RUN apk add --no-cache pcre-dev "$PHPIZE_DEPS" \
+RUN apk add --no-cache \
+        pcre-dev \
+        autoconf \
+        dpkg-dev \
+        dpkg \
+        file \
+        g++ \
+        gcc \
+        libc-dev \
+        make \
+        pkgconf \
+        re2c \
     && pecl install redis \
     && docker-php-ext-enable redis \
-    && apk del pcre-dev "$PHPIZE_DEPS"
+    && apk del --no-cache \
+        pcre-dev \
+        autoconf \
+        dpkg-dev \
+        dpkg \
+        file \
+        g++ \
+        gcc \
+        libc-dev \
+        make \
+        pkgconf \
+        re2c
 
 # Install Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
