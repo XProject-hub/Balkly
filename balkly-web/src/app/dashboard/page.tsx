@@ -72,131 +72,134 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-primary text-primary-foreground py-8">
+      <div className="bg-primary text-primary-foreground py-6 sm:py-8">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">
             Welcome back, {user?.name || "User"}!
           </h1>
-          <p className="text-lg opacity-90 mt-1">
+          <p className="text-sm sm:text-base lg:text-lg opacity-90 mt-1">
             Manage your listings, messages, and account
           </p>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Quick Actions */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-          <Button size="lg" asChild className="h-auto py-4">
-            <Link href="/listings/create">
-              <Plus className="mr-2 h-5 w-5" />
-              <span>New Listing</span>
-            </Link>
-          </Button>
-          <Button size="lg" variant="outline" asChild className="h-auto py-4">
-            <Link href="/dashboard/listings">
-              <Package className="mr-2 h-5 w-5" />
-              <span>My Listings</span>
-            </Link>
-          </Button>
-          <Button size="lg" variant="outline" asChild className="h-auto py-4">
-            <Link href="/dashboard/messages">
-              <MessageCircle className="mr-2 h-5 w-5" />
-              <span>Messages</span>
-            </Link>
-          </Button>
-          <Button size="lg" variant="outline" asChild className="h-auto py-4">
-            <Link href="/dashboard/orders">
-              <Euro className="mr-2 h-5 w-5" />
-              <span>Orders</span>
-            </Link>
-          </Button>
-          <Button size="lg" variant="outline" asChild className="h-auto py-4">
-            <Link href="/dashboard/favorites">
-              <Package className="mr-2 h-5 w-5" />
-              <span>Favorites</span>
-            </Link>
-          </Button>
-          <Button size="lg" variant="outline" asChild className="h-auto py-4">
-            <Link href="/dashboard/offers">
-              <Euro className="mr-2 h-5 w-5" />
-              <span>My Offers</span>
-            </Link>
-          </Button>
-          <Button size="lg" variant="outline" asChild className="h-auto py-4">
-            <Link href="/dashboard/insights">
-              <Package className="mr-2 h-5 w-5" />
-              <span>Insights</span>
-            </Link>
-          </Button>
+      <div className="container mx-auto px-4 py-4 sm:py-6 lg:py-8">
+        {/* Quick Actions - Scrollable on mobile */}
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-sm font-medium text-muted-foreground mb-3 sm:hidden">Quick Actions</h2>
+          <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-3 lg:grid-cols-7">
+            <Button size="default" asChild className="flex-shrink-0 h-auto py-3 sm:py-4 px-3 sm:px-4">
+              <Link href="/listings/create" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm whitespace-nowrap">New Listing</span>
+              </Link>
+            </Button>
+            <Button size="default" variant="outline" asChild className="flex-shrink-0 h-auto py-3 sm:py-4 px-3 sm:px-4">
+              <Link href="/dashboard/listings" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                <Package className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm whitespace-nowrap">My Listings</span>
+              </Link>
+            </Button>
+            <Button size="default" variant="outline" asChild className="flex-shrink-0 h-auto py-3 sm:py-4 px-3 sm:px-4">
+              <Link href="/dashboard/messages" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm whitespace-nowrap">Messages</span>
+              </Link>
+            </Button>
+            <Button size="default" variant="outline" asChild className="flex-shrink-0 h-auto py-3 sm:py-4 px-3 sm:px-4">
+              <Link href="/dashboard/orders" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                <Euro className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm whitespace-nowrap">Orders</span>
+              </Link>
+            </Button>
+            <Button size="default" variant="outline" asChild className="flex-shrink-0 h-auto py-3 sm:py-4 px-3 sm:px-4">
+              <Link href="/dashboard/favorites" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                <Package className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm whitespace-nowrap">Favorites</span>
+              </Link>
+            </Button>
+            <Button size="default" variant="outline" asChild className="flex-shrink-0 h-auto py-3 sm:py-4 px-3 sm:px-4">
+              <Link href="/dashboard/offers" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                <Euro className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm whitespace-nowrap">My Offers</span>
+              </Link>
+            </Button>
+            <Button size="default" variant="outline" asChild className="flex-shrink-0 h-auto py-3 sm:py-4 px-3 sm:px-4">
+              <Link href="/dashboard/insights" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-xs sm:text-sm whitespace-nowrap">Insights</span>
+              </Link>
+            </Button>
+          </div>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Listings</CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4 lg:p-6 pb-1 sm:pb-2">
+              <CardTitle className="text-xs sm:text-sm font-medium">Active Listings</CardTitle>
+              <Package className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.activeListings}</div>
-              <p className="text-xs text-muted-foreground">Your posted items</p>
+            <CardContent className="p-3 sm:p-4 lg:p-6 pt-0">
+              <div className="text-xl sm:text-2xl font-bold">{stats.activeListings}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Your posted items</p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Views</CardTitle>
-              <Eye className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4 lg:p-6 pb-1 sm:pb-2">
+              <CardTitle className="text-xs sm:text-sm font-medium">Total Views</CardTitle>
+              <Eye className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalViews}</div>
-              <p className="text-xs text-muted-foreground">Total page views</p>
+            <CardContent className="p-3 sm:p-4 lg:p-6 pt-0">
+              <div className="text-xl sm:text-2xl font-bold">{stats.totalViews}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Total page views</p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Messages</CardTitle>
-              <MessageCircle className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4 lg:p-6 pb-1 sm:pb-2">
+              <CardTitle className="text-xs sm:text-sm font-medium">Messages</CardTitle>
+              <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.messages}</div>
-              <p className="text-xs text-muted-foreground">
-                {stats.messages > 0 ? `${stats.messages} total` : "No messages yet"}
+            <CardContent className="p-3 sm:p-4 lg:p-6 pt-0">
+              <div className="text-xl sm:text-2xl font-bold">{stats.messages}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">
+                {stats.messages > 0 ? `${stats.messages} total` : "No messages"}
               </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Revenue</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4 lg:p-6 pb-1 sm:pb-2">
+              <CardTitle className="text-xs sm:text-sm font-medium">Revenue</CardTitle>
+              <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">€{stats.revenue}</div>
-              <p className="text-xs text-muted-foreground">From completed sales</p>
+            <CardContent className="p-3 sm:p-4 lg:p-6 pt-0">
+              <div className="text-xl sm:text-2xl font-bold">€{stats.revenue}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">From completed sales</p>
             </CardContent>
           </Card>
         </div>
 
-          {/* Recent Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Activity */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <Card>
-            <CardHeader>
-              <CardTitle>Recent Listings</CardTitle>
-              <CardDescription>Your latest posted items</CardDescription>
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-base sm:text-lg">Recent Listings</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Your latest posted items</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-6 pt-0">
               {stats.activeListings === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-4">No listings yet</p>
-                  <Button asChild>
+                <div className="text-center py-6 sm:py-8">
+                  <p className="text-sm text-muted-foreground mb-4">No listings yet</p>
+                  <Button asChild size="sm">
                     <Link href="/listings/create">Create Your First Listing</Link>
                   </Button>
                 </div>
               ) : (
                 <div className="text-center py-4">
-                  <Button variant="outline" asChild>
+                  <Button variant="outline" asChild size="sm">
                     <Link href="/dashboard/listings">View All Listings</Link>
                   </Button>
                 </div>
@@ -205,18 +208,18 @@ export default function DashboardPage() {
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle>Recent Messages</CardTitle>
-              <CardDescription>Latest inquiries</CardDescription>
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-base sm:text-lg">Recent Messages</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Latest inquiries</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-6 pt-0">
               {stats.messages === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">No messages yet</p>
+                <div className="text-center py-6 sm:py-8">
+                  <p className="text-sm text-muted-foreground">No messages yet</p>
                 </div>
               ) : (
                 <div className="text-center py-4">
-                  <Button variant="outline" asChild>
+                  <Button variant="outline" asChild size="sm">
                     <Link href="/dashboard/messages">View All Messages</Link>
                   </Button>
                 </div>

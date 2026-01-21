@@ -260,13 +260,15 @@ export default function ListingDetailPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-4">
+      <div className="container mx-auto px-4 py-4 sm:py-6 lg:py-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
           <Button
             variant="ghost"
+            size="sm"
             onClick={() => router.push("/listings")}
+            className="text-sm"
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeft className="mr-1 sm:mr-2 h-4 w-4" />
             Back to Listings
           </Button>
           
@@ -275,15 +277,15 @@ export default function ListingDetailPage() {
               variant="destructive" 
               size="sm"
               onClick={handleDeleteListing}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-red-600 hover:bg-red-700 text-xs sm:text-sm"
             >
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete Listing
+              <Trash2 className="mr-1 sm:mr-2 h-4 w-4" />
+              Delete
             </Button>
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Image Gallery */}
@@ -328,48 +330,48 @@ export default function ListingDetailPage() {
 
             {/* Details */}
             <Card>
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-3xl mb-2">{listing.title}</CardTitle>
-                    <CardDescription className="flex items-center gap-4 text-base">
+              <CardHeader className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4">
+                  <div className="flex-1 min-w-0">
+                    <CardTitle className="text-xl sm:text-2xl lg:text-3xl mb-2 break-words">{listing.title}</CardTitle>
+                    <CardDescription className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm lg:text-base">
                       <span className="flex items-center">
-                        <MapPin className="h-4 w-4 mr-1" />
+                        <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                         {listing.city}, {listing.country}
                       </span>
                       <span className="flex items-center">
-                        <Eye className="h-4 w-4 mr-1" />
+                        <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                         {listing.views_count} views
                       </span>
                       <span className="flex items-center">
-                        <Calendar className="h-4 w-4 mr-1" />
+                        <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                         {new Date(listing.created_at).toLocaleDateString()}
                       </span>
                     </CardDescription>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-shrink-0">
                     <FavoriteButton type="App\\Models\\Listing" id={parseInt(listingId)} size="sm" />
-                    <Button size="sm" variant="outline" onClick={handleShare}>
+                    <Button size="sm" variant="outline" onClick={handleShare} className="w-8 h-8 sm:w-9 sm:h-9 p-0">
                       <Share2 className="h-4 w-4" />
                     </Button>
-                    <Button size="sm" variant="outline">
+                    <Button size="sm" variant="outline" className="w-8 h-8 sm:w-9 sm:h-9 p-0">
                       <Flag className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4 sm:p-6 pt-0">
                 <div className="prose max-w-none">
-                  <h3 className="font-bold text-lg mb-2">Description</h3>
-                  <p className="whitespace-pre-wrap">{listing.description}</p>
+                  <h3 className="font-bold text-base sm:text-lg mb-2">Description</h3>
+                  <p className="whitespace-pre-wrap text-sm sm:text-base">{listing.description}</p>
                 </div>
 
                 {listing.listingAttributes?.length > 0 && (
-                  <div className="mt-6">
-                    <h3 className="font-bold text-lg mb-4">Specifications</h3>
-                    <div className="grid grid-cols-2 gap-4">
+                  <div className="mt-4 sm:mt-6">
+                    <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">Specifications</h3>
+                    <div className="grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-4">
                       {listing.listingAttributes.map((attr: any) => (
-                        <div key={attr.id} className="flex justify-between py-2 border-b">
+                        <div key={attr.id} className="flex justify-between py-2 border-b text-sm">
                           <span className="text-muted-foreground">
                             {attr.attribute.name}
                           </span>
@@ -383,29 +385,29 @@ export default function ListingDetailPage() {
             </Card>
           </div>
 
-          {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
-            {/* Price & CTA */}
-            <Card>
-              <CardHeader>
+          {/* Sidebar - Fixed on mobile at bottom */}
+          <div className="lg:col-span-1 space-y-4 sm:space-y-6">
+            {/* Price & CTA - Sticky on mobile */}
+            <Card className="lg:sticky lg:top-24">
+              <CardHeader className="p-4 sm:p-6">
                 {listing.price ? (
                   <PriceDisplay
                     amount={listing.price}
                     currency={listing.currency || 'EUR'}
-                    className="text-4xl text-primary font-bold"
+                    className="text-2xl sm:text-3xl lg:text-4xl text-primary font-bold"
                     showOriginal={true}
                   />
                 ) : (
-                  <CardTitle className="text-4xl text-primary">Contact</CardTitle>
+                  <CardTitle className="text-2xl sm:text-3xl lg:text-4xl text-primary">Contact</CardTitle>
                 )}
               </CardHeader>
-              <CardContent className="space-y-3">
-                <Button className="w-full" size="lg" onClick={handleContactSeller}>
-                  <MessageCircle className="mr-2 h-5 w-5" />
+              <CardContent className="p-4 sm:p-6 pt-0 space-y-2 sm:space-y-3">
+                <Button className="w-full" size="default" onClick={handleContactSeller}>
+                  <MessageCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                   Contact Seller
                 </Button>
-                <Button variant="outline" className="w-full" size="lg" onClick={() => setShowOfferModal(true)}>
-                  <Euro className="mr-2 h-5 w-5" />
+                <Button variant="outline" className="w-full" size="default" onClick={() => setShowOfferModal(true)}>
+                  <Euro className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                   Make an Offer
                 </Button>
               </CardContent>
@@ -413,35 +415,35 @@ export default function ListingDetailPage() {
 
             {/* Seller Info */}
             <Card>
-              <CardHeader>
-                <CardTitle>Seller Information</CardTitle>
+              <CardHeader className="p-4 sm:p-6">
+                <CardTitle className="text-base sm:text-lg">Seller Information</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4 sm:p-6 pt-0">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-base sm:text-lg flex-shrink-0">
                     {listing.user?.name?.[0]?.toUpperCase()}
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="font-medium">{listing.user?.name}</p>
+                      <p className="font-medium text-sm sm:text-base truncate">{listing.user?.name}</p>
                       <VerifiedBadge isVerified={listing.user?.is_verified_seller} size="sm" />
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs sm:text-sm text-muted-foreground">
                       Member since {new Date(listing.user?.created_at).getFullYear()}
                     </p>
                     {avgRating > 0 && (
                       <div className="flex items-center gap-1 mt-1">
-                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                        <span className="font-bold">{avgRating.toFixed(1)}</span>
-                        <span className="text-xs text-muted-foreground">({reviews.length} reviews)</span>
+                        <Star className="h-3 w-3 sm:h-4 sm:w-4 fill-yellow-400 text-yellow-400" />
+                        <span className="font-bold text-xs sm:text-sm">{avgRating.toFixed(1)}</span>
+                        <span className="text-[10px] sm:text-xs text-muted-foreground">({reviews.length} reviews)</span>
                       </div>
                     )}
                   </div>
                 </div>
-                <div className="space-y-2 text-sm">
+                <div className="space-y-2 text-xs sm:text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Location:</span>
-                    <span className="font-medium">
+                    <span className="font-medium truncate max-w-[120px]">
                       {listing.user?.profile?.city || "Not specified"}
                     </span>
                   </div>
@@ -457,12 +459,12 @@ export default function ListingDetailPage() {
               </CardContent>
             </Card>
 
-            {/* Safety Tips */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Safety Tips</CardTitle>
+            {/* Safety Tips - Hidden on mobile, shown on larger screens */}
+            <Card className="hidden sm:block">
+              <CardHeader className="p-4 sm:p-6">
+                <CardTitle className="text-base sm:text-lg">Safety Tips</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2 text-sm">
+              <CardContent className="p-4 sm:p-6 pt-0 space-y-2 text-xs sm:text-sm">
                 <p>• Meet in a public place</p>
                 <p>• Check the item before payment</p>
                 <p>• Pay only after collecting item</p>
@@ -592,12 +594,12 @@ export default function ListingDetailPage() {
 
         {/* Similar Listings */}
         {similarListings.length > 0 && (
-          <div className="container mx-auto px-4 py-12 bg-muted/30">
-            <h2 className="text-3xl font-bold mb-8">Similar Listings</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="mt-8 sm:mt-12 py-8 sm:py-12 bg-muted/30 -mx-4 px-4 sm:mx-0 sm:px-0 sm:rounded-xl">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 lg:mb-8 px-0 sm:px-4 lg:px-6">Similar Listings</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 px-0 sm:px-4 lg:px-6">
               {similarListings.map((item) => (
                 <Link key={item.id} href={`/listings/${item.id}`}>
-                  <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
                     <div className="aspect-video bg-muted relative overflow-hidden">
                       {item.media?.[0] ? (
                         <img 
@@ -607,18 +609,18 @@ export default function ListingDetailPage() {
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <Package className="h-12 w-12 text-muted-foreground/30" />
+                          <Package className="h-8 w-8 sm:h-12 sm:w-12 text-muted-foreground/30" />
                         </div>
                       )}
                     </div>
-                    <CardContent className="p-4">
-                      <p className="font-medium line-clamp-2 mb-2">{item.title}</p>
+                    <CardContent className="p-3 sm:p-4">
+                      <p className="font-medium line-clamp-2 mb-2 text-sm sm:text-base">{item.title}</p>
                       <PriceDisplay
                         amount={item.price}
                         currency={item.currency || 'EUR'}
-                        className="text-primary font-bold"
+                        className="text-primary font-bold text-sm sm:text-base"
                       />
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
                         <MapPin className="h-3 w-3 inline mr-1" />
                         {item.city}
                       </p>
