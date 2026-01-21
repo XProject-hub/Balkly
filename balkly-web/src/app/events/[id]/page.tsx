@@ -209,19 +209,44 @@ export default function EventDetailPage() {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Button>
-            <h1 className="text-5xl font-bold text-white mb-2">{event.title}</h1>
-            <div className="flex items-center gap-4 text-white/90 text-lg">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2">{event.title}</h1>
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-white/90 text-sm sm:text-base lg:text-lg">
               <span className="flex items-center">
-                <Calendar className="h-5 w-5 mr-2" />
-                {new Date(event.start_at).toLocaleDateString("en-US", {
-                  weekday: "long",
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
+                <Calendar className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                {(() => {
+                  const now = new Date();
+                  const start = new Date(event.start_at);
+                  const end = event.end_at ? new Date(event.end_at) : null;
+                  
+                  // If event has end date and is ongoing or upcoming
+                  if (end && end >= now) {
+                    return `Valid until: ${end.toLocaleDateString("en-US", {
+                      weekday: "short",
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}`;
+                  }
+                  // If event hasn't started yet
+                  if (start > now) {
+                    return `Starts: ${start.toLocaleDateString("en-US", {
+                      weekday: "short",
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}`;
+                  }
+                  // Fallback - show start date
+                  return start.toLocaleDateString("en-US", {
+                    weekday: "short",
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  });
+                })()}
               </span>
               <span className="flex items-center">
-                <Clock className="h-5 w-5 mr-2" />
+                <Clock className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                 {new Date(event.start_at).toLocaleTimeString("en-US", {
                   hour: "2-digit",
                   minute: "2-digit",
@@ -262,11 +287,15 @@ export default function EventDetailPage() {
                   <div className="flex items-start gap-3">
                     <Calendar className="h-5 w-5 text-primary mt-1" />
                     <div>
-                      <p className="font-medium">Date & Time</p>
+                      <p className="font-medium">Validity Period</p>
                       <p className="text-muted-foreground">
-                        {new Date(event.start_at).toLocaleString()}
-                        {event.end_at && (
-                          <> - {new Date(event.end_at).toLocaleString()}</>
+                        {event.end_at ? (
+                          <>
+                            <span className="block">Starts: {new Date(event.start_at).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" })}</span>
+                            <span className="block font-medium text-primary">Valid until: {new Date(event.end_at).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" })}</span>
+                          </>
+                        ) : (
+                          new Date(event.start_at).toLocaleString()
                         )}
                       </p>
                     </div>
