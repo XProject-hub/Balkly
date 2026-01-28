@@ -36,7 +36,7 @@ export default function FullAnalyticsPage() {
   useEffect(() => {
     loadAnalytics();
     loadOnlineUsers();
-    setCurrencySymbol(getCurrencySymbol());
+    setCurrencySymbol(getCurrencySymbol('EUR'));
     
     // Refresh online users every 30 seconds
     const interval = setInterval(loadOnlineUsers, 30000);
