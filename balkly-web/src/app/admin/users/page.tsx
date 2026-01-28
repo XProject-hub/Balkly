@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Search, UserX, Shield, Mail, Trash2, CheckCircle, MailCheck } from "lucide-react";
+import { ArrowLeft, Search, UserX, Shield, Mail, Trash2, CheckCircle, MailCheck, Loader2 } from "lucide-react";
+import { toast } from "@/lib/toast";
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<any[]>([]);
@@ -41,16 +42,19 @@ export default function AdminUsersPage() {
     if (!confirm(`Are you sure you want to ban ${userName}?`)) return;
 
     try {
-      await fetch(`/api/v1/admin/users/${userId}/ban`, {
+      const response = await fetch(`/api/v1/admin/users/${userId}/ban`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
       });
-      alert("User banned successfully");
+      
+      if (!response.ok) throw new Error("Failed to ban user");
+      
+      toast.success("User banned successfully");
       loadUsers();
     } catch (error) {
-      alert("Failed to ban user");
+      toast.error("Failed to ban user");
     }
   };
 
@@ -59,21 +63,24 @@ export default function AdminUsersPage() {
     
     const confirmAgain = prompt(`Type "${userName}" to confirm deletion:`);
     if (confirmAgain !== userName) {
-      alert('Cancelled - name did not match');
+      toast.info("Cancelled - name did not match");
       return;
     }
 
     try {
-      await fetch(`/api/v1/admin/users/${userId}`, {
+      const response = await fetch(`/api/v1/admin/users/${userId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
       });
-      alert("User deleted permanently");
+      
+      if (!response.ok) throw new Error("Failed to delete user");
+      
+      toast.success("User deleted permanently");
       loadUsers();
     } catch (error) {
-      alert("Failed to delete user");
+      toast.error("Failed to delete user");
     }
   };
 
@@ -89,13 +96,13 @@ export default function AdminUsersPage() {
       });
       
       if (response.ok) {
-        alert("Email verified successfully!");
+        toast.success("Email verified successfully!");
         loadUsers();
       } else {
-        alert("Failed to verify email");
+        toast.error("Failed to verify email");
       }
     } catch (error) {
-      alert("Failed to verify email");
+      toast.error("Failed to verify email");
     }
   };
 

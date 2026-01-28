@@ -152,14 +152,24 @@ class AdminController extends Controller
     {
         $period = $request->get('period', '30'); // days
 
+        // Get real funnel data from database
+        $totalVisits = DB::table('page_visits')
+            ->where('visited_at', '>=', now()->subDays($period))
+            ->count();
+        
+        $uniqueVisitors = DB::table('page_visits')
+            ->where('visited_at', '>=', now()->subDays($period))
+            ->distinct('ip_address')
+            ->count('ip_address');
+
         $analytics = [
             'funnel' => [
-                'visitors' => 15420,
-                'searches' => 8234,
-                'views' => 12543,
-                'messages' => 3421,
-                'checkouts' => 567,
-                'paid' => 432,
+                'visitors' => $uniqueVisitors ?: 0,
+                'page_views' => $totalVisits ?: 0,
+                'registrations' => User::where('created_at', '>=', now()->subDays($period))->count(),
+                'listings' => Listing::where('created_at', '>=', now()->subDays($period))->count(),
+                'orders' => Order::where('created_at', '>=', now()->subDays($period))->count(),
+                'paid' => Order::where('status', 'paid')->where('created_at', '>=', now()->subDays($period))->count(),
             ],
             'revenue' => [
                 'listing_fees' => Order::where('status', 'paid')

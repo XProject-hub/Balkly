@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Plus, Edit, Trash2, MessageCircle, GripVertical, Save } from "lucide-react";
+import { toast } from "@/lib/toast";
 import {
   DndContext,
   closestCenter,
@@ -189,10 +190,12 @@ export default function AdminForumCategoriesPage() {
         setEditingCategory(null);
         setFormData({ name: "", description: "", slug: "", parent_id: null, is_active: true });
         loadCategories();
-        alert("Category saved!");
+        toast.success("Category saved!");
+      } else {
+        toast.error("Failed to save category");
       }
     } catch (error) {
-      alert("Failed to save category");
+      toast.error("Failed to save category");
     }
   };
 
@@ -200,15 +203,19 @@ export default function AdminForumCategoriesPage() {
     if (!confirm("Delete this category? All topics will be moved to General.")) return;
 
     try {
-      await fetch(`/api/v1/admin/forum/categories/${id}`, {
+      const response = await fetch(`/api/v1/admin/forum/categories/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
         },
       });
+      
+      if (!response.ok) throw new Error("Failed to delete");
+      
+      toast.success("Category deleted");
       loadCategories();
     } catch (error) {
-      alert("Failed to delete category");
+      toast.error("Failed to delete category");
     }
   };
 
@@ -264,7 +271,7 @@ export default function AdminForumCategoriesPage() {
     if (!category) return;
 
     try {
-      await fetch(`/api/v1/admin/forum/categories/${id}`, {
+      const response = await fetch(`/api/v1/admin/forum/categories/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -275,10 +282,13 @@ export default function AdminForumCategoriesPage() {
           description: category.description,
         }),
       });
+      
+      if (!response.ok) throw new Error("Failed to update");
+      
       setEditingName(null);
-      alert('Category updated!');
+      toast.success('Category updated!');
     } catch (error) {
-      alert('Failed to update category');
+      toast.error('Failed to update category');
       loadCategories();
     }
   };
