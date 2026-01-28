@@ -65,5 +65,24 @@ class VerificationController extends Controller
 
         return response()->json(['verifications' => $verifications]);
     }
+
+    /**
+     * Admin: Reject verification
+     */
+    public function reject(Request $request, $userId)
+    {
+        $reason = $request->input('reason', 'No reason provided');
+
+        DB::table('seller_verifications')
+            ->where('user_id', $userId)
+            ->update([
+                'status' => 'rejected',
+                'rejection_reason' => $reason,
+                'verified_by' => auth()->id(),
+                'updated_at' => now(),
+            ]);
+
+        return response()->json(['message' => 'Verification rejected']);
+    }
 }
 

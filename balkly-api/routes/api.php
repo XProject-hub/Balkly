@@ -231,6 +231,7 @@ Route::prefix('v1')->group(function () {
             // Seller Verification Management
             Route::get('/verification/pending', [\App\Http\Controllers\Api\VerificationController::class, 'pending']);
             Route::post('/verification/{userId}/approve', [\App\Http\Controllers\Api\VerificationController::class, 'approve']);
+            Route::post('/verification/{userId}/reject', [\App\Http\Controllers\Api\VerificationController::class, 'reject']);
             
             // Blog Management
             Route::post('/blog', [\App\Http\Controllers\Api\BlogController::class, 'store']);

@@ -74,7 +74,7 @@ export default function RegisterPage() {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
-                className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+                className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 dark:border-gray-700 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
                 placeholder="John Doe"
               />
             </div>
@@ -87,7 +87,7 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
-                className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+                className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 dark:border-gray-700 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
                 placeholder="your@email.com"
               />
             </div>
@@ -101,7 +101,7 @@ export default function RegisterPage() {
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
                 minLength={8}
-                className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+                className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 dark:border-gray-700 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
                 placeholder="••••••••"
               />
               <p className="text-xs text-muted-foreground mt-1">
@@ -119,7 +119,7 @@ export default function RegisterPage() {
                   setFormData({ ...formData, password_confirmation: e.target.value })
                 }
                 required
-                className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+                className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 dark:border-gray-700 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
                 placeholder="••••••••"
               />
             </div>
