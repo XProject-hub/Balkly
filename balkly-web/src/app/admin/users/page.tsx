@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Search, UserX, Shield, Mail, Trash2 } from "lucide-react";
+import { ArrowLeft, Search, UserX, Shield, Mail, Trash2, CheckCircle, MailCheck } from "lucide-react";
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<any[]>([]);
@@ -74,6 +74,28 @@ export default function AdminUsersPage() {
       loadUsers();
     } catch (error) {
       alert("Failed to delete user");
+    }
+  };
+
+  const handleVerifyEmail = async (userId: number, userName: string) => {
+    if (!confirm(`Verify email for ${userName}?\n\nThis will allow the user to log in without email verification.`)) return;
+
+    try {
+      const response = await fetch(`/api/v1/admin/users/${userId}/verify-email`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      
+      if (response.ok) {
+        alert("Email verified successfully!");
+        loadUsers();
+      } else {
+        alert("Failed to verify email");
+      }
+    } catch (error) {
+      alert("Failed to verify email");
     }
   };
 
@@ -157,10 +179,15 @@ export default function AdminUsersPage() {
                           <span className="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-medium uppercase">
                             {user.role}
                           </span>
-                          {user.email_verified_at && (
-                            <span className="px-2 py-0.5 bg-green-100 text-green-800 text-xs rounded-full font-medium flex items-center">
+                          {user.email_verified_at ? (
+                            <span className="px-2 py-0.5 bg-green-100 text-green-800 text-xs rounded-full font-medium flex items-center dark:bg-green-900/30 dark:text-green-400">
+                              <MailCheck className="h-3 w-3 mr-1" />
+                              Email Verified
+                            </span>
+                          ) : (
+                            <span className="px-2 py-0.5 bg-yellow-100 text-yellow-800 text-xs rounded-full font-medium flex items-center dark:bg-yellow-900/30 dark:text-yellow-400">
                               <Mail className="h-3 w-3 mr-1" />
-                              Verified
+                              Unverified
                             </span>
                           )}
                           {user.twofa_secret && (
@@ -173,12 +200,23 @@ export default function AdminUsersPage() {
                       </div>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap">
                       <Button size="sm" variant="outline" asChild>
                         <Link href={`/profile/${user.id}`}>View Profile</Link>
                       </Button>
                       {user.role !== "admin" && (
                         <>
+                          {!user.email_verified_at && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleVerifyEmail(user.id, user.name)}
+                              className="text-green-600 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-900/20"
+                            >
+                              <CheckCircle className="h-4 w-4 mr-2" />
+                              Verify Email
+                            </Button>
+                          )}
                           <Button
                             size="sm"
                             variant="destructive"
@@ -195,35 +233,6 @@ export default function AdminUsersPage() {
                             className="bg-red-600 hover:bg-red-700"
                           >
                             <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                            onClick={async () => {
-                              if (!confirm(`Permanently delete ${user.name}? This cannot be undone!`)) return;
-                              
-                              try {
-                                const response = await fetch(`/api/v1/admin/users/${user.id}`, {
-                                  method: "DELETE",
-                                  headers: {
-                                    Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-                                  },
-                                });
-                                
-                                if (response.ok) {
-                                  // Remove from list immediately
-                                  setUsers(users.filter(u => u.id !== user.id));
-                                  alert("User deleted successfully");
-                                } else {
-                                  alert("Failed to delete user");
-                                }
-                              } catch (error) {
-                                alert("Failed to delete user");
-                              }
-                            }}
-                          >
                             Delete
                           </Button>
                         </>

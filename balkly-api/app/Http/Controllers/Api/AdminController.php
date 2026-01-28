@@ -253,5 +253,25 @@ class AdminController extends Controller
 
         return response()->json(['message' => 'User deleted successfully']);
     }
+
+    /**
+     * Manually verify user email (admin only)
+     */
+    public function verifyUserEmail($id)
+    {
+        $user = User::findOrFail($id);
+        
+        if ($user->hasVerifiedEmail()) {
+            return response()->json(['message' => 'User email is already verified'], 200);
+        }
+
+        $user->email_verified_at = now();
+        $user->save();
+
+        return response()->json([
+            'message' => 'User email verified successfully',
+            'user' => $user,
+        ]);
+    }
 }
 
