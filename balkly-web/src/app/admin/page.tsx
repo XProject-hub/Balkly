@@ -23,7 +23,7 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     loadStats();
-    setCurrencySymbol(getCurrencySymbol());
+    setCurrencySymbol(getCurrencySymbol('EUR'));
   }, []);
 
   const loadStats = async () => {
