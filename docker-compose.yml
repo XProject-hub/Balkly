@@ -167,7 +167,6 @@ services:
     environment:
       NEXT_PUBLIC_API_URL: https://balkly.live/api/v1
       NEXT_PUBLIC_APP_URL: https://balkly.live
-      NODE_ENV: production
     depends_on:
       - api
     networks:
