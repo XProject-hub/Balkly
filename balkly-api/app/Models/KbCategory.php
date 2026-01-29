@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class KBCategory extends Model
+class KbCategory extends Model
 {
     use HasFactory;
 
@@ -26,6 +26,6 @@ class KBCategory extends Model
     // Relationships
     public function articles()
     {
-        return $this->hasMany(KBArticle::class, 'category_id');
+        return $this->hasMany(KbArticle::class, 'category_id');
     }
 }

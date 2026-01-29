@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class KBArticle extends Model
+class KbArticle extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -36,7 +36,7 @@ class KBArticle extends Model
     // Relationships
     public function category()
     {
-        return $this->belongsTo(KBCategory::class, 'category_id');
+        return $this->belongsTo(KbCategory::class, 'category_id');
     }
 
     public function author()
