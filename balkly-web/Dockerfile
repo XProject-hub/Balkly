@@ -3,11 +3,10 @@ FROM node:20-alpine
 # Set working directory
 WORKDIR /app
 
-# Update npm to latest version
-RUN npm install -g npm@latest
-
-# Install dependencies
+# Install dependencies first (better layer caching)
 COPY package*.json ./
+COPY postcss.config.mjs ./
+COPY tailwind.config.ts ./
 RUN npm install
 
 # Copy application files
@@ -16,7 +15,7 @@ COPY . .
 # Build the application
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build || true
+RUN npm run build
 
 # Expose port
 EXPOSE 3000
