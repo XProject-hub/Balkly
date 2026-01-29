@@ -15,7 +15,11 @@ import {
   FileText, 
   Award,
   CheckCircle,
-  User as UserIcon
+  User as UserIcon,
+  Package,
+  MapPin,
+  Building,
+  TrendingUp
 } from "lucide-react";
 
 interface UserProfile {
@@ -30,12 +34,14 @@ interface UserProfile {
     location?: string;
     phone?: string;
     avatar_url?: string;
+    company_name?: string;
   };
 }
 
 interface Reputation {
   points: number;
   level: string;
+  level_color?: string;
   stats: {
     posts: number;
     topics: number;
@@ -44,14 +50,34 @@ interface Reputation {
   };
 }
 
+interface Activity {
+  total_listings: number;
+  active_listings: number;
+  forum_posts: number;
+  forum_topics: number;
+  reviews_received: number;
+  avg_rating: number | null;
+}
+
+interface ProfileData {
+  user: UserProfile;
+  reputation: Reputation;
+  activity: Activity;
+  member_since: string;
+  is_verified: boolean;
+}
+
 export default function UserProfilePage() {
   const params = useParams();
   const userId = params.id as string;
   
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [reputation, setReputation] = useState<Reputation | null>(null);
+  const [data, setData] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // For backwards compatibility
+  const user = data?.user || null;
+  const reputation = data?.reputation || null;
 
   useEffect(() => {
     loadProfile();
@@ -65,19 +91,20 @@ export default function UserProfilePage() {
       const response = await fetch(`/api/v1/users/${userId}`);
       
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
         if (response.status === 404) {
-          setError("User not found");
+          setError(errorData.message || "User not found");
         } else {
-          setError("Failed to load profile");
+          setError(errorData.message || "Failed to load profile");
         }
         return;
       }
       
-      const data = await response.json();
-      setUser(data.user);
-      setReputation(data.reputation);
+      const responseData = await response.json();
+      setData(responseData);
     } catch (err) {
-      setError("Failed to load profile");
+      console.error("Profile load error:", err);
+      setError("Failed to load profile. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -91,11 +118,23 @@ export default function UserProfilePage() {
     });
   };
 
-  const getLevelColor = (level: string) => {
+  const getLevelColor = (level: string, color?: string) => {
+    // Use color from API if available
+    if (color) {
+      switch (color) {
+        case 'gold': return 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400';
+        case 'purple': return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400';
+        case 'green': return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+        case 'blue': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
+        default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
+      }
+    }
+    // Fallback to level name
     switch (level?.toLowerCase()) {
+      case 'legend': return 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400';
       case 'expert': return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400';
-      case 'advanced': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
-      case 'intermediate': return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+      case 'active': return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+      case 'member': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
     }
   };
@@ -192,11 +231,18 @@ export default function UserProfilePage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
-                    <span>Member since {formatDate(user.created_at)}</span>
+                    <span>Member since {data?.member_since || formatDate(user.created_at)}</span>
                   </div>
                   {user.profile?.location && (
                     <div className="flex items-center gap-2">
-                      <span>📍 {user.profile.location}</span>
+                      <MapPin className="h-4 w-4" />
+                      <span>{user.profile.location}</span>
+                    </div>
+                  )}
+                  {user.profile?.company_name && (
+                    <div className="flex items-center gap-2">
+                      <Building className="h-4 w-4" />
+                      <span>{user.profile.company_name}</span>
                     </div>
                   )}
                 </div>
@@ -208,6 +254,46 @@ export default function UserProfilePage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Activity Stats Card */}
+        {data?.activity && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5" />
+                Activity
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="p-4 bg-muted/50 rounded-lg text-center">
+                  <Package className="h-6 w-6 mx-auto mb-2 text-green-500" />
+                  <div className="text-2xl font-bold">{data.activity.active_listings}</div>
+                  <div className="text-sm text-muted-foreground">Active Listings</div>
+                  <div className="text-xs text-muted-foreground">{data.activity.total_listings} total</div>
+                </div>
+                <div className="p-4 bg-muted/50 rounded-lg text-center">
+                  <MessageSquare className="h-6 w-6 mx-auto mb-2 text-blue-500" />
+                  <div className="text-2xl font-bold">{data.activity.forum_posts}</div>
+                  <div className="text-sm text-muted-foreground">Forum Posts</div>
+                </div>
+                <div className="p-4 bg-muted/50 rounded-lg text-center">
+                  <FileText className="h-6 w-6 mx-auto mb-2 text-purple-500" />
+                  <div className="text-2xl font-bold">{data.activity.forum_topics}</div>
+                  <div className="text-sm text-muted-foreground">Topics Created</div>
+                </div>
+                <div className="p-4 bg-muted/50 rounded-lg text-center">
+                  <Star className="h-6 w-6 mx-auto mb-2 text-yellow-500" />
+                  <div className="text-2xl font-bold">
+                    {data.activity.avg_rating ? data.activity.avg_rating.toFixed(1) : '-'}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Avg Rating</div>
+                  <div className="text-xs text-muted-foreground">{data.activity.reviews_received} reviews</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Reputation Card */}
         {reputation && (
@@ -222,7 +308,7 @@ export default function UserProfilePage() {
               <div className="flex items-center gap-4 mb-6">
                 <div className="text-4xl font-bold text-primary">{reputation.points}</div>
                 <div>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getLevelColor(reputation.level)}`}>
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getLevelColor(reputation.level, reputation.level_color)}`}>
                     {reputation.level}
                   </span>
                   <p className="text-sm text-muted-foreground mt-1">Reputation Points</p>

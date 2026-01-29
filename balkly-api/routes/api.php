@@ -294,8 +294,9 @@ Route::prefix('v1')->group(function () {
     Route::post('/banners/{id}/click', [\App\Http\Controllers\Api\AdBannerController::class, 'trackClick']);
     
     // User profiles and reputation (public)
-    Route::get('/users/{id}', [UserController::class, 'show']);
+    // IMPORTANT: Static routes must come BEFORE dynamic routes!
     Route::get('/users/leaderboard', [UserController::class, 'leaderboard']);
+    Route::get('/users/{id}', [UserController::class, 'show'])->where('id', '[0-9]+');
     
     // Plans (public)
     Route::get('/plans', [\App\Http\Controllers\Api\PlanController::class, 'index']);
