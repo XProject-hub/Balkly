@@ -47,6 +47,6 @@ class KBArticle extends Model
     // Scopes
     public function scopePublished($query)
     {
-        return $query->whereNotNull('published_at');
+        return $query->where('is_published', true);
     }
 }
