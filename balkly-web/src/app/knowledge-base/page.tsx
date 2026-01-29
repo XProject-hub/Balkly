@@ -4,7 +4,45 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Search, BookOpen, ChevronRight, TrendingUp, Eye, FileText, HelpCircle, Loader2 } from "lucide-react";
+import { 
+  Search, BookOpen, ChevronRight, TrendingUp, Eye, FileText, HelpCircle, Loader2,
+  Rocket, Shield, Package, ShoppingCart, MessageSquare, Ticket, Users, CreditCard,
+  Lock, Settings, Home, Star, Zap, Globe, CheckCircle, AlertCircle
+} from "lucide-react";
+
+// Map category slugs/icons to Lucide icons
+const getCategoryIcon = (slug: string, iconName?: string) => {
+  const iconMap: Record<string, any> = {
+    'getting-started': Rocket,
+    'account-security': Shield,
+    'listings-selling': Package,
+    'buying-orders': ShoppingCart,
+    'messaging-chat': MessageSquare,
+    'events-tickets': Ticket,
+    'forum-community': Users,
+    'payments-billing': CreditCard,
+    'trust-safety': Lock,
+    // Fallbacks based on common icon names
+    'rocket': Rocket,
+    'shield': Shield,
+    'package': Package,
+    'cart': ShoppingCart,
+    'message': MessageSquare,
+    'ticket': Ticket,
+    'users': Users,
+    'credit-card': CreditCard,
+    'lock': Lock,
+    'settings': Settings,
+    'home': Home,
+    'star': Star,
+    'zap': Zap,
+    'globe': Globe,
+    'check': CheckCircle,
+    'alert': AlertCircle,
+  };
+  
+  return iconMap[slug] || iconMap[iconName?.toLowerCase() || ''] || BookOpen;
+};
 
 interface Article {
   id: number;
@@ -198,15 +236,17 @@ export default function KnowledgeBasePage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {categories.map((category) => (
+                  {categories.map((category) => {
+                    const CategoryIcon = getCategoryIcon(category.slug, category.icon);
+                    return (
                     <Card
                       key={category.id}
                       className="bg-[#1a2332] border-gray-800 hover:border-gray-700 transition-all group"
                     >
                       <CardHeader className="pb-3">
                         <div className="flex items-center gap-3 mb-3">
-                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-600/20 flex items-center justify-center text-2xl">
-                            {category.icon || "📚"}
+                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-600/20 flex items-center justify-center">
+                            <CategoryIcon className="h-6 w-6 text-cyan-400" />
                           </div>
                           <div>
                             <CardTitle className="text-white text-lg group-hover:text-cyan-400 transition-colors">
@@ -254,7 +294,8 @@ export default function KnowledgeBasePage() {
                         )}
                       </CardContent>
                     </Card>
-                  ))}
+                  );
+                  })}
                 </div>
               )}
             </div>

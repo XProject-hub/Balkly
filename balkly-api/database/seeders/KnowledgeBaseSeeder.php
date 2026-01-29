@@ -19,13 +19,13 @@ class KnowledgeBaseSeeder extends Seeder
             return;
         }
 
-        // Create Categories
+        // Create Categories (using icon names, not emojis)
         $gettingStarted = KbCategory::firstOrCreate(
             ['slug' => 'getting-started'],
             [
                 'name' => 'Getting Started',
                 'description' => 'New to Balkly? Start here!',
-                'icon' => '🚀',
+                'icon' => 'rocket',
                 'display_order' => 1,
             ]
         );
@@ -35,7 +35,7 @@ class KnowledgeBaseSeeder extends Seeder
             [
                 'name' => 'Account & Security',
                 'description' => 'Managing your account, profile, and security settings',
-                'icon' => '🔐',
+                'icon' => 'shield',
                 'display_order' => 2,
             ]
         );
@@ -45,7 +45,7 @@ class KnowledgeBaseSeeder extends Seeder
             [
                 'name' => 'Listings & Selling',
                 'description' => 'Everything about creating, managing, and promoting listings',
-                'icon' => '📦',
+                'icon' => 'package',
                 'display_order' => 3,
             ]
         );
@@ -55,7 +55,7 @@ class KnowledgeBaseSeeder extends Seeder
             [
                 'name' => 'Buying & Orders',
                 'description' => 'How to buy items, make offers, and manage orders',
-                'icon' => '🛒',
+                'icon' => 'cart',
                 'display_order' => 4,
             ]
         );
@@ -65,7 +65,7 @@ class KnowledgeBaseSeeder extends Seeder
             [
                 'name' => 'Messaging & Chat',
                 'description' => 'Communicating with buyers and sellers',
-                'icon' => '💬',
+                'icon' => 'message',
                 'display_order' => 5,
             ]
         );
@@ -75,7 +75,7 @@ class KnowledgeBaseSeeder extends Seeder
             [
                 'name' => 'Events & Tickets',
                 'description' => 'Discovering events and purchasing tickets',
-                'icon' => '🎫',
+                'icon' => 'ticket',
                 'display_order' => 6,
             ]
         );
@@ -85,7 +85,7 @@ class KnowledgeBaseSeeder extends Seeder
             [
                 'name' => 'Forum & Community',
                 'description' => 'Using the Balkly community forum',
-                'icon' => '👥',
+                'icon' => 'users',
                 'display_order' => 7,
             ]
         );
@@ -95,7 +95,7 @@ class KnowledgeBaseSeeder extends Seeder
             [
                 'name' => 'Payments & Billing',
                 'description' => 'Payment methods, invoices, and refunds',
-                'icon' => '💳',
+                'icon' => 'credit-card',
                 'display_order' => 8,
             ]
         );
@@ -105,7 +105,7 @@ class KnowledgeBaseSeeder extends Seeder
             [
                 'name' => 'Trust & Safety',
                 'description' => 'Staying safe, reporting issues, and verification',
-                'icon' => '🛡️',
+                'icon' => 'lock',
                 'display_order' => 9,
             ]
         );

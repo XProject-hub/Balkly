@@ -94,12 +94,28 @@ export default function FullAnalyticsPage() {
     );
   }
 
-  if (!analytics) {
+  if (!analytics || !analytics.traffic) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-        <div className="text-center text-white">
-          <p className="text-xl mb-4">Failed to load analytics</p>
-          <Button onClick={loadAnalytics}>Retry</Button>
+        <div className="text-center text-white max-w-md mx-auto p-6">
+          <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
+            <BarChart3 className="h-8 w-8 text-red-400" />
+          </div>
+          <p className="text-xl font-semibold mb-2">Failed to load analytics</p>
+          <p className="text-gray-400 text-sm mb-4">
+            {analytics?.error || analytics?.message || 'Unable to fetch analytics data. Please ensure you are logged in as an admin.'}
+          </p>
+          <div className="flex gap-3 justify-center">
+            <Button onClick={loadAnalytics} variant="outline" className="border-gray-600">
+              Retry
+            </Button>
+            <Link href="/admin">
+              <Button variant="outline" className="border-gray-600">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Admin
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     );
