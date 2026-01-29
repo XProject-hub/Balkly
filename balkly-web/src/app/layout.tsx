@@ -1,12 +1,19 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import TrackingScript from "@/components/TrackingScript";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
 
 export const metadata: Metadata = {
   title: "Balkly - Modern Marketplace Platform",
@@ -34,11 +41,6 @@ export const metadata: Metadata = {
     icon: "/logo-icon.png",
     apple: "/logo-icon.png",
     shortcut: "/logo-icon.png",
-  },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
   },
 };
 
@@ -69,10 +71,12 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <TrackingScript />
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <ThemeProvider>
+          <TrackingScript />
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </ThemeProvider>
         
         {/* Register Service Worker */}
         <Script id="register-sw" strategy="afterInteractive">
