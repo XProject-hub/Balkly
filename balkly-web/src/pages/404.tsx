@@ -2,36 +2,16 @@ import Link from "next/link";
 
 export default function Custom404() {
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(to bottom right, #0f172a, #1e293b, #0f172a)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <div style={{ textAlign: "center", color: "white", maxWidth: "400px", padding: "24px" }}>
-        <div style={{ fontSize: "80px", fontWeight: "bold", color: "#06b6d4", marginBottom: "16px" }}>
-          404
-        </div>
-        <h1 style={{ fontSize: "24px", fontWeight: 600, marginBottom: "8px" }}>
-          Page Not Found
-        </h1>
-        <p style={{ color: "#9ca3af", marginBottom: "24px" }}>
-          The page you are looking for doesn&apos;t exist or has been moved.
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="text-center text-white max-w-md mx-auto p-6">
+        <div className="text-8xl font-bold text-cyan-400 mb-4">404</div>
+        <h1 className="text-2xl font-semibold mb-2">Page Not Found</h1>
+        <p className="text-gray-400 mb-6">
+          The page you are looking for does not exist or has been moved.
         </p>
         <Link
           href="/"
-          style={{
-            display: "inline-block",
-            padding: "12px 24px",
-            backgroundColor: "#06b6d4",
-            color: "white",
-            fontWeight: 500,
-            borderRadius: "8px",
-            textDecoration: "none",
-          }}
+          className="inline-flex items-center justify-center px-6 py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-medium rounded-lg transition-colors"
         >
           Go Home
         </Link>
