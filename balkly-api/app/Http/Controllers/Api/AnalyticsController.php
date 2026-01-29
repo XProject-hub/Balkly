@@ -55,10 +55,11 @@ class AnalyticsController extends Controller
      */
     public function getAnalytics(Request $request)
     {
-        $period = $request->get('period', 30); // days
-        $startDate = now()->subDays($period);
+        try {
+            $period = $request->get('period', 30); // days
+            $startDate = now()->subDays($period);
 
-        $analytics = [
+            $analytics = [
             // Website traffic - ALL REAL DATA
             'traffic' => [
                 'total_visits' => PageVisit::where('visited_at', '>=', $startDate)->count(),
@@ -278,7 +279,14 @@ class AnalyticsController extends Controller
                 ->get(),
         ];
 
-        return response()->json($analytics);
+            return response()->json($analytics);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to load analytics',
+                'message' => $e->getMessage(),
+                'trace' => config('app.debug') ? $e->getTraceAsString() : null
+            ], 500);
+        }
     }
 
     /**
