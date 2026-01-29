@@ -9,6 +9,9 @@ import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// Force dynamic rendering for all pages - prevents SSG errors with client hooks
+export const dynamic = 'force-dynamic';
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,

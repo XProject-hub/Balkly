@@ -8,6 +8,8 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Disable static generation - use server-side rendering for all pages
+  output: 'standalone',
   images: {
     domains: ['localhost', 'minio', '23.95.75.118', 'balkly.live', 'cdn.platinumlist.net'],
     remotePatterns: [
