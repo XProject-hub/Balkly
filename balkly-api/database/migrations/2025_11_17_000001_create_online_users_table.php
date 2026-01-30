@@ -8,13 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('online_users', function (Blueprint $table) {
-            $table->id();
-            $table->string('ip_address', 45)->unique();
-            $table->text('user_agent')->nullable();
-            $table->timestamp('last_activity')->useCurrent();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('online_users')) {
+            Schema::create('online_users', function (Blueprint $table) {
+                $table->id();
+                $table->string('ip_address', 45)->unique();
+                $table->text('user_agent')->nullable();
+                $table->timestamp('last_activity')->useCurrent();
+                $table->timestamps();
+            });
+        }
     }
 
     public function down(): void
