@@ -17,10 +17,10 @@ class BlogCategoriesSeeder extends Seeder
                 'description' => 'Vodiči i preporuke za koncerte, sport, festivale',
                 'order' => 1,
                 'subcategories' => [
-                    ['name' => 'Koncerti', 'slug' => 'concerts'],
-                    ['name' => 'Sport', 'slug' => 'sports'],
-                    ['name' => 'Family & Kids', 'slug' => 'family'],
-                    ['name' => 'Nightlife & Brunch', 'slug' => 'nightlife'],
+                    ['name' => 'Koncerti', 'slug' => 'events-concerts'],
+                    ['name' => 'Sport', 'slug' => 'events-sports'],
+                    ['name' => 'Family & Kids', 'slug' => 'events-family'],
+                    ['name' => 'Nightlife & Brunch', 'slug' => 'events-nightlife'],
                 ]
             ],
 
@@ -31,10 +31,10 @@ class BlogCategoriesSeeder extends Seeder
                 'description' => 'Praktične "how-to" teme za život i boravak',
                 'order' => 2,
                 'subcategories' => [
-                    ['name' => 'Transport', 'slug' => 'transport'],
-                    ['name' => 'Sim & Internet', 'slug' => 'sim'],
-                    ['name' => 'Cijene & budžet', 'slug' => 'cost-of-living'],
-                    ['name' => 'Turistički savjeti', 'slug' => 'tips'],
+                    ['name' => 'Transport', 'slug' => 'uae-transport'],
+                    ['name' => 'Sim & Internet', 'slug' => 'uae-sim'],
+                    ['name' => 'Cijene & budžet', 'slug' => 'uae-cost-of-living'],
+                    ['name' => 'Turistički savjeti', 'slug' => 'uae-tips'],
                 ]
             ],
 
@@ -45,9 +45,9 @@ class BlogCategoriesSeeder extends Seeder
                 'description' => 'Kako kupiti/prodati sigurno na Balkly',
                 'order' => 3,
                 'subcategories' => [
-                    ['name' => 'Sigurna kupovina', 'slug' => 'safety'],
-                    ['name' => 'Savjeti za prodaju', 'slug' => 'selling'],
-                    ['name' => 'Scam alert', 'slug' => 'scams'],
+                    ['name' => 'Sigurna kupovina', 'slug' => 'classifieds-safety'],
+                    ['name' => 'Savjeti za prodaju', 'slug' => 'classifieds-selling'],
+                    ['name' => 'Scam alert', 'slug' => 'classifieds-scams'],
                 ]
             ],
 
@@ -58,10 +58,10 @@ class BlogCategoriesSeeder extends Seeder
                 'description' => 'Najam/kupovina, kvartovi, dokumentacija',
                 'order' => 4,
                 'subcategories' => [
-                    ['name' => 'Najam', 'slug' => 'rent'],
-                    ['name' => 'Kupovina', 'slug' => 'buy'],
-                    ['name' => 'Kvartovi', 'slug' => 'areas'],
-                    ['name' => 'Pravni savjeti', 'slug' => 'legal'],
+                    ['name' => 'Najam', 'slug' => 'real-estate-rent'],
+                    ['name' => 'Kupovina', 'slug' => 'real-estate-buy'],
+                    ['name' => 'Kvartovi', 'slug' => 'real-estate-areas'],
+                    ['name' => 'Pravni savjeti', 'slug' => 'real-estate-legal'],
                 ]
             ],
 
@@ -72,9 +72,9 @@ class BlogCategoriesSeeder extends Seeder
                 'description' => 'Kupovina, registracija, servis, rent-a-car',
                 'order' => 5,
                 'subcategories' => [
-                    ['name' => 'Kupovina auta', 'slug' => 'buy'],
-                    ['name' => 'Registracija & osiguranje', 'slug' => 'registration'],
-                    ['name' => 'Rent & car-sharing', 'slug' => 'rent'],
+                    ['name' => 'Kupovina auta', 'slug' => 'auto-buy'],
+                    ['name' => 'Registracija & osiguranje', 'slug' => 'auto-registration'],
+                    ['name' => 'Rent & car-sharing', 'slug' => 'auto-rent'],
                 ]
             ],
 
@@ -85,9 +85,9 @@ class BlogCategoriesSeeder extends Seeder
                 'description' => 'Posao u UAE, freelancing, firme (RAKEZ/IFZA/DMCC)',
                 'order' => 6,
                 'subcategories' => [
-                    ['name' => 'Traženje posla', 'slug' => 'jobs'],
-                    ['name' => 'CV & intervjui', 'slug' => 'cv'],
-                    ['name' => 'Osnivanje firme', 'slug' => 'incorporation'],
+                    ['name' => 'Traženje posla', 'slug' => 'work-jobs'],
+                    ['name' => 'CV & intervjui', 'slug' => 'work-cv'],
+                    ['name' => 'Osnivanje firme', 'slug' => 'work-incorporation'],
                 ]
             ],
 
@@ -98,9 +98,9 @@ class BlogCategoriesSeeder extends Seeder
                 'description' => 'Svakodnevni troškovi, kartice, porezne osnove (EU/UAE)',
                 'order' => 7,
                 'subcategories' => [
-                    ['name' => 'Banke & kartice', 'slug' => 'banking'],
-                    ['name' => 'Porezi', 'slug' => 'tax'],
-                    ['name' => 'Budžet & štednja', 'slug' => 'budgeting'],
+                    ['name' => 'Banke & kartice', 'slug' => 'finance-banking'],
+                    ['name' => 'Porezi', 'slug' => 'finance-tax'],
+                    ['name' => 'Budžet & štednja', 'slug' => 'finance-budgeting'],
                 ]
             ],
 
@@ -111,9 +111,9 @@ class BlogCategoriesSeeder extends Seeder
                 'description' => 'Vize, aerodromi, kratki izleti iz Dubaija',
                 'order' => 8,
                 'subcategories' => [
-                    ['name' => 'Vize & dokumenti', 'slug' => 'visas'],
-                    ['name' => 'Itinereri', 'slug' => 'itineraries'],
-                    ['name' => 'Vikend izleti', 'slug' => 'weekend-trips'],
+                    ['name' => 'Vize & dokumenti', 'slug' => 'travel-visas'],
+                    ['name' => 'Itinereri', 'slug' => 'travel-itineraries'],
+                    ['name' => 'Vikend izleti', 'slug' => 'travel-weekend-trips'],
                 ]
             ],
 
@@ -124,9 +124,9 @@ class BlogCategoriesSeeder extends Seeder
                 'description' => 'Škole, aktivnosti s djecom, zdravlje, kućni ljubimci',
                 'order' => 9,
                 'subcategories' => [
-                    ['name' => 'Škole & edukacija', 'slug' => 'schools'],
-                    ['name' => 'Aktivnosti', 'slug' => 'activities'],
-                    ['name' => 'Pets', 'slug' => 'pets'],
+                    ['name' => 'Škole & edukacija', 'slug' => 'family-schools'],
+                    ['name' => 'Aktivnosti', 'slug' => 'family-activities'],
+                    ['name' => 'Pets', 'slug' => 'family-pets'],
                 ]
             ],
 
@@ -137,8 +137,8 @@ class BlogCategoriesSeeder extends Seeder
                 'description' => 'Kupovina gadgeta u UAE, cijene, poređenje',
                 'order' => 10,
                 'subcategories' => [
-                    ['name' => 'Kupovina & recenzije', 'slug' => 'reviews'],
-                    ['name' => 'Best-value vodiči', 'slug' => 'deals'],
+                    ['name' => 'Kupovina & recenzije', 'slug' => 'electronics-reviews'],
+                    ['name' => 'Best-value vodiči', 'slug' => 'electronics-deals'],
                 ]
             ],
 
@@ -149,9 +149,9 @@ class BlogCategoriesSeeder extends Seeder
                 'description' => 'Brunch, fine-dining, halal opcije, coffee spotovi',
                 'order' => 11,
                 'subcategories' => [
-                    ['name' => 'Preporuke', 'slug' => 'top-picks'],
-                    ['name' => 'Brunch & nightlife', 'slug' => 'brunch'],
-                    ['name' => 'Porodična mjesta', 'slug' => 'family'],
+                    ['name' => 'Preporuke', 'slug' => 'food-top-picks'],
+                    ['name' => 'Brunch & nightlife', 'slug' => 'food-brunch'],
+                    ['name' => 'Porodična mjesta', 'slug' => 'food-family'],
                 ]
             ],
 
@@ -162,9 +162,9 @@ class BlogCategoriesSeeder extends Seeder
                 'description' => 'Zajednica, događaji, usluge "na našem"',
                 'order' => 12,
                 'subcategories' => [
-                    ['name' => 'Za zajednicu', 'slug' => 'community'],
-                    ['name' => 'Usluge na našem', 'slug' => 'services'],
-                    ['name' => 'Priče iseljenika', 'slug' => 'stories'],
+                    ['name' => 'Za zajednicu', 'slug' => 'balkan-community'],
+                    ['name' => 'Usluge na našem', 'slug' => 'balkan-services'],
+                    ['name' => 'Priče iseljenika', 'slug' => 'balkan-stories'],
                 ]
             ],
 
@@ -175,8 +175,8 @@ class BlogCategoriesSeeder extends Seeder
                 'description' => 'Sigurnost na oglasima, plaćanja, privatnost',
                 'order' => 13,
                 'subcategories' => [
-                    ['name' => 'Plaćanja & escrow', 'slug' => 'payments'],
-                    ['name' => 'Privatnost', 'slug' => 'privacy'],
+                    ['name' => 'Plaćanja & escrow', 'slug' => 'security-payments'],
+                    ['name' => 'Privatnost', 'slug' => 'security-privacy'],
                 ]
             ],
 
@@ -187,9 +187,9 @@ class BlogCategoriesSeeder extends Seeder
                 'description' => 'Release note-ovi, partnerstva, akcije',
                 'order' => 14,
                 'subcategories' => [
-                    ['name' => 'Product updates', 'slug' => 'updates'],
-                    ['name' => 'Partnerstva', 'slug' => 'partners'],
-                    ['name' => 'Promo & popusti', 'slug' => 'deals'],
+                    ['name' => 'Product updates', 'slug' => 'news-updates'],
+                    ['name' => 'Partnerstva', 'slug' => 'news-partners'],
+                    ['name' => 'Promo & popusti', 'slug' => 'news-deals'],
                 ]
             ],
         ];
