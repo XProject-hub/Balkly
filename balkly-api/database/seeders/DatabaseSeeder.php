@@ -15,10 +15,9 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             AdditionalCategoriesSeeder::class,
             PlanSeeder::class,
-            // ForumCategorySeeder::class,  // Old seeder - replaced
-            // ForumSubcategoriesSeeder::class,  // Old seeder - replaced
-            CompleteForumCategoriesSeeder::class,  // New complete Serbian/Bosnian structure
+            CompleteForumCategoriesSeeder::class,
             UserSeeder::class,
+            EventSeeder::class,
             KnowledgeBaseSeeder::class,
             BlogCategoriesSeeder::class,
         ]);
