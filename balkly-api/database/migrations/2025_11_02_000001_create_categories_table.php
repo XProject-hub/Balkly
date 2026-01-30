@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('slug');
             $table->enum('type', ['text', 'number', 'select', 'multiselect', 'boolean', 'date', 'range']);
             $table->json('options_json')->nullable();
+            $table->json('metadata')->nullable();
             $table->boolean('is_required')->default(false);
             $table->boolean('is_searchable')->default(true);
             $table->integer('order')->default(0);
