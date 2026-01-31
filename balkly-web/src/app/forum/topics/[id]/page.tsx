@@ -384,9 +384,17 @@ export default function TopicDetailPage() {
             {/* User Info - Left Sidebar (XenForo style) */}
             <div className="md:col-span-3 bg-gray-50 dark:bg-gray-800/50 p-6 border-r dark:border-gray-800">
               <div className="text-center">
-                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white font-bold text-3xl shadow-lg mb-3">
-                  {topic.user?.name?.[0]?.toUpperCase()}
-                </div>
+                {topic.user?.profile?.avatar_url ? (
+                  <img 
+                    src={topic.user.profile.avatar_url} 
+                    alt={topic.user?.name} 
+                    className="w-24 h-24 mx-auto rounded-full object-cover shadow-lg mb-3"
+                  />
+                ) : (
+                  <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white font-bold text-3xl shadow-lg mb-3">
+                    {topic.user?.name?.[0]?.toUpperCase()}
+                  </div>
+                )}
                 <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-1">{topic.user?.name}</h3>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Member</p>
                 <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
@@ -472,9 +480,17 @@ export default function TopicDetailPage() {
               {/* User Info - Left */}
               <div className="md:col-span-3 bg-gray-50 dark:bg-gray-800/50 p-6 border-r dark:border-gray-800">
                 <div className="text-center">
-                  <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white font-bold text-2xl shadow-lg mb-3">
-                    {post.user?.name?.[0]?.toUpperCase()}
-                  </div>
+                  {post.user?.profile?.avatar_url ? (
+                    <img 
+                      src={post.user.profile.avatar_url} 
+                      alt={post.user?.name} 
+                      className="w-20 h-20 mx-auto rounded-full object-cover shadow-lg mb-3"
+                    />
+                  ) : (
+                    <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white font-bold text-2xl shadow-lg mb-3">
+                      {post.user?.name?.[0]?.toUpperCase()}
+                    </div>
+                  )}
                   <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-1">{post.user?.name}</h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400">Member</p>
                 </div>

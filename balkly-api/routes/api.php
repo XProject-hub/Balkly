@@ -82,6 +82,7 @@ Route::prefix('v1')->group(function () {
         // Profile
         Route::get('/profile', [\App\Http\Controllers\Api\ProfileController::class, 'show']);
         Route::patch('/profile/update', [\App\Http\Controllers\Api\ProfileController::class, 'update']);
+        Route::post('/profile/avatar', [\App\Http\Controllers\Api\ProfileController::class, 'uploadAvatar']);
         Route::get('/profile/insights', [\App\Http\Controllers\Api\ProfileController::class, 'insights']);
         Route::post('/profile/change-password', [\App\Http\Controllers\Api\ProfileController::class, 'changePassword']);
         

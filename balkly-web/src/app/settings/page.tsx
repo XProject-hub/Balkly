@@ -5,11 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, User, Bell, Shield, CreditCard } from "lucide-react";
+import { ArrowLeft, User, Bell, Shield, CreditCard, Camera } from "lucide-react";
 
 export default function SettingsPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
+  const [avatarUploading, setAvatarUploading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -64,6 +65,59 @@ export default function SettingsPage() {
           email: parsed.email || "",
         });
       }
+    }
+  };
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image must be less than 5MB');
+      return;
+    }
+
+    setAvatarUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      const response = await fetch('/api/v1/profile/avatar', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Update local user data
+        setUser((prev: any) => ({
+          ...prev,
+          profile: { ...prev?.profile, avatar_url: data.avatar_url }
+        }));
+        localStorage.setItem('user', JSON.stringify({
+          ...user,
+          profile: { ...user?.profile, avatar_url: data.avatar_url }
+        }));
+        alert('Avatar updated successfully!');
+      } else {
+        const error = await response.json();
+        alert(error.message || 'Failed to upload avatar');
+      }
+    } catch (error) {
+      console.error('Avatar upload error:', error);
+      alert('Failed to upload avatar');
+    } finally {
+      setAvatarUploading(false);
     }
   };
 
@@ -132,6 +186,40 @@ export default function SettingsPage() {
               <CardDescription>Update your personal details</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Avatar Upload */}
+              <div className="flex items-center gap-6 pb-4 border-b">
+                <div className="relative">
+                  {user?.profile?.avatar_url ? (
+                    <img 
+                      src={user.profile.avatar_url} 
+                      alt="Avatar" 
+                      className="w-24 h-24 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-24 h-24 rounded-full bg-primary flex items-center justify-center text-white font-bold text-3xl">
+                      {user?.name?.[0]?.toUpperCase() || 'U'}
+                    </div>
+                  )}
+                  <label className="absolute bottom-0 right-0 bg-primary hover:bg-primary/90 text-white rounded-full p-2 cursor-pointer transition">
+                    <Camera className="h-4 w-4" />
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="hidden" 
+                      onChange={handleAvatarUpload}
+                      disabled={avatarUploading}
+                    />
+                  </label>
+                </div>
+                <div>
+                  <h3 className="font-medium">{user?.name}</h3>
+                  <p className="text-sm text-muted-foreground">{user?.email}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {avatarUploading ? 'Uploading...' : 'Click the camera icon to change your avatar'}
+                  </p>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">Full Name</label>

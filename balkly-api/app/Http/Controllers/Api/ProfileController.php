@@ -50,6 +50,39 @@ class ProfileController extends Controller
     }
 
     /**
+     * Upload avatar
+     */
+    public function uploadAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar' => 'required|image|max:5120', // 5MB max
+        ]);
+
+        $user = $request->user();
+        $file = $request->file('avatar');
+
+        // Generate unique filename
+        $filename = 'avatar_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+        // Store in MinIO/S3
+        $path = $file->storeAs('avatars', $filename, 'public');
+        
+        // Get the full URL
+        $avatarUrl = config('app.url') . '/storage/' . $path;
+
+        // Update profile
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            ['avatar_url' => $avatarUrl]
+        );
+
+        return response()->json([
+            'avatar_url' => $avatarUrl,
+            'message' => 'Avatar uploaded successfully',
+        ]);
+    }
+
+    /**
      * Change password
      */
     public function changePassword(Request $request)
