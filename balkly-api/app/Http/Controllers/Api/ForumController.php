@@ -36,7 +36,7 @@ class ForumController extends Controller
 
     public function topics(Request $request)
     {
-        $query = ForumTopic::with(['user', 'category'])
+        $query = ForumTopic::with(['user.profile', 'category'])
             ->where('status', 'active');
 
         if ($request->has('category_id')) {
@@ -54,7 +54,7 @@ class ForumController extends Controller
 
     public function show($id)
     {
-        $topic = ForumTopic::with(['user.profile', 'category', 'posts.user'])
+        $topic = ForumTopic::with(['user.profile', 'category', 'posts.user.profile'])
             ->findOrFail($id);
 
         $topic->increment('views_count');
