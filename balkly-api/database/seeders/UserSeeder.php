@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
         $admin = User::create([
             'name' => 'Admin User',
             'email' => 'admin@balkly.com',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('Sarajevo1323'),
             'locale' => 'en',
             'role' => 'admin',
             'email_verified_at' => now(),
