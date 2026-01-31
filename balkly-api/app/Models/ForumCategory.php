@@ -10,6 +10,7 @@ class ForumCategory extends Model
     use HasFactory;
 
     protected $fillable = [
+        'parent_id',
         'name',
         'slug',
         'description',
@@ -25,14 +26,19 @@ class ForumCategory extends Model
         ];
     }
 
-    public function topics()
+    public function parent()
     {
-        return $this->hasMany(ForumTopic::class, 'category_id');
+        return $this->belongsTo(ForumCategory::class, 'parent_id');
     }
 
     public function subcategories()
     {
-        return $this->hasMany(ForumSubcategory::class, 'forum_category_id')->orderBy('order');
+        return $this->hasMany(ForumCategory::class, 'parent_id')->orderBy('order');
+    }
+
+    public function topics()
+    {
+        return $this->hasMany(ForumTopic::class, 'category_id');
     }
 }
 
