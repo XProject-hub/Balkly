@@ -24,6 +24,8 @@ export default function Footer() {
               <img 
                 src="/logo-icon.png" 
                 alt="Balkly" 
+                width={96}
+                height={96}
                 className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 brightness-110 sm:mb-4 lg:mb-6"
               />
               <div className="sm:hidden">
@@ -49,13 +51,13 @@ export default function Footer() {
               </p>
             </div>
             <div className="flex gap-3 mt-3 sm:mt-4">
-              <a href="https://www.tiktok.com/@balkly.ae" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors p-2 -ml-2 sm:p-0 sm:ml-0">
+              <a href="https://www.tiktok.com/@balkly.ae" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors p-2 -ml-2 sm:p-0 sm:ml-0" aria-label="Follow us on TikTok">
                 <TikTokIcon className="h-5 w-5" />
               </a>
-              <a href="https://www.instagram.com/balkly_dxb" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors p-2 sm:p-0">
+              <a href="https://www.instagram.com/balkly_dxb" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors p-2 sm:p-0" aria-label="Follow us on Instagram">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="mailto:info@balkly.live" className="text-gray-400 hover:text-white transition-colors p-2 sm:p-0">
+              <a href="mailto:info@balkly.live" className="text-gray-400 hover:text-white transition-colors p-2 sm:p-0" aria-label="Email us at info@balkly.live">
                 <Mail className="h-5 w-5" />
               </a>
             </div>

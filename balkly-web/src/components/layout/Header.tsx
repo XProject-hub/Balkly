@@ -142,6 +142,8 @@ export default function Header() {
             <img 
               src="/logo.png" 
               alt="Balkly" 
+              width={250}
+              height={200}
               className="h-12 sm:h-16 lg:h-20 w-auto dark:brightness-110"
             />
           </Link>
