@@ -71,6 +71,9 @@ Route::prefix('v1')->group(function () {
     Route::get('/paypal/success', [\App\Http\Controllers\Api\PayPalController::class, 'handleSuccess'])->name('api.paypal.success');
     Route::get('/paypal/cancel', [\App\Http\Controllers\Api\PayPalController::class, 'handleCancel'])->name('api.paypal.cancel');
     
+    // Analytics tracking (public - track all visitors)
+    Route::post('/analytics/track', [\App\Http\Controllers\Api\AnalyticsController::class, 'trackVisit']);
+    
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {
         // Auth
@@ -197,9 +200,6 @@ Route::prefix('v1')->group(function () {
         
         // Seller Verification
         Route::post('/verification/request', [\App\Http\Controllers\Api\VerificationController::class, 'requestVerification']);
-        
-        // Analytics tracking
-        Route::post('/analytics/track', [\App\Http\Controllers\Api\AnalyticsController::class, 'trackVisit']);
         
         // Notifications
         Route::get('/notifications', [NotificationController::class, 'index']);
