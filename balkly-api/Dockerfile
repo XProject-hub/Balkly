@@ -27,6 +27,9 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         exif \
         pcntl
 
+# Copy OPcache configuration for maximum performance
+COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+
 # Install Redis extension
 RUN apk add --no-cache \
         pcre-dev \
@@ -81,9 +84,13 @@ RUN mkdir -p /var/www/storage/framework/cache \
     && chmod -R 775 /var/www/storage \
     && chmod -R 775 /var/www/bootstrap/cache
 
+# Copy and set up entrypoint
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 # Expose port
 EXPOSE 8000
 
-# Start PHP-FPM
-CMD ["php-fpm"]
+# Use entrypoint for Laravel optimization
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
