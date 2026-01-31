@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Search, UserX, Shield, Mail, Trash2, CheckCircle, MailCheck, Loader2 } from "lucide-react";
+import { ArrowLeft, Search, UserX, Shield, Mail, Trash2, CheckCircle, MailCheck, Loader2, Crown, UserCog } from "lucide-react";
 import { toast } from "@/lib/toast";
 
 export default function AdminUsersPage() {
@@ -81,6 +81,35 @@ export default function AdminUsersPage() {
       loadUsers();
     } catch (error) {
       toast.error("Failed to delete user");
+    }
+  };
+
+  const handleChangeRole = async (userId: number, userName: string, newRole: string) => {
+    const roleLabels: Record<string, string> = {
+      user: "User",
+      seller: "Seller",
+      moderator: "Moderator",
+      admin: "Admin"
+    };
+    
+    if (!confirm(`Change ${userName}'s role to ${roleLabels[newRole]}?`)) return;
+
+    try {
+      const response = await fetch(`/api/v1/admin/users/${userId}/role`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({ role: newRole }),
+      });
+      
+      if (!response.ok) throw new Error("Failed to change role");
+      
+      toast.success(`${userName} is now a ${roleLabels[newRole]}`);
+      loadUsers();
+    } catch (error) {
+      toast.error("Failed to change role");
     }
   };
 
@@ -183,7 +212,15 @@ export default function AdminUsersPage() {
                         <p className="font-medium">{user.name}</p>
                         <p className="text-sm text-muted-foreground">{user.email}</p>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-medium uppercase">
+                          <span className={`px-2 py-0.5 text-xs rounded-full font-medium uppercase flex items-center gap-1 ${
+                            user.role === 'admin' 
+                              ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' 
+                              : user.role === 'moderator'
+                              ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400'
+                              : 'bg-primary/10 text-primary'
+                          }`}>
+                            {user.role === 'admin' && <Crown className="h-3 w-3" />}
+                            {user.role === 'moderator' && <Shield className="h-3 w-3" />}
                             {user.role}
                           </span>
                           {user.email_verified_at ? (
@@ -207,10 +244,24 @@ export default function AdminUsersPage() {
                       </div>
                     </div>
 
-                    <div className="flex gap-2 flex-wrap">
+                    <div className="flex gap-2 flex-wrap items-center">
                       <Button size="sm" variant="outline" asChild>
                         <Link href={`/profile/${user.id}`}>View Profile</Link>
                       </Button>
+                      
+                      {/* Role Change Dropdown */}
+                      {user.role !== "admin" && (
+                        <select
+                          value={user.role}
+                          onChange={(e) => handleChangeRole(user.id, user.name, e.target.value)}
+                          className="px-3 py-1.5 text-sm border rounded-lg bg-background"
+                        >
+                          <option value="user">User</option>
+                          <option value="seller">Seller</option>
+                          <option value="moderator">Moderator</option>
+                        </select>
+                      )}
+                      
                       {user.role !== "admin" && (
                         <>
                           {!user.email_verified_at && (

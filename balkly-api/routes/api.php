@@ -220,6 +220,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/analytics', [\App\Http\Controllers\Api\AnalyticsController::class, 'getAnalytics']);
             Route::get('/users', [\App\Http\Controllers\Api\AdminController::class, 'users']);
             Route::post('/users/{id}/ban', [\App\Http\Controllers\Api\AdminController::class, 'banUser']);
+            Route::post('/users/{id}/role', [\App\Http\Controllers\Api\AdminController::class, 'changeUserRole']);
             Route::post('/users/{id}/verify-email', [\App\Http\Controllers\Api\AdminController::class, 'verifyUserEmail']);
             Route::delete('/users/{id}', [\App\Http\Controllers\Api\AdminController::class, 'deleteUser']);
             

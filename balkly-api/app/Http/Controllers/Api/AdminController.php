@@ -248,6 +248,30 @@ class AdminController extends Controller
     }
 
     /**
+     * Change user role
+     */
+    public function changeUserRole(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'role' => 'required|in:user,seller,moderator',
+        ]);
+
+        $user = User::findOrFail($id);
+        
+        if ($user->role === 'admin') {
+            return response()->json(['error' => 'Cannot change admin role'], 403);
+        }
+
+        $user->role = $validated['role'];
+        $user->save();
+
+        return response()->json([
+            'message' => 'User role updated successfully',
+            'user' => $user,
+        ]);
+    }
+
+    /**
      * Permanently delete user
      */
     public function deleteUser($id)
