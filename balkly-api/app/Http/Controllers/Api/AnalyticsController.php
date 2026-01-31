@@ -255,7 +255,7 @@ class AnalyticsController extends Controller
                 'forum_posts_in_period' => ForumPost::where('created_at', '>=', $startDate)->count(),
                 'events_total' => Event::count(),
                 'events_active' => Event::where('status', 'published')
-                    ->where('date', '>=', now())->count(),
+                    ->where('start_at', '>=', now())->count(),
             ],
 
             // Peak hours analysis
