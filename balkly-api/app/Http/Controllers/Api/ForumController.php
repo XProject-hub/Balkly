@@ -17,11 +17,19 @@ class ForumController extends Controller
         // Admin can see all categories, public only sees active ones
         $query = ForumCategory::query();
         
+        // Only get top-level categories (parent_id is null)
+        $query->whereNull('parent_id');
+        
         if (!$request->user() || !$request->user()->isAdmin()) {
             $query->where('is_active', true);
         }
         
-        $categories = $query->with('subcategories')->orderBy('order')->get();
+        $categories = $query->with(['subcategories' => function($q) use ($request) {
+            if (!$request->user() || !$request->user()->isAdmin()) {
+                $q->where('is_active', true);
+            }
+            $q->orderBy('order');
+        }])->orderBy('order')->get();
 
         return response()->json(['categories' => $categories]);
     }
