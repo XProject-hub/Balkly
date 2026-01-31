@@ -13,7 +13,6 @@ class ForumTopic extends Model
 
     protected $fillable = [
         'category_id',
-        'subcategory_id',
         'user_id',
         'title',
         'slug',
