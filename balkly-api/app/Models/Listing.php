@@ -23,6 +23,9 @@ class Listing extends Model
         'city',
         'country',
         'status',
+        'is_promoted',
+        'promotion_type',
+        'promotion_expires_at',
         'expires_at',
         'published_at',
         'views_count',
@@ -33,6 +36,8 @@ class Listing extends Model
     {
         return [
             'price' => 'decimal:2',
+            'is_promoted' => 'boolean',
+            'promotion_expires_at' => 'datetime',
             'expires_at' => 'datetime',
             'published_at' => 'datetime',
             'metadata' => 'array',
