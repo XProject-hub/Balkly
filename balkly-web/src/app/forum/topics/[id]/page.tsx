@@ -19,6 +19,8 @@ export default function TopicDetailPage() {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [editingPost, setEditingPost] = useState<any>(null);
   const [editContent, setEditContent] = useState("");
+  const [editingTopic, setEditingTopic] = useState(false);
+  const [editTopicContent, setEditTopicContent] = useState("");
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -61,6 +63,36 @@ export default function TopicDetailPage() {
       loadTopic();
     } catch (error) {
       alert("Failed to post reply");
+    }
+  };
+
+  const handleEditTopic = () => {
+    setEditingTopic(true);
+    setEditTopicContent(topic.content);
+  };
+
+  const handleSaveTopicEdit = async () => {
+    if (!editTopicContent.trim()) return;
+    
+    try {
+      const response = await fetch(`/api/v1/forum/topics/${topicId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({ content: editTopicContent }),
+      });
+      
+      if (response.ok) {
+        setEditingTopic(false);
+        setEditTopicContent("");
+        loadTopic();
+      } else {
+        alert("Failed to save edit");
+      }
+    } catch (error) {
+      alert("Failed to save edit");
     }
   };
 
@@ -414,6 +446,15 @@ export default function TopicDetailPage() {
                     <span className="font-medium">{topic?.user_has_liked === true ? 'Liked' : 'Like'}</span>
                     {(topic?.likes_count || 0) > 0 && <span className="text-gray-500">({topic.likes_count})</span>}
                   </button>
+                  {(currentUser?.id === topic.user_id || currentUser?.role === 'admin') && (
+                    <button
+                      onClick={handleEditTopic}
+                      className="text-gray-600 dark:text-gray-400 hover:text-primary transition flex items-center gap-1"
+                    >
+                      <Edit className="h-4 w-4" />
+                      Edit
+                    </button>
+                  )}
                   <button className="text-gray-600 dark:text-gray-400 hover:text-primary transition">
                     <Flag className="h-4 w-4 inline mr-1" />
                     Report
@@ -530,6 +571,38 @@ export default function TopicDetailPage() {
             </>
           )}
         </div>
+
+        {/* Edit Topic Modal */}
+        {editingTopic && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white dark:bg-gray-900 rounded-lg max-w-3xl w-full p-6 border dark:border-gray-800">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">Edit Topic</h3>
+                <button
+                  onClick={() => setEditingTopic(false)}
+                  className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+              
+              <MarkdownEditor 
+                value={editTopicContent} 
+                onChange={setEditTopicContent} 
+                placeholder="Edit your topic..." 
+              />
+              
+              <div className="flex justify-end gap-2 mt-4">
+                <Button variant="outline" onClick={() => setEditingTopic(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleSaveTopicEdit} disabled={!editTopicContent.trim()}>
+                  Save changes
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Edit Post Modal */}
         {editingPost && (
