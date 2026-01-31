@@ -129,7 +129,7 @@ export default function RootLayout({
               },
               "sameAs": [
                 "https://facebook.com/balkly",
-                "https://instagram.com/balkly",
+                "https://instagram.com/balkly_dxb",
                 "https://twitter.com/balkly_live"
               ]
             })

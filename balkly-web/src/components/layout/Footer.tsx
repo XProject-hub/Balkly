@@ -52,7 +52,7 @@ export default function Footer() {
               <a href="https://www.tiktok.com/@balkly.ae" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors p-2 -ml-2 sm:p-0 sm:ml-0">
                 <TikTokIcon className="h-5 w-5" />
               </a>
-              <a href="https://www.instagram.com/balkly.ae" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors p-2 sm:p-0">
+              <a href="https://www.instagram.com/balkly_dxb" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors p-2 sm:p-0">
                 <Instagram className="h-5 w-5" />
               </a>
               <a href="mailto:info@balkly.live" className="text-gray-400 hover:text-white transition-colors p-2 sm:p-0">
