@@ -133,7 +133,7 @@ export default function HomePage() {
 
             {/* Search Bar */}
             <form onSubmit={handleSearch} className="max-w-2xl mx-auto px-2 sm:px-0">
-              <div className="flex flex-col sm:flex-row sm:items-stretch gap-2 bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-2 shadow-2xl border border-white/20">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 bg-white rounded-xl sm:rounded-2xl p-2 shadow-2xl">
                 <div className="flex-1 relative">
                   <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 h-4 sm:h-5 w-4 sm:w-5 text-gray-400" />
                   <input
@@ -143,11 +143,11 @@ export default function HomePage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search for cars, homes, events..."
-                    className="w-full h-12 sm:h-14 pl-10 sm:pl-12 pr-4 rounded-lg sm:rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-primary bg-gray-900/80 text-white placeholder:text-gray-400 text-sm sm:text-base"
+                    className="w-full h-11 pl-10 sm:pl-12 pr-4 rounded-lg sm:rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-primary bg-white text-gray-900 placeholder:text-gray-400 text-sm sm:text-base"
                     autoComplete="off"
                   />
                 </div>
-                <Button size="lg" type="submit" className="h-12 sm:h-14 w-full sm:w-auto px-6 sm:px-8">
+                <Button size="lg" type="submit" className="h-11 w-full sm:w-auto px-6 sm:px-8">
                   Search
                 </Button>
               </div>
