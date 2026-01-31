@@ -58,16 +58,42 @@ export default function FullAnalyticsPage() {
   const loadAnalytics = async () => {
     setLoading(true);
     try {
+      const token = localStorage.getItem("auth_token");
+      if (!token) {
+        setAnalytics({ error: "No authentication token found. Please log in again." });
+        setLoading(false);
+        return;
+      }
+      
       const response = await fetch(`/api/v1/admin/analytics?period=${period}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
+      
+      if (response.status === 401) {
+        setAnalytics({ error: "Session expired. Please log in again." });
+        setLoading(false);
+        return;
+      }
+      
+      if (response.status === 403) {
+        setAnalytics({ error: "Access denied. Admin privileges required." });
+        setLoading(false);
+        return;
+      }
+      
       const data = await response.json();
-      setAnalytics(data);
+      
+      if (data.error) {
+        console.error("Analytics API error:", data);
+        setAnalytics({ error: data.message || data.error });
+      } else {
+        setAnalytics(data);
+      }
     } catch (error) {
       console.error("Failed to load analytics:", error);
-      setAnalytics(null);
+      setAnalytics({ error: "Network error. Please check your connection." });
     } finally {
       setLoading(false);
     }
