@@ -1,15 +1,12 @@
-# Balkly Marketplace - Robots.txt
-
+# Balkly robots.txt
 User-agent: *
 Allow: /
+Disallow: /api/
 Disallow: /admin/
 Disallow: /dashboard/
-Disallow: /auth/
-Disallow: /api/
+Disallow: /settings/
 
-# Sitemap
-Sitemap: https://yourdomain.com/sitemap.xml
+User-agent: Googlebot
+Allow: /
 
-# Crawl-delay
-Crawl-delay: 1
-
+Sitemap: https://balkly.net/sitemap.xml
