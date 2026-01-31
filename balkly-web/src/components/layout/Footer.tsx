@@ -46,7 +46,7 @@ export default function Footer() {
               <p className="text-sm text-gray-400">
                 United Balkans in the Emirates
               </p>
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-gray-400 mt-2">
                 One community. One platform. No borders.
               </p>
             </div>
