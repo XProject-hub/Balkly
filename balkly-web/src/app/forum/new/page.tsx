@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
@@ -10,10 +10,14 @@ import MarkdownEditor from "@/components/MarkdownEditor";
 
 export default function NewTopicPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const preselectedCategory = searchParams.get("category");
+  
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
+  const [selectedCategoryName, setSelectedCategoryName] = useState<string>("");
   const [formData, setFormData] = useState({
-    category_id: "",
+    category_id: preselectedCategory || "",
     title: "",
     content: "",
   });
@@ -21,6 +25,32 @@ export default function NewTopicPage() {
   useEffect(() => {
     loadCategories();
   }, []);
+
+  // Update category_id when preselectedCategory changes
+  useEffect(() => {
+    if (preselectedCategory) {
+      setFormData(prev => ({ ...prev, category_id: preselectedCategory }));
+    }
+  }, [preselectedCategory]);
+
+  // Find category name when categories load
+  useEffect(() => {
+    if (formData.category_id && categories.length > 0) {
+      for (const cat of categories) {
+        if (cat.id.toString() === formData.category_id) {
+          setSelectedCategoryName(cat.name);
+          break;
+        }
+        if (cat.subcategories) {
+          const sub = cat.subcategories.find((s: any) => s.id.toString() === formData.category_id);
+          if (sub) {
+            setSelectedCategoryName(`${cat.name} → ${sub.name}`);
+            break;
+          }
+        }
+      }
+    }
+  }, [formData.category_id, categories]);
 
   const loadCategories = async () => {
     try {
@@ -99,29 +129,49 @@ export default function NewTopicPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="topic-category" className="block text-sm font-medium mb-2">Category *</label>
-                <select
-                  id="topic-category"
-                  value={formData.category_id}
-                  onChange={(e) =>
-                    setFormData({ ...formData, category_id: e.target.value })
-                  }
-                  required
-                  className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
-                >
-                  <option value="">Select a category</option>
-                  {categories.map((cat) => (
-                    <optgroup key={cat.id} label={cat.name}>
-                      <option value={cat.id}>
-                        {cat.name}
-                      </option>
-                      {cat.subcategories && cat.subcategories.map((subCat: any) => (
-                        <option key={subCat.id} value={subCat.id}>
-                          &nbsp;&nbsp;└─ {subCat.name}
+                {preselectedCategory && selectedCategoryName ? (
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 px-4 py-2 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+                      <span className="font-medium">{selectedCategoryName}</span>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setFormData({ ...formData, category_id: "" });
+                        setSelectedCategoryName("");
+                        router.replace("/forum/new");
+                      }}
+                    >
+                      Change
+                    </Button>
+                  </div>
+                ) : (
+                  <select
+                    id="topic-category"
+                    value={formData.category_id}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category_id: e.target.value })
+                    }
+                    required
+                    className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+                  >
+                    <option value="">Select a category</option>
+                    {categories.map((cat) => (
+                      <optgroup key={cat.id} label={cat.name}>
+                        <option value={cat.id}>
+                          {cat.name}
                         </option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </select>
+                        {cat.subcategories && cat.subcategories.map((subCat: any) => (
+                          <option key={subCat.id} value={subCat.id}>
+                            &nbsp;&nbsp;└─ {subCat.name}
+                          </option>
+                        ))}
+                      </optgroup>
+                    ))}
+                  </select>
+                )}
               </div>
 
               <div>

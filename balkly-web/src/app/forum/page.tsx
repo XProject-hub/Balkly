@@ -67,7 +67,7 @@ export default function ForumPage() {
               <p className="text-gray-600 dark:text-gray-400 mt-1">Community discussions and support</p>
             </div>
             <Button className="bg-primary hover:bg-primary/90" asChild>
-              <Link href="/forum/new">
+              <Link href={selectedCategory ? `/forum/new?category=${selectedCategory}` : "/forum/new"}>
                 <Plus className="mr-2 h-4 w-4" />
                 Post thread
               </Link>
@@ -140,7 +140,7 @@ export default function ForumPage() {
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">No threads yet</h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">Be the first to start a discussion</p>
                 <Button asChild>
-                  <Link href="/forum/new">Create thread</Link>
+                  <Link href={selectedCategory ? `/forum/new?category=${selectedCategory}` : "/forum/new"}>Create thread</Link>
                 </Button>
               </div>
             ) : (
@@ -166,9 +166,17 @@ export default function ForumPage() {
                         <div className="col-span-12 md:col-span-6 flex gap-3">
                           {/* Avatar */}
                           <div className="flex-shrink-0">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white font-bold text-sm">
-                              {topic.user?.name?.[0]?.toUpperCase()}
-                            </div>
+                            {topic.user?.profile?.avatar_url ? (
+                              <img 
+                                src={topic.user.profile.avatar_url} 
+                                alt={topic.user?.name} 
+                                className="w-10 h-10 rounded-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white font-bold text-sm">
+                                {topic.user?.name?.[0]?.toUpperCase()}
+                              </div>
+                            )}
                           </div>
 
                           {/* Thread Details */}
