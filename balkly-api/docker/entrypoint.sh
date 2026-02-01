@@ -3,9 +3,10 @@ set -e
 
 echo "🚀 Starting Balkly API..."
 
-# Wait for MySQL to be ready
+# Wait for MySQL to be ready (using bash instead of nc which may not be installed)
 echo "⏳ Waiting for MySQL..."
-while ! nc -z ${DB_HOST:-mysql} 3306; do
+until php -r "new PDO('mysql:host=${DB_HOST:-mysql};port=3306', '${DB_USERNAME:-balkly}', '${DB_PASSWORD:-balkly_pass}');" 2>/dev/null; do
+  echo "MySQL not ready yet, waiting..."
   sleep 2
 done
 sleep 3
@@ -19,16 +20,22 @@ fi
 
 # Optimize Laravel for production
 echo "⚡ Optimizing Laravel..."
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-php artisan event:cache
+php artisan config:cache || true
+php artisan route:cache || true
+php artisan view:cache || true
+php artisan event:cache || true
 
 # Create storage link if not exists
 php artisan storage:link 2>/dev/null || true
 
 echo "✅ Laravel optimized!"
-echo "🌐 Starting PHP-FPM..."
 
-# Start PHP-FPM
-exec php-fpm
+# If a command was passed (from docker-compose), run it
+# Otherwise, default to php-fpm
+if [ $# -gt 0 ]; then
+    echo "🌐 Executing command: $@"
+    exec "$@"
+else
+    echo "🌐 Starting PHP-FPM..."
+    exec php-fpm
+fi
