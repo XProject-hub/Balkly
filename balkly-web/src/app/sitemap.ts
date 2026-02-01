@@ -1,9 +1,26 @@
 import { MetadataRoute } from 'next'
 
+// Helper to safely fetch JSON with error handling
+async function safeFetch(url: string): Promise<any> {
+  try {
+    const res = await fetch(url, { 
+      next: { revalidate: 3600 },
+      signal: AbortSignal.timeout(5000) // 5 second timeout
+    })
+    if (!res.ok) return null
+    const text = await res.text()
+    // Check if response is JSON (not HTML error page)
+    if (text.startsWith('<') || text.startsWith('<!')) return null
+    return JSON.parse(text)
+  } catch {
+    return null
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://balkly.live'
   
-  // Static pages
+  // Static pages - always included
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
@@ -61,70 +78,67 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // Fetch dynamic pages from API
-  try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-    
-    // Get listings
-    const listingsRes = await fetch(`${apiUrl}/api/v1/listings?per_page=100`, {
-      next: { revalidate: 3600 }
-    })
-    const listingsData = await listingsRes.json()
-    const listings = (listingsData.data || []).map((listing: any) => ({
-      url: `${baseUrl}/listings/${listing.id}`,
-      lastModified: new Date(listing.updated_at || listing.created_at),
-      changeFrequency: 'daily' as const,
-      priority: 0.7,
-    }))
+  // During build, API may not be available - return static pages only
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://balkly.live/api/v1'
+  
+  // Try to fetch dynamic content (will gracefully fail during build)
+  const dynamicPages: MetadataRoute.Sitemap = []
 
-    // Get events
-    const eventsRes = await fetch(`${apiUrl}/api/v1/events?per_page=100`, {
-      next: { revalidate: 3600 }
-    })
-    const eventsData = await eventsRes.json()
-    const events = (eventsData.data || []).map((event: any) => ({
-      url: `${baseUrl}/events/${event.id}`,
-      lastModified: new Date(event.updated_at || event.created_at),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    }))
-
-    // Get forum topics
-    const forumRes = await fetch(`${apiUrl}/api/v1/forum/topics?per_page=100`, {
-      next: { revalidate: 3600 }
-    })
-    const forumData = await forumRes.json()
-    const topics = (forumData.data || []).map((topic: any) => ({
-      url: `${baseUrl}/forum/topics/${topic.id}`,
-      lastModified: new Date(topic.updated_at || topic.created_at),
-      changeFrequency: 'daily' as const,
-      priority: 0.6,
-    }))
-
-    // Get KB articles
-    const kbRes = await fetch(`${apiUrl}/api/v1/kb/categories`, {
-      next: { revalidate: 3600 }
-    })
-    const kbData = await kbRes.json()
-    const kbArticles: MetadataRoute.Sitemap = []
-    if (kbData.categories) {
-      kbData.categories.forEach((cat: any) => {
-        if (cat.articles) {
-          cat.articles.forEach((article: any) => {
-            kbArticles.push({
-              url: `${baseUrl}/knowledge-base/${article.slug}`,
-              lastModified: new Date(article.updated_at || article.created_at),
-              changeFrequency: 'weekly' as const,
-              priority: 0.6,
-            })
-          })
-        }
+  // Get listings
+  const listingsData = await safeFetch(`${apiUrl}/listings?per_page=100`)
+  if (listingsData?.data) {
+    listingsData.data.forEach((listing: any) => {
+      dynamicPages.push({
+        url: `${baseUrl}/listings/${listing.id}`,
+        lastModified: new Date(listing.updated_at || listing.created_at),
+        changeFrequency: 'daily',
+        priority: 0.7,
       })
-    }
-
-    return [...staticPages, ...listings, ...events, ...topics, ...kbArticles]
-  } catch (error) {
-    console.error('Failed to fetch dynamic sitemap data:', error)
-    return staticPages
+    })
   }
+
+  // Get events
+  const eventsData = await safeFetch(`${apiUrl}/events?per_page=100`)
+  if (eventsData?.data) {
+    eventsData.data.forEach((event: any) => {
+      dynamicPages.push({
+        url: `${baseUrl}/events/${event.id}`,
+        lastModified: new Date(event.updated_at || event.created_at),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      })
+    })
+  }
+
+  // Get forum topics
+  const forumData = await safeFetch(`${apiUrl}/forum/topics?per_page=100`)
+  if (forumData?.data) {
+    forumData.data.forEach((topic: any) => {
+      dynamicPages.push({
+        url: `${baseUrl}/forum/topics/${topic.id}`,
+        lastModified: new Date(topic.updated_at || topic.created_at),
+        changeFrequency: 'daily',
+        priority: 0.6,
+      })
+    })
+  }
+
+  // Get KB articles
+  const kbData = await safeFetch(`${apiUrl}/kb/categories`)
+  if (kbData?.categories) {
+    kbData.categories.forEach((cat: any) => {
+      if (cat.articles) {
+        cat.articles.forEach((article: any) => {
+          dynamicPages.push({
+            url: `${baseUrl}/knowledge-base/${article.slug}`,
+            lastModified: new Date(article.updated_at || article.created_at),
+            changeFrequency: 'weekly',
+            priority: 0.6,
+          })
+        })
+      }
+    })
+  }
+
+  return [...staticPages, ...dynamicPages]
 }
