@@ -5,7 +5,7 @@ echo "🚀 Starting Balkly API..."
 
 # Wait for MySQL to be ready
 echo "⏳ Waiting for MySQL..."
-until mysql -h"${DB_HOST:-mysql}" -u"${DB_USERNAME:-balkly}" -p"${DB_PASSWORD:-balkly_password}" -e "SELECT 1" &> /dev/null; do
+until php -r "try { new PDO('mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_DATABASE'), getenv('DB_USERNAME'), getenv('DB_PASSWORD')); echo 'ok'; exit(0); } catch(Exception \$e) { exit(1); }" 2>/dev/null; do
   sleep 2
 done
 echo "✅ MySQL is ready!"
