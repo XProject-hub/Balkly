@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Package, DollarSign, Eye, RefreshCw, Search } from "lucide-react";
+import { ArrowLeft, Package, Euro, Eye, RefreshCw, Search } from "lucide-react";
 import { toast } from "@/lib/toast";
 
 interface Order {
@@ -190,7 +190,7 @@ export default function AdminOrdersPage() {
               </div>
             ) : orders.length === 0 ? (
               <div className="text-center py-12">
-                <DollarSign className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
+                <Euro className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
                 <p className="text-muted-foreground">No orders yet</p>
                 <p className="text-sm text-muted-foreground mt-2">
                   Orders will appear here when users make purchases

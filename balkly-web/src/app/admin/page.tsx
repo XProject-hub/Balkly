@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Users,
   Package,
-  DollarSign,
+  Euro,
   TrendingUp,
   AlertCircle,
   Calendar,
@@ -172,7 +172,7 @@ export default function AdminDashboardPage() {
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <DollarSign className="mr-2 h-5 w-5" />
+                  <Euro className="mr-2 h-5 w-5" />
                   Orders & Payments
                 </CardTitle>
               </CardHeader>

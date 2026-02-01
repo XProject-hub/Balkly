@@ -43,7 +43,6 @@ function getFallbackRates(): Record<string, number> {
   return {
     'EUR': 1.0,
     'AED': 4.0,
-    'USD': 1.09,
     'GBP': 0.86,
     'BAM': 1.96,
     'RSD': 117.0,
@@ -84,7 +83,6 @@ export function getCurrencySymbol(currency: string): string {
   const symbols: Record<string, string> = {
     'EUR': '€',
     'AED': 'د.إ',
-    'USD': '$',
     'GBP': '£',
     'BAM': 'KM',
     'RSD': 'din',

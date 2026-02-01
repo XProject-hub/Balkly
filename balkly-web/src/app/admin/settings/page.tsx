@@ -106,7 +106,6 @@ export default function AdminSettingsPage() {
               >
                 <option value="EUR">EUR (€)</option>
                 <option value="AED">AED (د.إ)</option>
-                <option value="USD">USD ($)</option>
                 <option value="GBP">GBP (£)</option>
                 <option value="BAM">BAM (KM)</option>
                 <option value="RSD">RSD (din)</option>

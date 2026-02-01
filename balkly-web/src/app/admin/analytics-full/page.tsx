@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { 
   ArrowLeft, TrendingUp, TrendingDown, Users, Eye, Clock, Monitor, Smartphone, Tablet, 
-  DollarSign, ShoppingCart, MessageSquare, Star, Calendar, Globe, Chrome, BarChart3,
+  Euro, ShoppingCart, MessageSquare, Star, Calendar, Globe, Chrome, BarChart3,
   Activity, Target, Zap, Award, ArrowUpRight, ArrowDownRight, Package, Ticket, Pin
 } from "lucide-react";
 
@@ -261,7 +261,7 @@ export default function FullAnalyticsPage() {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: BarChart3 },
     { id: 'traffic', label: 'Traffic', icon: Activity },
-    { id: 'revenue', label: 'Revenue', icon: DollarSign },
+    { id: 'revenue', label: 'Revenue', icon: Euro },
     { id: 'users', label: 'Users', icon: Users },
     { id: 'engagement', label: 'Engagement', icon: Target },
   ];
@@ -391,7 +391,7 @@ export default function FullAnalyticsPage() {
               <Card className="bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border-emerald-500/30 backdrop-blur-sm">
                 <CardContent className="pt-4">
                   <div className="flex items-center justify-between mb-2">
-                    <DollarSign className="h-5 w-5 text-emerald-400" />
+                    <Euro className="h-5 w-5 text-emerald-400" />
                     <GrowthIndicator value={analytics.revenue.growth_rate} />
                   </div>
                   <p className="text-2xl font-bold text-white">{formatCurrency(analytics.revenue.in_period)}</p>
@@ -507,7 +507,7 @@ export default function FullAnalyticsPage() {
               <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
-                    <DollarSign className="h-5 w-5 text-green-400" />
+                    <Euro className="h-5 w-5 text-green-400" />
                     Revenue Breakdown
                   </CardTitle>
                 </CardHeader>
