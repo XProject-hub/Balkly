@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, MapPin, Clock, Ticket, Plus, Filter, X, SlidersHorizontal, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, MapPin, Clock, Plus, Filter, X, SlidersHorizontal, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { eventsAPI } from "@/lib/api";
 import AdBanner from "@/components/AdBanner";
 
@@ -15,7 +15,6 @@ export default function EventsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [filters, setFilters] = useState({
-    type: "",
     city: "",
     category: "",
     search: "",
@@ -85,21 +84,6 @@ export default function EventsPage() {
         </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-2">Event Type</label>
-        <select
-          value={filters.type}
-          onChange={(e) => {
-            setFilters({ ...filters, type: e.target.value });
-            setCurrentPage(1);
-          }}
-          className={`w-full px-3 ${isMobile ? 'py-2.5 text-base' : 'py-2'} border rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white`}
-        >
-          <option value="">All Types</option>
-          <option value="own">Balkly Tickets</option>
-          <option value="affiliate">Platinumlist Events</option>
-        </select>
-      </div>
 
       <div>
         <label className="block text-sm font-medium mb-2">Category</label>
@@ -148,7 +132,7 @@ export default function EventsPage() {
 
       <Button
         onClick={() => {
-          setFilters({ type: "", city: "", category: "", search: "" });
+          setFilters({ city: "", category: "", search: "" });
           setCurrentPage(1);
         }}
         variant="outline"
@@ -218,7 +202,7 @@ export default function EventsPage() {
               <SlidersHorizontal className="mr-2 h-4 w-4" />
               Filters
             </span>
-            {(filters.type || filters.city || filters.category) && (
+            {(filters.city || filters.category || filters.search) && (
               <span className="bg-primary text-primary-foreground text-xs px-2 py-0.5 rounded-full">
                 Active
               </span>
@@ -305,24 +289,9 @@ export default function EventsPage() {
                             <Calendar className="h-12 w-12 sm:h-16 sm:w-16 lg:h-20 lg:w-20 text-primary/20" />
                           </div>
                         )}
-                        {event.type === "own" ? (
-                          <div className="absolute top-2 right-2 bg-primary text-primary-foreground px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold">
-                            <Ticket className="inline h-3 w-3 mr-1" />
-                            <span className="hidden xs:inline">TICKETS</span>
-                          </div>
-                        ) : event.type === "affiliate" ? (
-                          <div className="absolute top-2 right-2 bg-purple-600 text-white px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
-                            PLATINUMLIST
-                          </div>
-                        ) : null}
                       </div>
                       <CardHeader className="p-3 sm:p-4 lg:p-6">
                         <CardTitle className="line-clamp-1 text-sm sm:text-base lg:text-lg">{event.title}</CardTitle>
-                        {event.type === "affiliate" && (
-                          <p className="text-[10px] sm:text-xs text-muted-foreground">
-                            Powered by Platinumlist
-                          </p>
-                        )}
                         <CardDescription className="space-y-1 text-xs sm:text-sm">
                           <div className="flex items-center">
                             <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
