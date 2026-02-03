@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, MapPin, Clock, Ticket, Plus, Filter, X, SlidersHorizontal } from "lucide-react";
+import { Calendar, MapPin, Clock, Ticket, Plus, Filter, X, SlidersHorizontal, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { eventsAPI } from "@/lib/api";
 import AdBanner from "@/components/AdBanner";
 
@@ -18,6 +18,7 @@ export default function EventsPage() {
     type: "",
     city: "",
     category: "",
+    search: "",
   });
 
   useEffect(() => {
@@ -67,6 +68,23 @@ export default function EventsPage() {
   // Filter component for both mobile and desktop
   const FilterContent = ({ isMobile = false }: { isMobile?: boolean }) => (
     <div className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium mb-2">Search Events</label>
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search by name, venue..."
+            value={filters.search}
+            onChange={(e) => {
+              setFilters({ ...filters, search: e.target.value });
+              setCurrentPage(1);
+            }}
+            className={`w-full pl-10 pr-4 ${isMobile ? 'py-2.5 text-base' : 'py-2'} border rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white`}
+          />
+        </div>
+      </div>
+
       <div>
         <label className="block text-sm font-medium mb-2">Event Type</label>
         <select
@@ -130,7 +148,7 @@ export default function EventsPage() {
 
       <Button
         onClick={() => {
-          setFilters({ type: "", city: "", category: "" });
+          setFilters({ type: "", city: "", category: "", search: "" });
           setCurrentPage(1);
         }}
         variant="outline"
@@ -339,7 +357,17 @@ export default function EventsPage() {
 
             {/* Pagination */}
             {totalEvents > 20 && (
-              <div className="mt-6 sm:mt-8 flex flex-wrap justify-center gap-2">
+              <div className="mt-6 sm:mt-8 flex flex-wrap justify-center items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(1)}
+                  disabled={currentPage === 1}
+                  className="text-xs sm:text-sm"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  <ChevronLeft className="h-4 w-4 -ml-2" />
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"
@@ -347,22 +375,71 @@ export default function EventsPage() {
                   disabled={currentPage === 1}
                   className="text-xs sm:text-sm"
                 >
-                  <span className="hidden xs:inline">Previous</span>
-                  <span className="xs:hidden">‹</span>
+                  <ChevronLeft className="h-4 w-4" />
+                  <span className="hidden xs:inline ml-1">Previous</span>
                 </Button>
                 
                 <div className="flex items-center gap-1 sm:gap-2">
-                  {Array.from({ length: Math.min(3, Math.ceil(totalEvents / 20)) }, (_, i) => (
-                    <Button
-                      key={i + 1}
-                      variant={currentPage === i + 1 ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setCurrentPage(i + 1)}
-                      className="w-8 sm:w-10 text-xs sm:text-sm"
-                    >
-                      {i + 1}
-                    </Button>
-                  ))}
+                  {(() => {
+                    const totalPages = Math.ceil(totalEvents / 20);
+                    const pages = [];
+                    let startPage = Math.max(1, currentPage - 2);
+                    let endPage = Math.min(totalPages, startPage + 4);
+                    
+                    if (endPage - startPage < 4) {
+                      startPage = Math.max(1, endPage - 4);
+                    }
+                    
+                    if (startPage > 1) {
+                      pages.push(
+                        <Button
+                          key={1}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(1)}
+                          className="w-8 sm:w-10 text-xs sm:text-sm"
+                        >
+                          1
+                        </Button>
+                      );
+                      if (startPage > 2) {
+                        pages.push(<span key="dots1" className="text-muted-foreground px-1">...</span>);
+                      }
+                    }
+                    
+                    for (let i = startPage; i <= endPage; i++) {
+                      pages.push(
+                        <Button
+                          key={i}
+                          variant={currentPage === i ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setCurrentPage(i)}
+                          className="w-8 sm:w-10 text-xs sm:text-sm"
+                        >
+                          {i}
+                        </Button>
+                      );
+                    }
+                    
+                    if (endPage < totalPages) {
+                      if (endPage < totalPages - 1) {
+                        pages.push(<span key="dots2" className="text-muted-foreground px-1">...</span>);
+                      }
+                      pages.push(
+                        <Button
+                          key={totalPages}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(totalPages)}
+                          className="w-8 sm:w-10 text-xs sm:text-sm"
+                        >
+                          {totalPages}
+                        </Button>
+                      );
+                    }
+                    
+                    return pages;
+                  })()}
                 </div>
 
                 <Button
@@ -372,9 +449,23 @@ export default function EventsPage() {
                   disabled={currentPage >= Math.ceil(totalEvents / 20)}
                   className="text-xs sm:text-sm"
                 >
-                  <span className="hidden xs:inline">Next</span>
-                  <span className="xs:hidden">›</span>
+                  <span className="hidden xs:inline mr-1">Next</span>
+                  <ChevronRight className="h-4 w-4" />
                 </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(Math.ceil(totalEvents / 20))}
+                  disabled={currentPage >= Math.ceil(totalEvents / 20)}
+                  className="text-xs sm:text-sm"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-4 w-4 -ml-2" />
+                </Button>
+                
+                <span className="text-sm text-muted-foreground ml-2">
+                  Page {currentPage} of {Math.ceil(totalEvents / 20)}
+                </span>
               </div>
             )}
           </div>
