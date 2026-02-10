@@ -131,6 +131,7 @@ export default function SettingsPage() {
           "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
+          name: formData.name,
           phone: formData.phone,
           city: formData.city,
           country: formData.country,

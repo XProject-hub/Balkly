@@ -28,6 +28,7 @@ class ProfileController extends Controller
         $user = $request->user();
         
         $validated = $request->validate([
+            'name' => 'nullable|string|max:100',
             'phone' => 'nullable|string|max:20',
             'city' => 'nullable|string|max:100',
             'country' => 'nullable|string|size:2',
@@ -36,6 +37,12 @@ class ProfileController extends Controller
             'company_name' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:500',
         ]);
+
+        // Update user name if provided
+        if (isset($validated['name'])) {
+            $user->update(['name' => $validated['name']]);
+            unset($validated['name']);
+        }
 
         // Update profile
         $user->profile()->updateOrCreate(
