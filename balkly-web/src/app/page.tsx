@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Car, Home, Calendar, MessageCircle, Search, TrendingUp, Star, MapPin, Eye, Package, Briefcase, Building2, DollarSign } from "lucide-react";
+import { Car, Home, Calendar, MessageCircle, Search, TrendingUp, Star, MapPin, Eye, Package, Briefcase, Building2, DollarSign, BookOpen, User } from "lucide-react";
 import { listingsAPI, eventsAPI, forumAPI, jobsAPI } from "@/lib/api";
 import AdBanner from "@/components/AdBanner";
 import PriceDisplay from "@/components/PriceDisplay";
@@ -17,6 +17,7 @@ export default function HomePage() {
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
   const [latestJobs, setLatestJobs] = useState<any[]>([]);
   const [trendingTopics, setTrendingTopics] = useState<any[]>([]);
+  const [latestBlogPosts, setLatestBlogPosts] = useState<any[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   
   useEffect(() => {
@@ -54,6 +55,15 @@ export default function HomePage() {
       // Load trending forum topics
       const forumRes = await forumAPI.getTopics({ per_page: 5 });
       setTrendingTopics(forumRes.data.data || []);
+
+      // Load latest blog posts
+      try {
+        const blogRes = await fetch('/api/v1/blog?per_page=3');
+        const blogData = await blogRes.json();
+        setLatestBlogPosts(blogData.data || []);
+      } catch (e) {
+        console.log("Blog not available yet");
+      }
     } catch (error) {
       console.error("Failed to load content:", error);
     }
@@ -583,6 +593,77 @@ export default function HomePage() {
                   </CardContent>
                 </Card>
               </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Latest Blog Posts Section */}
+      <section className="py-10 sm:py-16 lg:py-20 bg-white dark:bg-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+            <div>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">Latest from Blog</h2>
+              <p className="text-sm sm:text-base text-muted-foreground">Guides, tips, and community updates</p>
+            </div>
+            <Button variant="outline" asChild className="w-full sm:w-auto">
+              <Link href="/blog">View All Posts</Link>
+            </Button>
+          </div>
+          
+          {latestBlogPosts.length === 0 ? (
+            <div className="text-center py-8 sm:py-12 text-muted-foreground">
+              <BookOpen className="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-3 opacity-20" />
+              <p className="text-sm sm:text-base">No blog posts yet</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {latestBlogPosts.slice(0, 3).map((post) => (
+                <Link key={post.id} href={`/blog/${post.slug}`}>
+                  <Card className="hover:shadow-2xl transition-all group h-full overflow-hidden">
+                    {post.featured_image ? (
+                      <div className="aspect-video bg-muted overflow-hidden">
+                        <img
+                          src={post.featured_image}
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    ) : (
+                      <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                        <BookOpen className="h-12 w-12 text-primary/30" />
+                      </div>
+                    )}
+                    <CardHeader>
+                      {post.category && (
+                        <span className="inline-block px-2 py-1 bg-primary/10 text-primary text-xs rounded-full font-medium uppercase mb-2 w-fit">
+                          {post.category}
+                        </span>
+                      )}
+                      <CardTitle className="line-clamp-2 group-hover:text-primary transition-colors text-base">
+                        {post.title}
+                      </CardTitle>
+                      {post.excerpt && (
+                        <CardDescription className="line-clamp-2 text-sm">
+                          {post.excerpt}
+                        </CardDescription>
+                      )}
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                        <span className="flex items-center">
+                          <User className="h-3 w-3 mr-1" />
+                          {post.author?.name || 'Admin'}
+                        </span>
+                        <span className="flex items-center">
+                          <Calendar className="h-3 w-3 mr-1" />
+                          {new Date(post.published_at || post.created_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
           )}
