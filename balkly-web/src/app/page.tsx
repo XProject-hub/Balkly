@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Car, Home, Calendar, MessageCircle, Search, TrendingUp, Star, MapPin, Eye, Package } from "lucide-react";
-import { listingsAPI, eventsAPI, forumAPI } from "@/lib/api";
+import { Car, Home, Calendar, MessageCircle, Search, TrendingUp, Star, MapPin, Eye, Package, Briefcase, Building2, DollarSign } from "lucide-react";
+import { listingsAPI, eventsAPI, forumAPI, jobsAPI } from "@/lib/api";
 import AdBanner from "@/components/AdBanner";
 import PriceDisplay from "@/components/PriceDisplay";
 
@@ -15,6 +15,7 @@ export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [featuredListings, setFeaturedListings] = useState<any[]>([]);
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
+  const [latestJobs, setLatestJobs] = useState<any[]>([]);
   const [trendingTopics, setTrendingTopics] = useState<any[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   
@@ -41,6 +42,14 @@ export default function HomePage() {
       // Load upcoming events
       const eventsRes = await eventsAPI.getAll({ per_page: 4 });
       setUpcomingEvents(eventsRes.data.data || []);
+
+      // Load latest jobs from Adzuna
+      try {
+        const jobsRes = await jobsAPI.getFeatured(4);
+        setLatestJobs(jobsRes.data.jobs || []);
+      } catch (e) {
+        console.log("Jobs not available yet");
+      }
 
       // Load trending forum topics
       const forumRes = await forumAPI.getTopics({ per_page: 5 });
@@ -421,6 +430,80 @@ export default function HomePage() {
                   </CardHeader>
                 </Card>
               </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Latest Jobs Section */}
+      <section className="py-10 sm:py-16 lg:py-20 bg-gray-50 dark:bg-gray-800">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+            <div>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">Latest Jobs in Dubai</h2>
+              <p className="text-sm sm:text-base text-muted-foreground">Find your next career opportunity</p>
+            </div>
+            <Button variant="outline" asChild className="w-full sm:w-auto">
+              <Link href="/jobs">View All Jobs</Link>
+            </Button>
+          </div>
+          
+          {latestJobs.length === 0 ? (
+            <div className="text-center py-8 sm:py-12 text-muted-foreground">
+              <Briefcase className="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-3 opacity-20" />
+              <p className="text-sm sm:text-base">Loading jobs...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+              {latestJobs.slice(0, 4).map((job) => (
+                <a 
+                  key={job.id} 
+                  href={job.redirect_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="block"
+                >
+                  <Card className="hover:shadow-2xl transition-all group h-full">
+                    <CardHeader className="pb-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Briefcase className="h-5 w-5 text-primary" />
+                        </div>
+                        <span className="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-1 rounded-full">
+                          New
+                        </span>
+                      </div>
+                      <CardTitle className="line-clamp-2 group-hover:text-primary transition-colors text-base mt-3">
+                        {job.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        <Building2 className="h-4 w-4 mr-2 flex-shrink-0" />
+                        <span className="truncate">{job.company}</span>
+                      </div>
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
+                        <span className="truncate">{job.city || job.location}</span>
+                      </div>
+                      {(job.salary_min || job.salary_max) && (
+                        <div className="flex items-center text-sm font-medium text-primary">
+                          <DollarSign className="h-4 w-4 mr-1 flex-shrink-0" />
+                          {job.salary_min && job.salary_max 
+                            ? `${job.salary_currency || 'AED'} ${Math.round(job.salary_min).toLocaleString()} - ${Math.round(job.salary_max).toLocaleString()}`
+                            : job.salary_min 
+                              ? `From ${job.salary_currency || 'AED'} ${Math.round(job.salary_min).toLocaleString()}`
+                              : `Up to ${job.salary_currency || 'AED'} ${Math.round(job.salary_max).toLocaleString()}`
+                          }
+                        </div>
+                      )}
+                      <p className="text-xs text-muted-foreground line-clamp-2 mt-2">
+                        {job.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </a>
               ))}
             </div>
           )}

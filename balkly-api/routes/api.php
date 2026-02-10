@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\AIController;
 use App\Http\Controllers\Api\CurrencyController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\JobController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,12 @@ Route::prefix('v1')->group(function () {
     // Events
     Route::get('/events', [EventController::class, 'index']);
     Route::get('/events/{id}', [EventController::class, 'show']);
+    
+    // Jobs (from Adzuna)
+    Route::get('/jobs', [JobController::class, 'index']);
+    Route::get('/jobs/featured', [JobController::class, 'featured']);
+    Route::get('/jobs/categories', [JobController::class, 'categories']);
+    Route::get('/jobs/{id}', [JobController::class, 'show']);
     
     // Forum
     Route::get('/forum/categories', [ForumController::class, 'categories']);

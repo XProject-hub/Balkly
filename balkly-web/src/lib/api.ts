@@ -103,3 +103,10 @@ export const searchAPI = {
     api.get('/search', { params: { q: query, type } }),
 };
 
+export const jobsAPI = {
+  getAll: (params?: any) => api.get('/jobs', { params }),
+  getOne: (id: string) => api.get(`/jobs/${id}`),
+  getFeatured: (limit?: number) => api.get('/jobs/featured', { params: { limit } }),
+  getCategories: () => api.get('/jobs/categories'),
+};
+

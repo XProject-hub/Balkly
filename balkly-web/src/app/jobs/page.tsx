@@ -3,134 +3,317 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, MapPin, Briefcase } from "lucide-react";
-import { listingsAPI } from "@/lib/api";
-import PriceDisplay from "@/components/PriceDisplay";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Briefcase, MapPin, Building2, DollarSign, Search, Filter, ExternalLink, Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { jobsAPI } from "@/lib/api";
 
 export default function JobsPage() {
-  const [listings, setListings] = useState<any[]>([]);
+  const [jobs, setJobs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [totalJobs, setTotalJobs] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [categories, setCategories] = useState<any[]>([]);
   const [filters, setFilters] = useState({
-    job_type: "",
-    category: "",
-    experience: "",
-    salary_min: "",
-    salary_max: "",
+    search: "",
     city: "",
+    category: "",
   });
 
-  useEffect(() => { loadListings(); }, [filters]);
+  useEffect(() => {
+    loadJobs();
+  }, [filters, currentPage]);
 
-  const loadListings = async () => {
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  const loadJobs = async () => {
     setLoading(true);
     try {
-      const response = await listingsAPI.getAll({ category_id: 8, ...filters });
-      setListings(response.data.data || []);
-    } catch (error) {}
-    finally { setLoading(false); }
+      const params = {
+        ...filters,
+        page: currentPage,
+        per_page: 20,
+      };
+      const response = await jobsAPI.getAll(params);
+      setJobs(response.data.data || []);
+      setTotalJobs(response.data.total || 0);
+    } catch (error) {
+      console.error("Failed to load jobs:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadCategories = async () => {
+    try {
+      const response = await jobsAPI.getCategories();
+      setCategories(response.data.categories || []);
+    } catch (error) {
+      console.error("Failed to load categories:", error);
+    }
+  };
+
+  const formatSalary = (job: any) => {
+    if (!job.salary_min && !job.salary_max) return null;
+    const currency = job.salary_currency || 'AED';
+    if (job.salary_min && job.salary_max) {
+      return `${currency} ${Math.round(job.salary_min).toLocaleString()} - ${Math.round(job.salary_max).toLocaleString()}`;
+    }
+    if (job.salary_min) {
+      return `From ${currency} ${Math.round(job.salary_min).toLocaleString()}`;
+    }
+    return `Up to ${currency} ${Math.round(job.salary_max).toLocaleString()}`;
+  };
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return "Today";
+    if (diffDays === 1) return "Yesterday";
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+    return date.toLocaleDateString();
   };
 
   return (
-    <div className="min-h-screen bg-mist-50">
-      <div className="text-white py-12" style={{background: 'linear-gradient(135deg, #0F172A 0%, #111827 100%)'}}>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-8 sm:py-12 lg:py-16">
         <div className="container mx-auto px-4">
-          <h1 className="text-5xl font-bold mb-4">Jobs & Careers</h1>
-          <p className="text-xl opacity-90">Find your next opportunity</p>
+          <div className="max-w-3xl">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-4">
+              Jobs in Dubai & UAE
+            </h1>
+            <p className="text-sm sm:text-base lg:text-lg xl:text-xl opacity-90 mb-6">
+              Find your next career opportunity from thousands of job listings
+            </p>
+            
+            {/* Search Bar */}
+            <div className="flex flex-col sm:flex-row gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search jobs by title, company..."
+                  value={filters.search}
+                  onChange={(e) => {
+                    setFilters({ ...filters, search: e.target.value });
+                    setCurrentPage(1);
+                  }}
+                  className="w-full pl-10 pr-4 py-3 rounded-lg text-gray-900 placeholder:text-gray-500"
+                />
+              </div>
+              <select
+                value={filters.city}
+                onChange={(e) => {
+                  setFilters({ ...filters, city: e.target.value });
+                  setCurrentPage(1);
+                }}
+                className="px-4 py-3 rounded-lg text-gray-900 bg-white"
+              >
+                <option value="">All Cities</option>
+                <option value="Dubai">Dubai</option>
+                <option value="Abu Dhabi">Abu Dhabi</option>
+                <option value="Sharjah">Sharjah</option>
+                <option value="Ajman">Ajman</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <Card className="bg-white lg:col-span-1 h-fit sticky top-20">
-            <CardHeader><CardTitle className="text-gray-900">Filters</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label htmlFor="jobs-type" className="block text-sm font-semibold mb-2">Job Type</label>
-                <select id="jobs-type" value={filters.job_type} onChange={(e) => setFilters({ ...filters, job_type: e.target.value })} className="w-full px-4 py-2 border rounded-lg">
-                  <option value="">All Types</option>
-                  <option value="full-time">Full-time</option>
-                  <option value="part-time">Part-time</option>
-                  <option value="contract">Contract</option>
-                  <option value="freelance">Freelance</option>
-                  <option value="internship">Internship</option>
-                </select>
-              </div>
+      <div className="container mx-auto px-4 py-6 sm:py-8">
+        {/* Stats & Filters */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <p className="text-sm sm:text-base text-muted-foreground">
+              Showing {jobs.length} of {totalJobs} jobs
+            </p>
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            <select
+              value={filters.category}
+              onChange={(e) => {
+                setFilters({ ...filters, category: e.target.value });
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 border rounded-lg text-sm dark:bg-gray-800 dark:border-gray-700"
+            >
+              <option value="">All Categories</option>
+              {categories.map((cat) => (
+                <option key={cat.category} value={cat.category}>
+                  {cat.category} ({cat.count})
+                </option>
+              ))}
+            </select>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setFilters({ search: "", city: "", category: "" });
+                setCurrentPage(1);
+              }}
+            >
+              Clear Filters
+            </Button>
+          </div>
+        </div>
 
-              <div>
-                <label className="block text-sm font-semibold mb-2">Category</label>
-                <select value={filters.category} onChange={(e) => setFilters({ ...filters, category: e.target.value })} className="w-full px-4 py-2 border rounded-lg">
-                  <option value="">All Categories</option>
-                  <option value="it">IT & Software</option>
-                  <option value="sales">Sales & Marketing</option>
-                  <option value="finance">Finance & Accounting</option>
-                  <option value="healthcare">Healthcare</option>
-                  <option value="education">Education</option>
-                  <option value="hospitality">Hospitality</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold mb-2">Experience</label>
-                <select value={filters.experience} onChange={(e) => setFilters({ ...filters, experience: e.target.value })} className="w-full px-4 py-2 border rounded-lg">
-                  <option value="">Any</option>
-                  <option value="entry">Entry Level (0-2 years)</option>
-                  <option value="mid">Mid Level (3-5 years)</option>
-                  <option value="senior">Senior (5+ years)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold mb-2">Salary Range (Monthly)</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <input type="number" value={filters.salary_min} onChange={(e) => setFilters({ ...filters, salary_min: e.target.value })} placeholder="Min" className="px-3 py-2 border rounded-lg" />
-                  <input type="number" value={filters.salary_max} onChange={(e) => setFilters({ ...filters, salary_max: e.target.value })} placeholder="Max" className="px-3 py-2 border rounded-lg" />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="jobs-city" className="block text-sm font-semibold mb-2">City</label>
-                <input id="jobs-city" type="text" value={filters.city} onChange={(e) => setFilters({ ...filters, city: e.target.value })} placeholder="e.g., Dubai" className="w-full px-4 py-2 border rounded-lg" />
-              </div>
-
-              <Button className="w-full bg-gradient-to-r from-balkly-blue to-iris-purple text-white" asChild>
-                <Link href="/listings/create?category=jobs"><Plus className="mr-2 h-4 w-4" />Post Job</Link>
+        {/* Jobs List */}
+        {loading ? (
+          <div className="space-y-4">
+            {[1, 2, 3, 4].map((i) => (
+              <Card key={i} className="animate-pulse">
+                <CardContent className="p-6">
+                  <div className="h-5 bg-muted rounded w-3/4 mb-3" />
+                  <div className="h-4 bg-muted rounded w-1/2 mb-2" />
+                  <div className="h-4 bg-muted rounded w-1/3" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : jobs.length === 0 ? (
+          <Card>
+            <CardContent className="py-12 text-center">
+              <Briefcase className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-20" />
+              <p className="text-lg font-semibold mb-2">No jobs found</p>
+              <p className="text-muted-foreground mb-4">Try adjusting your search filters</p>
+              <Button onClick={() => setFilters({ search: "", city: "", category: "" })}>
+                Clear Filters
               </Button>
             </CardContent>
           </Card>
-
-          <div className="lg:col-span-3">
-            <p className="text-gray-600 mb-6">Showing {listings.length} jobs</p>
-            {loading ? <p>Loading...</p> : listings.length === 0 ? (
-              <Card className="bg-white"><CardContent className="py-16 text-center"><Button className="bg-gradient-to-r from-balkly-blue to-iris-purple text-white" asChild><Link href="/listings/create?category=jobs">Post First Job</Link></Button></CardContent></Card>
-            ) : (
-              <div className="space-y-4">
-                {listings.map((listing) => (
-                  <Link key={listing.id} href={`/listings/${listing.id}`}>
-                    <Card className="hover:shadow-lg bg-white">
-                      <CardContent className="p-6">
-                        <h3 className="font-bold text-xl text-gray-900 hover:text-balkly-blue">{listing.title}</h3>
-                        <p className="text-sm text-gray-600 mt-2">{listing.description}</p>
-                        <div className="flex gap-4 mt-4 text-sm">
-                          {listing.price ? (
-                            <span className="font-bold text-balkly-blue text-lg">
-                              <PriceDisplay amount={listing.price} currency={listing.currency || 'EUR'} />/month
-                            </span>
-                          ) : (
-                            <span className="font-bold text-balkly-blue text-lg">Contact</span>
+        ) : (
+          <div className="space-y-4">
+            {jobs.map((job) => (
+              <a
+                key={job.id}
+                href={job.redirect_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <Card className="hover:shadow-lg hover:border-primary/50 transition-all">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                      {/* Company Icon */}
+                      <div className="hidden sm:flex w-12 h-12 bg-primary/10 rounded-lg items-center justify-center flex-shrink-0">
+                        <Building2 className="h-6 w-6 text-primary" />
+                      </div>
+                      
+                      {/* Job Details */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                          <div>
+                            <h3 className="text-lg font-bold text-foreground group-hover:text-primary line-clamp-1">
+                              {job.title}
+                            </h3>
+                            <p className="text-primary font-medium">{job.company}</p>
+                          </div>
+                          {formatSalary(job) && (
+                            <div className="flex items-center text-sm font-bold text-green-600 dark:text-green-400 whitespace-nowrap">
+                              <DollarSign className="h-4 w-4 mr-1" />
+                              {formatSalary(job)}
+                            </div>
                           )}
-                          <span className="text-gray-500">{listing.city}</span>
                         </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))}
-              </div>
-            )}
+                        
+                        <div className="flex flex-wrap items-center gap-3 mt-3 text-sm text-muted-foreground">
+                          <span className="flex items-center">
+                            <MapPin className="h-4 w-4 mr-1" />
+                            {job.city || job.location}
+                          </span>
+                          {job.category && (
+                            <span className="bg-muted px-2 py-0.5 rounded text-xs">
+                              {job.category}
+                            </span>
+                          )}
+                          {job.contract_type && (
+                            <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded text-xs">
+                              {job.contract_type}
+                            </span>
+                          )}
+                          <span className="flex items-center">
+                            <Clock className="h-4 w-4 mr-1" />
+                            {formatDate(job.created_date)}
+                          </span>
+                        </div>
+                        
+                        <p className="text-sm text-muted-foreground mt-3 line-clamp-2">
+                          {job.description}
+                        </p>
+                      </div>
+                      
+                      {/* Apply Button */}
+                      <div className="flex sm:flex-col items-center gap-2 sm:ml-4">
+                        <Button size="sm" className="gap-1">
+                          Apply
+                          <ExternalLink className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </a>
+            ))}
           </div>
+        )}
+
+        {/* Pagination */}
+        {totalJobs > 20 && (
+          <div className="mt-8 flex flex-wrap justify-center items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(1)}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4 -ml-2" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Previous
+            </Button>
+            
+            <span className="px-4 py-2 text-sm">
+              Page {currentPage} of {Math.ceil(totalJobs / 20)}
+            </span>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(p => p + 1)}
+              disabled={currentPage >= Math.ceil(totalJobs / 20)}
+            >
+              Next
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(Math.ceil(totalJobs / 20))}
+              disabled={currentPage >= Math.ceil(totalJobs / 20)}
+            >
+              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4 -ml-2" />
+            </Button>
+          </div>
+        )}
+
+        {/* Powered by Adzuna */}
+        <div className="mt-8 text-center text-sm text-muted-foreground">
+          <p>Job listings powered by <a href="https://www.adzuna.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Adzuna</a></p>
         </div>
       </div>
     </div>
   );
 }
-
