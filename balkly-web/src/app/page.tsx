@@ -456,7 +456,7 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              {latestJobs.slice(0, 4).map((job) => (
+              {latestJobs.slice(0, 4).map((job, index) => (
                 <a 
                   key={job.id} 
                   href={job.redirect_url} 
@@ -464,43 +464,48 @@ export default function HomePage() {
                   rel="noopener noreferrer"
                   className="block"
                 >
-                  <Card className="hover:shadow-2xl transition-all group h-full">
-                    <CardHeader className="pb-2">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <Briefcase className="h-5 w-5 text-primary" />
-                        </div>
-                        <span className="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-1 rounded-full">
-                          New
-                        </span>
+                  <Card className="hover:shadow-2xl transition-all group h-full overflow-hidden">
+                    {/* Gradient Header with Icon */}
+                    <div className={`h-24 relative flex items-center justify-center ${
+                      index % 4 === 0 ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
+                      index % 4 === 1 ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
+                      index % 4 === 2 ? 'bg-gradient-to-br from-purple-500 to-violet-600' :
+                      'bg-gradient-to-br from-orange-500 to-red-500'
+                    }`}>
+                      <Briefcase className="h-12 w-12 text-white/30" />
+                      <div className="absolute top-2 right-2 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full font-medium">
+                        NEW
                       </div>
-                      <CardTitle className="line-clamp-2 group-hover:text-primary transition-colors text-base mt-3">
+                      {(job.salary_min || job.salary_max) && (
+                        <div className="absolute bottom-2 left-2 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded font-bold">
+                          {job.salary_min && job.salary_max 
+                            ? `${Math.round(job.salary_min/1000)}K - ${Math.round(job.salary_max/1000)}K`
+                            : job.salary_min 
+                              ? `${Math.round(job.salary_min/1000)}K+`
+                              : `${Math.round(job.salary_max/1000)}K`
+                          } AED
+                        </div>
+                      )}
+                    </div>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="line-clamp-2 group-hover:text-primary transition-colors text-base">
                         {job.title}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-2">
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Building2 className="h-4 w-4 mr-2 flex-shrink-0" />
+                    <CardContent className="space-y-2 pt-0">
+                      <div className="flex items-center text-sm font-medium text-foreground">
+                        <Building2 className="h-4 w-4 mr-2 flex-shrink-0 text-primary" />
                         <span className="truncate">{job.company}</span>
                       </div>
                       <div className="flex items-center text-sm text-muted-foreground">
                         <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
-                        <span className="truncate">{job.city || job.location}</span>
+                        <span className="truncate">{job.city || 'Dubai'}</span>
                       </div>
-                      {(job.salary_min || job.salary_max) && (
-                        <div className="flex items-center text-sm font-medium text-primary">
-                          <DollarSign className="h-4 w-4 mr-1 flex-shrink-0" />
-                          {job.salary_min && job.salary_max 
-                            ? `${job.salary_currency || 'AED'} ${Math.round(job.salary_min).toLocaleString()} - ${Math.round(job.salary_max).toLocaleString()}`
-                            : job.salary_min 
-                              ? `From ${job.salary_currency || 'AED'} ${Math.round(job.salary_min).toLocaleString()}`
-                              : `Up to ${job.salary_currency || 'AED'} ${Math.round(job.salary_max).toLocaleString()}`
-                          }
-                        </div>
+                      {job.category && (
+                        <span className="inline-block text-xs bg-muted px-2 py-1 rounded">
+                          {job.category}
+                        </span>
                       )}
-                      <p className="text-xs text-muted-foreground line-clamp-2 mt-2">
-                        {job.description}
-                      </p>
                     </CardContent>
                   </Card>
                 </a>

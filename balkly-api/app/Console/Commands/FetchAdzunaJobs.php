@@ -83,7 +83,7 @@ class FetchAdzunaJobs extends Command
             'app_id' => $this->appId,
             'app_key' => $this->appKey,
             'results_per_page' => 50,
-            'what' => '', // All jobs
+            'where' => 'Dubai', // Focus on Dubai jobs
             'sort_by' => 'date',
             'max_days_old' => 30,
         ]);
