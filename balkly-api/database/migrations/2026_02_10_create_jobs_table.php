@@ -24,7 +24,8 @@ return new class extends Migration
             $table->string('contract_type')->nullable()->comment('permanent, contract, etc.');
             $table->string('contract_time')->nullable()->comment('full_time, part_time');
             $table->string('redirect_url', 1000);
-            $table->string('source')->default('adzuna');
+            $table->string('source')->default('jsearch');
+            $table->string('employer_logo', 500)->nullable();
             $table->timestamp('created_date')->nullable();
             $table->string('status')->default('active');
             $table->json('metadata')->nullable();

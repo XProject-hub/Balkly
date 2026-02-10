@@ -465,27 +465,30 @@ export default function HomePage() {
                   className="block"
                 >
                   <Card className="hover:shadow-2xl transition-all group h-full overflow-hidden">
-                    {/* Gradient Header with Icon */}
-                    <div className={`h-24 relative flex items-center justify-center ${
-                      index % 4 === 0 ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
-                      index % 4 === 1 ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
-                      index % 4 === 2 ? 'bg-gradient-to-br from-purple-500 to-violet-600' :
-                      'bg-gradient-to-br from-orange-500 to-red-500'
+                    {/* Header with Logo or Gradient */}
+                    <div className={`h-28 relative flex items-center justify-center ${
+                      !job.employer_logo ? (
+                        index % 4 === 0 ? 'bg-gradient-to-br from-green-500 to-emerald-600' :
+                        index % 4 === 1 ? 'bg-gradient-to-br from-blue-500 to-indigo-600' :
+                        index % 4 === 2 ? 'bg-gradient-to-br from-purple-500 to-violet-600' :
+                        'bg-gradient-to-br from-orange-500 to-red-500'
+                      ) : 'bg-gray-100 dark:bg-gray-800'
                     }`}>
-                      <Briefcase className="h-12 w-12 text-white/30" />
-                      <div className="absolute top-2 right-2 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full font-medium">
+                      {job.employer_logo ? (
+                        <img 
+                          src={job.employer_logo} 
+                          alt={job.company}
+                          className="h-16 w-auto max-w-[80%] object-contain"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                          }}
+                        />
+                      ) : null}
+                      <Briefcase className={`h-12 w-12 ${job.employer_logo ? 'hidden' : ''} text-white/30`} />
+                      <div className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium shadow">
                         NEW
                       </div>
-                      {(job.salary_min || job.salary_max) && (
-                        <div className="absolute bottom-2 left-2 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded font-bold">
-                          {job.salary_min && job.salary_max 
-                            ? `${Math.round(job.salary_min/1000)}K - ${Math.round(job.salary_max/1000)}K`
-                            : job.salary_min 
-                              ? `${Math.round(job.salary_min/1000)}K+`
-                              : `${Math.round(job.salary_max/1000)}K`
-                          } AED
-                        </div>
-                      )}
                     </div>
                     <CardHeader className="pb-2">
                       <CardTitle className="line-clamp-2 group-hover:text-primary transition-colors text-base">
@@ -501,9 +504,23 @@ export default function HomePage() {
                         <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
                         <span className="truncate">{job.city || 'Dubai'}</span>
                       </div>
+                      {(job.salary_min || job.salary_max) && (
+                        <div className="flex items-center text-sm font-bold text-green-600 dark:text-green-400">
+                          <DollarSign className="h-4 w-4 mr-1 flex-shrink-0" />
+                          {job.salary_min && job.salary_max 
+                            ? `${(job.salary_currency || 'AED')} ${Math.round(job.salary_min).toLocaleString()} - ${Math.round(job.salary_max).toLocaleString()}`
+                            : job.salary_min 
+                              ? `From ${Math.round(job.salary_min).toLocaleString()}`
+                              : `Up to ${Math.round(job.salary_max).toLocaleString()}`
+                          }
+                        </div>
+                      )}
                       {job.category && (
-                        <span className="inline-block text-xs bg-muted px-2 py-1 rounded">
-                          {job.category}
+                        <span className="inline-block text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-2 py-1 rounded">
+                          {job.category === 'FULLTIME' ? 'Full Time' : 
+                           job.category === 'PARTTIME' ? 'Part Time' :
+                           job.category === 'CONTRACTOR' ? 'Contract' :
+                           job.category === 'INTERN' ? 'Internship' : job.category}
                         </span>
                       )}
                     </CardContent>

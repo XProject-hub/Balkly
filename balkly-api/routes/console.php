@@ -13,8 +13,8 @@ Schedule::command('horizon:snapshot')->everyFiveMinutes();
 // Fetch Platinumlist events every 2 hours
 Schedule::command('platinumlist:fetch')->everyTwoHours();
 
-// Fetch Adzuna jobs every 6 hours
-Schedule::command('adzuna:fetch --pages=5')->everySixHours();
+// Fetch JSearch jobs every 6 hours
+Schedule::command('jobs:fetch --pages=3')->everySixHours();
 
 // Backup database every hour (keeps only 5 most recent)
 Schedule::command('db:backup')->hourly();

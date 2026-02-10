@@ -199,9 +199,20 @@ export default function JobsPage() {
                 <Card className="hover:shadow-lg hover:border-primary/50 transition-all">
                   <CardContent className="p-4 sm:p-6">
                     <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                      {/* Company Icon */}
-                      <div className="hidden sm:flex w-12 h-12 bg-primary/10 rounded-lg items-center justify-center flex-shrink-0">
-                        <Building2 className="h-6 w-6 text-primary" />
+                      {/* Company Logo or Icon */}
+                      <div className="hidden sm:flex w-14 h-14 bg-gray-100 dark:bg-gray-800 rounded-lg items-center justify-center flex-shrink-0 overflow-hidden">
+                        {job.employer_logo ? (
+                          <img 
+                            src={job.employer_logo} 
+                            alt={job.company}
+                            className="w-full h-full object-contain p-1"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              e.currentTarget.parentElement?.querySelector('svg')?.classList.remove('hidden');
+                            }}
+                          />
+                        ) : null}
+                        <Building2 className={`h-6 w-6 text-primary ${job.employer_logo ? 'hidden' : ''}`} />
                       </div>
                       
                       {/* Job Details */}

@@ -25,6 +25,7 @@ class Job extends Model
         'contract_time',
         'redirect_url',
         'source',
+        'employer_logo',
         'created_date',
         'status',
         'metadata',
