@@ -81,7 +81,7 @@ export default function JobsPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-8 sm:py-12 lg:py-16">
+      <div className="bg-gradient-to-r from-balkly-blue to-purple-600 text-white py-8 sm:py-12 lg:py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-4">
@@ -322,7 +322,7 @@ export default function JobsPage() {
 
         {/* Powered by Adzuna */}
         <div className="mt-8 text-center text-sm text-muted-foreground">
-          <p>Job listings powered by <a href="https://www.adzuna.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Adzuna</a></p>
+          <p>Job listings aggregated from top UAE job boards</p>
         </div>
       </div>
     </div>
