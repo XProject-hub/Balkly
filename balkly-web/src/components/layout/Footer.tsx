@@ -69,12 +69,12 @@ export default function Footer() {
             <ul className="space-y-2 text-xs sm:text-sm">
               <li>
                 <Link href="/listings" className="text-gray-400 hover:text-white transition-colors">
-                  Browse Listings
+                  View Ads
                 </Link>
               </li>
               <li>
                 <Link href="/listings/create" className="text-gray-400 hover:text-white transition-colors">
-                  Post a Listing
+                  Post an Ad
                 </Link>
               </li>
               <li>

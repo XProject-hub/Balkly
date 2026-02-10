@@ -42,10 +42,10 @@ const getIconComponent = (iconName: string) => {
 
 // Multi-step wizard steps
 const STEPS = [
-  { id: 1, name: "Category", description: "Choose your listing category" },
-  { id: 2, name: "Details", description: "Add title, description, and photos" },
-  { id: 3, name: "Attributes", description: "Specify item details" },
-  { id: 4, name: "Pricing", description: "Set price and select a plan" },
+  { id: 1, name: "Category", description: "What do you want to post?" },
+  { id: 2, name: "Details", description: "Add basic details" },
+  { id: 3, name: "More Details", description: "Additional info (optional)" },
+  { id: 4, name: "Price", description: "Set price and choose a plan" },
 ];
 
 export default function CreateListingPage() {
@@ -295,7 +295,7 @@ export default function CreateListingPage() {
         }
       } else {
         // No plan selected, listing is already active
-        alert("✅ Listing created successfully! View it in My Listings.");
+        alert("✅ Ad posted successfully! View it in My Ads.");
         window.location.href = `/dashboard/listings`;
       }
     } catch (error: any) {
@@ -326,9 +326,9 @@ export default function CreateListingPage() {
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Create New Listing</h1>
+          <h1 className="text-4xl font-bold mb-2">Post an Ad</h1>
           <p className="text-muted-foreground">
-            List your item in just a few steps. AI will help you create the perfect listing.
+            Post your ad in just a few steps. AI will help you create the perfect ad.
           </p>
         </div>
 
@@ -436,7 +436,7 @@ export default function CreateListingPage() {
                 )}
                 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Title *</label>
+                  <label className="block text-sm font-medium mb-2">Ad title *</label>
                   <input
                     type="text"
                     value={formData.title}
@@ -459,11 +459,11 @@ export default function CreateListingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Description *</label>
+                  <label className="block text-sm font-medium mb-2">Describe your ad *</label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Describe your item in detail..."
+                    placeholder="Describe what you're selling..."
                     className="w-full px-4 py-2 border rounded-lg h-32"
                     maxLength={2000}
                   />
@@ -473,7 +473,7 @@ export default function CreateListingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Photos & Videos</label>
+                  <label className="block text-sm font-medium mb-2">Add photos (optional)</label>
                   <div className="border-2 border-dashed rounded-lg p-8 text-center hover:border-primary transition-colors">
                     <p className="text-muted-foreground mb-2">
                       Drag & drop photos and videos here
@@ -627,7 +627,7 @@ export default function CreateListingPage() {
             {currentStep === 4 && (
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Price *</label>
+                  <label className="block text-sm font-medium mb-2">Price (optional)</label>
                   <div className="flex gap-2">
                     <input
                       type="text"
@@ -687,7 +687,7 @@ export default function CreateListingPage() {
                 <div>
                   <h3 className="font-bold text-lg mb-4">Choose a Plan (Optional)</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Boost your listing visibility with a premium plan, or continue with basic free listing.
+                    Boost your ad visibility with a premium plan, or continue with basic free ad.
                   </p>
                   {selectedPlan && (
                     <div className="mb-4 p-3 bg-green-100 dark:bg-green-900/30 border-2 border-green-500 rounded-lg">
@@ -796,7 +796,7 @@ export default function CreateListingPage() {
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading ? "Processing..." : "Publish Listing"}
+              {loading ? "Processing..." : "Post Ad"}
             </Button>
           )}
         </div>

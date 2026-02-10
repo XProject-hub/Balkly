@@ -155,7 +155,7 @@ export default function Header() {
               className="flex items-center text-sm font-medium hover:text-primary transition-colors whitespace-nowrap"
             >
               <Package className="h-4 w-4 mr-1" />
-              Listings
+              Ads
             </Link>
             <Link
               href="/events"
@@ -177,7 +177,7 @@ export default function Header() {
                 className="flex items-center text-sm font-medium hover:text-primary transition-colors whitespace-nowrap"
               >
                 <LayoutDashboard className="h-4 w-4 mr-1" />
-                Dashboard
+                My Account
               </Link>
             )}
           </nav>
@@ -251,7 +251,7 @@ export default function Header() {
                       className="flex items-center px-4 py-2 text-sm hover:bg-accent"
                     >
                       <LayoutDashboard className="h-4 w-4 mr-2" />
-                      Dashboard
+                      My Account
                     </Link>
                     <Link
                       href="/dashboard/messages"
@@ -328,7 +328,7 @@ export default function Header() {
                   name="search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search listings, events..."
+                  placeholder="Search ads, events..."
                   className="w-full pl-11 pr-4 py-3 border rounded-xl text-base dark:bg-gray-800 dark:border-gray-700"
                   autoComplete="off"
                 />
@@ -343,7 +343,7 @@ export default function Header() {
                 className="flex items-center px-4 py-3 text-base font-medium hover:bg-accent rounded-xl transition-colors"
               >
                 <Package className="h-5 w-5 mr-3" />
-                Listings
+                Ads
               </Link>
               <Link
                 href="/events"
@@ -414,7 +414,7 @@ export default function Header() {
                     className="flex items-center px-4 py-3 text-base font-medium hover:bg-accent rounded-xl transition-colors"
                   >
                     <LayoutDashboard className="h-5 w-5 mr-3" />
-                    Dashboard
+                    My Account
                   </Link>
                   <Link
                     href="/dashboard/messages"

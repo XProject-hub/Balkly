@@ -108,7 +108,7 @@ export default function HomePage() {
                 style={{background: 'linear-gradient(90deg, #1E63FF, #7C3AED)', boxShadow: '0 8px 24px rgba(30,99,255,.4)'}}
                 asChild
               >
-                <Link href="/listings">Browse Listings</Link>
+                <Link href="/listings">View Ads</Link>
               </Button>
               {!isLoggedIn ? (
                 <Button 
@@ -126,7 +126,7 @@ export default function HomePage() {
                   className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 transition-transform border-white font-bold" 
                   asChild
                 >
-                  <Link href="/dashboard">Go to Dashboard</Link>
+                  <Link href="/dashboard">My Account</Link>
                 </Button>
               )}
             </div>
@@ -270,7 +270,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
             <div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">Featured Listings</h2>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">Featured Ads</h2>
               <p className="text-sm sm:text-base text-muted-foreground">Handpicked items from trusted sellers</p>
             </div>
             <Button variant="outline" asChild className="w-full sm:w-auto">
@@ -281,7 +281,7 @@ export default function HomePage() {
           {featuredListings.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Package className="h-16 w-16 mx-auto mb-3 opacity-20" />
-              <p>No featured listings yet</p>
+              <p>No featured ads yet</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -542,11 +542,11 @@ export default function HomePage() {
                   </Button>
                 ) : (
                   <Button size="lg" className="w-full sm:w-auto bg-white text-gray-900 hover:bg-gray-100 font-bold" asChild>
-                    <Link href="/dashboard">Go to Dashboard</Link>
+                    <Link href="/dashboard">My Account</Link>
                   </Button>
                 )}
                 <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/10 text-white border-white/50 hover:bg-white/20 font-bold" asChild>
-                  <Link href="/listings/create">Post a Listing</Link>
+                  <Link href="/listings/create">Post an Ad</Link>
                 </Button>
               </div>
             </CardContent>

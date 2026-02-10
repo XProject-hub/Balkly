@@ -91,7 +91,7 @@ export default function ListingsPage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">Browse Listings</h1>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">View Ads</h1>
               <p className="text-sm sm:text-base lg:text-lg opacity-90">
                 Find amazing deals on cars, real estate, and more
               </p>
@@ -106,7 +106,7 @@ export default function ListingsPage() {
               <Button size="default" variant="secondary" asChild className="flex-1 sm:flex-initial">
                 <Link href="/listings/create">
                   <Plus className="mr-1 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="hidden xs:inline">Post</span> Listing
+                  <span className="hidden xs:inline">Post</span> Ad
                 </Link>
               </Button>
             </div>
@@ -503,7 +503,7 @@ export default function ListingsPage() {
           <div className="lg:col-span-3">
             <div className="mb-4 sm:mb-6">
               <p className="text-sm sm:text-base text-muted-foreground">
-                Showing {listings.length} listings
+                Showing {listings.length} ads
               </p>
             </div>
 
@@ -522,11 +522,12 @@ export default function ListingsPage() {
             ) : listings.length === 0 ? (
               <Card>
                 <CardContent className="py-8 sm:py-12 text-center">
+                  <p className="text-lg font-semibold mb-2">No ads yet</p>
                   <p className="text-sm sm:text-base text-muted-foreground mb-4">
-                    No listings found matching your criteria
+                    Be the first to post one
                   </p>
                   <Button asChild>
-                    <Link href="/listings/create">Post the First Listing</Link>
+                    <Link href="/listings/create">Post an Ad</Link>
                   </Button>
                 </CardContent>
               </Card>

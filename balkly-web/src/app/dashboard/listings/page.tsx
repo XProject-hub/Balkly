@@ -60,14 +60,14 @@ export default function MyListingsPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this listing?")) return;
+    if (!confirm("Are you sure you want to delete this ad?")) return;
 
     try {
       await listingsAPI.delete(id.toString());
       setListings(listings.filter((l) => l.id !== id));
-      alert("Listing deleted successfully!");
+      alert("Ad deleted successfully!");
     } catch (error) {
-      alert("Failed to delete listing");
+      alert("Failed to delete ad");
     }
   };
 
@@ -94,18 +94,18 @@ export default function MyListingsPage() {
           <Link href="/dashboard">
             <Button variant="secondary" size="sm" className="mb-2">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Dashboard
+              My Account
             </Button>
           </Link>
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-4xl font-bold mb-2">My Listings</h1>
-              <p className="text-lg opacity-90">Manage your posted items</p>
+              <h1 className="text-4xl font-bold mb-2">My Ads</h1>
+              <p className="text-lg opacity-90">Manage your posted ads</p>
             </div>
             <Button size="lg" variant="secondary" asChild>
               <Link href="/listings/create">
                 <Plus className="mr-2 h-5 w-5" />
-                New Listing
+                Post Ad
               </Link>
             </Button>
           </div>
@@ -161,13 +161,14 @@ export default function MyListingsPage() {
         ) : filteredListings.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
+              <p className="text-lg font-semibold mb-2">No ads yet</p>
               <p className="text-muted-foreground mb-4">
                 {filter === "all"
-                  ? "You haven't created any listings yet"
-                  : `No ${filter} listings`}
+                  ? "Be the first to post one"
+                  : `No ${filter} ads`}
               </p>
               <Button asChild>
-                <Link href="/listings/create">Create Your First Listing</Link>
+                <Link href="/listings/create">Post Your First Ad</Link>
               </Button>
             </CardContent>
           </Card>

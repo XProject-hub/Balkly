@@ -78,7 +78,7 @@ export default function DashboardPage() {
             Welcome back, {user?.name || "User"}!
           </h1>
           <p className="text-sm sm:text-base lg:text-lg opacity-90 mt-1">
-            Manage your listings, messages, and account
+            Manage your ads, messages, and account
           </p>
         </div>
       </div>
@@ -91,13 +91,13 @@ export default function DashboardPage() {
             <Button size="default" asChild className="flex-shrink-0 h-auto py-3 sm:py-4 px-3 sm:px-4">
               <Link href="/listings/create" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
                 <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="text-xs sm:text-sm whitespace-nowrap">New Listing</span>
+                <span className="text-xs sm:text-sm whitespace-nowrap">Post Ad</span>
               </Link>
             </Button>
             <Button size="default" variant="outline" asChild className="flex-shrink-0 h-auto py-3 sm:py-4 px-3 sm:px-4">
               <Link href="/dashboard/listings" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
                 <Package className="h-4 w-4 sm:h-5 sm:w-5" />
-                <span className="text-xs sm:text-sm whitespace-nowrap">My Listings</span>
+                <span className="text-xs sm:text-sm whitespace-nowrap">My Ads</span>
               </Link>
             </Button>
             <Button size="default" variant="outline" asChild className="flex-shrink-0 h-auto py-3 sm:py-4 px-3 sm:px-4">
@@ -137,12 +137,12 @@ export default function DashboardPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 sm:p-4 lg:p-6 pb-1 sm:pb-2">
-              <CardTitle className="text-xs sm:text-sm font-medium">Active Listings</CardTitle>
+              <CardTitle className="text-xs sm:text-sm font-medium">Active Ads</CardTitle>
               <Package className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent className="p-3 sm:p-4 lg:p-6 pt-0">
               <div className="text-xl sm:text-2xl font-bold">{stats.activeListings}</div>
-              <p className="text-[10px] sm:text-xs text-muted-foreground">Your posted items</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Your posted ads</p>
             </CardContent>
           </Card>
 
@@ -186,21 +186,21 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <Card>
             <CardHeader className="p-4 sm:p-6">
-              <CardTitle className="text-base sm:text-lg">Recent Listings</CardTitle>
-              <CardDescription className="text-xs sm:text-sm">Your latest posted items</CardDescription>
+              <CardTitle className="text-base sm:text-lg">Recent Ads</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Your latest posted ads</CardDescription>
             </CardHeader>
             <CardContent className="p-4 sm:p-6 pt-0">
               {stats.activeListings === 0 ? (
                 <div className="text-center py-6 sm:py-8">
-                  <p className="text-sm text-muted-foreground mb-4">No listings yet</p>
+                  <p className="text-sm text-muted-foreground mb-4">No ads yet</p>
                   <Button asChild size="sm">
-                    <Link href="/listings/create">Create Your First Listing</Link>
+                    <Link href="/listings/create">Post Your First Ad</Link>
                   </Button>
                 </div>
               ) : (
                 <div className="text-center py-4">
                   <Button variant="outline" asChild size="sm">
-                    <Link href="/dashboard/listings">View All Listings</Link>
+                    <Link href="/dashboard/listings">View All Ads</Link>
                   </Button>
                 </div>
               )}
