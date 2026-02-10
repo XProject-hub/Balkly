@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Plus, FileText, BookOpen, Trash2, Edit, Eye, Loader2 } from "lucide-react";
+import { ArrowLeft, Plus, FileText, BookOpen, Trash2, Edit, Eye, Loader2, Tag, Save } from "lucide-react";
 import { toast } from "@/lib/toast";
 
 interface ContentItem {
@@ -17,18 +17,28 @@ interface ContentItem {
   created_at: string;
 }
 
+interface BlogCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string;
+}
+
 export default function AdminContentPage() {
-  const [activeTab, setActiveTab] = useState<"blog" | "kb">("blog");
+  const [activeTab, setActiveTab] = useState<"blog" | "kb" | "categories">("blog");
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [blogPosts, setBlogPosts] = useState<ContentItem[]>([]);
   const [kbArticles, setKbArticles] = useState<ContentItem[]>([]);
+  const [blogCategories, setBlogCategories] = useState<BlogCategory[]>([]);
+  const [newCategory, setNewCategory] = useState({ name: "", description: "" });
+  const [editingCategory, setEditingCategory] = useState<BlogCategory | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
     excerpt: "",
-    category: "news",
+    category: "",
     video_url: "",
     featured_image: "",
   });
@@ -45,6 +55,17 @@ export default function AdminContentPage() {
       if (blogRes.ok) {
         const blogData = await blogRes.json();
         setBlogPosts(blogData.data || blogData.posts || []);
+      }
+
+      // Load blog categories
+      const catRes = await fetch("/api/v1/blog/categories");
+      if (catRes.ok) {
+        const catData = await catRes.json();
+        setBlogCategories(catData.categories || catData || []);
+        // Set default category if we have categories
+        if ((catData.categories || catData || []).length > 0) {
+          setFormData(prev => ({ ...prev, category: (catData.categories || catData)[0].slug }));
+        }
       }
 
       // Load KB articles
@@ -132,6 +153,83 @@ export default function AdminContentPage() {
     }
   };
 
+  const handleCreateCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCategory.name.trim()) return;
+
+    setSaving(true);
+    try {
+      const response = await fetch("/api/v1/admin/blog/categories", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify(newCategory),
+      });
+
+      if (!response.ok) throw new Error("Failed to create category");
+
+      toast.success("Category created!");
+      setNewCategory({ name: "", description: "" });
+      loadContent();
+    } catch (err) {
+      toast.error("Failed to create category");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleUpdateCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingCategory) return;
+
+    setSaving(true);
+    try {
+      const response = await fetch(`/api/v1/admin/blog/categories/${editingCategory.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({
+          name: editingCategory.name,
+          description: editingCategory.description,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update category");
+
+      toast.success("Category updated!");
+      setEditingCategory(null);
+      loadContent();
+    } catch (err) {
+      toast.error("Failed to update category");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteCategory = async (id: number) => {
+    if (!confirm("Are you sure? Posts in this category will be uncategorized.")) return;
+
+    try {
+      const response = await fetch(`/api/v1/admin/blog/categories/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+
+      if (!response.ok) throw new Error("Failed to delete category");
+
+      toast.success("Category deleted");
+      loadContent();
+    } catch (err) {
+      toast.error("Failed to delete category");
+    }
+  };
+
   const currentContent = activeTab === "blog" ? blogPosts : kbArticles;
 
   return (
@@ -151,13 +249,20 @@ export default function AdminContentPage() {
 
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Tabs */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 mb-6 flex-wrap">
           <Button
             variant={activeTab === "blog" ? "default" : "outline"}
             onClick={() => setActiveTab("blog")}
           >
             <FileText className="mr-2 h-4 w-4" />
             Blog Posts ({blogPosts.length})
+          </Button>
+          <Button
+            variant={activeTab === "categories" ? "default" : "outline"}
+            onClick={() => setActiveTab("categories")}
+          >
+            <Tag className="mr-2 h-4 w-4" />
+            Blog Categories ({blogCategories.length})
           </Button>
           <Button
             variant={activeTab === "kb" ? "default" : "outline"}
@@ -168,11 +273,13 @@ export default function AdminContentPage() {
           </Button>
         </div>
 
-        {/* Create Button */}
-        <Button onClick={() => setShowForm(!showForm)} className="mb-6">
-          <Plus className="mr-2 h-4 w-4" />
-          {showForm ? "Cancel" : `New ${activeTab === "blog" ? "Post" : "Article"}`}
-        </Button>
+        {/* Create Button - only for blog and kb */}
+        {activeTab !== "categories" && (
+          <Button onClick={() => setShowForm(!showForm)} className="mb-6">
+            <Plus className="mr-2 h-4 w-4" />
+            {showForm ? "Cancel" : `New ${activeTab === "blog" ? "Post" : "Article"}`}
+          </Button>
+        )}
 
         {/* Creation Form */}
         {showForm && (
@@ -218,11 +325,24 @@ export default function AdminContentPage() {
                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                         className="w-full px-4 py-2 border rounded-lg bg-background"
                       >
-                        <option value="news">News</option>
-                        <option value="tutorial">Tutorial</option>
-                        <option value="guide">Guide</option>
-                        <option value="update">Update</option>
+                        {blogCategories.length === 0 ? (
+                          <>
+                            <option value="news">News</option>
+                            <option value="tutorial">Tutorial</option>
+                            <option value="guide">Guide</option>
+                            <option value="update">Update</option>
+                          </>
+                        ) : (
+                          blogCategories.map((cat) => (
+                            <option key={cat.id} value={cat.slug}>{cat.name}</option>
+                          ))
+                        )}
                       </select>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        <button type="button" onClick={() => setActiveTab("categories")} className="text-primary hover:underline">
+                          Manage categories
+                        </button>
+                      </p>
                     </div>
 
                     <div>
@@ -281,7 +401,119 @@ export default function AdminContentPage() {
           </Card>
         )}
 
+        {/* Blog Categories Management */}
+        {activeTab === "categories" && (
+          <div className="space-y-6">
+            {/* Create Category Form */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Create New Category</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleCreateCategory} className="flex gap-4 items-end">
+                  <div className="flex-1">
+                    <label htmlFor="cat-name" className="block text-sm font-medium mb-2">Category Name</label>
+                    <input
+                      id="cat-name"
+                      type="text"
+                      value={newCategory.name}
+                      onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                      required
+                      className="w-full px-4 py-2 border rounded-lg bg-background"
+                      placeholder="e.g., Tutorials, News, Updates..."
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label htmlFor="cat-desc" className="block text-sm font-medium mb-2">Description (optional)</label>
+                    <input
+                      id="cat-desc"
+                      type="text"
+                      value={newCategory.description}
+                      onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
+                      className="w-full px-4 py-2 border rounded-lg bg-background"
+                      placeholder="Short description..."
+                    />
+                  </div>
+                  <Button type="submit" disabled={saving || !newCategory.name.trim()}>
+                    {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4 mr-2" />}
+                    Add
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
+            {/* Existing Categories */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Existing Categories</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {loading ? (
+                  <div className="text-center py-8">
+                    <Loader2 className="h-8 w-8 mx-auto animate-spin text-primary" />
+                  </div>
+                ) : blogCategories.length === 0 ? (
+                  <p className="text-center py-8 text-muted-foreground">
+                    No categories yet. Create your first category above.
+                  </p>
+                ) : (
+                  <div className="space-y-3">
+                    {blogCategories.map((cat) => (
+                      <div key={cat.id} className="flex items-center justify-between p-4 border rounded-lg">
+                        {editingCategory?.id === cat.id ? (
+                          <form onSubmit={handleUpdateCategory} className="flex-1 flex gap-4 items-center">
+                            <input
+                              type="text"
+                              value={editingCategory.name}
+                              onChange={(e) => setEditingCategory({ ...editingCategory, name: e.target.value })}
+                              className="flex-1 px-3 py-1 border rounded bg-background"
+                            />
+                            <input
+                              type="text"
+                              value={editingCategory.description || ""}
+                              onChange={(e) => setEditingCategory({ ...editingCategory, description: e.target.value })}
+                              className="flex-1 px-3 py-1 border rounded bg-background"
+                              placeholder="Description..."
+                            />
+                            <Button type="submit" size="sm" disabled={saving}>
+                              <Save className="h-4 w-4" />
+                            </Button>
+                            <Button type="button" size="sm" variant="outline" onClick={() => setEditingCategory(null)}>
+                              Cancel
+                            </Button>
+                          </form>
+                        ) : (
+                          <>
+                            <div>
+                              <h3 className="font-medium flex items-center gap-2">
+                                <Tag className="h-4 w-4 text-primary" />
+                                {cat.name}
+                              </h3>
+                              <p className="text-sm text-muted-foreground">
+                                {cat.description || cat.slug}
+                              </p>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="outline" onClick={() => setEditingCategory(cat)}>
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button size="sm" variant="destructive" onClick={() => handleDeleteCategory(cat.id)}>
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Existing Content List */}
+        {activeTab !== "categories" && (
         <Card className="mb-6">
           <CardHeader>
             <CardTitle>
@@ -331,6 +563,7 @@ export default function AdminContentPage() {
             )}
           </CardContent>
         </Card>
+        )}
 
         {/* Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
