@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Calendar, User, Eye, Heart, Share2, Facebook, Twitter, Linkedin, Link2, MessageCircle, Send } from "lucide-react";
+import { ArrowLeft, Calendar, User, Eye, Heart, Share2, Facebook, Twitter, Linkedin, Link2, MessageCircle, Send, Trash2 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { showToast } from "@/lib/toast";
 
@@ -23,6 +23,17 @@ export default function BlogPostPage() {
   const [newComment, setNewComment] = useState("");
   const [submittingComment, setSubmittingComment] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    // Get current user info
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        setCurrentUser(JSON.parse(userStr));
+      } catch (e) {}
+    }
+  }, []);
 
   useEffect(() => {
     if (slug) {
@@ -140,6 +151,36 @@ export default function BlogPostPage() {
       showToast.error('Failed to post comment');
     } finally {
       setSubmittingComment(false);
+    }
+  };
+
+  const canDeleteComment = () => {
+    if (!currentUser) return false;
+    return currentUser.role === 'admin' || currentUser.role === 'moderator';
+  };
+
+  const handleDeleteComment = async (commentId: number) => {
+    if (!confirm('Are you sure you want to delete this comment?')) return;
+
+    const token = localStorage.getItem('auth_token');
+    if (!token) return;
+
+    try {
+      const response = await fetch(`/api/v1/blog/comments/${commentId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      
+      if (response.ok) {
+        setComments(prev => prev.filter(c => c.id !== commentId));
+        showToast.success('Comment deleted');
+      } else {
+        showToast.error('Failed to delete comment');
+      }
+    } catch (error) {
+      showToast.error('Failed to delete comment');
     }
   };
 
@@ -348,11 +389,24 @@ export default function BlogPostPage() {
                           <User className="h-5 w-5 text-primary" />
                         </div>
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="font-semibold">{comment.user?.name || 'Anonymous'}</span>
-                            <span className="text-xs text-muted-foreground">
-                              {new Date(comment.created_at).toLocaleDateString()}
-                            </span>
+                          <div className="flex items-center justify-between mb-1">
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold">{comment.user?.name || 'Anonymous'}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {new Date(comment.created_at).toLocaleDateString()}
+                              </span>
+                            </div>
+                            {canDeleteComment() && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50"
+                                onClick={() => handleDeleteComment(comment.id)}
+                                title="Delete comment (Admin/Moderator)"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            )}
                           </div>
                           <p className="text-sm text-foreground">{comment.content}</p>
                         </div>
