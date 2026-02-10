@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 class FetchPlatinumlistEvents extends Command
 {
     protected $signature = 'platinumlist:fetch';
-    protected $description = 'Fetch events from Platinumlist XML feed and save as affiliate events';
+    protected $description = 'Fetch Dubai & Abu Dhabi events from Platinumlist XML feed';
 
     public function handle()
     {
@@ -36,7 +36,7 @@ class FetchPlatinumlistEvents extends Command
             $events = $this->parseXmlEvents($xml);
 
             if (empty($events)) {
-                $this->error('No UAE events to import');
+                $this->error('No Dubai/Abu Dhabi events to import');
                 return 1;
             }
 
@@ -57,6 +57,14 @@ class FetchPlatinumlistEvents extends Command
 
                 $count++;
                 $this->info("✓ Added: {$event['title']}");
+            }
+
+            // Clean up past events (ended more than 7 days ago)
+            $deleted = Event::where('type', 'affiliate')
+                ->where('end_at', '<', now()->subDays(7))
+                ->delete();
+            if ($deleted > 0) {
+                $this->info("🗑️ Cleaned up {$deleted} past events");
             }
 
             $this->info("✅ Successfully imported {$count} events from Platinumlist");
