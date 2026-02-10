@@ -65,10 +65,13 @@ class BlogController extends Controller
             'excerpt' => 'nullable|string|max:500',
             'content' => 'required|string',
             'featured_image' => 'nullable|url',
-            'category' => 'required|in:news,tutorial,update,guide',
+            'category' => 'nullable|string|max:100',
             'tags' => 'nullable|array',
-            'status' => 'required|in:draft,published',
+            'status' => 'nullable|in:draft,published',
         ]);
+
+        // Default status to published if not provided
+        $validated['status'] = $validated['status'] ?? 'published';
 
         $post = BlogPost::create([
             'author_id' => auth()->id(),
