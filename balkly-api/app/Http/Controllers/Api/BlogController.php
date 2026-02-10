@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BlogPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class BlogController extends Controller
 {
@@ -114,6 +115,102 @@ class BlogController extends Controller
     {
         BlogPost::findOrFail($id)->delete();
         return response()->json(['message' => 'Post deleted']);
+    }
+
+    /**
+     * Get all blog categories
+     */
+    public function categories()
+    {
+        $categories = DB::table('blog_categories')
+            ->whereNull('parent_id')
+            ->orderBy('order')
+            ->get();
+
+        return response()->json(['categories' => $categories]);
+    }
+
+    /**
+     * Create blog category (Admin)
+     */
+    public function storeCategory(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+            'description' => 'nullable|string|max:500',
+        ]);
+
+        $slug = Str::slug($validated['name']);
+        
+        // Check if slug exists
+        $exists = DB::table('blog_categories')->where('slug', $slug)->exists();
+        if ($exists) {
+            $slug = $slug . '-' . Str::random(4);
+        }
+
+        $id = DB::table('blog_categories')->insertGetId([
+            'name' => $validated['name'],
+            'slug' => $slug,
+            'description' => $validated['description'] ?? null,
+            'order' => DB::table('blog_categories')->max('order') + 1,
+            'is_active' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $category = DB::table('blog_categories')->find($id);
+
+        return response()->json(['category' => $category], 201);
+    }
+
+    /**
+     * Update blog category (Admin)
+     */
+    public function updateCategory(Request $request, $id)
+    {
+        $category = DB::table('blog_categories')->find($id);
+        if (!$category) {
+            return response()->json(['error' => 'Category not found'], 404);
+        }
+
+        $validated = $request->validate([
+            'name' => 'sometimes|string|max:100',
+            'description' => 'nullable|string|max:500',
+        ]);
+
+        $updateData = ['updated_at' => now()];
+        
+        if (isset($validated['name'])) {
+            $updateData['name'] = $validated['name'];
+            $updateData['slug'] = Str::slug($validated['name']);
+        }
+        if (array_key_exists('description', $validated)) {
+            $updateData['description'] = $validated['description'];
+        }
+
+        DB::table('blog_categories')->where('id', $id)->update($updateData);
+
+        $category = DB::table('blog_categories')->find($id);
+
+        return response()->json(['category' => $category]);
+    }
+
+    /**
+     * Delete blog category (Admin)
+     */
+    public function destroyCategory($id)
+    {
+        $category = DB::table('blog_categories')->find($id);
+        if (!$category) {
+            return response()->json(['error' => 'Category not found'], 404);
+        }
+
+        // Set posts in this category to null
+        BlogPost::where('category', $category->slug)->update(['category' => null]);
+
+        DB::table('blog_categories')->where('id', $id)->delete();
+
+        return response()->json(['message' => 'Category deleted']);
     }
 }
 

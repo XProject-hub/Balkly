@@ -247,6 +247,11 @@ Route::prefix('v1')->group(function () {
             Route::patch('/blog/{id}', [\App\Http\Controllers\Api\BlogController::class, 'update']);
             Route::delete('/blog/{id}', [\App\Http\Controllers\Api\BlogController::class, 'destroy']);
             
+            // Blog Category Management
+            Route::post('/blog/categories', [\App\Http\Controllers\Api\BlogController::class, 'storeCategory']);
+            Route::patch('/blog/categories/{id}', [\App\Http\Controllers\Api\BlogController::class, 'updateCategory']);
+            Route::delete('/blog/categories/{id}', [\App\Http\Controllers\Api\BlogController::class, 'destroyCategory']);
+            
             // Knowledge Base Management
             Route::post('/kb/articles', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'store']);
             Route::patch('/kb/articles/{id}', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'update']);
@@ -317,6 +322,7 @@ Route::prefix('v1')->group(function () {
     
     // Blog (public)
     Route::get('/blog', [\App\Http\Controllers\Api\BlogController::class, 'index']);
+    Route::get('/blog/categories', [\App\Http\Controllers\Api\BlogController::class, 'categories']);
     Route::get('/blog/{slug}', [\App\Http\Controllers\Api\BlogController::class, 'show']);
     
     // Knowledge Base (public)
