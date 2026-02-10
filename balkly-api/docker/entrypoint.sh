@@ -3,6 +3,23 @@ set -e
 
 echo "🚀 Starting Balkly API..."
 
+# Fix permissions first (critical!)
+echo "🔧 Fixing permissions..."
+mkdir -p /var/www/storage/framework/cache/data
+mkdir -p /var/www/storage/framework/sessions
+mkdir -p /var/www/storage/framework/views
+mkdir -p /var/www/storage/logs
+mkdir -p /var/www/bootstrap/cache
+chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+echo "✅ Permissions fixed!"
+
+# Install composer dependencies if not already installed
+if [ ! -d "/var/www/vendor" ]; then
+    echo "📦 Installing composer dependencies..."
+    composer install --no-dev --optimize-autoloader --no-interaction
+fi
+
 # Wait for MySQL to be ready (using bash instead of nc which may not be installed)
 echo "⏳ Waiting for MySQL..."
 until php -r "new PDO('mysql:host=${DB_HOST:-mysql};port=3306', '${DB_USERNAME:-balkly}', '${DB_PASSWORD:-balkly_pass}');" 2>/dev/null; do
