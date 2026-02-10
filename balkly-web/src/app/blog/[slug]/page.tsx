@@ -5,7 +5,9 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Calendar, User, Eye } from "lucide-react";
+import { ArrowLeft, Calendar, User, Eye, Heart, Share2, Facebook, Twitter, Linkedin, Link2, MessageCircle, Send } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { showToast } from "@/lib/toast";
 
 export default function BlogPostPage() {
   const params = useParams();
@@ -15,6 +17,12 @@ export default function BlogPostPage() {
   const [post, setPost] = useState<any>(null);
   const [related, setRelated] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [liked, setLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
+  const [comments, setComments] = useState<any[]>([]);
+  const [newComment, setNewComment] = useState("");
+  const [submittingComment, setSubmittingComment] = useState(false);
+  const [showShareMenu, setShowShareMenu] = useState(false);
 
   useEffect(() => {
     if (slug) {
@@ -29,10 +37,109 @@ export default function BlogPostPage() {
       const data = await response.json();
       setPost(data.post);
       setRelated(data.related || []);
+      setLikesCount(data.post?.likes_count || 0);
+      setComments(data.post?.comments || []);
+      
+      // Check if user has liked this post
+      const likedPosts = JSON.parse(localStorage.getItem('liked_blog_posts') || '[]');
+      setLiked(likedPosts.includes(data.post?.id));
     } catch (error) {
       console.error("Failed to load post:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLike = async () => {
+    if (!post) return;
+    
+    const likedPosts = JSON.parse(localStorage.getItem('liked_blog_posts') || '[]');
+    
+    if (liked) {
+      // Unlike
+      const newLikedPosts = likedPosts.filter((id: number) => id !== post.id);
+      localStorage.setItem('liked_blog_posts', JSON.stringify(newLikedPosts));
+      setLiked(false);
+      setLikesCount(prev => Math.max(0, prev - 1));
+    } else {
+      // Like
+      likedPosts.push(post.id);
+      localStorage.setItem('liked_blog_posts', JSON.stringify(likedPosts));
+      setLiked(true);
+      setLikesCount(prev => prev + 1);
+    }
+
+    // Send to backend (fire and forget)
+    try {
+      await fetch(`/api/v1/blog/${slug}/like`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+    } catch (e) {
+      // Ignore errors - local state is already updated
+    }
+  };
+
+  const handleShare = (platform: string) => {
+    const url = window.location.href;
+    const title = post?.title || 'Check out this article';
+    
+    let shareUrl = '';
+    switch (platform) {
+      case 'facebook':
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        break;
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+        break;
+      case 'linkedin':
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+        break;
+      case 'copy':
+        navigator.clipboard.writeText(url);
+        showToast.success('Link copied to clipboard!');
+        setShowShareMenu(false);
+        return;
+    }
+    
+    if (shareUrl) {
+      window.open(shareUrl, '_blank', 'width=600,height=400');
+    }
+    setShowShareMenu(false);
+  };
+
+  const handleSubmitComment = async () => {
+    if (!newComment.trim()) return;
+    
+    const token = localStorage.getItem('auth_token');
+    if (!token) {
+      showToast.error('Please login to comment');
+      return;
+    }
+
+    setSubmittingComment(true);
+    try {
+      const response = await fetch(`/api/v1/blog/${slug}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ content: newComment }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setComments(prev => [data.comment, ...prev]);
+        setNewComment("");
+        showToast.success('Comment posted!');
+      } else {
+        showToast.error('Failed to post comment');
+      }
+    } catch (error) {
+      showToast.error('Failed to post comment');
+    } finally {
+      setSubmittingComment(false);
     }
   };
 
@@ -136,6 +243,126 @@ export default function BlogPostPage() {
               ))}
             </div>
           )}
+
+          {/* Like & Share Section */}
+          <div className="flex items-center justify-between py-6 border-t border-b mb-8">
+            <div className="flex items-center gap-4">
+              <Button
+                variant={liked ? "default" : "outline"}
+                size="sm"
+                onClick={handleLike}
+                className={liked ? "bg-red-500 hover:bg-red-600" : ""}
+              >
+                <Heart className={`h-4 w-4 mr-2 ${liked ? "fill-current" : ""}`} />
+                {likesCount} {likesCount === 1 ? 'Like' : 'Likes'}
+              </Button>
+              
+              <span className="text-muted-foreground text-sm flex items-center">
+                <MessageCircle className="h-4 w-4 mr-1" />
+                {comments.length} Comments
+              </span>
+            </div>
+
+            <div className="relative">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowShareMenu(!showShareMenu)}
+              >
+                <Share2 className="h-4 w-4 mr-2" />
+                Share
+              </Button>
+
+              {showShareMenu && (
+                <div className="absolute right-0 top-full mt-2 bg-background border rounded-lg shadow-lg p-2 z-50 min-w-[160px]">
+                  <button
+                    onClick={() => handleShare('facebook')}
+                    className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-muted rounded-md"
+                  >
+                    <Facebook className="h-4 w-4 text-blue-600" />
+                    Facebook
+                  </button>
+                  <button
+                    onClick={() => handleShare('twitter')}
+                    className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-muted rounded-md"
+                  >
+                    <Twitter className="h-4 w-4 text-sky-500" />
+                    Twitter
+                  </button>
+                  <button
+                    onClick={() => handleShare('linkedin')}
+                    className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-muted rounded-md"
+                  >
+                    <Linkedin className="h-4 w-4 text-blue-700" />
+                    LinkedIn
+                  </button>
+                  <button
+                    onClick={() => handleShare('copy')}
+                    className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-muted rounded-md"
+                  >
+                    <Link2 className="h-4 w-4" />
+                    Copy Link
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Comments Section */}
+          <div className="mb-12">
+            <h3 className="text-xl font-bold mb-6 flex items-center">
+              <MessageCircle className="h-5 w-5 mr-2" />
+              Comments ({comments.length})
+            </h3>
+
+            {/* Comment Form */}
+            <div className="mb-8">
+              <Textarea
+                placeholder="Write a comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                rows={3}
+                className="mb-3"
+              />
+              <Button 
+                onClick={handleSubmitComment}
+                disabled={!newComment.trim() || submittingComment}
+              >
+                <Send className="h-4 w-4 mr-2" />
+                {submittingComment ? 'Posting...' : 'Post Comment'}
+              </Button>
+            </div>
+
+            {/* Comments List */}
+            {comments.length === 0 ? (
+              <p className="text-muted-foreground text-center py-8">
+                No comments yet. Be the first to comment!
+              </p>
+            ) : (
+              <div className="space-y-4">
+                {comments.map((comment) => (
+                  <Card key={comment.id}>
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <User className="h-5 w-5 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-semibold">{comment.user?.name || 'Anonymous'}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(comment.created_at).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <p className="text-sm text-foreground">{comment.content}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
         </article>
 
         {/* Related Posts */}
