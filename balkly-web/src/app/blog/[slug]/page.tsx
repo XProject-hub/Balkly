@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Calendar, User, Eye, Heart, Share2, Facebook, Twitter, Linkedin, Link2, MessageCircle, Send, Trash2 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { showToast } from "@/lib/toast";
+import { toast } from "@/lib/toast";
 
 export default function BlogPostPage() {
   const params = useParams();
@@ -108,7 +108,7 @@ export default function BlogPostPage() {
         break;
       case 'copy':
         navigator.clipboard.writeText(url);
-        showToast.success('Link copied to clipboard!');
+        toast.success('Link copied to clipboard!');
         setShowShareMenu(false);
         return;
     }
@@ -124,7 +124,7 @@ export default function BlogPostPage() {
     
     const token = localStorage.getItem('auth_token');
     if (!token) {
-      showToast.error('Please login to comment');
+      toast.error('Please login to comment');
       return;
     }
 
@@ -143,12 +143,12 @@ export default function BlogPostPage() {
         const data = await response.json();
         setComments(prev => [data.comment, ...prev]);
         setNewComment("");
-        showToast.success('Comment posted!');
+        toast.success('Comment posted!');
       } else {
-        showToast.error('Failed to post comment');
+        toast.error('Failed to post comment');
       }
     } catch (error) {
-      showToast.error('Failed to post comment');
+      toast.error('Failed to post comment');
     } finally {
       setSubmittingComment(false);
     }
@@ -175,12 +175,12 @@ export default function BlogPostPage() {
       
       if (response.ok) {
         setComments(prev => prev.filter(c => c.id !== commentId));
-        showToast.success('Comment deleted');
+        toast.success('Comment deleted');
       } else {
-        showToast.error('Failed to delete comment');
+        toast.error('Failed to delete comment');
       }
     } catch (error) {
-      showToast.error('Failed to delete comment');
+      toast.error('Failed to delete comment');
     }
   };
 
