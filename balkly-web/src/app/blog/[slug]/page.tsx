@@ -363,6 +363,22 @@ export default function BlogPostPage() {
               </div>
             )}
           </div>
+
+          {/* Forum Discussion Link */}
+          <div className="bg-gradient-to-r from-balkly-blue/10 to-purple-500/10 border border-primary/20 rounded-xl p-6 text-center mb-8">
+            <MessageCircle className="h-8 w-8 mx-auto mb-3 text-primary" />
+            <h3 className="text-lg font-bold mb-2">Want to discuss more?</h3>
+            <p className="text-muted-foreground mb-4">
+              Join the conversation with the Balkly community
+            </p>
+            <a 
+              href="https://balkly.live/forum" 
+              className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+            >
+              <MessageCircle className="h-4 w-4" />
+              Discuss on Balkly Forum
+            </a>
+          </div>
         </article>
 
         {/* Related Posts */}
