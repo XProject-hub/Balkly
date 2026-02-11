@@ -98,12 +98,21 @@ class BlogController extends Controller
 
         $validated = $request->validate([
             'title' => 'sometimes|string|max:200',
+            'excerpt' => 'nullable|string|max:500',
             'content' => 'sometimes|string',
+            'featured_image' => 'nullable|url',
+            'category' => 'nullable|string|max:100',
+            'tags' => 'nullable|array',
             'status' => 'sometimes|in:draft,published,archived',
         ]);
 
         if (isset($validated['status']) && $validated['status'] === 'published' && !$post->published_at) {
             $validated['published_at'] = now();
+        }
+
+        // Update slug if title changed
+        if (isset($validated['title']) && $validated['title'] !== $post->title) {
+            $validated['slug'] = Str::slug($validated['title']) . '-' . Str::random(6);
         }
 
         $post->update($validated);

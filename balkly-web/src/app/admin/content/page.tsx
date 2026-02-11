@@ -34,6 +34,7 @@ export default function AdminContentPage() {
   const [blogCategories, setBlogCategories] = useState<BlogCategory[]>([]);
   const [newCategory, setNewCategory] = useState({ name: "", description: "" });
   const [editingCategory, setEditingCategory] = useState<BlogCategory | null>(null);
+  const [editingPost, setEditingPost] = useState<ContentItem | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -210,6 +211,81 @@ export default function AdminContentPage() {
     }
   };
 
+  const handleEditPost = (post: ContentItem) => {
+    setEditingPost(post);
+    setFormData({
+      title: post.title,
+      content: "",  // Will be loaded
+      excerpt: post.excerpt || "",
+      category: post.category || "",
+      video_url: "",
+      featured_image: "",
+    });
+    setShowForm(true);
+    // Fetch full post content
+    fetchPostContent(post.id);
+  };
+
+  const fetchPostContent = async (id: number) => {
+    try {
+      const response = await fetch(`/api/v1/blog/${blogPosts.find(p => p.id === id)?.slug}`);
+      if (response.ok) {
+        const data = await response.json();
+        setFormData(prev => ({
+          ...prev,
+          content: data.post.content || "",
+          featured_image: data.post.featured_image || "",
+        }));
+      }
+    } catch (err) {
+      console.error("Failed to fetch post content");
+    }
+  };
+
+  const handleUpdatePost = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingPost) return;
+
+    setSaving(true);
+    try {
+      const response = await fetch(`/api/v1/admin/blog/${editingPost.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({
+          title: formData.title,
+          excerpt: formData.excerpt,
+          content: formData.content,
+          category: formData.category,
+          featured_image: formData.featured_image,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update post");
+      }
+
+      toast.success("Blog post updated!");
+      setShowForm(false);
+      setEditingPost(null);
+      setFormData({
+        title: "",
+        content: "",
+        excerpt: "",
+        category: "",
+        video_url: "",
+        featured_image: "",
+      });
+      loadContent();
+    } catch (err) {
+      toast.error("Failed to update post");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleDeleteCategory = async (id: number) => {
     if (!confirm("Are you sure? Posts in this category will be uncategorized.")) return;
 
@@ -275,7 +351,13 @@ export default function AdminContentPage() {
 
         {/* Create Button - only for blog and kb */}
         {activeTab !== "categories" && (
-          <Button onClick={() => setShowForm(!showForm)} className="mb-6">
+          <Button onClick={() => {
+            setShowForm(!showForm);
+            if (showForm) {
+              setEditingPost(null);
+              setFormData({ title: "", content: "", excerpt: "", category: "", video_url: "", featured_image: "" });
+            }
+          }} className="mb-6">
             <Plus className="mr-2 h-4 w-4" />
             {showForm ? "Cancel" : `New ${activeTab === "blog" ? "Post" : "Article"}`}
           </Button>
@@ -286,11 +368,11 @@ export default function AdminContentPage() {
           <Card className="mb-8">
             <CardHeader>
               <CardTitle>
-                Create New {activeTab === "blog" ? "Blog Post" : "KB Article"}
+                {editingPost ? "Edit Blog Post" : `Create New ${activeTab === "blog" ? "Blog Post" : "KB Article"}`}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={editingPost ? handleUpdatePost : handleSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="content-title" className="block text-sm font-medium mb-2">Title</label>
                   <input
@@ -391,10 +473,12 @@ export default function AdminContentPage() {
                 <Button type="submit" className="w-full" disabled={saving}>
                   {saving ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : editingPost ? (
+                    <Save className="mr-2 h-4 w-4" />
                   ) : (
                     <Plus className="mr-2 h-4 w-4" />
                   )}
-                  Publish {activeTab === "blog" ? "Post" : "Article"}
+                  {editingPost ? "Update Post" : `Publish ${activeTab === "blog" ? "Post" : "Article"}`}
                 </Button>
               </form>
             </CardContent>
@@ -549,6 +633,15 @@ export default function AdminContentPage() {
                           <Eye className="h-4 w-4" />
                         </Link>
                       </Button>
+                      {activeTab === "blog" && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEditPost(item)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      )}
                       <Button
                         size="sm"
                         variant="destructive"

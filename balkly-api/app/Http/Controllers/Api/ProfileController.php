@@ -39,16 +39,22 @@ class ProfileController extends Controller
         ]);
 
         // Update user name if provided
-        if (isset($validated['name'])) {
-            $user->update(['name' => $validated['name']]);
+        if (isset($validated['name']) && !empty($validated['name'])) {
+            $user->name = $validated['name'];
+            $user->save();
             unset($validated['name']);
         }
 
-        // Update profile
-        $user->profile()->updateOrCreate(
-            ['user_id' => $user->id],
-            $validated
-        );
+        // Update profile (only if there are profile fields to update)
+        if (!empty($validated)) {
+            $user->profile()->updateOrCreate(
+                ['user_id' => $user->id],
+                $validated
+            );
+        }
+
+        // Refresh the user model to get latest data
+        $user->refresh();
 
         return response()->json([
             'user' => $user->load('profile'),
