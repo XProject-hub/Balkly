@@ -39,7 +39,7 @@ export default function AdminContentPage() {
     title: "",
     content: "",
     excerpt: "",
-    category: "",
+    category: "",  // Empty - user must select
     video_url: "",
     featured_image: "",
   });
@@ -63,10 +63,7 @@ export default function AdminContentPage() {
       if (catRes.ok) {
         const catData = await catRes.json();
         setBlogCategories(catData.categories || catData || []);
-        // Set default category if we have categories
-        if ((catData.categories || catData || []).length > 0) {
-          setFormData(prev => ({ ...prev, category: (catData.categories || catData)[0].slug }));
-        }
+        // Don't auto-set category - let user choose
       }
 
       // Load KB articles
@@ -406,7 +403,9 @@ export default function AdminContentPage() {
                         value={formData.category}
                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                         className="w-full px-4 py-2 border rounded-lg bg-background"
+                        required
                       >
+                        <option value="">-- Select Category --</option>
                         {blogCategories.length === 0 ? (
                           <>
                             <option value="news">News</option>
