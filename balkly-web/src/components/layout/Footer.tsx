@@ -78,6 +78,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/car-rental" className="text-gray-400 hover:text-white transition-colors">
+                  Car Rental
+                </Link>
+              </li>
+              <li>
                 <Link href="/events" className="text-gray-400 hover:text-white transition-colors">
                   Find Events
                 </Link>

@@ -542,6 +542,79 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Car Rental Section */}
+      <section className="py-10 sm:py-16 lg:py-20 bg-gradient-to-br from-balkly-blue via-purple-600 to-balkly-blue text-white relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl -translate-x-1/2 translate-y-1/2" />
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+            {/* Content */}
+            <div className="flex-1 text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm mb-4">
+                <Car className="h-4 w-4" />
+                <span>New Service</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+                Rent a Car in UAE
+              </h2>
+              <p className="text-lg sm:text-xl text-white/90 mb-6 max-w-xl">
+                Compare prices from 50+ suppliers. Best rates guaranteed with free cancellation on most bookings.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Button 
+                  size="lg" 
+                  className="bg-white text-balkly-blue hover:bg-gray-100 font-bold px-8"
+                  asChild
+                >
+                  <Link href="/car-rental">
+                    <Car className="h-5 w-5 mr-2" />
+                    Search Cars
+                  </Link>
+                </Button>
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-white/50 text-white hover:bg-white/10 font-semibold"
+                  asChild
+                >
+                  <Link href="/car-rental/manage-booking">
+                    Manage Booking
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            
+            {/* Car types preview */}
+            <div className="flex-1 grid grid-cols-2 gap-4 max-w-md">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all">
+                <div className="text-4xl mb-2">🚗</div>
+                <div className="font-semibold">Economy</div>
+                <div className="text-sm text-white/70">From AED 89/day</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all">
+                <div className="text-4xl mb-2">🚙</div>
+                <div className="font-semibold">SUV</div>
+                <div className="text-sm text-white/70">From AED 179/day</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all">
+                <div className="text-4xl mb-2">🚐</div>
+                <div className="font-semibold">Van</div>
+                <div className="text-sm text-white/70">From AED 249/day</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all">
+                <div className="text-4xl mb-2">🏎️</div>
+                <div className="font-semibold">Luxury</div>
+                <div className="text-sm text-white/70">From AED 349/day</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Ad Banner - Middle of page */}
       <AdBanner position="homepage_middle" className="py-8 bg-white dark:bg-gray-900" />
 
