@@ -590,23 +590,38 @@ export default function HomePage() {
             
             {/* Car types preview */}
             <div className="flex-1 grid grid-cols-2 gap-4 max-w-md">
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all">
-                <div className="text-4xl mb-2">🚗</div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all group cursor-pointer">
+                <div className="w-14 h-14 mx-auto mb-2 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Car className="h-7 w-7" />
+                </div>
                 <div className="font-semibold">Economy</div>
                 <div className="text-sm text-white/70">From AED 89/day</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all">
-                <div className="text-4xl mb-2">🚙</div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all group cursor-pointer">
+                <div className="w-14 h-14 mx-auto mb-2 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Car className="h-8 w-8" />
+                </div>
                 <div className="font-semibold">SUV</div>
                 <div className="text-sm text-white/70">From AED 179/day</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all">
-                <div className="text-4xl mb-2">🚐</div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all group cursor-pointer">
+                <div className="w-14 h-14 mx-auto mb-2 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M6 17a2 2 0 100-4 2 2 0 000 4zM18 17a2 2 0 100-4 2 2 0 000 4z" />
+                    <path d="M4 17H2V9l2-4h12l2 4v8h-2M8 17h8" />
+                    <path d="M4 5h16" />
+                  </svg>
+                </div>
                 <div className="font-semibold">Van</div>
                 <div className="text-sm text-white/70">From AED 249/day</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all">
-                <div className="text-4xl mb-2">🏎️</div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all group cursor-pointer">
+                <div className="w-14 h-14 mx-auto mb-2 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M5 17a2 2 0 100-4 2 2 0 000 4zM19 17a2 2 0 100-4 2 2 0 000 4z" />
+                    <path d="M3 17V11l2-6h5l3 4h6l2 2v6h-2M7 17h10" />
+                  </svg>
+                </div>
                 <div className="font-semibold">Luxury</div>
                 <div className="text-sm text-white/70">From AED 349/day</div>
               </div>

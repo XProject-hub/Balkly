@@ -6,12 +6,6 @@ import Link from "next/link";
 
 export default function CarRentalSearchPage() {
   useEffect(() => {
-    // Load VIP Cars booking engine script
-    const script = document.createElement("script");
-    script.src = "https://res.supplycars.com/jsbookingengine/script1.js?v=0.04";
-    script.async = true;
-    document.body.appendChild(script);
-
     // Set default values for the search results page
     (window as any).default_values = {
       affiliate_id: "vip_3285",
@@ -26,8 +20,23 @@ export default function CarRentalSearchPage() {
       div_id: "bookingengine",
     };
 
+    // Load jQuery first (required by VIP Cars)
+    const jquery = document.createElement("script");
+    jquery.src = "https://code.jquery.com/jquery-3.6.0.min.js";
+    jquery.async = true;
+    document.head.appendChild(jquery);
+
+    jquery.onload = () => {
+      // Load VIP Cars booking engine script after jQuery
+      const script = document.createElement("script");
+      script.src = "https://res.supplycars.com/jsbookingengine/script1.js?v=0.04";
+      script.async = true;
+      document.body.appendChild(script);
+    };
+
     return () => {
-      document.body.removeChild(script);
+      const scripts = document.querySelectorAll('script[src*="supplycars"], script[src*="jquery"]');
+      scripts.forEach(s => s.remove());
     };
   }, []);
 

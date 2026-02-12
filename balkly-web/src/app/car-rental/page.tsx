@@ -1,16 +1,56 @@
 "use client";
 
 import { useEffect } from "react";
-import { Car, Shield, Clock, CreditCard, MapPin, Star, Check } from "lucide-react";
+import { Car, Shield, Clock, CreditCard, MapPin, Star, Check, Truck, Sparkles } from "lucide-react";
 import Link from "next/link";
+
+// Car type icons as SVG components
+const EconomyCarIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M7 17a2 2 0 100-4 2 2 0 000 4zM17 17a2 2 0 100-4 2 2 0 000 4z" />
+    <path d="M5 17H3v-4l2-5h10l2 5v4h-2M9 17h6" />
+    <path d="M5 8l1-3h12l1 3" />
+  </svg>
+);
+
+const SUVIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M7 18a2 2 0 100-4 2 2 0 000 4zM17 18a2 2 0 100-4 2 2 0 000 4z" />
+    <path d="M5 18H3V9l3-4h8l4 4v9h-2M9 18h6" />
+    <path d="M6 5v4M18 5v4M6 9h12" />
+  </svg>
+);
+
+const CompactCarIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M6 17a2 2 0 100-4 2 2 0 000 4zM18 17a2 2 0 100-4 2 2 0 000 4z" />
+    <path d="M4 17H2v-5l3-4h10l3 4v5h-2M8 17h8" />
+  </svg>
+);
+
+const LuxuryCarIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M6 17a2 2 0 100-4 2 2 0 000 4zM18 17a2 2 0 100-4 2 2 0 000 4z" />
+    <path d="M4 17H2v-4l2-6h4l2 3h4l2-3h4l2 6v4h-2M8 17h8" />
+    <path d="M7 7l1-2h8l1 2" />
+  </svg>
+);
 
 export default function CarRentalPage() {
   useEffect(() => {
-    // Load VIP Cars booking engine script
-    const script = document.createElement("script");
-    script.src = "https://res.supplycars.com/jsbookingengine/script1.js?v=0.04";
-    script.async = true;
-    document.body.appendChild(script);
+    // Load jQuery first (required by VIP Cars)
+    const jquery = document.createElement("script");
+    jquery.src = "https://code.jquery.com/jquery-3.6.0.min.js";
+    jquery.async = true;
+    document.head.appendChild(jquery);
+
+    jquery.onload = () => {
+      // Load VIP Cars booking engine script after jQuery
+      const script = document.createElement("script");
+      script.src = "https://res.supplycars.com/jsbookingengine/script1.js?v=0.04";
+      script.async = true;
+      document.body.appendChild(script);
+    };
 
     // Set default values for the booking engine
     (window as any).default_values = {
@@ -42,7 +82,9 @@ export default function CarRentalPage() {
     };
 
     return () => {
-      document.body.removeChild(script);
+      // Cleanup scripts on unmount
+      const scripts = document.querySelectorAll('script[src*="supplycars"], script[src*="jquery"]');
+      scripts.forEach(s => s.remove());
     };
   }, []);
 
@@ -70,10 +112,10 @@ export default function CarRentalPage() {
   ];
 
   const carTypes = [
-    { name: "Economy", price: "From AED 89/day", image: "🚗" },
-    { name: "Compact", price: "From AED 119/day", image: "🚙" },
-    { name: "SUV", price: "From AED 179/day", image: "🚐" },
-    { name: "Luxury", price: "From AED 349/day", image: "🏎️" },
+    { name: "Economy", price: "From AED 89/day", icon: EconomyCarIcon, color: "from-blue-500 to-cyan-500" },
+    { name: "Compact", price: "From AED 119/day", icon: CompactCarIcon, color: "from-green-500 to-emerald-500" },
+    { name: "SUV", price: "From AED 179/day", icon: SUVIcon, color: "from-orange-500 to-amber-500" },
+    { name: "Luxury", price: "From AED 349/day", icon: LuxuryCarIcon, color: "from-purple-500 to-pink-500" },
   ];
 
   const popularLocations = [
@@ -161,8 +203,8 @@ export default function CarRentalPage() {
                 key={index}
                 className="bg-card rounded-xl p-6 border border-border text-center hover:border-primary/50 transition-all hover:shadow-lg cursor-pointer group"
               >
-                <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">
-                  {car.image}
+                <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${car.color} p-3 group-hover:scale-110 transition-transform`}>
+                  <car.icon className="w-full h-full text-white" />
                 </div>
                 <h3 className="font-semibold text-lg mb-1">{car.name}</h3>
                 <p className="text-primary font-medium">{car.price}</p>
