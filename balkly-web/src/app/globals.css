@@ -406,3 +406,118 @@ body:has([href*="/admin"][aria-current]) {
   }
 }
 
+/* VIP Cars Booking Engine Widget Styling */
+#bookingengine {
+  font-family: inherit !important;
+}
+
+#bookingengine .form-control,
+#bookingengine input,
+#bookingengine select {
+  border-radius: 0.5rem !important;
+  border: 1px solid hsl(var(--border)) !important;
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 0.875rem !important;
+}
+
+#bookingengine .form-control:focus,
+#bookingengine input:focus,
+#bookingengine select:focus {
+  border-color: hsl(var(--primary)) !important;
+  box-shadow: 0 0 0 2px hsla(var(--primary), 0.2) !important;
+  outline: none !important;
+}
+
+#bookingengine button[type="submit"],
+#bookingengine .btn-primary,
+#bookingengine .search-btn {
+  background: linear-gradient(135deg, #1E63FF 0%, #7C3AED 100%) !important;
+  border: none !important;
+  border-radius: 0.5rem !important;
+  color: white !important;
+  font-weight: 600 !important;
+  padding: 0.875rem 1.5rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+#bookingengine button[type="submit"]:hover,
+#bookingengine .btn-primary:hover,
+#bookingengine .search-btn:hover {
+  background: linear-gradient(135deg, #1854DB 0%, #6D28D9 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(30, 99, 255, 0.3) !important;
+}
+
+#bookingengine label {
+  color: hsl(var(--foreground)) !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+/* Dark mode overrides for VIP Cars widget */
+.dark #bookingengine {
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark #bookingengine .form-control,
+.dark #bookingengine input,
+.dark #bookingengine select {
+  background-color: hsl(218 25% 20%) !important;
+  border-color: hsl(218 25% 30%) !important;
+  color: hsl(0 0% 98%) !important;
+}
+
+.dark #bookingengine input::placeholder {
+  color: hsl(215 15% 60%) !important;
+}
+
+/* Style the datepicker if present */
+#bookingengine .datepicker,
+#bookingengine .ui-datepicker {
+  background: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Autocomplete dropdown styling */
+#bookingengine .autocomplete-suggestions,
+#bookingengine .tt-menu,
+#bookingengine .dropdown-menu {
+  background: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+  max-height: 300px !important;
+  overflow-y: auto !important;
+}
+
+#bookingengine .autocomplete-suggestion,
+#bookingengine .tt-suggestion,
+#bookingengine .dropdown-item {
+  padding: 0.75rem 1rem !important;
+  cursor: pointer !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+#bookingengine .autocomplete-suggestion:hover,
+#bookingengine .tt-suggestion:hover,
+#bookingengine .dropdown-item:hover,
+#bookingengine .autocomplete-selected {
+  background: hsl(var(--accent)) !important;
+}
+
+/* Remove any unwanted branding */
+#bookingengine a[href*="vipcars"],
+#bookingengine .powered-by,
+#bookingengine .vip-logo {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+

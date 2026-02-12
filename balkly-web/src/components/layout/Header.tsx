@@ -18,6 +18,7 @@ import {
   Moon,
   Sun,
   ChevronDown,
+  Car,
 } from "lucide-react";
 import CurrencySwitcher from "@/components/CurrencySwitcher";
 import NotificationBell from "@/components/NotificationBell";
@@ -170,6 +171,13 @@ export default function Header() {
             >
               <MessageCircle className="h-4 w-4 mr-1" />
               Forum
+            </Link>
+            <Link
+              href="/car-rental"
+              className="flex items-center text-sm font-medium hover:text-primary transition-colors whitespace-nowrap"
+            >
+              <Car className="h-4 w-4 mr-1" />
+              Car Rental
             </Link>
             {isLoggedIn && (
               <Link
@@ -360,6 +368,14 @@ export default function Header() {
               >
                 <MessageCircle className="h-5 w-5 mr-3" />
                 Forum
+              </Link>
+              <Link
+                href="/car-rental"
+                onClick={() => setIsMenuOpen(false)}
+                className="flex items-center px-4 py-3 text-base font-medium hover:bg-accent rounded-xl transition-colors"
+              >
+                <Car className="h-5 w-5 mr-3" />
+                Car Rental
               </Link>
 
               <div className="border-t my-4 dark:border-gray-700" />
