@@ -38,21 +38,7 @@ const LuxuryCarIcon = ({ className }: { className?: string }) => (
 
 export default function CarRentalPage() {
   useEffect(() => {
-    // Load jQuery first (required by VIP Cars)
-    const jquery = document.createElement("script");
-    jquery.src = "https://code.jquery.com/jquery-3.6.0.min.js";
-    jquery.async = true;
-    document.head.appendChild(jquery);
-
-    jquery.onload = () => {
-      // Load VIP Cars booking engine script after jQuery
-      const script = document.createElement("script");
-      script.src = "https://res.supplycars.com/jsbookingengine/script1.js?v=0.04";
-      script.async = true;
-      document.body.appendChild(script);
-    };
-
-    // Set default values for the booking engine
+    // IMPORTANT: Set default values BEFORE loading scripts
     (window as any).default_values = {
       affiliate_id: "vip_3285",
       page: "step1",
@@ -76,9 +62,21 @@ export default function CarRentalPage() {
       dropoffdate: "4",
       pickuptime: "10:00",
       dropofftime: "10:00",
-      currency: "AED",
+      currency: "EUR",
       driver_age: "25",
       div_id: "bookingengine",
+    };
+
+    // Load jQuery first (required by VIP Cars)
+    const jquery = document.createElement("script");
+    jquery.src = "https://code.jquery.com/jquery-3.6.0.min.js";
+    document.head.appendChild(jquery);
+
+    jquery.onload = () => {
+      // Load VIP Cars booking engine script after jQuery is ready
+      const script = document.createElement("script");
+      script.src = "https://res.supplycars.com/jsbookingengine/script1.js?v=0.04";
+      document.body.appendChild(script);
     };
 
     return () => {
