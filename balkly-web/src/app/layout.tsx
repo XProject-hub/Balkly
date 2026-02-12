@@ -124,6 +124,9 @@ export default function RootLayout({
         <meta name="theme-color" content="#1E63FF" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         
+        {/* Website Verification */}
+        <meta name="fo-verify" content="04638958-aeaa-44ad-b3da-cc17cb88dfb6" />
+        
         {/* JSON-LD Structured Data for SEO */}
         <script
           type="application/ld+json"
