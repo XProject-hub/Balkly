@@ -1,90 +1,53 @@
 "use client";
 
-import { useEffect } from "react";
-import { Car, Shield, Clock, CreditCard, MapPin, Star, Check, Truck, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { Car, Shield, Clock, CreditCard, MapPin, Check, Calendar, Users, Search } from "lucide-react";
 import Link from "next/link";
-
-// Car type icons as SVG components
-const EconomyCarIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <path d="M7 17a2 2 0 100-4 2 2 0 000 4zM17 17a2 2 0 100-4 2 2 0 000 4z" />
-    <path d="M5 17H3v-4l2-5h10l2 5v4h-2M9 17h6" />
-    <path d="M5 8l1-3h12l1 3" />
-  </svg>
-);
-
-const SUVIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <path d="M7 18a2 2 0 100-4 2 2 0 000 4zM17 18a2 2 0 100-4 2 2 0 000 4z" />
-    <path d="M5 18H3V9l3-4h8l4 4v9h-2M9 18h6" />
-    <path d="M6 5v4M18 5v4M6 9h12" />
-  </svg>
-);
-
-const CompactCarIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <path d="M6 17a2 2 0 100-4 2 2 0 000 4zM18 17a2 2 0 100-4 2 2 0 000 4z" />
-    <path d="M4 17H2v-5l3-4h10l3 4v5h-2M8 17h8" />
-  </svg>
-);
-
-const LuxuryCarIcon = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <path d="M6 17a2 2 0 100-4 2 2 0 000 4zM18 17a2 2 0 100-4 2 2 0 000 4z" />
-    <path d="M4 17H2v-4l2-6h4l2 3h4l2-3h4l2 6v4h-2M8 17h8" />
-    <path d="M7 7l1-2h8l1 2" />
-  </svg>
-);
+import { Button } from "@/components/ui/button";
 
 export default function CarRentalPage() {
-  useEffect(() => {
-    // IMPORTANT: Set default values BEFORE loading scripts
-    (window as any).default_values = {
+  const [pickupLocation, setPickupLocation] = useState("Dubai Airport (DXB)");
+  const [dropoffLocation, setDropoffLocation] = useState("");
+  const [sameLocation, setSameLocation] = useState(true);
+  const [pickupDate, setPickupDate] = useState("");
+  const [pickupTime, setPickupTime] = useState("10:00");
+  const [dropoffDate, setDropoffDate] = useState("");
+  const [dropoffTime, setDropoffTime] = useState("10:00");
+  const [driverAge, setDriverAge] = useState("25");
+
+  // Set default dates (tomorrow and 4 days from now)
+  useState(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const returnDate = new Date();
+    returnDate.setDate(returnDate.getDate() + 5);
+    
+    setPickupDate(tomorrow.toISOString().split('T')[0]);
+    setDropoffDate(returnDate.toISOString().split('T')[0]);
+  });
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Build VIP Cars search URL with affiliate parameters
+    const baseUrl = "https://www.vipcars.com/search";
+    const params = new URLSearchParams({
       affiliate_id: "vip_3285",
-      page: "step1",
       aff_tid: "balkly_rental",
-      step2Url: "https://balkly.live/car-rental/search",
-      formType: "form6",
-      terms_page: "https://balkly.live/terms",
-      show_multilingual: "1",
-      language: "en",
-      privacy_page: "https://balkly.live/privacy",
-      unsubscribe_page: "https://balkly.live/settings",
-      width: "100%",
-      height: "420px",
       pickup_country: "ae",
-      pickup_city: "",
-      pickup_loc: "",
+      pickup_city: pickupLocation.includes("Dubai") ? "dubai" : "abu-dhabi",
       dropoff_country: "ae",
-      dropoff_city: "",
-      dropoff_loc: "",
-      pickupdate: "1",
-      dropoffdate: "4",
-      pickuptime: "10:00",
-      dropofftime: "10:00",
+      dropoff_city: sameLocation ? (pickupLocation.includes("Dubai") ? "dubai" : "abu-dhabi") : (dropoffLocation.includes("Dubai") ? "dubai" : "abu-dhabi"),
+      pickupdate: pickupDate,
+      dropoffdate: dropoffDate,
+      pickuptime: pickupTime,
+      dropofftime: dropoffTime,
+      driver_age: driverAge,
       currency: "EUR",
-      driver_age: "25",
-      div_id: "bookingengine",
-    };
+    });
 
-    // Load jQuery first (required by VIP Cars)
-    const jquery = document.createElement("script");
-    jquery.src = "https://code.jquery.com/jquery-3.6.0.min.js";
-    document.head.appendChild(jquery);
-
-    jquery.onload = () => {
-      // Load VIP Cars booking engine script after jQuery is ready
-      const script = document.createElement("script");
-      script.src = "https://res.supplycars.com/jsbookingengine/script1.js?v=0.04";
-      document.body.appendChild(script);
-    };
-
-    return () => {
-      // Cleanup scripts on unmount
-      const scripts = document.querySelectorAll('script[src*="supplycars"], script[src*="jquery"]');
-      scripts.forEach(s => s.remove());
-    };
-  }, []);
+    window.open(`${baseUrl}?${params.toString()}`, '_blank');
+  };
 
   const features = [
     {
@@ -145,9 +108,29 @@ export default function CarRentalPage() {
     "Dubai Marina",
   ];
 
+  const locations = [
+    "Dubai Airport (DXB)",
+    "Dubai - Downtown",
+    "Dubai Mall",
+    "Dubai Marina",
+    "JBR Beach",
+    "Abu Dhabi Airport (AUH)",
+    "Abu Dhabi - City",
+    "Sharjah Airport",
+  ];
+
+  const times = [
+    "00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30",
+    "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30",
+    "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+    "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30",
+    "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30",
+    "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section with Booking Engine */}
+      {/* Hero Section with Booking Form */}
       <section className="relative bg-gradient-to-br from-balkly-blue via-purple-600 to-balkly-blue overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
@@ -159,7 +142,7 @@ export default function CarRentalPage() {
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-white/90 text-sm mb-4">
               <Car className="h-4 w-4" />
-              <span>Compare prices from 50+ suppliers</span>
+              <span>Compare prices from 600+ suppliers</span>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
               Rent a Car in UAE
@@ -169,18 +152,148 @@ export default function CarRentalPage() {
             </p>
           </div>
 
-          {/* Booking Engine Container */}
+          {/* Booking Form */}
           <div className="max-w-4xl mx-auto">
-            <div className="bg-card/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 border border-border">
-              <div id="bookingengine" style={{ position: "relative", minHeight: "380px" }}>
-                <div className="flex items-center justify-center h-[380px]">
-                  <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-                    <p className="text-muted-foreground">Loading booking engine...</p>
+            <form onSubmit={handleSearch} className="bg-card/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 border border-border">
+              {/* Pick-up Location */}
+              <div className="grid md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Pick-up Location</label>
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <select 
+                      value={pickupLocation}
+                      onChange={(e) => setPickupLocation(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 border rounded-lg bg-background text-foreground"
+                    >
+                      {locations.map(loc => (
+                        <option key={loc} value={loc}>{loc}</option>
+                      ))}
+                    </select>
                   </div>
                 </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    <label className="flex items-center gap-2">
+                      <input 
+                        type="checkbox" 
+                        checked={!sameLocation}
+                        onChange={(e) => setSameLocation(!e.target.checked)}
+                        className="rounded"
+                      />
+                      Different drop-off location
+                    </label>
+                  </label>
+                  {!sameLocation && (
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                      <select 
+                        value={dropoffLocation || pickupLocation}
+                        onChange={(e) => setDropoffLocation(e.target.value)}
+                        className="w-full pl-10 pr-4 py-3 border rounded-lg bg-background text-foreground"
+                      >
+                        {locations.map(loc => (
+                          <option key={loc} value={loc}>{loc}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+
+              {/* Dates and Times */}
+              <div className="grid md:grid-cols-4 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Pick-up Date</label>
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <input 
+                      type="date"
+                      value={pickupDate}
+                      onChange={(e) => setPickupDate(e.target.value)}
+                      min={new Date().toISOString().split('T')[0]}
+                      className="w-full pl-10 pr-4 py-3 border rounded-lg bg-background text-foreground"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Pick-up Time</label>
+                  <select 
+                    value={pickupTime}
+                    onChange={(e) => setPickupTime(e.target.value)}
+                    className="w-full px-4 py-3 border rounded-lg bg-background text-foreground"
+                  >
+                    {times.map(time => (
+                      <option key={time} value={time}>{time}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Drop-off Date</label>
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <input 
+                      type="date"
+                      value={dropoffDate}
+                      onChange={(e) => setDropoffDate(e.target.value)}
+                      min={pickupDate || new Date().toISOString().split('T')[0]}
+                      className="w-full pl-10 pr-4 py-3 border rounded-lg bg-background text-foreground"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Drop-off Time</label>
+                  <select 
+                    value={dropoffTime}
+                    onChange={(e) => setDropoffTime(e.target.value)}
+                    className="w-full px-4 py-3 border rounded-lg bg-background text-foreground"
+                  >
+                    {times.map(time => (
+                      <option key={time} value={time}>{time}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Driver Age and Search */}
+              <div className="flex flex-col md:flex-row gap-4 items-end">
+                <div className="flex-1">
+                  <label className="block text-sm font-medium mb-2">Driver's Age</label>
+                  <div className="relative">
+                    <Users className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <select 
+                      value={driverAge}
+                      onChange={(e) => setDriverAge(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 border rounded-lg bg-background text-foreground"
+                    >
+                      {Array.from({length: 82}, (_, i) => i + 18).map(age => (
+                        <option key={age} value={age}>{age} years</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  size="lg"
+                  className="w-full md:w-auto px-12 py-6 text-lg font-bold"
+                  style={{background: 'linear-gradient(135deg, #1E63FF 0%, #7C3AED 100%)'}}
+                >
+                  <Search className="h-5 w-5 mr-2" />
+                  Search Cars
+                </Button>
+              </div>
+
+              <p className="text-xs text-muted-foreground mt-4 text-center">
+                You'll be redirected to our partner VIP Cars to view available vehicles and complete your booking
+              </p>
+            </form>
           </div>
         </div>
       </section>

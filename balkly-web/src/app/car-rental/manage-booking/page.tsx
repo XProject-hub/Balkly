@@ -1,42 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
-import { Car, ArrowLeft, Calendar, FileText, HelpCircle } from "lucide-react";
+import { useState } from "react";
+import { Car, ArrowLeft, Calendar, FileText, HelpCircle, Search, Mail, Hash } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function ManageBookingPage() {
-  useEffect(() => {
-    // Set default values for manage booking page
-    (window as any).default_values = {
-      affiliate_id: "vip_3285",
-      page: "managebooking",
-      language: "en",
-      show_multilingual: "1",
-      step2Url: "https://balkly.live/car-rental/search",
-      manage_booking_page: "https://balkly.live/car-rental/manage-booking",
-      terms_page: "https://balkly.live/terms",
-      privacy_page: "https://balkly.live/privacy",
-      unsubscribe_page: "https://balkly.live/settings",
-      div_id: "bookingengine",
-    };
+  const [bookingRef, setBookingRef] = useState("");
+  const [email, setEmail] = useState("");
 
-    // Load jQuery first (required by VIP Cars)
-    const jquery = document.createElement("script");
-    jquery.src = "https://code.jquery.com/jquery-3.6.0.min.js";
-    document.head.appendChild(jquery);
-
-    jquery.onload = () => {
-      // Load VIP Cars booking engine script after jQuery is ready
-      const script = document.createElement("script");
-      script.src = "https://res.supplycars.com/jsbookingengine/script1.js?v=0.04";
-      document.body.appendChild(script);
-    };
-
-    return () => {
-      const scripts = document.querySelectorAll('script[src*="supplycars"], script[src*="jquery"]');
-      scripts.forEach(s => s.remove());
-    };
-  }, []);
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Redirect to VIP Cars manage booking page
+    window.open(`https://www.vipcars.com/manage-booking?affiliate_id=vip_3285`, '_blank');
+  };
 
   const helpItems = [
     {
@@ -83,7 +60,7 @@ export default function ManageBookingPage() {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-12">
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Booking Engine */}
+          {/* Booking Form */}
           <div className="lg:col-span-2">
             <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
               <div className="p-6 border-b border-border">
@@ -92,16 +69,49 @@ export default function ManageBookingPage() {
                   Use your confirmation number and email to access your booking
                 </p>
               </div>
-              <div className="p-6">
-                <div id="bookingengine" style={{ minHeight: "400px" }}>
-                  <div className="flex items-center justify-center h-[400px]">
-                    <div className="text-center">
-                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-                      <p className="text-muted-foreground">Loading booking manager...</p>
-                    </div>
+              <form onSubmit={handleSearch} className="p-6 space-y-6">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Booking Reference Number</label>
+                  <div className="relative">
+                    <Hash className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <input
+                      type="text"
+                      value={bookingRef}
+                      onChange={(e) => setBookingRef(e.target.value)}
+                      placeholder="e.g., VIP123456"
+                      className="w-full pl-10 pr-4 py-3 border rounded-lg bg-background"
+                    />
                   </div>
                 </div>
-              </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Email Address</label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="your@email.com"
+                      className="w-full pl-10 pr-4 py-3 border rounded-lg bg-background"
+                    />
+                  </div>
+                </div>
+
+                <Button 
+                  type="submit" 
+                  size="lg"
+                  className="w-full py-6 text-lg font-bold"
+                  style={{background: 'linear-gradient(135deg, #1E63FF 0%, #7C3AED 100%)'}}
+                >
+                  <Search className="h-5 w-5 mr-2" />
+                  Find My Booking
+                </Button>
+
+                <p className="text-xs text-muted-foreground text-center">
+                  You'll be redirected to our partner's secure booking management portal
+                </p>
+              </form>
             </div>
           </div>
 
