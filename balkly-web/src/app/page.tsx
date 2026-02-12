@@ -562,7 +562,7 @@ export default function HomePage() {
                 Rent a Car in UAE
               </h2>
               <p className="text-lg sm:text-xl text-white/90 mb-6 max-w-xl">
-                Compare prices from 50+ suppliers. Best rates guaranteed with free cancellation on most bookings.
+                Compare 600+ suppliers. All-inclusive pricing with free cancellation up to 48h before pickup.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Button 
@@ -590,41 +590,58 @@ export default function HomePage() {
             
             {/* Car types preview */}
             <div className="flex-1 grid grid-cols-2 gap-4 max-w-md">
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all group cursor-pointer">
-                <div className="w-14 h-14 mx-auto mb-2 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Car className="h-7 w-7" />
+              <Link href="/car-rental" className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden hover:bg-white/20 transition-all group cursor-pointer">
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img 
+                    src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=300&h=200&fit=crop" 
+                    alt="Economy car"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
                 </div>
-                <div className="font-semibold">Economy</div>
-                <div className="text-sm text-white/70">From AED 89/day</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all group cursor-pointer">
-                <div className="w-14 h-14 mx-auto mb-2 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Car className="h-8 w-8" />
+                <div className="p-3 text-center">
+                  <div className="font-semibold">Economy</div>
+                  <div className="text-sm text-white/70">From €15/day</div>
                 </div>
-                <div className="font-semibold">SUV</div>
-                <div className="text-sm text-white/70">From AED 179/day</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all group cursor-pointer">
-                <div className="w-14 h-14 mx-auto mb-2 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M6 17a2 2 0 100-4 2 2 0 000 4zM18 17a2 2 0 100-4 2 2 0 000 4z" />
-                    <path d="M4 17H2V9l2-4h12l2 4v8h-2M8 17h8" />
-                    <path d="M4 5h16" />
-                  </svg>
+              </Link>
+              <Link href="/car-rental" className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden hover:bg-white/20 transition-all group cursor-pointer">
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img 
+                    src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=300&h=200&fit=crop" 
+                    alt="SUV"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
                 </div>
-                <div className="font-semibold">Van</div>
-                <div className="text-sm text-white/70">From AED 249/day</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center hover:bg-white/20 transition-all group cursor-pointer">
-                <div className="w-14 h-14 mx-auto mb-2 bg-white/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M5 17a2 2 0 100-4 2 2 0 000 4zM19 17a2 2 0 100-4 2 2 0 000 4z" />
-                    <path d="M3 17V11l2-6h5l3 4h6l2 2v6h-2M7 17h10" />
-                  </svg>
+                <div className="p-3 text-center">
+                  <div className="font-semibold">SUV</div>
+                  <div className="text-sm text-white/70">From €35/day</div>
                 </div>
-                <div className="font-semibold">Luxury</div>
-                <div className="text-sm text-white/70">From AED 349/day</div>
-              </div>
+              </Link>
+              <Link href="/car-rental" className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden hover:bg-white/20 transition-all group cursor-pointer">
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img 
+                    src="https://images.unsplash.com/photo-1590362891991-f776e747a588?w=300&h=200&fit=crop" 
+                    alt="Compact car"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+                <div className="p-3 text-center">
+                  <div className="font-semibold">Compact</div>
+                  <div className="text-sm text-white/70">From €22/day</div>
+                </div>
+              </Link>
+              <Link href="/car-rental" className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden hover:bg-white/20 transition-all group cursor-pointer">
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img 
+                    src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&h=200&fit=crop" 
+                    alt="Luxury car"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+                <div className="p-3 text-center">
+                  <div className="font-semibold">Luxury</div>
+                  <div className="text-sm text-white/70">From €75/day</div>
+                </div>
+              </Link>
             </div>
           </div>
         </div>

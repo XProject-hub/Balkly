@@ -90,32 +90,52 @@ export default function CarRentalPage() {
 
   const features = [
     {
+      icon: CreditCard,
+      title: "All Inclusive Pricing",
+      description: "CDW, Theft Waiver, airport surcharge & taxes included",
+    },
+    {
       icon: Shield,
-      title: "Full Insurance Included",
-      description: "Comprehensive coverage for peace of mind",
+      title: "No Hidden Charges",
+      description: "Once you paid, you paid. No last minute surprises",
     },
     {
       icon: Clock,
-      title: "24/7 Support",
-      description: "Round-the-clock customer assistance",
+      title: "24/7 Customer Support",
+      description: "Excellent support on phone, chat & email",
     },
     {
-      icon: CreditCard,
-      title: "Best Price Guarantee",
-      description: "We match any competitor's price",
-    },
-    {
-      icon: MapPin,
-      title: "Multiple Locations",
-      description: "Pick up from airports, hotels & more",
+      icon: Check,
+      title: "Free Cancellation",
+      description: "Cancel for free, 48 hours before pick up",
     },
   ];
 
   const carTypes = [
-    { name: "Economy", price: "From AED 89/day", icon: EconomyCarIcon, color: "from-blue-500 to-cyan-500" },
-    { name: "Compact", price: "From AED 119/day", icon: CompactCarIcon, color: "from-green-500 to-emerald-500" },
-    { name: "SUV", price: "From AED 179/day", icon: SUVIcon, color: "from-orange-500 to-amber-500" },
-    { name: "Luxury", price: "From AED 349/day", icon: LuxuryCarIcon, color: "from-purple-500 to-pink-500" },
+    { 
+      name: "Economy", 
+      price: "From €15/day", 
+      image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=250&fit=crop",
+      example: "Toyota Yaris or similar"
+    },
+    { 
+      name: "Compact", 
+      price: "From €22/day", 
+      image: "https://images.unsplash.com/photo-1590362891991-f776e747a588?w=400&h=250&fit=crop",
+      example: "VW Golf or similar"
+    },
+    { 
+      name: "SUV", 
+      price: "From €35/day", 
+      image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=400&h=250&fit=crop",
+      example: "Nissan X-Trail or similar"
+    },
+    { 
+      name: "Luxury", 
+      price: "From €75/day", 
+      image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&h=250&fit=crop",
+      example: "BMW 5 Series or similar"
+    },
   ];
 
   const popularLocations = [
@@ -201,13 +221,20 @@ export default function CarRentalPage() {
             {carTypes.map((car, index) => (
               <div
                 key={index}
-                className="bg-card rounded-xl p-6 border border-border text-center hover:border-primary/50 transition-all hover:shadow-lg cursor-pointer group"
+                className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 transition-all hover:shadow-lg cursor-pointer group"
               >
-                <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${car.color} p-3 group-hover:scale-110 transition-transform`}>
-                  <car.icon className="w-full h-full text-white" />
+                <div className="aspect-[4/3] bg-muted overflow-hidden">
+                  <img 
+                    src={car.image} 
+                    alt={car.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
                 </div>
-                <h3 className="font-semibold text-lg mb-1">{car.name}</h3>
-                <p className="text-primary font-medium">{car.price}</p>
+                <div className="p-4 text-center">
+                  <h3 className="font-semibold text-lg mb-1">{car.name}</h3>
+                  <p className="text-xs text-muted-foreground mb-2">{car.example}</p>
+                  <p className="text-primary font-bold text-lg">{car.price}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -238,20 +265,37 @@ export default function CarRentalPage() {
         </div>
       </section>
 
+      {/* Trusted Partners */}
+      <section className="py-12 bg-white dark:bg-gray-900 border-y border-border">
+        <div className="container mx-auto px-4">
+          <p className="text-center text-sm text-muted-foreground mb-6">
+            Rent from 600+ Trusted Car Rental Companies Worldwide
+          </p>
+          <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10 opacity-70">
+            {["Hertz", "Avis", "Sixt", "Budget", "Europcar", "Enterprise", "Dollar", "Thrifty"].map((brand) => (
+              <div key={brand} className="text-lg md:text-xl font-bold text-muted-foreground">
+                {brand}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Why Choose Us */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4">Why Book With Balkly?</h2>
+              <p className="text-muted-foreground">Best prices guaranteed from leading suppliers worldwide</p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8">
               <div className="space-y-4">
                 {[
-                  "Compare 50+ rental companies instantly",
-                  "No hidden fees - price you see is what you pay",
-                  "Free cancellation on most bookings",
+                  "All Inclusive Pricing - CDW, Theft Waiver & taxes included",
+                  "No hidden charges - price you see is what you pay",
+                  "Free cancellation up to 48 hours before pickup",
                   "24/7 customer support in multiple languages",
                 ].map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
@@ -264,10 +308,10 @@ export default function CarRentalPage() {
               </div>
               <div className="space-y-4">
                 {[
-                  "Best price guarantee - we match competitors",
-                  "Trusted by thousands of Balkan expats",
-                  "Easy booking process in under 2 minutes",
-                  "Wide selection of vehicles for every budget",
+                  "Lowest price guarantee - best rates on the web",
+                  "Leading suppliers: Hertz, Avis, Sixt, Enterprise & more",
+                  "Easy booking in under 2 minutes",
+                  "Compare 600+ car rental companies instantly",
                 ].map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
