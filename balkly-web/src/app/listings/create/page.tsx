@@ -489,36 +489,61 @@ export default function CreateListingPage() {
                       id="photos"
                       onChange={(e) => {
                         if (e.target.files) {
-                          const filesArray = Array.from(e.target.files);
-                          setFormData({ ...formData, images: filesArray });
+                          const newFiles = Array.from(e.target.files);
+                          // Append new files to existing images (up to max 10)
+                          const combined = [...formData.images, ...newFiles].slice(0, 10);
+                          setFormData({ ...formData, images: combined });
+                          // Reset input to allow selecting same file again
+                          e.target.value = '';
                         }
                       }}
                     />
                     <label htmlFor="photos">
                       <Button variant="outline" type="button" asChild>
-                        <span>Choose Files ({formData.images.length}/10)</span>
+                        <span>
+                          {formData.images.length === 0 
+                            ? "Choose Files" 
+                            : `Add More (${formData.images.length}/10)`
+                          }
+                        </span>
                       </Button>
                     </label>
                   </div>
                   {formData.images.length > 0 && (
-                    <div className="grid grid-cols-3 gap-2 mt-4">
-                      {formData.images.map((file, index) => (
-                        <div key={index} className="relative group">
-                          <div className="aspect-square bg-muted rounded-lg overflow-hidden">
-                            <img
-                              src={URL.createObjectURL(file)}
-                              alt={`Upload ${index + 1}`}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          {index === 0 && (
-                            <div className="absolute top-2 left-2 bg-primary text-primary-foreground px-2 py-1 rounded text-xs font-bold">
-                              COVER
+                    <>
+                      <p className="text-sm text-muted-foreground mt-2 mb-2">
+                        {formData.images.length} file(s) selected. Click X to remove.
+                      </p>
+                      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 mt-2">
+                        {formData.images.map((file, index) => (
+                          <div key={index} className="relative group">
+                            <div className="aspect-square bg-muted rounded-lg overflow-hidden">
+                              <img
+                                src={URL.createObjectURL(file)}
+                                alt={`Upload ${index + 1}`}
+                                className="w-full h-full object-cover"
+                              />
                             </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
+                            {index === 0 && (
+                              <div className="absolute top-1 left-1 bg-primary text-primary-foreground px-1.5 py-0.5 rounded text-[10px] font-bold">
+                                COVER
+                              </div>
+                            )}
+                            {/* Remove button */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newImages = formData.images.filter((_, i) => i !== index);
+                                setFormData({ ...formData, images: newImages });
+                              }}
+                              className="absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </>
                   )}
                 </div>
               </div>
