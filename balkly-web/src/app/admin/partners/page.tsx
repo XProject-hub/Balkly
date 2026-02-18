@@ -59,6 +59,7 @@ export default function AdminPartnersPage() {
     contact_email: "",
     commission_type: "percent_of_bill",
     commission_rate: 10,
+    default_voucher_duration_days: 0,
     default_voucher_duration_hours: 2,
     is_active: true,
   });
@@ -108,7 +109,7 @@ export default function AdminPartnersPage() {
       user_id: 0, company_name: "", company_description: "", website_url: "",
       address: "", city: "", country: "", phone: "", contact_email: "",
       commission_type: "percent_of_bill", commission_rate: 10,
-      default_voucher_duration_hours: 2, is_active: true,
+      default_voucher_duration_days: 0, default_voucher_duration_hours: 2, is_active: true,
     });
     setUserSearch("");
     setUserResults([]);
@@ -129,7 +130,8 @@ export default function AdminPartnersPage() {
       contact_email: partner.contact_email || "",
       commission_type: partner.commission_type,
       commission_rate: partner.commission_rate,
-      default_voucher_duration_hours: partner.default_voucher_duration_hours,
+      default_voucher_duration_days: (partner as any).default_voucher_duration_days || 0,
+      default_voucher_duration_hours: partner.default_voucher_duration_hours || 0,
       is_active: partner.is_active,
     });
     setUserSearch(partner.user?.name || "");
@@ -401,7 +403,7 @@ export default function AdminPartnersPage() {
 
               <div className="border-t pt-4 mt-4">
                 <h3 className="font-semibold mb-3">Commission Settings</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-1">Commission Type *</label>
                     <select value={form.commission_type}
@@ -421,9 +423,15 @@ export default function AdminPartnersPage() {
                       className="w-full px-4 py-2 border rounded-lg bg-background" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">Voucher Duration (hours)</label>
-                    <input type="number" value={form.default_voucher_duration_hours} min="1" max="720"
-                      onChange={(e) => setForm({ ...form, default_voucher_duration_hours: parseInt(e.target.value) || 2 })}
+                    <label className="block text-sm font-medium mb-1">Duration (days)</label>
+                    <input type="number" value={form.default_voucher_duration_days} min="0" max="365"
+                      onChange={(e) => setForm({ ...form, default_voucher_duration_days: parseInt(e.target.value) || 0 })}
+                      className="w-full px-4 py-2 border rounded-lg bg-background" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">+ Hours</label>
+                    <input type="number" value={form.default_voucher_duration_hours} min="0" max="23"
+                      onChange={(e) => setForm({ ...form, default_voucher_duration_hours: parseInt(e.target.value) || 0 })}
                       className="w-full px-4 py-2 border rounded-lg bg-background" />
                   </div>
                 </div>

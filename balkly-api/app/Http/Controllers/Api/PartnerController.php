@@ -61,7 +61,8 @@ class PartnerController extends Controller
             'contact_email' => 'nullable|email',
             'commission_type' => 'required|in:percent_of_bill,fixed_per_client,digital_referral_percent',
             'commission_rate' => 'required|numeric|min:0|max:10000',
-            'default_voucher_duration_hours' => 'nullable|integer|min:1|max:720',
+            'default_voucher_duration_hours' => 'nullable|integer|min:0|max:23',
+            'default_voucher_duration_days' => 'nullable|integer|min:0|max:365',
         ]);
 
         try {
@@ -109,7 +110,8 @@ class PartnerController extends Controller
             'contact_email' => 'nullable|email',
             'commission_type' => 'sometimes|in:percent_of_bill,fixed_per_client,digital_referral_percent',
             'commission_rate' => 'sometimes|numeric|min:0|max:10000',
-            'default_voucher_duration_hours' => 'sometimes|integer|min:1|max:720',
+            'default_voucher_duration_hours' => 'sometimes|integer|min:0|max:23',
+            'default_voucher_duration_days' => 'sometimes|integer|min:0|max:365',
             'is_active' => 'sometimes|boolean',
         ]);
 

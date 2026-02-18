@@ -10,7 +10,8 @@ class Partner extends Model
     protected $fillable = [
         'user_id', 'company_name', 'company_logo', 'company_description',
         'website_url', 'address', 'city', 'country', 'phone', 'contact_email',
-        'commission_type', 'commission_rate', 'default_voucher_duration_hours',
+        'commission_type', 'commission_rate',
+        'default_voucher_duration_hours', 'default_voucher_duration_days',
         'is_active',
     ];
 

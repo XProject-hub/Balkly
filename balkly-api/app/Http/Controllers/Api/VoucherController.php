@@ -44,7 +44,9 @@ class VoucherController extends Controller
             'offer_id' => $offer->id,
             'user_id' => $request->user()->id,
             'status' => 'issued',
-            'expires_at' => now()->addHours($partner->default_voucher_duration_hours ?? 2),
+            'expires_at' => now()
+                ->addDays($partner->default_voucher_duration_days ?? 0)
+                ->addHours($partner->default_voucher_duration_hours ?? 2),
         ]);
 
         $voucher->load(['partner:id,company_name', 'offer']);
