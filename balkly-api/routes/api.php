@@ -90,6 +90,10 @@ Route::prefix('v1')->group(function () {
     // Public partner offers
     Route::get('/partners/{id}/offers', [\App\Http\Controllers\Api\PartnerOfferController::class, 'publicOffers']);
     
+    // Newsletter (public)
+    Route::post('/newsletter/subscribe', [\App\Http\Controllers\Api\NewsletterController::class, 'subscribe']);
+    Route::get('/newsletter/unsubscribe/{token}', [\App\Http\Controllers\Api\NewsletterController::class, 'unsubscribe']);
+    
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {
         // Auth
@@ -268,6 +272,12 @@ Route::prefix('v1')->group(function () {
             // Platform Settings
             Route::get('/settings', [\App\Http\Controllers\Api\SettingController::class, 'index']);
             Route::patch('/settings', [\App\Http\Controllers\Api\SettingController::class, 'update']);
+            
+            // Newsletter Management
+            Route::get('/newsletter/subscribers', [\App\Http\Controllers\Api\NewsletterController::class, 'subscribers']);
+            Route::delete('/newsletter/subscribers/{id}', [\App\Http\Controllers\Api\NewsletterController::class, 'deleteSubscriber']);
+            Route::post('/newsletter/send', [\App\Http\Controllers\Api\NewsletterController::class, 'send']);
+            Route::get('/newsletter/history', [\App\Http\Controllers\Api\NewsletterController::class, 'history']);
             
             // Partner Management
             Route::get('/partners', [\App\Http\Controllers\Api\PartnerController::class, 'index']);

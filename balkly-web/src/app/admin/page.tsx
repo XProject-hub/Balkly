@@ -232,6 +232,22 @@ export default function AdminDashboardPage() {
             </Card>
           </Link>
 
+          <Link href="/admin/newsletter">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <MessageCircle className="mr-2 h-5 w-5" />
+                  Newsletter
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Compose newsletters & manage subscribers
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+
           <Link href="/admin/verifications">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader>

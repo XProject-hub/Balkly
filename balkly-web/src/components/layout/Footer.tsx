@@ -1,7 +1,9 @@
-import Link from "next/link";
-import { Instagram, Mail } from "lucide-react";
+"use client";
 
-// TikTok icon component (not available in lucide-react)
+import { useState } from "react";
+import Link from "next/link";
+import { Instagram, Mail, Loader2, CheckCircle } from "lucide-react";
+
 const TikTokIcon = ({ className }: { className?: string }) => (
   <svg 
     className={className} 
@@ -155,6 +157,9 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Newsletter */}
+        <NewsletterForm />
+
         <div className="border-t border-gray-700 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-xs sm:text-sm text-gray-400">
           <p>&copy; {new Date().getFullYear()} Balkly. All rights reserved.</p>
           <p className="mt-2">
@@ -163,6 +168,75 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+function NewsletterForm() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setStatus("loading");
+    try {
+      const res = await fetch("/api/v1/newsletter/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setStatus("success");
+        setMessage(data.message);
+        setEmail("");
+      } else {
+        setStatus("error");
+        setMessage(data.message || data.errors?.email?.[0] || "Something went wrong.");
+      }
+    } catch {
+      setStatus("error");
+      setMessage("Network error. Please try again.");
+    }
+  };
+
+  return (
+    <div className="border-t border-gray-700 mt-6 sm:mt-8 pt-6 sm:pt-8">
+      <div className="max-w-md mx-auto text-center">
+        <h4 className="font-bold text-white text-sm sm:text-base mb-2">Stay Updated</h4>
+        <p className="text-xs sm:text-sm text-gray-400 mb-4">
+          Subscribe to our newsletter for the latest deals and community news.
+        </p>
+        {status === "success" ? (
+          <div className="flex items-center justify-center gap-2 text-green-400 text-sm">
+            <CheckCircle className="h-4 w-4" />
+            <span>{message}</span>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex gap-2">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => { setEmail(e.target.value); setStatus("idle"); }}
+              placeholder="Enter your email"
+              required
+              className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary"
+            />
+            <button
+              type="submit"
+              disabled={status === "loading"}
+              className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition disabled:opacity-50"
+            >
+              {status === "loading" ? <Loader2 className="h-4 w-4 animate-spin" /> : "Subscribe"}
+            </button>
+          </form>
+        )}
+        {status === "error" && (
+          <p className="text-red-400 text-xs mt-2">{message}</p>
+        )}
+      </div>
+    </div>
   );
 }
 
