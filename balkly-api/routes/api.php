@@ -331,6 +331,10 @@ Route::prefix('v1')->group(function () {
             // Listing Admin - Delete Listings
             Route::delete('/listings/{id}', [ListingController::class, 'destroy']);
             
+            // Listing Admin - Promotion Management
+            Route::post('/listings/{id}/promote', [\App\Http\Controllers\Api\AdminController::class, 'applyPromotion']);
+            Route::post('/listings/{id}/remove-promotion', [\App\Http\Controllers\Api\AdminController::class, 'removePromotion']);
+            
             // Visitor Details - Real-time (unique by IP, last 5 min)
             Route::get('/visits', function(Request $request) {
                 // Get unique visitors from last 5 minutes, grouped by IP

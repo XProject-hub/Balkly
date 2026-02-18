@@ -307,5 +307,74 @@ class AdminController extends Controller
             'user' => $user,
         ]);
     }
+
+    /**
+     * Apply a promotion package to a listing (as if user paid)
+     */
+    public function applyPromotion(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'promotion_type' => 'required|in:standard,featured,boosted',
+            'duration_days' => 'required|integer|min:1|max:365',
+        ]);
+
+        $listing = Listing::findOrFail($id);
+
+        $featureMap = [
+            'standard'  => ['is_featured' => false, 'is_boosted' => false],
+            'featured'  => ['is_featured' => true,  'is_boosted' => false],
+            'boosted'   => ['is_featured' => false, 'is_boosted' => true],
+        ];
+
+        $settings = $featureMap[$validated['promotion_type']];
+
+        $listing->update([
+            'is_promoted' => true,
+            'is_featured' => $settings['is_featured'],
+            'is_boosted' => $settings['is_boosted'],
+            'promotion_type' => $validated['promotion_type'],
+            'promotion_expires_at' => now()->addDays($validated['duration_days']),
+            'featured_until' => now()->addDays($validated['duration_days']),
+        ]);
+
+        \Log::info('Admin applied promotion to listing', [
+            'admin_id' => $request->user()->id,
+            'listing_id' => $listing->id,
+            'promotion_type' => $validated['promotion_type'],
+            'duration_days' => $validated['duration_days'],
+        ]);
+
+        return response()->json([
+            'message' => 'Promotion applied successfully',
+            'listing' => $listing->fresh(),
+        ]);
+    }
+
+    /**
+     * Remove promotion from a listing
+     */
+    public function removePromotion(Request $request, $id)
+    {
+        $listing = Listing::findOrFail($id);
+
+        $listing->update([
+            'is_promoted' => false,
+            'is_featured' => false,
+            'is_boosted' => false,
+            'promotion_type' => 'none',
+            'promotion_expires_at' => null,
+            'featured_until' => null,
+        ]);
+
+        \Log::info('Admin removed promotion from listing', [
+            'admin_id' => $request->user()->id,
+            'listing_id' => $listing->id,
+        ]);
+
+        return response()->json([
+            'message' => 'Promotion removed successfully',
+            'listing' => $listing->fresh(),
+        ]);
+    }
 }
 
