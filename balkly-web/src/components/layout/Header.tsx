@@ -287,6 +287,16 @@ export default function Header() {
                         Admin Panel
                       </Link>
                     )}
+                    {(user?.role === "partner" || user?.role === "staff") && (
+                      <Link
+                        href="/partner"
+                        onClick={() => setShowUserMenu(false)}
+                        className="flex items-center px-4 py-2 text-sm hover:bg-accent border-t"
+                      >
+                        <Settings className="h-4 w-4 mr-2" />
+                        Partner Dashboard
+                      </Link>
+                    )}
                     <button
                       onClick={handleLogout}
                       className="flex items-center w-full px-4 py-2 text-sm hover:bg-accent text-destructive border-t"
@@ -456,6 +466,16 @@ export default function Header() {
                     >
                       <Settings className="h-5 w-5 mr-3" />
                       Admin Panel
+                    </Link>
+                  )}
+                  {(user?.role === "partner" || user?.role === "staff") && (
+                    <Link
+                      href="/partner"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center px-4 py-3 text-base font-medium hover:bg-accent rounded-xl transition-colors"
+                    >
+                      <Settings className="h-5 w-5 mr-3" />
+                      Partner Dashboard
                     </Link>
                   )}
                   

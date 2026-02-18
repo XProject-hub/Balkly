@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Smartphone, ArrowLeft } from "lucide-react";
 
-export default function TwoFactorPage() {
+function TwoFactorContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const userId = searchParams.get("user_id");
@@ -28,8 +28,6 @@ export default function TwoFactorPage() {
     setError("");
 
     try {
-      console.log("Verifying 2FA code for user:", userId);
-      
       const response = await fetch("/api/v1/auth/2fa/verify", {
         method: "POST",
         headers: {
@@ -41,11 +39,8 @@ export default function TwoFactorPage() {
         }),
       });
 
-      console.log("2FA verify response:", response.status);
-
       if (response.ok) {
         const data = await response.json();
-        console.log("2FA success, token received");
         
         // Store token
         localStorage.setItem("auth_token", data.token);
@@ -60,11 +55,9 @@ export default function TwoFactorPage() {
         }, 100);
       } else {
         const data = await response.json();
-        console.error("2FA failed:", data);
         setError(data.message || "Invalid code. Please try again.");
       }
     } catch (err) {
-      console.error("2FA error:", err);
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -135,6 +128,18 @@ export default function TwoFactorPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function TwoFactorPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
+      </div>
+    }>
+      <TwoFactorContent />
+    </Suspense>
   );
 }
 

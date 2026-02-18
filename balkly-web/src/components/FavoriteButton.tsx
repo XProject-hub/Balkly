@@ -12,6 +12,7 @@ interface FavoriteButtonProps {
 
 export default function FavoriteButton({ type, id, size = "default" }: FavoriteButtonProps) {
   const [isFavorited, setIsFavorited] = useState(false);
+  const [favoriteRecordId, setFavoriteRecordId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -20,50 +21,61 @@ export default function FavoriteButton({ type, id, size = "default" }: FavoriteB
 
   const checkFavorite = async () => {
     try {
+      const token = localStorage.getItem("auth_token");
+      if (!token) return;
       const response = await fetch("/api/v1/favorites/check", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           favoritable_type: type,
           favoritable_id: id,
         }),
       });
-      const data = await response.json();
-      setIsFavorited(data.is_favorited);
+      if (response.ok) {
+        const data = await response.json();
+        setIsFavorited(data.is_favorited);
+        if (data.favorite_id) setFavoriteRecordId(data.favorite_id);
+      }
     } catch (error) {
       // User not logged in or error
     }
   };
 
   const toggleFavorite = async () => {
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+      alert("Please login to save favorites");
+      return;
+    }
     setLoading(true);
     try {
-      if (isFavorited) {
-        // Remove from favorites
-        await fetch(`/api/v1/favorites/${id}`, {
+      if (isFavorited && favoriteRecordId) {
+        await fetch(`/api/v1/favorites/${favoriteRecordId}`, {
           method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
         setIsFavorited(false);
+        setFavoriteRecordId(null);
       } else {
-        // Add to favorites
-        await fetch("/api/v1/favorites", {
+        const response = await fetch("/api/v1/favorites", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             favoritable_type: type,
             favoritable_id: id,
           }),
         });
-        setIsFavorited(true);
+        if (response.ok) {
+          const data = await response.json();
+          setIsFavorited(true);
+          if (data.favorite?.id) setFavoriteRecordId(data.favorite.id);
+        }
       }
     } catch (error) {
       alert("Please login to save favorites");

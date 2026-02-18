@@ -22,8 +22,7 @@ export default function CurrencySwitcher() {
     setPreferredCurrency(newCurrency);
     setIsOpen(false);
     
-    // Reload page to update all prices
-    window.location.reload();
+    window.dispatchEvent(new Event('currency-change'));
   };
 
   return (

@@ -22,6 +22,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'locale',
         'role',
         'twofa_secret',
+        'email_verified_at',
+        'metadata',
     ];
 
     protected $hidden = [
@@ -35,6 +37,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'metadata' => 'array',
         ];
     }
 
@@ -77,6 +80,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function auditLogs()
     {
         return $this->hasMany(AuditLog::class, 'actor_id');
+    }
+
+    public function partner()
+    {
+        return $this->hasOne(Partner::class);
+    }
+
+    public function partnerStaff()
+    {
+        return $this->hasOne(PartnerStaff::class)->where('is_active', true);
     }
 
     /**
@@ -125,6 +138,32 @@ class User extends Authenticatable implements MustVerifyEmail
     public function canModerate(): bool
     {
         return in_array($this->role, ['admin', 'moderator']);
+    }
+
+    public function isPartner(): bool
+    {
+        return $this->role === 'partner';
+    }
+
+    public function isStaff(): bool
+    {
+        return $this->role === 'staff';
+    }
+
+    public function isPartnerOrStaff(): bool
+    {
+        return in_array($this->role, ['partner', 'staff']);
+    }
+
+    public function getPartnerEntity(): ?Partner
+    {
+        if ($this->role === 'partner') {
+            return $this->partner;
+        }
+        if ($this->role === 'staff') {
+            return $this->partnerStaff?->partner;
+        }
+        return null;
     }
 }
 

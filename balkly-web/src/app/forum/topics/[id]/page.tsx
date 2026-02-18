@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Pin, Lock, Eye, Heart, Flag, MessageSquare, CheckCircle, MessageCircle, Edit, X, Trash2 } from "lucide-react";
 import { forumAPI } from "@/lib/api";
 import MarkdownEditor from "@/components/MarkdownEditor";
+import { markdownToSafeHtml } from "@/lib/sanitize";
 
 export default function TopicDetailPage() {
   const params = useParams();
@@ -171,12 +172,6 @@ export default function TopicDetailPage() {
   };
 
   const handleLike = async (postId?: number) => {
-    console.log('=== LIKE DEBUG ===');
-    console.log('postId:', postId);
-    console.log('topicId:', topicId);
-    console.log('topic object:', topic);
-    
-    // Get current state
     const currentLiked = postId 
       ? topic.posts?.find((p: any) => p.id === postId)?.user_has_liked
       : topic.user_has_liked;
@@ -211,11 +206,8 @@ export default function TopicDetailPage() {
       const url = postId 
         ? `/api/v1/forum/posts/${postId}/like`
         : `/api/v1/forum/topics/${topicId}/like`;
-      
-      console.log('API URL being called:', url);
         
       const token = localStorage.getItem("auth_token");
-      console.log('Auth token:', token);
       
       const response = await fetch(url, {
         method: 'POST',
@@ -225,16 +217,8 @@ export default function TopicDetailPage() {
         },
       });
       
-      console.log('Response status:', response.status);
-      console.log('Response OK:', response.ok);
-
       if (response.ok) {
         const data = await response.json();
-        console.log('Like response:', data);
-        console.log('Current liked state before:', currentLiked);
-        console.log('New liked state from server:', data.liked);
-        
-        // Sync with server if different
         if (postId) {
           setTopic((prev: any) => ({
             ...prev,
@@ -441,16 +425,8 @@ export default function TopicDetailPage() {
 
               <div className="prose max-w-none dark:prose-invert mb-6">
                 <div 
-                  className="text-gray-800 dark:text-gray-200"
-                  dangerouslySetInnerHTML={{
-                  __html: topic.content
-                    .replaceAll(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replaceAll(/\*(.*?)\*/g, '<em>$1</em>')
-                    .replaceAll(/`(.*?)`/g, '<code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm">$1</code>')
-                    .replaceAll(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="max-w-full rounded-lg my-2" />')
-                    .replaceAll(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary hover:underline" target="_blank">$1</a>')
-                    .replaceAll('\n', '<br/>')
-                  }}
+                    className="text-gray-800 dark:text-gray-200"
+                    dangerouslySetInnerHTML={{ __html: markdownToSafeHtml(topic.content) }}
                 />
               </div>
 
@@ -544,15 +520,7 @@ export default function TopicDetailPage() {
                 <div className="prose max-w-none dark:prose-invert mb-6">
                   <div 
                     className="text-gray-800 dark:text-gray-200"
-                    dangerouslySetInnerHTML={{
-                      __html: post.content
-                        .replaceAll(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                        .replaceAll(/\*(.*?)\*/g, '<em>$1</em>')
-                        .replaceAll(/`(.*?)`/g, '<code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm">$1</code>')
-                        .replaceAll(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="max-w-full rounded-lg my-2" />')
-                        .replaceAll(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary hover:underline" target="_blank">$1</a>')
-                        .replaceAll('\n', '<br/>')
-                    }}
+                    dangerouslySetInnerHTML={{ __html: markdownToSafeHtml(post.content) }}
                   />
                 </div>
 

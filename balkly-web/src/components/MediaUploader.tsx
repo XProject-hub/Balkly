@@ -36,7 +36,8 @@ export default function MediaUploader({
 
     const droppedFiles = Array.from(e.dataTransfer.files);
     handleFiles(droppedFiles);
-  }, [files]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [files, maxFiles, onUpload]);
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -77,8 +78,8 @@ export default function MediaUploader({
   };
 
   const acceptTypes = acceptVideo 
-    ? "image/jpeg,image/jpg,image/png,image/gif,image/webp,video/mp4,video/quicktime"
-    : "image/jpeg,image/jpg,image/png,image/gif,image/webp";
+    ? "image/jpeg,image/jpg,image/png,image/gif,image/webp,image/bmp,image/tiff,image/avif,video/mp4,video/quicktime"
+    : "image/jpeg,image/jpg,image/png,image/gif,image/webp,image/bmp,image/tiff,image/avif";
 
   return (
     <div className="space-y-4">

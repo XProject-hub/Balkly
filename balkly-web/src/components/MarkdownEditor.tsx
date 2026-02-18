@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Bold, Italic, Link as LinkIcon, List, Code, Eye, Smile, Image, Film } from "lucide-react";
+import { markdownToSafeHtml } from "@/lib/sanitize";
 
 interface MarkdownEditorProps {
   value: string;
@@ -65,13 +66,7 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
   const insertMarkdown = (before: string, after: string = '') => {
     const textarea = textareaRef.current;
     
-    console.log('insertMarkdown called', { before, after, textarea });
-    
-    if (!textarea) {
-      console.error('Textarea ref is null!');
-      alert('Editor error - please refresh page');
-      return;
-    }
+    if (!textarea) return;
 
     const start = textarea.selectionStart || 0;
     const end = textarea.selectionEnd || 0;
@@ -80,13 +75,6 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
     const afterText = value.substring(end);
     
     const newText = beforeText + before + selectedText + after + afterText;
-    
-    console.log('Inserting markdown', { 
-      start, 
-      end, 
-      selectedText, 
-      newText: newText.substring(0, 50) + '...' 
-    });
     
     onChange(newText);
     
@@ -110,17 +98,17 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
     }
 
     // Validate each file
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/bmp', 'image/tiff', 'image/avif'];
     
     for (const file of Array.from(files)) {
       if (!allowedTypes.includes(file.type)) {
-        alert(`File "${file.name}" is not a valid image. Allowed: JPEG, PNG, GIF, WebP`);
+        alert(`File "${file.name}" is not a valid image. Allowed: JPEG, PNG, GIF, WebP, BMP, TIFF, AVIF`);
         if (imageInputRef.current) imageInputRef.current.value = '';
         return;
       }
       if (file.size > maxSize) {
-        alert(`File "${file.name}" is too large. Maximum size: 5MB`);
+        alert(`File "${file.name}" is too large. Maximum size: 10MB`);
         if (imageInputRef.current) imageInputRef.current.value = '';
         return;
       }
@@ -135,12 +123,8 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
         formData.append('images[]', file, file.name);
       });
       
-      console.log('Uploading files:', files.length);
-
       const API_URL = process.env.NEXT_PUBLIC_API_URL || window.location.origin + '/api/v1';
       const uploadUrl = `${API_URL}/forum/upload-images`;
-      
-      console.log('Upload URL:', uploadUrl);
       
       const response = await fetch(uploadUrl, {
         method: 'POST',
@@ -151,16 +135,11 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
         body: formData,
       });
 
-      console.log('Upload response:', response.status);
-      console.log('Content-Type:', response.headers.get('content-type'));
-      
       const responseText = await response.text();
-      console.log('Response text (first 500 chars):', responseText.substring(0, 500));
       
       if (response.ok) {
         try {
           const data = JSON.parse(responseText);
-          console.log('Upload data:', data);
           // Insert markdown image tags
           const imageMarkdown = data.images?.map((url: string) => `![Image](${url})`).join('\n') || '';
           onChange(value + '\n' + imageMarkdown);
@@ -169,7 +148,6 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
           alert('Upload response is not valid JSON. Response: ' + responseText.substring(0, 200));
         }
       } else {
-        console.error('Upload failed:', responseText.substring(0, 200));
         try {
           const errorData = JSON.parse(responseText);
           alert('Failed to upload: ' + (errorData.message || 'Unknown error'));
@@ -244,7 +222,7 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
         <input
           ref={imageInputRef}
           type="file"
-          accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+          accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/bmp,image/tiff,image/avif"
           multiple
           onChange={handleImageUpload}
           className="hidden"
@@ -370,15 +348,7 @@ export default function MarkdownEditor({ value, onChange, placeholder }: Markdow
       {/* Editor/Preview Area */}
       {showPreview ? (
         <div className="p-4 min-h-[200px] prose max-w-none">
-          <div dangerouslySetInnerHTML={{ 
-            __html: value
-              .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-              .replace(/\*(.*?)\*/g, '<em>$1</em>')
-              .replace(/`(.*?)`/g, '<code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm">$1</code>')
-              .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="max-w-full rounded-lg my-2" />')
-              .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary hover:underline" target="_blank">$1</a>')
-              .replace(/\n/g, '<br/>')
-          }} />
+          <div dangerouslySetInnerHTML={{ __html: markdownToSafeHtml(value) }} />
         </div>
       ) : (
         <textarea

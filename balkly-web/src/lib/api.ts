@@ -4,15 +4,12 @@ import { fetchPlatinumListEvents, getPlatinumListEvent } from './platinumlist';
 // Get API URL - use window.location.origin for dynamic URLs
 const getApiUrl = () => {
   if (typeof window !== 'undefined') {
-    const baseUrl = window.location.origin + '/api/v1';
-    console.log('API Base URL:', baseUrl);
-    return baseUrl;
+    return window.location.origin + '/api/v1';
   }
   return process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api/v1';
 };
 
 const API_BASE_URL = getApiUrl();
-console.log('Axios configured with base URL:', API_BASE_URL);
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -21,25 +18,22 @@ export const api = axios.create({
   },
 });
 
-// Request interceptor to add auth token
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('auth_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
   return config;
 });
 
-// Response interceptor for error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Handle unauthorized - redirect to login
+    if (error.response?.status === 401 && typeof window !== 'undefined') {
       localStorage.removeItem('auth_token');
-      if (typeof window !== 'undefined') {
-        window.location.href = '/auth/login';
-      }
+      window.location.href = '/auth/login';
     }
     return Promise.reject(error);
   }
@@ -69,13 +63,7 @@ export const categoriesAPI = {
 
 export const eventsAPI = {
   getAll: async (params?: any) => {
-    console.log('eventsAPI.getAll called with params:', params);
-    const response = await api.get('/events', { params });
-    console.log('RAW API RESPONSE:', JSON.stringify(response.data, null, 2));
-    console.log('Total from API:', response.data?.total);
-    console.log('Data array length:', response.data?.data?.length);
-    console.log('First 3 events:', response.data?.data?.slice(0, 3));
-    return response;
+    return api.get('/events', { params });
   },
   
   getOne: async (id: string) => {

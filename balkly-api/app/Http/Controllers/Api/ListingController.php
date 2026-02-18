@@ -43,15 +43,19 @@ class ListingController extends Controller
             $query->where('is_promoted', (bool)$request->is_promoted);
         }
 
-        // Sorting - Promoted first, then by selected sort
-        if ($request->get('is_promoted')) {
-            $query->orderBy('is_promoted', 'desc')
-                  ->orderBy('created_at', 'desc');
-        } else {
-            $sortBy = $request->get('sort_by', 'created_at');
-            $sortOrder = $request->get('sort_order', 'desc');
-            $query->orderBy($sortBy, $sortOrder);
+        $allowedSortColumns = ['created_at', 'price', 'views_count', 'title'];
+        $sortBy = $request->get('sort_by', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
+        
+        if (!in_array($sortBy, $allowedSortColumns)) {
+            $sortBy = 'created_at';
         }
+        if (!in_array($sortOrder, ['asc', 'desc'])) {
+            $sortOrder = 'desc';
+        }
+
+        $query->orderBy('is_promoted', 'desc')
+              ->orderBy($sortBy, $sortOrder);
 
         $listings = $query->paginate($request->get('per_page', 20));
 
@@ -152,7 +156,7 @@ class ListingController extends Controller
     {
         $request->validate([
             'images' => 'required|array|max:10',
-            'images.*' => 'image|mimes:jpeg,jpg,png,gif,webp|max:5120',
+            'images.*' => 'image|mimes:jpeg,jpg,png,gif,webp,bmp,tiff,tif,avif|max:10240',
         ]);
 
         $uploadedMedia = [];
@@ -188,7 +192,7 @@ class ListingController extends Controller
 
         $request->validate([
             'images' => 'required|array|max:10',
-            'images.*' => 'image|mimes:jpeg,jpg,png,gif,webp|max:5120', // 5MB max
+            'images.*' => 'image|mimes:jpeg,jpg,png,gif,webp,bmp,tiff,tif,avif|max:10240', // 10MB max
         ]);
 
         $uploadedMedia = [];

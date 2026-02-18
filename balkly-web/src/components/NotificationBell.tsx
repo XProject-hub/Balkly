@@ -23,9 +23,8 @@ export default function NotificationBell() {
       const token = localStorage.getItem("auth_token");
       if (!token) return;
 
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || window.location.origin + '/api/v1';
 
-      // Fetch unread count
       const countResponse = await fetch(`${API_URL}/notifications/unread-count`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -55,7 +54,7 @@ export default function NotificationBell() {
 
   const markAsRead = async (notificationId: number) => {
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || window.location.origin + '/api/v1';
       await fetch(`${API_URL}/notifications/${notificationId}/read`, {
         method: "POST",
         headers: {
@@ -133,7 +132,7 @@ export default function NotificationBell() {
                           {new Date(notif.created_at).toLocaleString()}
                         </p>
                       </div>
-                      {!notif.is_read && (
+                      {!notif.read_at && (
                         <div className="w-2 h-2 bg-blue-500 rounded-full mt-2" />
                       )}
                     </div>

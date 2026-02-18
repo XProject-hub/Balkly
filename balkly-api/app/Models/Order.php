@@ -11,6 +11,8 @@ class Order extends Model
 
     protected $fillable = [
         'buyer_id',
+        'seller_id',
+        'listing_id',
         'subtotal',
         'tax',
         'total',
@@ -19,6 +21,8 @@ class Order extends Model
         'provider',
         'provider_ref',
         'provider_session_id',
+        'payment_method',
+        'payment_id',
         'metadata',
         'paid_at',
     ];
@@ -37,6 +41,16 @@ class Order extends Model
     public function buyer()
     {
         return $this->belongsTo(User::class, 'buyer_id');
+    }
+
+    public function seller()
+    {
+        return $this->belongsTo(User::class, 'seller_id');
+    }
+
+    public function listing()
+    {
+        return $this->belongsTo(Listing::class);
     }
 
     public function items()

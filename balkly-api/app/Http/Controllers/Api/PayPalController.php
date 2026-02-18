@@ -25,20 +25,31 @@ class PayPalController extends Controller
     {
         $validated = $request->validate([
             'listing_id' => 'required|exists:listings,id',
-            'plan_id' => 'required|integer',
-            'amount' => 'required|numeric|min:0',
+            'plan_id' => 'required|integer|in:1,2,3,4',
         ]);
 
         $listing = Listing::findOrFail($validated['listing_id']);
-        
-        // Create pending order in database
+
+        $planPrices = [
+            1 => 0,      // Free
+            2 => 4.99,   // Standard
+            3 => 9.99,   // Featured
+            4 => 14.99,  // Boost
+        ];
+
+        $amount = $planPrices[$validated['plan_id']] ?? 0;
+
+        if ($amount <= 0) {
+            return response()->json(['message' => 'This plan is free, no payment required.'], 400);
+        }
+
         $order = Order::create([
             'buyer_id' => auth()->id(),
             'seller_id' => $listing->user_id,
             'listing_id' => $listing->id,
-            'subtotal' => $validated['amount'],
+            'subtotal' => $amount,
             'tax' => 0,
-            'total' => $validated['amount'],
+            'total' => $amount,
             'currency' => env('PAYPAL_CURRENCY', 'EUR'),
             'payment_method' => 'paypal',
             'status' => 'pending',
@@ -59,7 +70,7 @@ class PayPalController extends Controller
             $description = ($planNames[$validated['plan_id']] ?? 'Listing Promotion') . ' - ' . $listing->title;
             
             $paypalOrder = $this->paypal->createOrder(
-                $validated['amount'],
+                $amount,
                 env('PAYPAL_CURRENCY', 'EUR'),
                 $description,
                 route('api.paypal.success') . '?order_id=' . $order->id,

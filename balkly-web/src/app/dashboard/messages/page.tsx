@@ -33,9 +33,19 @@ export default function MessagesPage() {
   const [uploading, setUploading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const userData = localStorage.getItem("user");
-  const currentUserId = userData && userData !== 'undefined' ? JSON.parse(userData)?.id : null;
+  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const userData = localStorage.getItem("user");
+      if (userData && userData !== 'undefined') {
+        try {
+          setCurrentUserId(JSON.parse(userData)?.id);
+        } catch (e) {}
+      }
+    }
+  }, []);
 
   useEffect(() => {
     loadChats();
@@ -147,7 +157,7 @@ export default function MessagesPage() {
       }
 
       // Send message
-      const response = await fetch("/api/v1/messages", {
+      const response = await fetch("/api/v1/chats/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -229,7 +239,9 @@ export default function MessagesPage() {
                       >
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">
-                            {(chat.buyer?.name || chat.seller?.name)?.[0]?.toUpperCase()}
+                            {(currentUserId === chat.buyer_id
+                              ? chat.seller?.name
+                              : chat.buyer?.name)?.[0]?.toUpperCase() || '?'}
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="font-medium truncate">

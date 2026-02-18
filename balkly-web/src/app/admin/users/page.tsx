@@ -206,7 +206,7 @@ export default function AdminUsersPage() {
                   >
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg">
-                        {user.name[0].toUpperCase()}
+                        {user.name?.[0]?.toUpperCase() || 'U'}
                       </div>
                       <div>
                         <p className="font-medium">{user.name}</p>

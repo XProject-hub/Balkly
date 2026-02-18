@@ -22,7 +22,7 @@ class CheckRole
 
         if (!in_array($request->user()->role, $roles)) {
             return response()->json([
-                'message' => 'Forbidden. Admin access required.',
+                'message' => 'Forbidden. You do not have the required role.',
                 'required_role' => $roles,
                 'current_role' => $request->user()->role,
             ], 403);

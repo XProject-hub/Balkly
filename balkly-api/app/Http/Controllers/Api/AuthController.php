@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
@@ -40,27 +41,20 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'locale' => $request->locale ?? 'en',
             'role' => 'user',
+            'email_verified_at' => now(),
         ]);
 
         // Create profile
         Profile::create(['user_id' => $user->id]);
 
-        // Send verification email (using Resend)
-        try {
-            event(new Registered($user));
-            $user->sendEmailVerificationNotification();
-        } catch (\Exception $e) {
-            // Log email failure but don't auto-verify - user must verify via email
-            \Log::warning('Verification email failed: ' . $e->getMessage());
-        }
+        // Auto-verified: skip email verification for now
+        $token = $user->createToken('auth_token')->plainTextToken;
 
-        // Note: Welcome email will be sent after verification
-
-        // DON'T give token - user must verify email first
         return response()->json([
-            'message' => 'Registration successful! Please check your email to verify your account before logging in.',
-            'email' => $user->email,
-            'requires_verification' => true,
+            'message' => 'Registration successful!',
+            'user' => $user->load('profile'),
+            'token' => $token,
+            'token_type' => 'Bearer',
         ], 201);
     }
 
@@ -399,7 +393,13 @@ class AuthController extends Controller
     }
 
     /**
-     * Social login (Google) - Exchange token
+     * Social login (Google/Facebook) - Exchange token
+     * 
+     * To enable, set these in .env:
+     *   GOOGLE_CLIENT_ID=your_client_id
+     *   GOOGLE_CLIENT_SECRET=your_client_secret
+     *   FACEBOOK_CLIENT_ID=your_app_id
+     *   FACEBOOK_CLIENT_SECRET=your_app_secret
      */
     public function socialLogin(Request $request)
     {
@@ -408,25 +408,31 @@ class AuthController extends Controller
             'access_token' => 'required|string',
         ]);
 
-        // Verify token with provider and get user info
-        $socialUser = $this->verifySocialToken($request->provider, $request->access_token);
+        $provider = $request->provider;
+
+        if (!$this->isSocialProviderConfigured($provider)) {
+            return response()->json([
+                'message' => ucfirst($provider) . ' login is not configured yet. Please contact the administrator.',
+                'error_code' => 'provider_not_configured',
+            ], 503);
+        }
+
+        $socialUser = $this->verifySocialToken($provider, $request->access_token);
 
         if (!$socialUser) {
             return response()->json([
-                'message' => 'Invalid social login token',
+                'message' => 'Unable to verify your ' . ucfirst($provider) . ' account. Please try again.',
             ], 400);
         }
 
-        // Find or create user
         $user = User::where('email', $socialUser['email'])->first();
 
         if (!$user) {
-            // Create new user
             $user = User::create([
                 'name' => $socialUser['name'],
                 'email' => $socialUser['email'],
-                'password' => Hash::make(Str::random(32)), // Random password
-                'email_verified_at' => now(), // Auto-verify for social
+                'password' => Hash::make(Str::random(32)),
+                'email_verified_at' => now(),
                 'role' => 'user',
             ]);
 
@@ -445,31 +451,91 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Verify social provider token
-     * TODO: Add actual provider verification when you provide credentials
-     */
-    protected function verifySocialToken($provider, $accessToken)
+    protected function isSocialProviderConfigured(string $provider): bool
     {
-        // Google verification
-        if ($provider === 'google') {
-            // TODO: Verify with Google API
-            // $client = new Google_Client(['client_id' => config('services.google.client_id')]);
-            // $payload = $client->verifyIdToken($accessToken);
-            
-            // For now, return null (implement when you provide Google credentials)
-            return null;
-        }
+        return match ($provider) {
+            'google' => !empty(config('services.google.client_id')),
+            'facebook' => !empty(config('services.facebook.client_id')),
+            default => false,
+        };
+    }
 
-        // Facebook verification
-        if ($provider === 'facebook') {
-            // TODO: Verify with Facebook API
-            // Implement when you provide Facebook app credentials
-            
-            return null;
+    protected function verifySocialToken(string $provider, string $accessToken): ?array
+    {
+        try {
+            if ($provider === 'google' && config('services.google.client_id')) {
+                $response = \Illuminate\Support\Facades\Http::get(
+                    'https://www.googleapis.com/oauth2/v3/tokeninfo',
+                    ['id_token' => $accessToken]
+                );
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if ($data['aud'] === config('services.google.client_id')) {
+                        return [
+                            'name' => $data['name'] ?? $data['email'],
+                            'email' => $data['email'],
+                            'avatar' => $data['picture'] ?? null,
+                        ];
+                    }
+                }
+            }
+
+            if ($provider === 'facebook' && config('services.facebook.client_id')) {
+                $response = \Illuminate\Support\Facades\Http::get(
+                    'https://graph.facebook.com/me',
+                    [
+                        'fields' => 'id,name,email,picture.type(large)',
+                        'access_token' => $accessToken,
+                    ]
+                );
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (!empty($data['email'])) {
+                        return [
+                            'name' => $data['name'],
+                            'email' => $data['email'],
+                            'avatar' => $data['picture']['data']['url'] ?? null,
+                        ];
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            \Log::warning("Social login verification failed for {$provider}: " . $e->getMessage());
         }
 
         return null;
+    }
+
+    /**
+     * Delete the authenticated user's account
+     */
+    public function deleteAccount(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        $user = $request->user();
+
+        if ($request->email !== $user->email) {
+            return response()->json(['message' => 'Email does not match your account.'], 422);
+        }
+
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Incorrect password.'], 422);
+        }
+
+        DB::transaction(function () use ($user) {
+            $user->tokens()->delete();
+            $user->profile()->delete();
+            $user->listings()->update(['status' => 'deleted']);
+            $user->delete();
+        });
+
+        return response()->json(['message' => 'Account deleted successfully.']);
     }
 
     /**

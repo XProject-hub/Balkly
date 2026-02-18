@@ -222,4 +222,26 @@ class OrderController extends Controller
 
         return response()->json(['received' => true]);
     }
+
+    /**
+     * Generic checkout webhook handler
+     */
+    public function checkoutWebhook(Request $request)
+    {
+        $payload = $request->getContent();
+        $signature = $request->header('Stripe-Signature');
+
+        try {
+            $result = $this->paymentService->handleWebhook($payload, $signature);
+
+            if (isset($result['error'])) {
+                return response()->json($result, 400);
+            }
+
+            return response()->json(['received' => true]);
+        } catch (\Exception $e) {
+            \Log::error('Checkout webhook error: ' . $e->getMessage());
+            return response()->json(['error' => 'Webhook processing failed'], 500);
+        }
+    }
 }

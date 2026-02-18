@@ -216,7 +216,7 @@ export default function SafetyTipsPage() {
                 <Link href="/contact">Contact Support</Link>
               </Button>
               <Button variant="outline" size="lg" className="bg-transparent" asChild>
-                <a href="mailto:safety@balkly.com">safety@balkly.com</a>
+                <a href="mailto:safety@balkly.live">safety@balkly.live</a>
               </Button>
             </div>
           </CardContent>

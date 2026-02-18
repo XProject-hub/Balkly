@@ -79,7 +79,7 @@ export default function ListingDetailPage() {
           per_page: 4,
           status: 'active'
         });
-        const similar = (similarRes.data.data || []).filter((l: any) => l.id !== listingId);
+        const similar = (similarRes.data.data || []).filter((l: any) => String(l.id) !== listingId);
         setSimilarListings(similar.slice(0, 4));
       }
     } catch (error) {
@@ -92,12 +92,19 @@ export default function ListingDetailPage() {
   const handleMakeOffer = async () => {
     if (!offerAmount) return;
 
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+      alert("Please login to make an offer!");
+      router.push("/auth/login");
+      return;
+    }
+
     try {
-      await fetch("/api/v1/offers", {
+      const response = await fetch("/api/v1/offers", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           listing_id: listingId,
@@ -106,12 +113,17 @@ export default function ListingDetailPage() {
         }),
       });
       
-      setShowOfferModal(false);
-      setOfferAmount("");
-      setOfferMessage("");
-      alert("Offer sent to seller!");
+      if (response.ok) {
+        setShowOfferModal(false);
+        setOfferAmount("");
+        setOfferMessage("");
+        alert("Offer sent to seller!");
+      } else {
+        const data = await response.json();
+        alert(data.message || "Failed to send offer. Please try again.");
+      }
     } catch (error) {
-      alert("Failed to send offer. Please login first.");
+      alert("Failed to send offer. Please try again.");
     }
   };
 
@@ -354,7 +366,36 @@ export default function ListingDetailPage() {
                     <Button size="sm" variant="outline" onClick={handleShare} className="w-8 h-8 sm:w-9 sm:h-9 p-0">
                       <Share2 className="h-4 w-4" />
                     </Button>
-                    <Button size="sm" variant="outline" className="w-8 h-8 sm:w-9 sm:h-9 p-0">
+                    <Button size="sm" variant="outline" className="w-8 h-8 sm:w-9 sm:h-9 p-0" onClick={() => {
+                      const token = localStorage.getItem("auth_token");
+                      if (!token) {
+                        alert("Please login to report this listing.");
+                        router.push("/auth/login");
+                        return;
+                      }
+                      const reason = prompt("Why are you reporting this listing?\n\nType one of:\n• spam\n• inappropriate\n• fraud\n• duplicate\n• other");
+                      if (reason) {
+                        const validReasons = ['spam', 'inappropriate', 'fraud', 'duplicate', 'copyright', 'other'];
+                        const normalizedReason = reason.toLowerCase().trim();
+                        const matchedReason = validReasons.find(r => normalizedReason.includes(r)) || 'other';
+                        fetch("/api/v1/reports", {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                          },
+                          body: JSON.stringify({ 
+                            target_type: 'listing', 
+                            target_id: parseInt(listingId), 
+                            reason: matchedReason,
+                            description: reason,
+                          }),
+                        }).then(res => {
+                          if (res.ok) alert("Report submitted. Thank you!");
+                          else alert("Failed to submit report.");
+                        }).catch(() => alert("Failed to submit report."));
+                      }
+                    }}>
                       <Flag className="h-4 w-4" />
                     </Button>
                   </div>

@@ -216,6 +216,22 @@ export default function AdminDashboardPage() {
             </Card>
           </Link>
 
+          <Link href="/admin/partners">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Users className="mr-2 h-5 w-5" />
+                  Partners
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Manage business partners, commissions & vouchers
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+
           <Link href="/admin/verifications">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader>

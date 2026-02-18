@@ -1,8 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { sanitizeHtml } from "@/lib/sanitize";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+const API_URL = typeof window !== 'undefined' 
+  ? (process.env.NEXT_PUBLIC_API_URL || window.location.origin + '/api/v1')
+  : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1');
 
 // Banner position configurations - controls size and layout
 const POSITION_STYLES: Record<string, { container: string; image: string; wrapper: string }> = {
@@ -118,7 +121,7 @@ export default function AdBanner({ position, className = "" }: AdBannerProps) {
           {banner.type === "html" && banner.html_content && (
             <div
               className={styles.wrapper}
-              dangerouslySetInnerHTML={{ __html: banner.html_content }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(banner.html_content) }}
               onClick={() => handleClick(banner)}
             />
           )}

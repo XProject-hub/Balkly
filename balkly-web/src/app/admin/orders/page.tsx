@@ -226,7 +226,7 @@ export default function AdminOrdersPage() {
                       </div>
                       <div className="text-right">
                         <p className="text-xl font-bold">
-                          €{(order.total / 100).toFixed(2)}
+                          €{Number(order.total).toFixed(2)}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {order.items?.length || 0} item(s)

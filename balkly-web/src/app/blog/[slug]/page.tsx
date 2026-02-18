@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Calendar, User, Eye, Heart, Share2, Facebook, Twitter, Linkedin, Link2, MessageCircle, Send, Trash2 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/lib/toast";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 export default function BlogPostPage() {
   const params = useParams();
@@ -268,7 +269,7 @@ export default function BlogPostPage() {
 
           {/* Content */}
           <div className="prose max-w-none mb-12">
-            <div dangerouslySetInnerHTML={{ __html: post.content }} />
+            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }} />
           </div>
 
           {/* Tags */}
@@ -426,7 +427,7 @@ export default function BlogPostPage() {
               Join the conversation with the Balkly community
             </p>
             <a 
-              href="https://balkly.live/forum" 
+              href="/forum" 
               className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
             >
               <MessageCircle className="h-4 w-4" />

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { authAPI } from "@/lib/api";
-import { Mail, AlertCircle, CheckCircle } from "lucide-react";
+import { Mail, CheckCircle } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -25,7 +25,8 @@ export default function LoginPage() {
     setResending(true);
     setResendSuccess(false);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.balkly.live'}/api/v1/auth/resend-verification`, {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || window.location.origin + '/api/v1';
+      const response = await fetch(`${API_URL}/auth/resend-verification`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: unverifiedEmail }),
@@ -161,11 +162,7 @@ export default function LoginPage() {
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <label className="flex items-center">
-                <input type="checkbox" className="mr-2" />
-                <span className="text-sm">Remember me</span>
-              </label>
+            <div className="flex items-center justify-end">
               <Link
                 href="/auth/forgot-password"
                 className="text-sm text-primary hover:underline"

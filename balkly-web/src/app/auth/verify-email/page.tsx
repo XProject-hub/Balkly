@@ -26,7 +26,8 @@ function VerifyEmailContent() {
 
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.balkly.live'}/api/v1/auth/resend-verification`, {
+      const API_URL = typeof window !== 'undefined' ? window.location.origin + '/api/v1' : (process.env.NEXT_PUBLIC_API_URL || 'https://api.balkly.live');
+      const response = await fetch(`${API_URL}/auth/resend-verification`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

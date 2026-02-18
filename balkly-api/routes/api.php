@@ -44,7 +44,7 @@ Route::prefix('v1')->group(function () {
     
     // Listings
     Route::get('/listings', [ListingController::class, 'index']);
-    Route::get('/listings/{id}', [ListingController::class, 'show']);
+    Route::get('/listings/{id}', [ListingController::class, 'show'])->where('id', '[0-9]+');
     
     // Events
     Route::get('/events', [EventController::class, 'index']);
@@ -81,14 +81,22 @@ Route::prefix('v1')->group(function () {
     // Analytics tracking (public - track all visitors)
     Route::post('/analytics/track', [\App\Http\Controllers\Api\AnalyticsController::class, 'trackVisit']);
     
+    // Partner tracking redirect (public)
+    Route::get('/go/{trackingCode}', [\App\Http\Controllers\Api\PartnerTrackingController::class, 'redirect']);
+    
+    // Public voucher view (rate limited)
+    Route::get('/vouchers/{code}', [\App\Http\Controllers\Api\VoucherController::class, 'show']);
+    
+    // Public partner offers
+    Route::get('/partners/{id}/offers', [\App\Http\Controllers\Api\PartnerOfferController::class, 'publicOffers']);
+    
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {
         // Auth
         Route::post('/auth/logout', [AuthController::class, 'logout']);
         Route::get('/auth/me', [AuthController::class, 'me']);
         Route::post('/auth/send-verification', [AuthController::class, 'sendVerificationEmail']);
-        Route::post('/auth/change-password', [\App\Http\Controllers\Api\ProfileController::class, 'changePassword']);
-        
+        Route::delete('/auth/delete-account', [AuthController::class, 'deleteAccount']);
         // Profile
         Route::get('/profile', [\App\Http\Controllers\Api\ProfileController::class, 'show']);
         Route::patch('/profile/update', [\App\Http\Controllers\Api\ProfileController::class, 'update']);
@@ -116,9 +124,6 @@ Route::prefix('v1')->group(function () {
         Route::post('/chats/start/{listingId}', [ChatController::class, 'start']);
         Route::get('/chats/{id}/messages', [ChatController::class, 'messages']);
         Route::post('/chats/messages', [ChatController::class, 'sendMessage']);
-        
-        // Media Upload (generic)
-        Route::post('/media/upload', [ListingController::class, 'uploadGenericMedia']);
         
         // Media
         Route::post('/media/upload', [\App\Http\Controllers\Api\MediaController::class, 'upload']);
@@ -148,10 +153,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/ticket_orders', [EventController::class, 'purchaseTickets']);
         Route::post('/ticket/scan', [EventController::class, 'scanTicket']);
         
-        // Chat
-        Route::get('/chats', [ChatController::class, 'index']);
-        Route::post('/chats/{listing_id}', [ChatController::class, 'start']);
-        Route::post('/messages', [ChatController::class, 'sendMessage']);
+        // (duplicate chat routes removed - defined above)
         
         // Orders & Payments
         Route::get('/orders', [OrderController::class, 'index']);
@@ -218,6 +220,38 @@ Route::prefix('v1')->group(function () {
         // KB Article Feedback
         Route::post('/kb/{id}/feedback', [\App\Http\Controllers\Api\KnowledgeBaseController::class, 'feedback']);
         
+        // Voucher generation (any authenticated user)
+        Route::post('/vouchers', [\App\Http\Controllers\Api\VoucherController::class, 'store']);
+        Route::get('/my-vouchers', [\App\Http\Controllers\Api\VoucherController::class, 'userVouchers']);
+        
+        // Partner routes (role: partner or staff)
+        Route::middleware('role:partner,staff')->prefix('partner')->group(function () {
+            Route::get('/dashboard', [\App\Http\Controllers\Api\PartnerDashboardController::class, 'dashboard']);
+            Route::get('/clicks', [\App\Http\Controllers\Api\PartnerDashboardController::class, 'clicks']);
+            Route::get('/conversions', [\App\Http\Controllers\Api\PartnerDashboardController::class, 'conversions']);
+            Route::post('/conversions', [\App\Http\Controllers\Api\PartnerDashboardController::class, 'storeConversion']);
+            Route::patch('/conversions/{id}', [\App\Http\Controllers\Api\PartnerDashboardController::class, 'updateConversion']);
+            Route::get('/offers', [\App\Http\Controllers\Api\PartnerOfferController::class, 'index']);
+            Route::post('/offers', [\App\Http\Controllers\Api\PartnerOfferController::class, 'store']);
+            Route::patch('/offers/{id}', [\App\Http\Controllers\Api\PartnerOfferController::class, 'update']);
+            Route::delete('/offers/{id}', [\App\Http\Controllers\Api\PartnerOfferController::class, 'destroy']);
+        });
+        
+        // Partner-only routes (staff management)
+        Route::middleware('role:partner')->prefix('partner')->group(function () {
+            Route::get('/staff', [\App\Http\Controllers\Api\PartnerStaffController::class, 'index']);
+            Route::post('/staff', [\App\Http\Controllers\Api\PartnerStaffController::class, 'store']);
+            Route::patch('/staff/{id}', [\App\Http\Controllers\Api\PartnerStaffController::class, 'update']);
+            Route::delete('/staff/{id}', [\App\Http\Controllers\Api\PartnerStaffController::class, 'destroy']);
+        });
+        
+        // Staff routes (voucher redeem)
+        Route::middleware('role:partner,staff')->prefix('staff')->group(function () {
+            Route::get('/vouchers/{code}', [\App\Http\Controllers\Api\VoucherController::class, 'staffShow']);
+            Route::post('/vouchers/{code}/redeem', [\App\Http\Controllers\Api\VoucherController::class, 'redeem']);
+            Route::get('/redemptions', [\App\Http\Controllers\Api\VoucherController::class, 'staffRedemptions']);
+        });
+        
         // Admin Routes (role-protected)
         Route::middleware('role:admin')->prefix('admin')->group(function () {
             Route::get('/dashboard', [\App\Http\Controllers\Api\AdminController::class, 'dashboard']);
@@ -230,6 +264,17 @@ Route::prefix('v1')->group(function () {
             Route::post('/users/{id}/role', [\App\Http\Controllers\Api\AdminController::class, 'changeUserRole']);
             Route::post('/users/{id}/verify-email', [\App\Http\Controllers\Api\AdminController::class, 'verifyUserEmail']);
             Route::delete('/users/{id}', [\App\Http\Controllers\Api\AdminController::class, 'deleteUser']);
+            
+            // Platform Settings
+            Route::get('/settings', [\App\Http\Controllers\Api\SettingController::class, 'index']);
+            Route::patch('/settings', [\App\Http\Controllers\Api\SettingController::class, 'update']);
+            
+            // Partner Management
+            Route::get('/partners', [\App\Http\Controllers\Api\PartnerController::class, 'index']);
+            Route::get('/partners/{id}', [\App\Http\Controllers\Api\PartnerController::class, 'show']);
+            Route::post('/partners', [\App\Http\Controllers\Api\PartnerController::class, 'store']);
+            Route::patch('/partners/{id}', [\App\Http\Controllers\Api\PartnerController::class, 'update']);
+            Route::delete('/partners/{id}', [\App\Http\Controllers\Api\PartnerController::class, 'destroy']);
             
             // Ad Banner Management
             Route::get('/banners', [\App\Http\Controllers\Api\AdBannerController::class, 'index']);

@@ -29,30 +29,51 @@ export default function AdminSettingsPage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    // Settings are typically stored in localStorage or env
-    // For now, we'll use localStorage to persist settings
-    const savedSettings = localStorage.getItem("platform_settings");
-    if (savedSettings) {
+    const loadSettings = async () => {
+      setLoading(true);
       try {
-        setSettings(JSON.parse(savedSettings));
-      } catch (e) {
-        // Use defaults
+        const token = localStorage.getItem("auth_token");
+        const response = await fetch("/api/v1/admin/settings", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setSettings(data.settings);
+        }
+      } catch {
+        const saved = localStorage.getItem("platform_settings");
+        if (saved) {
+          try { setSettings(JSON.parse(saved)); } catch {}
+        }
+      } finally {
+        setLoading(false);
       }
-    }
+    };
+    loadSettings();
   }, []);
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Save to localStorage for now
-      // In production, this would call an API endpoint
-      localStorage.setItem("platform_settings", JSON.stringify(settings));
+      const token = localStorage.getItem("auth_token");
+      const response = await fetch("/api/v1/admin/settings", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(settings),
+      });
       
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      toast.success("Settings saved successfully");
-    } catch (err) {
+      if (response.ok) {
+        const data = await response.json();
+        setSettings(data.settings);
+        localStorage.setItem("platform_settings", JSON.stringify(data.settings));
+        toast.success("Settings saved successfully");
+      } else {
+        toast.error("Failed to save settings");
+      }
+    } catch {
       toast.error("Failed to save settings");
     } finally {
       setSaving(false);

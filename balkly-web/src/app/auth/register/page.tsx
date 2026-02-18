@@ -32,9 +32,17 @@ export default function RegisterPage() {
     try {
       const response = await authAPI.register(formData);
       
-      // Registration successful - user must verify email before logging in
-      // Redirect to check email page with the email address
-      router.push(`/auth/verify-email?email=${encodeURIComponent(formData.email)}&registered=true`);
+      if (response.data.token) {
+        localStorage.setItem("auth_token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        window.dispatchEvent(new Event('auth-change'));
+        
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 100);
+      } else {
+        router.push(`/auth/verify-email?email=${encodeURIComponent(formData.email)}&registered=true`);
+      }
     } catch (err: any) {
       console.error("Registration error:", err);
       const errorMsg = err.response?.data?.message || err.response?.data?.errors || "Registration failed. Please try again.";
@@ -125,8 +133,8 @@ export default function RegisterPage() {
             </div>
 
             <div className="flex items-start">
-              <input type="checkbox" required className="mt-1 mr-2" />
-              <label className="text-sm">
+              <input id="terms" type="checkbox" required className="mt-1 mr-2" />
+              <label htmlFor="terms" className="text-sm">
                 I agree to the{" "}
                 <Link href="/terms" className="text-primary hover:underline">
                   Terms of Service

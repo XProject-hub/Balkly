@@ -68,7 +68,7 @@ class ProfileController extends Controller
     public function uploadAvatar(Request $request)
     {
         $request->validate([
-            'avatar' => 'required|image|max:5120', // 5MB max
+            'avatar' => 'required|image|mimes:jpeg,jpg,png,gif,webp,bmp,tiff,tif,avif|max:10240', // 10MB max
         ]);
 
         $user = $request->user();

@@ -78,9 +78,8 @@ export default function SettingsPage() {
       return;
     }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Image must be less than 5MB');
+    if (file.size > 10 * 1024 * 1024) {
+      alert('Image must be less than 10MB');
       return;
     }
 
@@ -236,9 +235,10 @@ export default function SettingsPage() {
                   <input
                     type="email"
                     value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg"
+                    disabled
+                    className="w-full px-4 py-2 border rounded-lg bg-muted cursor-not-allowed opacity-70"
                   />
+                  <p className="text-xs text-muted-foreground mt-1">Email cannot be changed</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Phone</label>
@@ -401,8 +401,8 @@ export default function SettingsPage() {
                 <Button 
                   variant="destructive" 
                   size="sm"
-                  onClick={() => {
-                    const confirm = window.confirm(
+                  onClick={async () => {
+                    const confirmed = window.confirm(
                       "⚠️ WARNING: This will permanently delete your account and all data.\n\n" +
                       "This includes:\n" +
                       "• All your listings\n" +
@@ -413,21 +413,40 @@ export default function SettingsPage() {
                       "Are you absolutely sure?"
                     );
                     
-                    if (confirm) {
-                      const doubleConfirm = window.confirm(
-                        "FINAL CONFIRMATION\n\n" +
-                        "Type your email in the next prompt to confirm deletion."
-                      );
+                    if (!confirmed) return;
+                    
+                    const email = prompt("Enter your email address to confirm:");
+                    if (email !== user?.email) {
+                      alert("Email does not match. Account deletion cancelled.");
+                      return;
+                    }
+                    
+                    const password = prompt("Enter your password to confirm:");
+                    if (!password) return;
+                    
+                    try {
+                      const token = localStorage.getItem("auth_token");
+                      const response = await fetch("/api/v1/auth/delete-account", {
+                        method: "DELETE",
+                        headers: {
+                          "Content-Type": "application/json",
+                          Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ email, password }),
+                      });
                       
-                      if (doubleConfirm) {
-                        const email = prompt("Enter your email address to confirm:");
-                        if (email === user?.email) {
-                          // TODO: Call API to delete account
-                          alert("Account deletion requested. This feature will be implemented with admin approval.");
-                        } else {
-                          alert("Email does not match. Account deletion cancelled.");
-                        }
+                      if (response.ok) {
+                        localStorage.removeItem("auth_token");
+                        localStorage.removeItem("user");
+                        window.dispatchEvent(new Event("auth-change"));
+                        alert("Your account has been deleted. We're sorry to see you go.");
+                        window.location.href = "/";
+                      } else {
+                        const data = await response.json();
+                        alert(data.message || "Failed to delete account. Please try again.");
                       }
+                    } catch {
+                      alert("Failed to delete account. Please check your connection.");
                     }
                   }}
                 >

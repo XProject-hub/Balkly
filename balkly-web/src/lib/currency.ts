@@ -2,7 +2,9 @@
  * Currency conversion and formatting utilities
  */
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+const API_URL = typeof window !== 'undefined' 
+  ? (process.env.NEXT_PUBLIC_API_URL || window.location.origin + '/api/v1')
+  : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1');
 
 // Cache for exchange rates
 let ratesCache: { rates: Record<string, number>; timestamp: number } | null = null;
