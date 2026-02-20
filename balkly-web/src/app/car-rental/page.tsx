@@ -4,8 +4,10 @@ import { useState } from "react";
 import { Car, Shield, Clock, CreditCard, MapPin, Check, Calendar, Users, Search } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function CarRentalPage() {
+  const { t } = useLanguage();
   const [pickupLocation, setPickupLocation] = useState("Dubai Airport (DXB)");
   const [dropoffLocation, setDropoffLocation] = useState("");
   const [sameLocation, setSameLocation] = useState(true);
@@ -52,48 +54,48 @@ export default function CarRentalPage() {
   const features = [
     {
       icon: CreditCard,
-      title: "All Inclusive Pricing",
-      description: "CDW, Theft Waiver, airport surcharge & taxes included",
+      title: t.carRentalPage.allInclusive,
+      description: t.carRentalPage.allInclusiveDesc,
     },
     {
       icon: Shield,
-      title: "No Hidden Charges",
-      description: "Once you paid, you paid. No last minute surprises",
+      title: t.carRentalPage.noHidden,
+      description: t.carRentalPage.noHiddenDesc,
     },
     {
       icon: Clock,
-      title: "24/7 Customer Support",
-      description: "Excellent support on phone, chat & email",
+      title: t.carRentalPage.support247,
+      description: t.carRentalPage.supportDesc,
     },
     {
       icon: Check,
-      title: "Free Cancellation",
-      description: "Cancel for free, 48 hours before pick up",
+      title: t.carRentalPage.freeCancellation,
+      description: t.carRentalPage.freeCancelDesc,
     },
   ];
 
   const carTypes = [
     { 
-      name: "Economy", 
-      price: "From €15/day", 
+      name: t.carRentalPage.economy, 
+      price: `${t.carRentalPage.from} €15${t.carRentalPage.perDay}`, 
       image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=250&fit=crop",
       example: "Toyota Yaris or similar"
     },
     { 
-      name: "Compact", 
-      price: "From €22/day", 
+      name: t.carRentalPage.compact, 
+      price: `${t.carRentalPage.from} €22${t.carRentalPage.perDay}`, 
       image: "https://images.unsplash.com/photo-1590362891991-f776e747a588?w=400&h=250&fit=crop",
       example: "VW Golf or similar"
     },
     { 
-      name: "SUV", 
-      price: "From €35/day", 
+      name: t.carRentalPage.suv, 
+      price: `${t.carRentalPage.from} €35${t.carRentalPage.perDay}`, 
       image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=400&h=250&fit=crop",
       example: "Nissan X-Trail or similar"
     },
     { 
-      name: "Luxury", 
-      price: "From €75/day", 
+      name: t.carRentalPage.luxury, 
+      price: `${t.carRentalPage.from} €75${t.carRentalPage.perDay}`, 
       image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&h=250&fit=crop",
       example: "BMW 5 Series or similar"
     },
@@ -142,13 +144,13 @@ export default function CarRentalPage() {
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-white/90 text-sm mb-4">
               <Car className="h-4 w-4" />
-              <span>Compare prices from 600+ suppliers</span>
+              <span>{t.carRentalPage.compareFrom}</span>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
-              Rent a Car in UAE
+              {t.carRentalPage.title}
             </h1>
             <p className="text-xl text-white/80 max-w-2xl mx-auto">
-              Best prices guaranteed. Free cancellation on most bookings.
+              {t.carRentalPage.subtitle}
             </p>
           </div>
 
@@ -158,7 +160,7 @@ export default function CarRentalPage() {
               {/* Pick-up Location */}
               <div className="grid md:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Pick-up Location</label>
+                  <label className="block text-sm font-medium mb-2">{t.carRentalPage.pickupLocation}</label>
                   <div className="relative">
                     <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <select 
@@ -182,7 +184,7 @@ export default function CarRentalPage() {
                         onChange={(e) => setSameLocation(!e.target.checked)}
                         className="rounded"
                       />
-                      Different drop-off location
+                      {t.carRentalPage.differentDropoff}
                     </label>
                   </label>
                   {!sameLocation && (
@@ -205,7 +207,7 @@ export default function CarRentalPage() {
               {/* Dates and Times */}
               <div className="grid md:grid-cols-4 gap-4 mb-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Pick-up Date</label>
+                  <label className="block text-sm font-medium mb-2">{t.carRentalPage.pickupDate}</label>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <input 
@@ -220,7 +222,7 @@ export default function CarRentalPage() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Pick-up Time</label>
+                  <label className="block text-sm font-medium mb-2">{t.carRentalPage.pickupTime}</label>
                   <select 
                     value={pickupTime}
                     onChange={(e) => setPickupTime(e.target.value)}
@@ -233,7 +235,7 @@ export default function CarRentalPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Drop-off Date</label>
+                  <label className="block text-sm font-medium mb-2">{t.carRentalPage.dropoffDate}</label>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <input 
@@ -248,7 +250,7 @@ export default function CarRentalPage() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Drop-off Time</label>
+                  <label className="block text-sm font-medium mb-2">{t.carRentalPage.dropoffTime}</label>
                   <select 
                     value={dropoffTime}
                     onChange={(e) => setDropoffTime(e.target.value)}
@@ -264,7 +266,7 @@ export default function CarRentalPage() {
               {/* Driver Age and Search */}
               <div className="flex flex-col md:flex-row gap-4 items-end">
                 <div className="flex-1">
-                  <label className="block text-sm font-medium mb-2">Driver's Age</label>
+                  <label className="block text-sm font-medium mb-2">{t.carRentalPage.driversAge}</label>
                   <div className="relative">
                     <Users className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <select 
@@ -273,7 +275,7 @@ export default function CarRentalPage() {
                       className="w-full pl-10 pr-4 py-3 border rounded-lg bg-background text-foreground"
                     >
                       {Array.from({length: 82}, (_, i) => i + 18).map(age => (
-                        <option key={age} value={age}>{age} years</option>
+                        <option key={age} value={age}>{age} {t.carRentalPage.years}</option>
                       ))}
                     </select>
                   </div>
@@ -286,12 +288,12 @@ export default function CarRentalPage() {
                   style={{background: 'linear-gradient(135deg, #1E63FF 0%, #7C3AED 100%)'}}
                 >
                   <Search className="h-5 w-5 mr-2" />
-                  Search Cars
+                  {t.carRentalPage.searchCars}
                 </Button>
               </div>
 
               <p className="text-xs text-muted-foreground mt-4 text-center">
-                You'll be redirected to our partner VIP Cars to view available vehicles and complete your booking
+                {t.carRentalPage.redirectNote}
               </p>
             </form>
           </div>
@@ -322,9 +324,9 @@ export default function CarRentalPage() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Choose Your Perfect Ride</h2>
+            <h2 className="text-3xl font-bold mb-4">{t.carRentalPage.chooseRide}</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              From budget-friendly economy cars to luxury vehicles, find the perfect car for your trip
+              {t.carRentalPage.chooseRideDesc}
             </p>
           </div>
 
@@ -356,9 +358,9 @@ export default function CarRentalPage() {
       <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Popular Pick-up Locations</h2>
+            <h2 className="text-3xl font-bold mb-4">{t.carRentalPage.popularLocations}</h2>
             <p className="text-muted-foreground">
-              Convenient locations across Dubai and Abu Dhabi
+              {t.carRentalPage.popularLocationsDesc}
             </p>
           </div>
 
@@ -380,7 +382,7 @@ export default function CarRentalPage() {
       <section className="py-12 bg-white dark:bg-gray-900 border-y border-border">
         <div className="container mx-auto px-4">
           <p className="text-center text-sm text-muted-foreground mb-6">
-            Rent from 600+ Trusted Car Rental Companies Worldwide
+            {t.carRentalPage.rentFrom}
           </p>
           <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10 opacity-70">
             {["Hertz", "Avis", "Sixt", "Budget", "Europcar", "Enterprise", "Dollar", "Thrifty"].map((brand) => (
@@ -397,8 +399,8 @@ export default function CarRentalPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Why Book With Balkly?</h2>
-              <p className="text-muted-foreground">Best prices guaranteed from leading suppliers worldwide</p>
+              <h2 className="text-3xl font-bold mb-4">{t.carRentalPage.whyBalkly}</h2>
+              <p className="text-muted-foreground">{t.carRentalPage.allInclusiveDesc}</p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8">
@@ -441,17 +443,17 @@ export default function CarRentalPage() {
       <section className="py-12 bg-gradient-to-r from-balkly-blue to-purple-600">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-            Already have a booking?
+            {t.carRentalPage.haveBooking}
           </h2>
           <p className="text-white/80 mb-6">
-            View, modify, or cancel your reservation easily
+            {t.carRentalPage.manageBooking}
           </p>
           <Link
             href="/car-rental/manage-booking"
             className="inline-flex items-center gap-2 bg-white text-balkly-blue px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
           >
             <Car className="h-5 w-5" />
-            Manage My Booking
+            {t.carRentalPage.manageBtn}
           </Link>
         </div>
       </section>

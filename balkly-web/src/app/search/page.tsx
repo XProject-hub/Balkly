@@ -8,9 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search, MapPin, Package, Calendar, MessageCircle } from "lucide-react";
 import { searchAPI } from "@/lib/api";
 import PriceDisplay from "@/components/PriceDisplay";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 function SearchContent() {
   const searchParams = useSearchParams();
+  const { t } = useLanguage();
   const query = searchParams.get("q") || "";
   
   const [results, setResults] = useState<any>({
@@ -58,7 +60,7 @@ function SearchContent() {
     <div className="min-h-screen bg-background">
       <div className="bg-primary text-primary-foreground py-12">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-6">Search Results</h1>
+          <h1 className="text-4xl font-bold mb-6">{t.searchPage.title}</h1>
           
           {/* Search Bar */}
           <form onSubmit={handleSearch} className="max-w-3xl">
@@ -69,12 +71,12 @@ function SearchContent() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search for anything..."
+                  placeholder={t.searchPage.placeholder}
                   className="w-full pl-10 pr-4 py-3 rounded-lg border bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 placeholder:text-gray-500"
                 />
               </div>
               <Button size="lg" type="submit">
-                Search
+                {t.searchPage.searchBtn}
               </Button>
             </div>
           </form>
@@ -97,9 +99,9 @@ function SearchContent() {
           <Card>
             <CardContent className="py-12 text-center">
               <Search className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-              <h2 className="text-2xl font-bold mb-2">No results found</h2>
+              <h2 className="text-2xl font-bold mb-2">{t.searchPage.noResults}</h2>
               <p className="text-muted-foreground">
-                Try different keywords or browse our categories
+                {t.searchPage.noResultsDesc}
               </p>
             </CardContent>
           </Card>
@@ -107,7 +109,7 @@ function SearchContent() {
           <div className="space-y-8">
             <div>
               <p className="text-muted-foreground mb-6">
-                Found {totalResults} results for "<strong>{query}</strong>"
+                {totalResults} {t.searchPage.foundResults} "<strong>{query}</strong>"
               </p>
             </div>
 
@@ -116,7 +118,7 @@ function SearchContent() {
               <div>
                 <h2 className="text-2xl font-bold mb-4 flex items-center">
                   <Package className="mr-2 h-6 w-6" />
-                  Listings ({results.listings.length})
+                  {t.searchPage.listings} ({results.listings.length})
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {results.listings.map((listing: any) => (
@@ -137,7 +139,7 @@ function SearchContent() {
                                 className="font-bold text-primary"
                               />
                             ) : (
-                              <span className="font-bold text-primary">Contact</span>
+                              <span className="font-bold text-primary">{t.searchPage.contact}</span>
                             )}
                             <span className="text-sm text-muted-foreground flex items-center">
                               <MapPin className="h-3 w-3 mr-1" />
@@ -157,7 +159,7 @@ function SearchContent() {
               <div>
                 <h2 className="text-2xl font-bold mb-4 flex items-center">
                   <Calendar className="mr-2 h-6 w-6" />
-                  Events ({results.events.length})
+                  {t.searchPage.events} ({results.events.length})
                 </h2>
                 <div className="space-y-3">
                   {results.events.map((event: any) => (
@@ -195,7 +197,7 @@ function SearchContent() {
               <div>
                 <h2 className="text-2xl font-bold mb-4 flex items-center">
                   <MessageCircle className="mr-2 h-6 w-6" />
-                  Forum ({results.forum.length})
+                  {t.searchPage.forum} ({results.forum.length})
                 </h2>
                 <div className="space-y-3">
                   {results.forum.map((topic: any) => (
@@ -207,9 +209,9 @@ function SearchContent() {
                             {topic.content}
                           </p>
                           <div className="flex gap-4 text-sm text-muted-foreground">
-                            <span>by {topic.user?.name}</span>
-                            <span>{topic.replies_count} replies</span>
-                            <span>{topic.views_count} views</span>
+                            <span>{t.searchPage.by} {topic.user?.name}</span>
+                            <span>{topic.replies_count} {t.searchPage.replies}</span>
+                            <span>{topic.views_count} {t.searchPage.views}</span>
                           </div>
                         </CardContent>
                       </Card>

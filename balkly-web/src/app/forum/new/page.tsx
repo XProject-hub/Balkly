@@ -7,9 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import { forumAPI } from "@/lib/api";
 import MarkdownEditor from "@/components/MarkdownEditor";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function NewTopicPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const searchParams = useSearchParams();
   const preselectedCategory = searchParams.get("category");
   
@@ -65,17 +67,17 @@ export default function NewTopicPage() {
     e.preventDefault();
     
     if (!formData.category_id) {
-      alert("Please select a category!");
+      alert(t.forumNew.errCategory);
       return;
     }
     
     if (!formData.title.trim()) {
-      alert("Please enter a title!");
+      alert(t.forumNew.errTitle);
       return;
     }
     
     if (!formData.content.trim()) {
-      alert("Please enter content!");
+      alert(t.forumNew.errContent);
       return;
     }
 
@@ -98,7 +100,7 @@ export default function NewTopicPage() {
         const errors = Object.values(error.response.data.errors).flat();
         alert("Validation errors:\n" + errors.join("\n"));
       } else {
-        const errorMsg = error.response?.data?.message || "Failed to create topic. Please try again.";
+        const errorMsg = error.response?.data?.message || t.forumNew.errFailed;
         alert(errorMsg);
       }
     } finally {
@@ -115,20 +117,20 @@ export default function NewTopicPage() {
           onClick={() => router.push("/forum")}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Forum
+          {t.forumNew.backToForum}
         </Button>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-3xl">Start a New Discussion</CardTitle>
+            <CardTitle className="text-3xl">{t.forumNew.title}</CardTitle>
             <p className="text-muted-foreground">
-              Share your thoughts, ask questions, or start a conversation
+              {t.forumNew.subtitle}
             </p>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="topic-category" className="block text-sm font-medium mb-2">Category *</label>
+                <label htmlFor="topic-category" className="block text-sm font-medium mb-2">{t.forumNew.category}</label>
                 {preselectedCategory && selectedCategoryName ? (
                   <div className="flex items-center gap-2">
                     <div className="flex-1 px-4 py-2 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
@@ -144,7 +146,7 @@ export default function NewTopicPage() {
                         router.replace("/forum/new");
                       }}
                     >
-                      Change
+                      {t.forumNew.change}
                     </Button>
                   </div>
                 ) : (
@@ -157,7 +159,7 @@ export default function NewTopicPage() {
                     required
                     className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                   >
-                    <option value="">Select a category</option>
+                    <option value="">{t.forumNew.selectCategory}</option>
                     {categories.map((cat) => (
                       <optgroup key={cat.id} label={cat.name}>
                         <option value={cat.id}>
@@ -175,7 +177,7 @@ export default function NewTopicPage() {
               </div>
 
               <div>
-                <label htmlFor="topic-title" className="block text-sm font-medium mb-2">Title *</label>
+                <label htmlFor="topic-title" className="block text-sm font-medium mb-2">{t.forumNew.threadTitle}</label>
                 <input
                   id="topic-title"
                   type="text"
@@ -185,23 +187,23 @@ export default function NewTopicPage() {
                   }
                   required
                   maxLength={200}
-                  placeholder="What's your topic about?"
+                  placeholder={t.forumNew.titlePlaceholder}
                   className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                 />
                 <p className="text-xs text-muted-foreground mt-1">
-                  {formData.title.length}/200 characters
+                  {formData.title.length}/200 {t.forumNew.chars}
                 </p>
               </div>
 
               <div>
-                <label htmlFor="topic-content" className="block text-sm font-medium mb-2">Content *</label>
+                <label htmlFor="topic-content" className="block text-sm font-medium mb-2">{t.forumNew.content}</label>
                 <MarkdownEditor
                   value={formData.content}
                   onChange={(content) => setFormData({ ...formData, content })}
-                  placeholder="Write your message... (Markdown supported)"
+                  placeholder={t.forumNew.contentPlaceholder}
                 />
                 <p className="text-xs text-muted-foreground mt-1">
-                  {formData.content.length}/10,000 characters
+                  {formData.content.length}/10,000 {t.forumNew.chars}
                 </p>
               </div>
 
@@ -211,14 +213,14 @@ export default function NewTopicPage() {
                   disabled={loading || !formData.category_id || !formData.title || !formData.content}
                   className="flex-1"
                 >
-                  {loading ? "Creating..." : "Post Topic"}
+                  {loading ? t.forumNew.creating : t.forumNew.postTopic}
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => router.push("/forum")}
                 >
-                  Cancel
+                  {t.forumNew.cancel}
                 </Button>
               </div>
             </form>

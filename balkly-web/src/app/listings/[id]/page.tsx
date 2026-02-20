@@ -22,6 +22,7 @@ import { listingsAPI } from "@/lib/api";
 import FavoriteButton from "@/components/FavoriteButton";
 import VerifiedBadge from "@/components/VerifiedBadge";
 import PriceDisplay from "@/components/PriceDisplay";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ListingDetailPage() {
   const params = useParams();
@@ -40,6 +41,7 @@ export default function ListingDetailPage() {
   const [avgRating, setAvgRating] = useState(0);
   const [similarListings, setSimilarListings] = useState<any[]>([]);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -94,7 +96,7 @@ export default function ListingDetailPage() {
 
     const token = localStorage.getItem("auth_token");
     if (!token) {
-      alert("Please login to make an offer!");
+      alert(t.listingDetail.loginToOffer);
       router.push("/auth/login");
       return;
     }
@@ -117,20 +119,20 @@ export default function ListingDetailPage() {
         setShowOfferModal(false);
         setOfferAmount("");
         setOfferMessage("");
-        alert("Offer sent to seller!");
+        alert(t.listingDetail.offerSent);
       } else {
         const data = await response.json();
-        alert(data.message || "Failed to send offer. Please try again.");
+        alert(data.message || t.listingDetail.failedOffer);
       }
     } catch (error) {
-      alert("Failed to send offer. Please try again.");
+      alert(t.listingDetail.failedOffer);
     }
   };
 
   const handleContactSeller = () => {
     const token = localStorage.getItem("auth_token");
     if (!token) {
-      alert("Please login to contact the seller!");
+      alert(t.listingDetail.loginToContact);
       router.push("/auth/login");
       return;
     }
@@ -142,7 +144,7 @@ export default function ListingDetailPage() {
   const handleDeleteListing = async () => {
     console.log('🗑️ handleDeleteListing called for listing:', listingId);
     
-    if (!confirm('Are you sure you want to delete this listing? This action cannot be undone.')) {
+    if (!confirm(t.listingDetail.confirmDelete)) {
       console.log('🗑️ User cancelled deletion');
       return;
     }
@@ -164,22 +166,22 @@ export default function ListingDetailPage() {
       if (response.ok) {
         const data = await response.json();
         console.log('🗑️ Listing deleted:', data);
-        alert('Listing deleted successfully!');
+        alert(t.listingDetail.deleted);
         router.push('/listings');
       } else {
         const errorText = await response.text();
         console.error('🗑️ Delete failed:', errorText);
-        alert('Failed to delete listing');
+        alert(t.listingDetail.failedDelete);
       }
     } catch (error) {
       console.error('🗑️ Delete error:', error);
-      alert('Failed to delete listing');
+      alert(t.listingDetail.failedDelete);
     }
   };
 
   const handleSendMessage = async () => {
     if (!contactMessage.trim()) {
-      alert("Please enter a message!");
+      alert(t.listingDetail.enterMessage);
       return;
     }
 
@@ -213,17 +215,17 @@ export default function ListingDetailPage() {
       });
 
       if (messageResponse.ok) {
-        alert("Message sent! The seller will be notified.");
+        alert(t.listingDetail.messageSent);
         setShowContactModal(false);
         setContactMessage("");
         router.push("/dashboard/messages");
       } else {
         const data = await messageResponse.json();
-        alert(data.message || "Failed to send message. Please try again.");
+        alert(data.message || t.listingDetail.failedMessage);
       }
     } catch (error) {
       console.error("Send message error:", error);
-      alert("Failed to send message. Please try again.");
+      alert(t.listingDetail.failedMessage);
     }
   };
 
@@ -236,7 +238,7 @@ export default function ListingDetailPage() {
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard!");
+      alert(t.listingDetail.linkCopied);
     }
   };
 
@@ -258,10 +260,10 @@ export default function ListingDetailPage() {
     return (
       <div className="min-h-screen bg-background py-8">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-2xl font-bold mb-4">Listing not found</h1>
+          <h1 className="text-2xl font-bold mb-4">{t.listingDetail.listingNotFound}</h1>
           <Button onClick={() => router.push("/listings")}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Listings
+            {t.listingDetail.backToListings}
           </Button>
         </div>
       </div>
@@ -281,7 +283,7 @@ export default function ListingDetailPage() {
             className="text-sm"
           >
             <ArrowLeft className="mr-1 sm:mr-2 h-4 w-4" />
-            Back to Listings
+            {t.listingDetail.backToListings}
           </Button>
           
           {currentUser?.role === 'admin' && (
@@ -292,7 +294,7 @@ export default function ListingDetailPage() {
               className="bg-red-600 hover:bg-red-700 text-xs sm:text-sm"
             >
               <Trash2 className="mr-1 sm:mr-2 h-4 w-4" />
-              Delete
+              {t.listingDetail.delete}
             </Button>
           )}
         </div>
@@ -353,7 +355,7 @@ export default function ListingDetailPage() {
                       </span>
                       <span className="flex items-center">
                         <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                        {listing.views_count} views
+                        {listing.views_count} {t.listingDetail.views}
                       </span>
                       <span className="flex items-center">
                         <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
@@ -369,7 +371,7 @@ export default function ListingDetailPage() {
                     <Button size="sm" variant="outline" className="w-8 h-8 sm:w-9 sm:h-9 p-0" onClick={() => {
                       const token = localStorage.getItem("auth_token");
                       if (!token) {
-                        alert("Please login to report this listing.");
+                        alert(t.listingDetail.loginToReport);
                         router.push("/auth/login");
                         return;
                       }
@@ -391,9 +393,9 @@ export default function ListingDetailPage() {
                             description: reason,
                           }),
                         }).then(res => {
-                          if (res.ok) alert("Report submitted. Thank you!");
-                          else alert("Failed to submit report.");
-                        }).catch(() => alert("Failed to submit report."));
+                          if (res.ok) alert(t.listingDetail.reportSubmitted);
+                          else alert(t.listingDetail.failedReport);
+                        }).catch(() => alert(t.listingDetail.failedReport));
                       }
                     }}>
                       <Flag className="h-4 w-4" />
@@ -403,13 +405,13 @@ export default function ListingDetailPage() {
               </CardHeader>
               <CardContent className="p-4 sm:p-6 pt-0">
                 <div className="prose max-w-none">
-                  <h3 className="font-bold text-base sm:text-lg mb-2">Description</h3>
+                  <h3 className="font-bold text-base sm:text-lg mb-2">{t.listingDetail.description}</h3>
                   <p className="whitespace-pre-wrap text-sm sm:text-base">{listing.description}</p>
                 </div>
 
                 {listing.listingAttributes?.length > 0 && (
                   <div className="mt-4 sm:mt-6">
-                    <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">Specifications</h3>
+                    <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">{t.listingDetail.specifications}</h3>
                     <div className="grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-4">
                       {listing.listingAttributes.map((attr: any) => (
                         <div key={attr.id} className="flex justify-between py-2 border-b text-sm">
@@ -439,17 +441,17 @@ export default function ListingDetailPage() {
                     showOriginal={true}
                   />
                 ) : (
-                  <CardTitle className="text-2xl sm:text-3xl lg:text-4xl text-primary">Contact</CardTitle>
+                  <CardTitle className="text-2xl sm:text-3xl lg:text-4xl text-primary">{t.listingDetail.contact}</CardTitle>
                 )}
               </CardHeader>
               <CardContent className="p-4 sm:p-6 pt-0 space-y-2 sm:space-y-3">
                 <Button className="w-full" size="default" onClick={handleContactSeller}>
                   <MessageCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                  Contact Seller
+                  {t.listingDetail.contactSeller}
                 </Button>
                 <Button variant="outline" className="w-full" size="default" onClick={() => setShowOfferModal(true)}>
                   <Euro className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                  Make an Offer
+                  {t.listingDetail.makeOffer}
                 </Button>
               </CardContent>
             </Card>
@@ -457,7 +459,7 @@ export default function ListingDetailPage() {
             {/* Seller Info */}
             <Card>
               <CardHeader className="p-4 sm:p-6">
-                <CardTitle className="text-base sm:text-lg">Seller Information</CardTitle>
+                <CardTitle className="text-base sm:text-lg">{t.listingDetail.sellerInfo}</CardTitle>
               </CardHeader>
               <CardContent className="p-4 sm:p-6 pt-0">
                 <div className="flex items-center gap-3 mb-4">
@@ -470,31 +472,31 @@ export default function ListingDetailPage() {
                       <VerifiedBadge isVerified={listing.user?.is_verified_seller} size="sm" />
                     </div>
                     <p className="text-xs sm:text-sm text-muted-foreground">
-                      Member since {new Date(listing.user?.created_at).getFullYear()}
+                      {t.listingDetail.memberSince} {new Date(listing.user?.created_at).getFullYear()}
                     </p>
                     {avgRating > 0 && (
                       <div className="flex items-center gap-1 mt-1">
                         <Star className="h-3 w-3 sm:h-4 sm:w-4 fill-yellow-400 text-yellow-400" />
                         <span className="font-bold text-xs sm:text-sm">{avgRating.toFixed(1)}</span>
-                        <span className="text-[10px] sm:text-xs text-muted-foreground">({reviews.length} reviews)</span>
+                        <span className="text-[10px] sm:text-xs text-muted-foreground">({reviews.length} {t.listingDetail.reviews})</span>
                       </div>
                     )}
                   </div>
                 </div>
                 <div className="space-y-2 text-xs sm:text-sm">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Location:</span>
+                    <span className="text-muted-foreground">{t.listingDetail.location}</span>
                     <span className="font-medium truncate max-w-[120px]">
                       {listing.user?.profile?.city || "Not specified"}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Response rate:</span>
+                    <span className="text-muted-foreground">{t.listingDetail.responseRate}</span>
                     <span className="font-medium">95%</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Response time:</span>
-                    <span className="font-medium">Within hours</span>
+                    <span className="text-muted-foreground">{t.listingDetail.responseTime}</span>
+                    <span className="font-medium">{t.listingDetail.withinHours}</span>
                   </div>
                 </div>
               </CardContent>
@@ -503,14 +505,14 @@ export default function ListingDetailPage() {
             {/* Safety Tips - Hidden on mobile, shown on larger screens */}
             <Card className="hidden sm:block">
               <CardHeader className="p-4 sm:p-6">
-                <CardTitle className="text-base sm:text-lg">Safety Tips</CardTitle>
+                <CardTitle className="text-base sm:text-lg">{t.listingDetail.safetyTips}</CardTitle>
               </CardHeader>
               <CardContent className="p-4 sm:p-6 pt-0 space-y-2 text-xs sm:text-sm">
-                <p>• Meet in a public place</p>
-                <p>• Check the item before payment</p>
-                <p>• Pay only after collecting item</p>
-                <p>• Report suspicious listings</p>
-                <p>• Don't share financial information</p>
+                <p>• {t.listingDetail.tip1}</p>
+                <p>• {t.listingDetail.tip2}</p>
+                <p>• {t.listingDetail.tip3}</p>
+                <p>• {t.listingDetail.tip4}</p>
+                <p>• {t.listingDetail.tip5}</p>
               </CardContent>
             </Card>
           </div>
@@ -521,33 +523,33 @@ export default function ListingDetailPage() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <Card className="w-full max-w-md">
               <CardHeader>
-                <CardTitle>Contact Seller</CardTitle>
+                <CardTitle>{t.listingDetail.contactSeller}</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Send a message to {listing.user?.name}
+                  {t.listingDetail.sendMessage} {listing.user?.name}
                 </p>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Your Message</label>
+                  <label className="block text-sm font-medium mb-2">{t.listingDetail.yourMessage}</label>
                   <textarea
                     value={contactMessage}
                     onChange={(e) => setContactMessage(e.target.value)}
-                    placeholder="Hi! I'm interested in this listing. Is it still available?"
+                    placeholder={t.listingDetail.defaultMessage}
                     className="w-full px-4 py-2 border rounded-lg h-32 dark:bg-gray-800 dark:border-gray-700"
                     rows={5}
                   />
                   <p className="text-xs text-muted-foreground mt-1">
-                    Be polite and specific about your inquiry
+                    {t.listingDetail.messageHint}
                   </p>
                 </div>
 
                 <div className="flex gap-2">
                   <Button onClick={handleSendMessage} className="flex-1">
                     <MessageCircle className="mr-2 h-4 w-4" />
-                    Send Message
+                    {t.listingDetail.sendBtn}
                   </Button>
                   <Button variant="outline" onClick={() => setShowContactModal(false)}>
-                    Cancel
+                    {t.listingDetail.cancel}
                   </Button>
                 </div>
               </CardContent>
@@ -560,10 +562,10 @@ export default function ListingDetailPage() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <Card className="w-full max-w-md">
               <CardHeader>
-                <CardTitle>Make an Offer</CardTitle>
+                <CardTitle>{t.listingDetail.makeOffer}</CardTitle>
                 {listing.price && (
                   <p className="text-sm text-muted-foreground">
-                    Original price: <PriceDisplay
+                    {t.listingDetail.originalPrice} <PriceDisplay
                       amount={typeof listing.price === 'number' ? listing.price : parseFloat(listing.price || 0)}
                       currency={listing.currency || 'EUR'}
                     />
@@ -572,33 +574,33 @@ export default function ListingDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Your Offer (€)</label>
+                  <label className="block text-sm font-medium mb-2">{t.listingDetail.yourOffer}</label>
                   <input
                     type="number"
                     value={offerAmount}
                     onChange={(e) => setOfferAmount(e.target.value)}
-                    placeholder="Enter your offer"
+                    placeholder={t.listingDetail.enterOffer}
                     className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                     step="0.01"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Message (optional)</label>
+                  <label className="block text-sm font-medium mb-2">{t.listingDetail.messageOptional}</label>
                   <textarea
                     value={offerMessage}
                     onChange={(e) => setOfferMessage(e.target.value)}
-                    placeholder="Add a message to the seller..."
+                    placeholder={t.listingDetail.addMessage}
                     className="w-full px-4 py-2 border rounded-lg h-24 dark:bg-gray-800 dark:border-gray-700"
                   />
                 </div>
 
                 <div className="flex gap-2">
                   <Button onClick={handleMakeOffer} className="flex-1">
-                    Send Offer
+                    {t.listingDetail.sendOffer}
                   </Button>
                   <Button variant="outline" onClick={() => setShowOfferModal(false)}>
-                    Cancel
+                    {t.listingDetail.cancel}
                   </Button>
                 </div>
               </CardContent>
@@ -636,7 +638,7 @@ export default function ListingDetailPage() {
         {/* Similar Listings */}
         {similarListings.length > 0 && (
           <div className="mt-8 sm:mt-12 py-8 sm:py-12 bg-muted/30 -mx-4 px-4 sm:mx-0 sm:px-0 sm:rounded-xl">
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 lg:mb-8 px-0 sm:px-4 lg:px-6">Similar Listings</h2>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 lg:mb-8 px-0 sm:px-4 lg:px-6">{t.listingDetail.similarListings}</h2>
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 px-0 sm:px-4 lg:px-6">
               {similarListings.map((item) => (
                 <Link key={item.id} href={`/listings/${item.id}`}>

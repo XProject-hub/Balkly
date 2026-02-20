@@ -8,6 +8,7 @@ import { ArrowLeft, Pin, Lock, Eye, Heart, Flag, MessageSquare, CheckCircle, Mes
 import { forumAPI } from "@/lib/api";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import { markdownToSafeHtml } from "@/lib/sanitize";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function TopicDetailPage() {
   const params = useParams();
@@ -22,6 +23,7 @@ export default function TopicDetailPage() {
   const [editContent, setEditContent] = useState("");
   const [editingTopic, setEditingTopic] = useState(false);
   const [editTopicContent, setEditTopicContent] = useState("");
+  const { t } = useLanguage();
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -63,7 +65,7 @@ export default function TopicDetailPage() {
       setReply("");
       loadTopic();
     } catch (error) {
-      alert("Failed to post reply");
+      alert(t.forumTopic.failedReply);
     }
   };
 
@@ -90,10 +92,10 @@ export default function TopicDetailPage() {
         setEditTopicContent("");
         loadTopic();
       } else {
-        alert("Failed to save edit");
+        alert(t.forumTopic.failedEdit);
       }
     } catch (error) {
-      alert("Failed to save edit");
+      alert(t.forumTopic.failedEdit);
     }
   };
 
@@ -119,12 +121,12 @@ export default function TopicDetailPage() {
       setEditContent("");
       loadTopic();
     } catch (error) {
-      alert("Failed to save edit");
+      alert(t.forumTopic.failedEdit);
     }
   };
 
   const handleDeletePost = async (postId: number) => {
-    if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) return;
+    if (!confirm(t.forumTopic.confirmDeletePost)) return;
     
     try {
       await fetch(`/api/v1/admin/forum/posts/${postId}`, {
@@ -135,12 +137,12 @@ export default function TopicDetailPage() {
       });
       loadTopic();
     } catch (error) {
-      alert('Failed to delete post');
+      alert(t.forumTopic.failedDeletePost);
     }
   };
 
   const handleDeleteTopic = async () => {
-    if (!confirm('Are you sure you want to delete this entire topic? This action cannot be undone.')) return;
+    if (!confirm(t.forumTopic.confirmDeleteTopic)) return;
     
     try {
       await fetch(`/api/v1/admin/forum/topics/${topicId}`, {
@@ -151,7 +153,7 @@ export default function TopicDetailPage() {
       });
       router.push('/forum');
     } catch (error) {
-      alert('Failed to delete topic');
+      alert(t.forumTopic.failedDeleteTopic);
     }
   };
 
@@ -167,7 +169,7 @@ export default function TopicDetailPage() {
       alert(data.message);
       loadTopic();
     } catch (error) {
-      alert('Failed to pin/unpin topic');
+      alert(t.forumTopic.failedPin);
     }
   };
 
@@ -293,8 +295,8 @@ export default function TopicDetailPage() {
     return (
       <div className="min-h-screen bg-gray-100 dark:bg-gray-950 py-8">
         <div className="max-w-[1200px] mx-auto px-6 text-center">
-          <h1 className="text-2xl font-bold mb-4">Thread not found</h1>
-          <Button onClick={() => router.push("/forum")}>Back to Forum</Button>
+          <h1 className="text-2xl font-bold mb-4">{t.forumTopic.threadNotFound}</h1>
+          <Button onClick={() => router.push("/forum")}>{t.forumTopic.backToForum}</Button>
         </div>
       </div>
     );
@@ -308,7 +310,7 @@ export default function TopicDetailPage() {
           <div className="flex justify-between items-center mb-3">
             <Button variant="ghost" onClick={() => router.push("/forum")}>
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to forum
+              {t.forumTopic.backToForum}
             </Button>
             
             {currentUser?.role === 'admin' && (
@@ -320,7 +322,7 @@ export default function TopicDetailPage() {
                   className={topic?.is_sticky ? "bg-amber-600 hover:bg-amber-700" : ""}
                 >
                   <Pin className="mr-2 h-4 w-4" />
-                  {topic?.is_sticky ? 'Unpin' : 'Pin'}
+                  {topic?.is_sticky ? t.forumTopic.unpin : t.forumTopic.pin}
                 </Button>
                 <Button 
                   variant="destructive" 
@@ -329,7 +331,7 @@ export default function TopicDetailPage() {
                   className="bg-red-600 hover:bg-red-700"
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Delete Topic
+                  {t.forumTopic.deleteTopic}
                 </Button>
               </div>
             )}
@@ -345,15 +347,15 @@ export default function TopicDetailPage() {
           <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
             <span className="flex items-center gap-1">
               <Eye className="h-4 w-4" />
-              {topic.views_count} views
+              {topic.views_count} {t.forumTopic.views}
             </span>
             <span className="flex items-center gap-1">
               <MessageCircle className="h-4 w-4" />
-              {topic.replies_count} replies
+              {topic.replies_count} {t.forumTopic.replies}
             </span>
             <span className="flex items-center gap-1">
               <Heart className="h-4 w-4" />
-              {topic.likes_count || 0} likes
+              {topic.likes_count || 0} {t.forumTopic.likes}
             </span>
           </div>
         </div>
@@ -389,23 +391,23 @@ export default function TopicDetailPage() {
                 {topic.user?.role === 'admin' ? (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400 text-xs rounded-full font-semibold mb-2">
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                    Admin
+                    {t.forumTopic.admin}
                   </span>
                 ) : topic.user?.role === 'moderator' ? (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-400 text-xs rounded-full font-semibold mb-2">
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                    Moderator
+                    {t.forumTopic.moderator}
                   </span>
                 ) : (
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Member</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t.forumTopic.member}</p>
                 )}
                 <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
                   <div className="flex justify-between">
-                    <span>Messages:</span>
+                    <span>{t.forumTopic.messages}</span>
                     <span className="font-medium">0</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Reaction score:</span>
+                    <span>{t.forumTopic.reactionScore}</span>
                     <span className="font-medium">{topic.likes_count || 0}</span>
                   </div>
                 </div>
@@ -445,7 +447,7 @@ export default function TopicDetailPage() {
                     }`}
                   >
                     <Heart className={`h-4 w-4 transition-all ${topic?.user_has_liked === true ? 'fill-red-500 text-red-500' : ''}`} />
-                    <span className="font-medium">{topic?.user_has_liked === true ? 'Liked' : 'Like'}</span>
+                    <span className="font-medium">{topic?.user_has_liked === true ? t.forumTopic.liked : t.forumTopic.like}</span>
                     {(topic?.likes_count || 0) > 0 && <span className="text-gray-500">({topic.likes_count})</span>}
                   </button>
                   {(currentUser?.id === topic.user_id || currentUser?.role === 'admin') && (
@@ -454,12 +456,12 @@ export default function TopicDetailPage() {
                       className="text-gray-600 dark:text-gray-400 hover:text-primary transition flex items-center gap-1"
                     >
                       <Edit className="h-4 w-4" />
-                      Edit
+                      {t.forumTopic.edit}
                     </button>
                   )}
                   <button className="text-gray-600 dark:text-gray-400 hover:text-primary transition">
                     <Flag className="h-4 w-4 inline mr-1" />
-                    Report
+                    {t.forumTopic.report}
                   </button>
                 </div>
               </div>
@@ -495,15 +497,15 @@ export default function TopicDetailPage() {
                   {post.user?.role === 'admin' ? (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400 text-xs rounded-full font-semibold">
                       <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                      Admin
+                      {t.forumTopic.admin}
                     </span>
                   ) : post.user?.role === 'moderator' ? (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-400 text-xs rounded-full font-semibold">
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                      Moderator
+                      {t.forumTopic.moderator}
                     </span>
                   ) : (
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Member</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{t.forumTopic.member}</p>
                   )}
                 </div>
               </div>
@@ -538,14 +540,14 @@ export default function TopicDetailPage() {
                     }`}
                   >
                     <Heart className={`h-4 w-4 transition-all ${post?.user_has_liked === true ? 'fill-red-500 text-red-500' : ''}`} />
-                    <span className="font-medium">{post?.user_has_liked === true ? 'Liked' : 'Like'}</span>
+                    <span className="font-medium">{post?.user_has_liked === true ? t.forumTopic.liked : t.forumTopic.like}</span>
                     {(post?.likes_count || 0) > 0 && <span className="text-gray-500">({post.likes_count})</span>}
                   </button>
                   <button
                     onClick={() => setReply(`> ${post.user?.name} wrote:\n> ${post.content}\n\n`)}
                     className="text-gray-600 dark:text-gray-400 hover:text-primary transition"
                   >
-                    Quote
+                    {t.forumTopic.quote}
                   </button>
                   {currentUser?.id === post.user_id && (
                     <button
@@ -553,7 +555,7 @@ export default function TopicDetailPage() {
                       className="text-gray-600 dark:text-gray-400 hover:text-primary transition flex items-center gap-1"
                     >
                       <Edit className="h-4 w-4" />
-                      Edit
+                      {t.forumTopic.edit}
                     </button>
                   )}
                   {currentUser?.role === 'admin' && (
@@ -562,7 +564,7 @@ export default function TopicDetailPage() {
                       className="text-gray-600 dark:text-gray-400 hover:text-red-500 transition flex items-center gap-1"
                     >
                       <Trash2 className="h-4 w-4" />
-                      Delete
+                      {t.forumTopic.delete}
                     </button>
                   )}
                   </div>
@@ -574,18 +576,18 @@ export default function TopicDetailPage() {
 
         {/* Reply Form - XenForo Style */}
         <div className="bg-white dark:bg-gray-900 rounded-lg border dark:border-gray-800 p-6">
-          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100 mb-4">Post a reply</h3>
+          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100 mb-4">{t.forumTopic.postReply}</h3>
           {topic.is_locked && currentUser?.role !== 'admin' ? (
             <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-              This thread is locked. Only moderators can reply.
+              {t.forumTopic.threadLocked}
             </div>
           ) : (
             <>
-              <MarkdownEditor value={reply} onChange={setReply} placeholder="Write your reply..." />
+              <MarkdownEditor value={reply} onChange={setReply} placeholder={t.forumTopic.writeReply} />
               <div className="flex justify-end mt-4">
                 <Button onClick={handleReply} disabled={!reply.trim()}>
                   <MessageSquare className="mr-2 h-4 w-4" />
-                  Post reply
+                  {t.forumTopic.postReplyBtn}
                 </Button>
               </div>
             </>
@@ -597,7 +599,7 @@ export default function TopicDetailPage() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-900 rounded-lg max-w-3xl w-full p-6 border dark:border-gray-800">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">Edit Topic</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t.forumTopic.editTopic}</h3>
                 <button
                   onClick={() => setEditingTopic(false)}
                   className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
@@ -609,15 +611,15 @@ export default function TopicDetailPage() {
               <MarkdownEditor 
                 value={editTopicContent} 
                 onChange={setEditTopicContent} 
-                placeholder="Edit your topic..." 
+                placeholder={t.forumTopic.editTopicPlaceholder} 
               />
               
               <div className="flex justify-end gap-2 mt-4">
                 <Button variant="outline" onClick={() => setEditingTopic(false)}>
-                  Cancel
+                  {t.forumTopic.cancelEdit}
                 </Button>
                 <Button onClick={handleSaveTopicEdit} disabled={!editTopicContent.trim()}>
-                  Save changes
+                  {t.forumTopic.saveChanges}
                 </Button>
               </div>
             </div>
@@ -629,7 +631,7 @@ export default function TopicDetailPage() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-900 rounded-lg max-w-3xl w-full p-6 border dark:border-gray-800">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">Edit Post</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t.forumTopic.editPost}</h3>
                 <button
                   onClick={() => setEditingPost(null)}
                   className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
@@ -641,15 +643,15 @@ export default function TopicDetailPage() {
               <MarkdownEditor 
                 value={editContent} 
                 onChange={setEditContent} 
-                placeholder="Edit your post..." 
+                placeholder={t.forumTopic.editPostPlaceholder} 
               />
               
               <div className="flex justify-end gap-2 mt-4">
                 <Button variant="outline" onClick={() => setEditingPost(null)}>
-                  Cancel
+                  {t.forumTopic.cancelEdit}
                 </Button>
                 <Button onClick={handleSaveEdit} disabled={!editContent.trim()}>
-                  Save changes
+                  {t.forumTopic.saveChanges}
                 </Button>
               </div>
             </div>

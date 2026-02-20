@@ -9,9 +9,11 @@ import { Car, Home, Calendar, MessageCircle, Search, TrendingUp, Star, MapPin, E
 import { listingsAPI, eventsAPI, forumAPI, jobsAPI } from "@/lib/api";
 import AdBanner from "@/components/AdBanner";
 import PriceDisplay from "@/components/PriceDisplay";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function HomePage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [featuredListings, setFeaturedListings] = useState<any[]>([]);
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
@@ -95,28 +97,27 @@ export default function HomePage() {
             <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-3 sm:mb-4">
               <span className="text-[10px] sm:text-xs font-bold">UAE</span>
               <span className="text-white/60">•</span>
-              <span className="text-[10px] sm:text-xs font-bold">Balkly Community</span>
+              <span className="text-[10px] sm:text-xs font-bold">{t.home.badge}</span>
             </div>
 
             {/* Main Title */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-3 animate-fade-in">
-              Welcome to <span className="bg-gradient-to-r from-balkly-blue to-teal-glow bg-clip-text text-transparent">Balkly</span>
+              {t.home.welcomeTo} <span className="bg-gradient-to-r from-balkly-blue to-teal-glow bg-clip-text text-transparent">Balkly</span>
             </h1>
             
             {/* Balkans Community Heading */}
             <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3 text-teal-glow">
-              United Balkans in the Emirates
+              {t.home.unitedBalkans}
             </h2>
             
             {/* Subtitle */}
             <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 sm:mb-6 text-white/90 font-medium">
-              One community. One platform. No borders.
+              {t.home.oneCommunity}
             </p>
             
             {/* Description */}
             <p className="text-sm sm:text-base mb-6 sm:mb-8 text-white/80 max-w-2xl mx-auto px-2">
-              Buy, sell, and connect with the Balkans community across the UAE.
-              Your local community in Dubai, Abu Dhabi, and beyond.
+              {t.home.heroDesc}
             </p>
             
             {/* CTA Buttons */}
@@ -127,7 +128,7 @@ export default function HomePage() {
                 style={{background: 'linear-gradient(90deg, #1E63FF, #7C3AED)', boxShadow: '0 8px 24px rgba(30,99,255,.4)'}}
                 asChild
               >
-                <Link href="/listings">View Ads</Link>
+                <Link href="/listings">{t.home.viewAds}</Link>
               </Button>
               {!isLoggedIn ? (
                 <Button 
@@ -136,7 +137,7 @@ export default function HomePage() {
                   className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 transition-transform border-white font-bold" 
                   asChild
                 >
-                  <Link href="/auth/register">Get Started Free</Link>
+                  <Link href="/auth/register">{t.home.getStartedFree}</Link>
                 </Button>
               ) : (
                 <Button 
@@ -145,7 +146,7 @@ export default function HomePage() {
                   className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 transition-transform border-white font-bold" 
                   asChild
                 >
-                  <Link href="/dashboard">My Account</Link>
+                  <Link href="/dashboard">{t.nav.myAccount}</Link>
                 </Button>
               )}
             </div>
@@ -161,13 +162,13 @@ export default function HomePage() {
                     name="q"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search for cars, homes, events..."
+                    placeholder={t.home.searchPlaceholder}
                     className="w-full h-11 pl-10 sm:pl-12 pr-4 rounded-lg sm:rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-primary bg-white text-gray-900 placeholder:text-gray-400 text-sm sm:text-base"
                     autoComplete="off"
                   />
                 </div>
                 <Button size="lg" type="submit" className="h-11 w-full sm:w-auto px-6 sm:px-8">
-                  Search
+                  {t.home.searchBtn}
                 </Button>
               </div>
             </form>
@@ -187,10 +188,10 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-4">
-              Explore Categories
+              {t.home.exploreCategories}
             </h2>
             <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
-              Find exactly what you're looking for
+              {t.home.findWhatLooking}
             </p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
@@ -200,9 +201,9 @@ export default function HomePage() {
                   <div className="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
                     <Car className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-balkly-blue" />
                   </div>
-                  <CardTitle className="text-sm sm:text-base">Auto</CardTitle>
+                  <CardTitle className="text-sm sm:text-base">{t.home.catAuto}</CardTitle>
                   <CardDescription className="text-[10px] sm:text-xs hidden sm:block">
-                    Cars & vehicles
+                    {t.home.catAutoDesc}
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -214,9 +215,9 @@ export default function HomePage() {
                   <div className="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
                     <Home className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-balkly-blue" />
                   </div>
-                  <CardTitle className="text-sm sm:text-base">Real Estate</CardTitle>
+                  <CardTitle className="text-sm sm:text-base">{t.home.catRealEstate}</CardTitle>
                   <CardDescription className="text-[10px] sm:text-xs hidden sm:block">
-                    Houses & apartments
+                    {t.home.catRealEstateDesc}
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -228,9 +229,9 @@ export default function HomePage() {
                   <div className="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
                     <Package className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-balkly-blue" />
                   </div>
-                  <CardTitle className="text-sm sm:text-base">Electronics</CardTitle>
+                  <CardTitle className="text-sm sm:text-base">{t.home.catElectronics}</CardTitle>
                   <CardDescription className="text-[10px] sm:text-xs hidden sm:block">
-                    Phones & gadgets
+                    {t.home.catElectronicsDesc}
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -242,9 +243,9 @@ export default function HomePage() {
                   <div className="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
                     <Package className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-balkly-blue" />
                   </div>
-                  <CardTitle className="text-sm sm:text-base">Fashion</CardTitle>
+                  <CardTitle className="text-sm sm:text-base">{t.home.catFashion}</CardTitle>
                   <CardDescription className="text-[10px] sm:text-xs hidden sm:block">
-                    Clothing & shoes
+                    {t.home.catFashionDesc}
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -256,9 +257,9 @@ export default function HomePage() {
                   <div className="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
                     <Package className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-balkly-blue" />
                   </div>
-                  <CardTitle className="text-sm sm:text-base">Jobs</CardTitle>
+                  <CardTitle className="text-sm sm:text-base">{t.home.catJobs}</CardTitle>
                   <CardDescription className="text-[10px] sm:text-xs hidden sm:block">
-                    Work opportunities
+                    {t.home.catJobsDesc}
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -270,9 +271,9 @@ export default function HomePage() {
                   <div className="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
                     <MessageCircle className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-balkly-blue" />
                   </div>
-                  <CardTitle className="text-sm sm:text-base">Forum</CardTitle>
+                  <CardTitle className="text-sm sm:text-base">{t.home.catForum}</CardTitle>
                   <CardDescription className="text-[10px] sm:text-xs hidden sm:block">
-                    Community discussions
+                    {t.home.catForumDesc}
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -289,18 +290,18 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
             <div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">Featured Ads</h2>
-              <p className="text-sm sm:text-base text-muted-foreground">Handpicked items from trusted sellers</p>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">{t.home.featuredListings}</h2>
+              <p className="text-sm sm:text-base text-muted-foreground">{t.home.featuredDesc}</p>
             </div>
             <Button variant="outline" asChild className="w-full sm:w-auto">
-              <Link href="/listings">View All</Link>
+              <Link href="/listings">{t.home.viewAll}</Link>
             </Button>
           </div>
           
           {featuredListings.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Package className="h-16 w-16 mx-auto mb-3 opacity-20" />
-              <p>No featured ads yet</p>
+              <p>{t.home.noFeaturedListings}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -356,7 +357,7 @@ export default function HomePage() {
                           className="text-2xl font-bold text-primary"
                         />
                       ) : (
-                        <span className="text-2xl font-bold text-primary">Contact</span>
+                        <span className="text-2xl font-bold text-primary">{t.listingDetail.contact}</span>
                       )}
                       <span className="text-sm text-muted-foreground flex items-center">
                         <MapPin className="h-3 w-3 mr-1" />
@@ -377,18 +378,18 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
             <div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">Upcoming Events</h2>
-              <p className="text-sm sm:text-base text-muted-foreground">Don't miss out on exciting events</p>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">{t.home.upcomingEvents}</h2>
+              <p className="text-sm sm:text-base text-muted-foreground">{t.nav.events}</p>
             </div>
             <Button variant="outline" asChild className="w-full sm:w-auto">
-              <Link href="/events">View All Events</Link>
+              <Link href="/events">{t.home.viewAll}</Link>
             </Button>
           </div>
           
           {upcomingEvents.length === 0 ? (
             <div className="text-center py-8 sm:py-12 text-muted-foreground">
               <Calendar className="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-3 opacity-20" />
-              <p className="text-sm sm:text-base">No events scheduled</p>
+              <p className="text-sm sm:text-base">{t.home.noEvents}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -451,11 +452,11 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
             <div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">Latest Jobs in Dubai</h2>
-              <p className="text-sm sm:text-base text-muted-foreground">Find your next career opportunity</p>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">{t.home.latestJobs}</h2>
+              <p className="text-sm sm:text-base text-muted-foreground">{t.home.catJobsDesc}</p>
             </div>
             <Button variant="outline" asChild className="w-full sm:w-auto">
-              <Link href="/jobs">View All Jobs</Link>
+              <Link href="/jobs">{t.home.viewAll}</Link>
             </Button>
           </div>
           
@@ -556,13 +557,13 @@ export default function HomePage() {
             <div className="flex-1 text-center lg:text-left">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm mb-4">
                 <Car className="h-4 w-4" />
-                <span>New Service</span>
+                <span>{t.nav.carRental}</span>
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-                Rent a Car in UAE
+                {t.carRentalPage.title}
               </h2>
               <p className="text-lg sm:text-xl text-white/90 mb-6 max-w-xl">
-                Compare 600+ suppliers. All-inclusive pricing with free cancellation up to 48h before pickup.
+                {t.carRentalPage.compareFrom}. {t.carRentalPage.allInclusiveDesc}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Button 
@@ -572,7 +573,7 @@ export default function HomePage() {
                 >
                   <Link href="/car-rental">
                     <Car className="h-5 w-5 mr-2" />
-                    Search Cars
+                    {t.carRentalPage.searchCars}
                   </Link>
                 </Button>
                 <Button 
@@ -582,7 +583,7 @@ export default function HomePage() {
                   asChild
                 >
                   <Link href="/car-rental/manage-booking">
-                    Manage Booking
+                    {t.carRentalPage.manageBtn}
                   </Link>
                 </Button>
               </div>
@@ -599,8 +600,8 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="p-3 text-center">
-                  <div className="font-semibold">Economy</div>
-                  <div className="text-sm text-white/70">From €15/day</div>
+                  <div className="font-semibold">{t.carRentalPage.economy}</div>
+                  <div className="text-sm text-white/70">{t.carRentalPage.from} €15{t.carRentalPage.perDay}</div>
                 </div>
               </Link>
               <Link href="/car-rental" className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden hover:bg-white/20 transition-all group cursor-pointer">
@@ -612,8 +613,8 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="p-3 text-center">
-                  <div className="font-semibold">SUV</div>
-                  <div className="text-sm text-white/70">From €35/day</div>
+                  <div className="font-semibold">{t.carRentalPage.suv}</div>
+                  <div className="text-sm text-white/70">{t.carRentalPage.from} €35{t.carRentalPage.perDay}</div>
                 </div>
               </Link>
               <Link href="/car-rental" className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden hover:bg-white/20 transition-all group cursor-pointer">
@@ -625,8 +626,8 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="p-3 text-center">
-                  <div className="font-semibold">Compact</div>
-                  <div className="text-sm text-white/70">From €22/day</div>
+                  <div className="font-semibold">{t.carRentalPage.compact}</div>
+                  <div className="text-sm text-white/70">{t.carRentalPage.from} €22{t.carRentalPage.perDay}</div>
                 </div>
               </Link>
               <Link href="/car-rental" className="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden hover:bg-white/20 transition-all group cursor-pointer">
@@ -638,8 +639,8 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="p-3 text-center">
-                  <div className="font-semibold">Luxury</div>
-                  <div className="text-sm text-white/70">From €75/day</div>
+                  <div className="font-semibold">{t.carRentalPage.luxury}</div>
+                  <div className="text-sm text-white/70">{t.carRentalPage.from} €75{t.carRentalPage.perDay}</div>
                 </div>
               </Link>
             </div>
@@ -655,18 +656,18 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
             <div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">Trending Discussions</h2>
-              <p className="text-sm sm:text-base text-muted-foreground">Join the conversation</p>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">{t.home.trendingTopics}</h2>
+              <p className="text-sm sm:text-base text-muted-foreground">{t.home.catForumDesc}</p>
             </div>
             <Button variant="outline" asChild className="w-full sm:w-auto">
-              <Link href="/forum">Visit Forum</Link>
+              <Link href="/forum">{t.nav.forum}</Link>
             </Button>
           </div>
           
           {trendingTopics.length === 0 ? (
             <div className="text-center py-8 sm:py-12 text-muted-foreground">
               <MessageCircle className="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-3 opacity-20" />
-              <p className="text-sm sm:text-base">No discussions yet</p>
+              <p className="text-sm sm:text-base">{t.home.noTopics}</p>
             </div>
           ) : (
             <div className="space-y-3 sm:space-y-4">
@@ -683,7 +684,7 @@ export default function HomePage() {
                           {topic.content}
                         </p>
                         <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
-                          <span className="truncate max-w-[100px] sm:max-w-none">by {topic.user?.name}</span>
+                          <span className="truncate max-w-[100px] sm:max-w-none">{t.home.postedBy} {topic.user?.name}</span>
                           <span className="flex items-center">
                             <Eye className="h-3 w-3 mr-1" />
                             {topic.views_count || 0}
@@ -709,18 +710,18 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
             <div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">Latest from Blog</h2>
-              <p className="text-sm sm:text-base text-muted-foreground">Guides, tips, and community updates</p>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">{t.home.latestBlog}</h2>
+              <p className="text-sm sm:text-base text-muted-foreground">{t.nav.blog}</p>
             </div>
             <Button variant="outline" asChild className="w-full sm:w-auto">
-              <Link href="/blog">View All Posts</Link>
+              <Link href="/blog">{t.home.viewAll}</Link>
             </Button>
           </div>
           
           {latestBlogPosts.length === 0 ? (
             <div className="text-center py-8 sm:py-12 text-muted-foreground">
               <BookOpen className="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-3 opacity-20" />
-              <p className="text-sm sm:text-base">No blog posts yet</p>
+              <p className="text-sm sm:text-base">{t.home.noTopics}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -779,16 +780,16 @@ export default function HomePage() {
       <section className="py-10 sm:py-16 bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">
-            Why Choose Balkly?
+            {t.home.whyBalkly}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto">
             <div className="text-center">
               <div className="bg-primary/10 rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center mx-auto mb-3 sm:mb-4">
                 <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-2">Smart Features</h3>
+              <h3 className="text-lg sm:text-xl font-semibold mb-2">{t.home.trustedCommunity}</h3>
               <p className="text-sm sm:text-base text-muted-foreground">
-                Automatic listing enhancement, multi-language support, and content verification
+                {t.home.trustedDesc}
               </p>
             </div>
 
@@ -796,9 +797,9 @@ export default function HomePage() {
               <div className="bg-primary/10 rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center mx-auto mb-3 sm:mb-4">
                 <MessageCircle className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-2">Real-time Chat</h3>
+              <h3 className="text-lg sm:text-xl font-semibold mb-2">{t.home.securePayments}</h3>
               <p className="text-sm sm:text-base text-muted-foreground">
-                Connect instantly with buyers and sellers through our messaging system
+                {t.home.secureDesc}
               </p>
             </div>
 
@@ -806,9 +807,9 @@ export default function HomePage() {
               <div className="bg-primary/10 rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center mx-auto mb-3 sm:mb-4">
                 <Calendar className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-2">Event Ticketing</h3>
+              <h3 className="text-lg sm:text-xl font-semibold mb-2">{t.home.localSupport}</h3>
               <p className="text-sm sm:text-base text-muted-foreground">
-                Buy tickets with QR codes for seamless event check-in
+                {t.home.localDesc}
               </p>
             </div>
           </div>
@@ -820,24 +821,24 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <Card className="max-w-3xl mx-auto text-center text-white border-0" style={{background: 'linear-gradient(90deg, #1E63FF, #7C3AED)'}}>
             <CardHeader className="p-4 sm:p-6">
-              <CardTitle className="text-xl sm:text-2xl lg:text-3xl text-white">Ready to Get Started?</CardTitle>
+              <CardTitle className="text-xl sm:text-2xl lg:text-3xl text-white">{t.home.getStarted}</CardTitle>
               <CardDescription className="text-white/90 text-sm sm:text-base lg:text-lg">
-                Join thousands of users buying, selling, and connecting on Balkly
+                {t.home.joinCommunity}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                 {!isLoggedIn ? (
                   <Button size="lg" className="w-full sm:w-auto bg-white text-gray-900 hover:bg-gray-100 font-bold" asChild>
-                    <Link href="/auth/register">Create Account</Link>
+                    <Link href="/auth/register">{t.auth.createAccount}</Link>
                   </Button>
                 ) : (
                   <Button size="lg" className="w-full sm:w-auto bg-white text-gray-900 hover:bg-gray-100 font-bold" asChild>
-                    <Link href="/dashboard">My Account</Link>
+                    <Link href="/dashboard">{t.nav.myAccount}</Link>
                   </Button>
                 )}
                 <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/10 text-white border-white/50 hover:bg-white/20 font-bold" asChild>
-                  <Link href="/listings/create">Post an Ad</Link>
+                  <Link href="/listings/create">{t.home.postFreeAd}</Link>
                 </Button>
               </div>
             </CardContent>
