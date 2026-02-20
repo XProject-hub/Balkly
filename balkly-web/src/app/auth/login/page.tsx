@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { authAPI } from "@/lib/api";
 import { Mail, CheckCircle } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
   const [error, setError] = useState("");
@@ -77,7 +79,7 @@ export default function LoginPage() {
         setUnverifiedEmail(err.response.data.email || formData.email);
         setError("");
       } else {
-        setError(err.response?.data?.message || "Login failed. Please try again.");
+        setError(err.response?.data?.message || t.auth.loginFailed);
       }
     } finally {
       setLoading(false);
@@ -88,8 +90,8 @@ export default function LoginPage() {
     <div className="min-h-screen bg-background flex items-center justify-center py-12 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold">Welcome Back</CardTitle>
-          <CardDescription>Sign in to your Balkly account</CardDescription>
+          <CardTitle className="text-3xl font-bold">{t.auth.loginTitle}</CardTitle>
+          <CardDescription>{t.auth.loginSubtitle}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -106,18 +108,15 @@ export default function LoginPage() {
                   <Mail className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
                   <div className="flex-1">
                     <h4 className="font-medium text-amber-800 dark:text-amber-200 mb-1">
-                      Email Verification Required
+                      {t.auth.emailNotVerified}
                     </h4>
-                    <p className="text-sm text-amber-700 dark:text-amber-300 mb-2">
-                      Please verify your email address before logging in. Check your inbox for the verification link from <strong>info@balkly.live</strong>.
-                    </p>
                     <p className="text-sm text-amber-700 dark:text-amber-300 mb-3">
-                      📧 <strong>Also check your Spam/Junk folder!</strong>
+                      📧 <strong>Check your Spam/Junk folder!</strong>
                     </p>
                     {resendSuccess ? (
                       <div className="flex items-center gap-2 text-green-600 dark:text-green-400 text-sm">
                         <CheckCircle className="h-4 w-4" />
-                        Verification email sent! Check your inbox and spam folder.
+                        {t.auth.verificationSent}
                       </div>
                     ) : (
                       <Button
@@ -128,7 +127,7 @@ export default function LoginPage() {
                         disabled={resending}
                         className="border-amber-300 hover:bg-amber-100 dark:border-amber-700 dark:hover:bg-amber-900/30"
                       >
-                        {resending ? "Sending..." : "Resend Verification Email"}
+                        {resending ? t.common.loading : t.auth.resendVerification}
                       </Button>
                     )}
                   </div>
@@ -137,7 +136,7 @@ export default function LoginPage() {
             )}
 
             <div>
-              <label htmlFor="login-email" className="block text-sm font-medium mb-2">Email</label>
+              <label htmlFor="login-email" className="block text-sm font-medium mb-2">{t.auth.email}</label>
               <input
                 id="login-email"
                 type="email"
@@ -150,7 +149,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label htmlFor="login-password" className="block text-sm font-medium mb-2">Password</label>
+              <label htmlFor="login-password" className="block text-sm font-medium mb-2">{t.auth.password}</label>
               <input
                 id="login-password"
                 type="password"
@@ -163,22 +162,19 @@ export default function LoginPage() {
             </div>
 
             <div className="flex items-center justify-end">
-              <Link
-                href="/auth/forgot-password"
-                className="text-sm text-primary hover:underline"
-              >
-                Forgot password?
+              <Link href="/auth/forgot-password" className="text-sm text-primary hover:underline">
+                {t.auth.forgotPassword}
               </Link>
             </div>
 
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? t.common.loading : t.auth.loginBtn}
             </Button>
 
             <div className="text-center text-sm text-muted-foreground">
-              Don't have an account?{" "}
+              {t.auth.noAccount}{" "}
               <Link href="/auth/register" className="text-primary hover:underline font-medium">
-                Sign up
+                {t.auth.signUp}
               </Link>
             </div>
           </form>

@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import TrackingScript from "@/components/TrackingScript";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import RamadanPopup from "@/components/RamadanPopup";
 import Script from "next/script";
 
@@ -193,13 +194,15 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <ThemeProvider>
-          <TrackingScript />
-          <RamadanPopup />
-          <Header />
-          <main>{children}</main>
-          <Footer />
-        </ThemeProvider>
+        <LanguageProvider>
+          <ThemeProvider>
+            <TrackingScript />
+            <RamadanPopup />
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </ThemeProvider>
+        </LanguageProvider>
         
         {/* Register Service Worker */}
         <Script id="register-sw" strategy="afterInteractive">

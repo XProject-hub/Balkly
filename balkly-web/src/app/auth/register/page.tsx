@@ -6,9 +6,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { authAPI } from "@/lib/api";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
@@ -63,8 +65,8 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-background flex items-center justify-center py-12 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold">Create Account</CardTitle>
-          <CardDescription>Join Balkly and start trading</CardDescription>
+          <CardTitle className="text-3xl font-bold">{t.auth.registerTitle}</CardTitle>
+          <CardDescription>{t.auth.registerSubtitle}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -75,7 +77,7 @@ export default function RegisterPage() {
             )}
 
             <div>
-              <label htmlFor="register-name" className="block text-sm font-medium mb-2">Full Name</label>
+              <label htmlFor="register-name" className="block text-sm font-medium mb-2">{t.auth.fullName}</label>
               <input
                 id="register-name"
                 type="text"
@@ -88,7 +90,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="register-email" className="block text-sm font-medium mb-2">Email</label>
+              <label htmlFor="register-email" className="block text-sm font-medium mb-2">{t.auth.email}</label>
               <input
                 id="register-email"
                 type="email"
@@ -101,7 +103,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="register-password" className="block text-sm font-medium mb-2">Password</label>
+              <label htmlFor="register-password" className="block text-sm font-medium mb-2">{t.auth.password}</label>
               <input
                 id="register-password"
                 type="password"
@@ -112,13 +114,10 @@ export default function RegisterPage() {
                 className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-800 dark:border-gray-700 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
                 placeholder="••••••••"
               />
-              <p className="text-xs text-muted-foreground mt-1">
-                At least 8 characters
-              </p>
             </div>
 
             <div>
-              <label htmlFor="register-confirm" className="block text-sm font-medium mb-2">Confirm Password</label>
+              <label htmlFor="register-confirm" className="block text-sm font-medium mb-2">{t.auth.confirmPassword}</label>
               <input
                 id="register-confirm"
                 type="password"
@@ -135,25 +134,21 @@ export default function RegisterPage() {
             <div className="flex items-start">
               <input id="terms" type="checkbox" required className="mt-1 mr-2" />
               <label htmlFor="terms" className="text-sm">
-                I agree to the{" "}
-                <Link href="/terms" className="text-primary hover:underline">
-                  Terms of Service
-                </Link>{" "}
-                and{" "}
-                <Link href="/privacy" className="text-primary hover:underline">
-                  Privacy Policy
-                </Link>
+                {t.auth.byRegistering}{" "}
+                <Link href="/terms" className="text-primary hover:underline">{t.auth.termsOfService}</Link>{" "}
+                {t.auth.and}{" "}
+                <Link href="/privacy" className="text-primary hover:underline">{t.auth.privacyPolicy}</Link>
               </label>
             </div>
 
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Creating account..." : "Create Account"}
+              {loading ? t.common.loading : t.auth.registerBtn}
             </Button>
 
             <div className="text-center text-sm text-muted-foreground">
-              Already have an account?{" "}
+              {t.auth.hasAccount}{" "}
               <Link href="/auth/login" className="text-primary hover:underline font-medium">
-                Sign in
+                {t.auth.loginLink}
               </Link>
             </div>
           </form>
