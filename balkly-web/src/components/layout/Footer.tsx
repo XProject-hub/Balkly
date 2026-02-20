@@ -47,7 +47,7 @@ export default function Footer() {
               <p className="text-xs text-gray-400 mt-2">{t.footer.oneCommunity}</p>
             </div>
             <div className="flex gap-3 mt-3 sm:mt-4">
-              <a href="https://www.tiktok.com/@balkly.ae" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors p-2 -ml-2 sm:p-0 sm:ml-0" aria-label="TikTok">
+              <a href="https://www.tiktok.com/@balkly.dxb" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors p-2 -ml-2 sm:p-0 sm:ml-0" aria-label="TikTok">
                 <TikTokIcon className="h-5 w-5" />
               </a>
               <a href="https://www.instagram.com/balkly_dxb" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors p-2 sm:p-0" aria-label="Instagram">
