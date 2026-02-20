@@ -13,6 +13,7 @@ import {
   MessageCircle,
   Settings,
   Eye,
+  Moon,
 } from "lucide-react";
 import { getCurrencySymbol } from "@/lib/currency";
 
@@ -243,6 +244,22 @@ export default function AdminDashboardPage() {
               <CardContent>
                 <p className="text-muted-foreground">
                   Compose newsletters & manage subscribers
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/admin/ramadan">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer border-[#8b1c2d]/30 hover:border-[#8b1c2d]/60">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Moon className="mr-2 h-5 w-5 text-[#e05c72]" />
+                  Ramazan Kampanja
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Korisnici koji su pregledali Ramazanski promo kod
                 </p>
               </CardContent>
             </Card>

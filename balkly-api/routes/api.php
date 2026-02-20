@@ -93,6 +93,8 @@ Route::prefix('v1')->group(function () {
     // Newsletter (public)
     Route::post('/newsletter/subscribe', [\App\Http\Controllers\Api\NewsletterController::class, 'subscribe']);
     Route::get('/newsletter/unsubscribe/{token}', [\App\Http\Controllers\Api\NewsletterController::class, 'unsubscribe']);
+
+    // Ramadan campaign - public unsubscribe (N/A) placeholder
     
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {
@@ -227,6 +229,9 @@ Route::prefix('v1')->group(function () {
         // Voucher generation (any authenticated user)
         Route::post('/vouchers', [\App\Http\Controllers\Api\VoucherController::class, 'store']);
         Route::get('/my-vouchers', [\App\Http\Controllers\Api\VoucherController::class, 'userVouchers']);
+
+        // Ramadan campaign confirm page (any authenticated user)
+        Route::get('/ramadan/confirm', [\App\Http\Controllers\Api\RamadanController::class, 'confirm']);
         
         // Partner routes (role: partner or staff)
         Route::middleware('role:partner,staff')->prefix('partner')->group(function () {
@@ -273,6 +278,9 @@ Route::prefix('v1')->group(function () {
             Route::get('/settings', [\App\Http\Controllers\Api\SettingController::class, 'index']);
             Route::patch('/settings', [\App\Http\Controllers\Api\SettingController::class, 'update']);
             
+            // Ramadan Campaign Views
+            Route::get('/ramadan/views', [\App\Http\Controllers\Api\RamadanController::class, 'adminViews']);
+
             // Newsletter Management
             Route::get('/newsletter/subscribers', [\App\Http\Controllers\Api\NewsletterController::class, 'subscribers']);
             Route::delete('/newsletter/subscribers/{id}', [\App\Http\Controllers\Api\NewsletterController::class, 'deleteSubscriber']);
