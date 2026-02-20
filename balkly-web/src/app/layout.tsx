@@ -7,6 +7,8 @@ import TrackingScript from "@/components/TrackingScript";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import RamadanPopup from "@/components/RamadanPopup";
+import RamadanBanner from "@/components/RamadanBanner";
+import RamadanDecorations from "@/components/RamadanDecorations";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -197,7 +199,9 @@ export default function RootLayout({
         <LanguageProvider>
           <ThemeProvider>
             <TrackingScript />
+            <RamadanDecorations />
             <RamadanPopup />
+            <RamadanBanner />
             <Header />
             <main>{children}</main>
             <Footer />

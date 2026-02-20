@@ -8,6 +8,8 @@ export default function RamadanPopup() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    const ramadanEnd = new Date("2026-03-20T00:00:00");
+    if (new Date() >= ramadanEnd) return;
     const dismissed = sessionStorage.getItem("ramadan_popup_dismissed");
     if (!dismissed) {
       setVisible(true);
