@@ -247,8 +247,8 @@ export default function RamadanConfirmPage() {
               Ponuda važi samo tokom Ramazana. Jedan poklon po osobi.
             </p>
             <p className="text-slate-400 text-sm font-medium">
-              Vidimo se na iftaru 🌙 —{" "}
-              <Link href="/" className="text-[#e05c72] hover:underline">
+              Vidimo se na iftaru 🌙 Vaš{" "}
+              <Link href="https://balkly.net" className="text-[#e05c72] hover:underline">
                 Balkly Team
               </Link>
             </p>
