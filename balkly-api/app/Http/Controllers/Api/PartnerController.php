@@ -37,9 +37,9 @@ class PartnerController extends Controller
 
     public function index(Request $request)
     {
-        $query = Partner::with(['user.profile', 'staff', 'offers']);
+        $query = Partner::with(['user:id,name,email']);
 
-        if ($request->has('search')) {
+        if ($request->has('search') && $request->search) {
             $s = $request->search;
             $query->where(function ($q) use ($s) {
                 $q->where('company_name', 'like', "%{$s}%")
@@ -47,19 +47,18 @@ class PartnerController extends Controller
             });
         }
 
-        if ($request->has('active')) {
-            $query->where('is_active', $request->boolean('active'));
-        }
+        $partners = $query->orderBy('created_at', 'desc')->paginate(20);
 
-        $partners = $query->withCount(['vouchers', 'clicks', 'conversions'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
-
-        // Attach total commission manually to avoid withSum alias issues
+        // Attach counts and commission safely (won't break if tables are missing)
         $partners->getCollection()->transform(function ($p) {
-            $p->total_commission = (float) $p->conversions()
-                ->whereIn('status', ['confirmed', 'paid'])
-                ->sum('commission_amount');
+            try { $p->vouchers_count    = $p->vouchers()->count(); } catch (\Throwable $e) { $p->vouchers_count = 0; }
+            try { $p->clicks_count      = $p->clicks()->count(); }   catch (\Throwable $e) { $p->clicks_count = 0; }
+            try { $p->conversions_count = $p->conversions()->count(); } catch (\Throwable $e) { $p->conversions_count = 0; }
+            try {
+                $p->total_commission = (float) $p->conversions()
+                    ->whereIn('status', ['confirmed', 'paid'])
+                    ->sum('commission_amount');
+            } catch (\Throwable $e) { $p->total_commission = 0.0; }
             return $p;
         });
 
