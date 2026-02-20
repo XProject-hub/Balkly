@@ -43,6 +43,22 @@ const nextConfig = {
   async rewrites() {
     return [];
   },
+  async redirects() {
+    return [
+      // Forward /go/[code] to Laravel API which handles click tracking + redirect to partner site
+      {
+        source: '/go/:code',
+        destination: '/api/v1/go/:code',
+        permanent: false,
+      },
+      // Forward /v/[code] to Laravel API (voucher view)
+      {
+        source: '/v/:code',
+        destination: '/api/v1/vouchers/:code',
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
