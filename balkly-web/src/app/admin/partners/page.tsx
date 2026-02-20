@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   ArrowLeft, Plus, Search, Edit, Trash2, Users, MousePointerClick,
-  DollarSign, X, Loader2, ExternalLink, AlertCircle, BarChart2,
+  Euro, X, Loader2, ExternalLink, AlertCircle, BarChart2,
 } from "lucide-react";
 import { toast } from "@/lib/toast";
 
@@ -329,7 +329,7 @@ export default function AdminPartnersPage() {
                           <p className="text-xs text-muted-foreground">Voucheri</p>
                         </div>
                         <div className="text-center">
-                          <DollarSign className="h-4 w-4 mx-auto mb-0.5 text-green-600" />
+                          <Euro className="h-4 w-4 mx-auto mb-0.5 text-green-600" />
                           <span className="font-bold text-green-600">
                             €{Number(p.total_commission ?? 0).toFixed(2)}
                           </span>

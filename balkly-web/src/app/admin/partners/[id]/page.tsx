@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  ArrowLeft, MousePointerClick, Users, DollarSign, Ticket,
+  ArrowLeft, MousePointerClick, Users, Euro, Ticket,
   ExternalLink, Copy, CheckCheck, Calendar, TrendingUp, Clock,
 } from "lucide-react";
 import { toast } from "@/lib/toast";
@@ -100,7 +100,7 @@ export default function AdminPartnerDetailPage() {
             { icon: <MousePointerClick className="h-5 w-5 text-blue-500" />, label: "Web Klikovi", value: partner.clicks_count ?? 0, sub: "Ukupno" },
             { icon: <Ticket className="h-5 w-5 text-orange-500" />, label: "Voucheri", value: partner.vouchers_count ?? 0, sub: `${partner.redemptions_count ?? 0} iskorišteno` },
             { icon: <TrendingUp className="h-5 w-5 text-purple-500" />, label: "Konverzije", value: partner.conversions_count ?? 0, sub: "Potvrđeno" },
-            { icon: <DollarSign className="h-5 w-5 text-green-600" />, label: "Komisija (potvrđena)", value: `€${totalCommission.toFixed(2)}`, sub: `Na čekanju: €${pendingCommission.toFixed(2)}`, valueClass: "text-green-600" },
+            { icon: <Euro className="h-5 w-5 text-green-600" />, label: "Komisija (potvrđena)", value: `€${totalCommission.toFixed(2)}`, sub: `Na čekanju: €${pendingCommission.toFixed(2)}`, valueClass: "text-green-600" },
           ].map((s, i) => (
             <Card key={i}>
               <CardHeader className="pb-2">

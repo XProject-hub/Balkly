@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MousePointerClick, Ticket, DollarSign, TrendingUp, Loader2, ScanLine, QrCode } from "lucide-react";
+import { MousePointerClick, Ticket, Euro, TrendingUp, Loader2, ScanLine, QrCode } from "lucide-react";
 
 export default function PartnerDashboardPage() {
   const [data, setData] = useState<any>(null);
@@ -110,7 +110,7 @@ export default function PartnerDashboardPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <DollarSign className="h-4 w-4" /> Total Commission
+              <Euro className="h-4 w-4" /> Ukupna komisija
             </CardTitle>
           </CardHeader>
           <CardContent>
