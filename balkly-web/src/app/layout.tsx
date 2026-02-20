@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import TrackingScript from "@/components/TrackingScript";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import RamadanPopup from "@/components/RamadanPopup";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -194,6 +195,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <TrackingScript />
+          <RamadanPopup />
           <Header />
           <main>{children}</main>
           <Footer />
