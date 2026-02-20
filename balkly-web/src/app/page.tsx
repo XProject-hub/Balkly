@@ -672,7 +672,7 @@ export default function HomePage() {
           ) : (
             <div className="space-y-3 sm:space-y-4">
               {trendingTopics.slice(0, 5).map((topic) => (
-              <Link key={topic.id} href={`/forum/topics/${topic.id}`}>
+              <Link key={topic.id} href={isLoggedIn ? `/forum/topics/${topic.id}` : "/auth/login"}>
                 <Card className="hover:shadow-lg transition-all hover:border-primary">
                   <CardContent className="p-4 sm:p-6">
                     <div className="flex items-start gap-3 sm:gap-4">
@@ -680,9 +680,19 @@ export default function HomePage() {
                         <h3 className="font-bold text-base sm:text-lg mb-1 hover:text-primary transition-colors line-clamp-1">
                           {topic.title}
                         </h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mb-2">
-                          {topic.content}
-                        </p>
+                        {isLoggedIn ? (
+                          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mb-2">
+                            {topic.content}
+                          </p>
+                        ) : (
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="flex-1 h-4 bg-gradient-to-r from-muted to-transparent rounded blur-sm select-none pointer-events-none" aria-hidden="true" />
+                            <span className="text-xs text-primary font-medium whitespace-nowrap flex items-center gap-1">
+                              <User className="h-3 w-3" />
+                              {t.forum.loginToAccess}
+                            </span>
+                          </div>
+                        )}
                         <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
                           <span className="truncate max-w-[100px] sm:max-w-none">{t.home.postedBy} {topic.user?.name}</span>
                           <span className="flex items-center">
