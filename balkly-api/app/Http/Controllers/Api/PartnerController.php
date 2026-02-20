@@ -12,6 +12,29 @@ use Illuminate\Support\Facades\Hash;
 
 class PartnerController extends Controller
 {
+    /** Public listing for the /partners user-facing page */
+    public function publicIndex(Request $request)
+    {
+        $partners = Partner::where('is_active', true)
+            ->with(['offers' => fn($q) => $q->where('is_active', true)->select('id', 'partner_id', 'title', 'description', 'benefit_type', 'benefit_value')])
+            ->select('id', 'company_name', 'company_description', 'company_logo', 'website_url', 'address', 'city', 'phone')
+            ->orderBy('company_name')
+            ->get();
+
+        return response()->json(['data' => $partners]);
+    }
+
+    /** Public single partner detail */
+    public function publicShow($id)
+    {
+        $partner = Partner::where('is_active', true)
+            ->with(['offers' => fn($q) => $q->where('is_active', true)])
+            ->select('id', 'company_name', 'company_description', 'company_logo', 'website_url', 'address', 'city', 'phone')
+            ->findOrFail($id);
+
+        return response()->json(['partner' => $partner]);
+    }
+
     public function index(Request $request)
     {
         $query = Partner::with(['user.profile', 'staff', 'offers']);
@@ -29,9 +52,16 @@ class PartnerController extends Controller
         }
 
         $partners = $query->withCount(['vouchers', 'clicks', 'conversions'])
-            ->withSum('conversions as total_commission', 'commission_amount')
             ->orderBy('created_at', 'desc')
             ->paginate(20);
+
+        // Attach total commission manually to avoid withSum alias issues
+        $partners->getCollection()->transform(function ($p) {
+            $p->total_commission = (float) $p->conversions()
+                ->whereIn('status', ['confirmed', 'paid'])
+                ->sum('commission_amount');
+            return $p;
+        });
 
         return response()->json($partners);
     }
@@ -40,8 +70,23 @@ class PartnerController extends Controller
     {
         $partner = Partner::with(['user.profile', 'staff.user', 'offers'])
             ->withCount(['vouchers', 'clicks', 'conversions', 'redemptions'])
-            ->withSum('conversions as total_commission', 'commission_amount')
             ->findOrFail($id);
+
+        $partner->total_commission = (float) $partner->conversions()
+            ->whereIn('status', ['confirmed', 'paid'])
+            ->sum('commission_amount');
+
+        $partner->total_commission_pending = (float) $partner->conversions()
+            ->where('status', 'pending')
+            ->sum('commission_amount');
+
+        $partner->monthly_summary = $partner->conversions()
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count, SUM(commission_amount) as commission")
+            ->where('status', '!=', 'cancelled')
+            ->groupBy('month')
+            ->orderByDesc('month')
+            ->limit(12)
+            ->get();
 
         return response()->json(['partner' => $partner]);
     }

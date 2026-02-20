@@ -18,14 +18,19 @@ class VoucherController extends Controller
     {
         $validated = $request->validate([
             'partner_id' => 'required|exists:partners,id',
-            'offer_id' => 'required|exists:partner_offers,id',
+            'offer_id'   => 'nullable|exists:partner_offers,id',
         ]);
 
         $partner = Partner::where('is_active', true)->findOrFail($validated['partner_id']);
-        $offer = PartnerOffer::where('partner_id', $partner->id)
-            ->where('is_active', true)
-            ->findOrFail($validated['offer_id']);
 
+        $offer = null;
+        if (!empty($validated['offer_id'])) {
+            $offer = PartnerOffer::where('partner_id', $partner->id)
+                ->where('is_active', true)
+                ->findOrFail($validated['offer_id']);
+        }
+
+        // Return existing active voucher if user already has one
         $existing = Voucher::where('user_id', $request->user()->id)
             ->where('partner_id', $partner->id)
             ->where('status', 'issued')
@@ -33,20 +38,27 @@ class VoucherController extends Controller
             ->first();
 
         if ($existing) {
+            $existing->load(['partner:id,company_name', 'offer']);
             return response()->json([
                 'message' => 'You already have an active voucher for this partner.',
-                'voucher' => $existing->load('offer'),
-            ], 422);
+                'voucher' => $existing,
+                'qr_url'  => url("/v/{$existing->code}"),
+                'existing' => true,
+            ]);
+        }
+
+        $durationDays  = (int) ($partner->default_voucher_duration_days ?? 0);
+        $durationHours = (int) ($partner->default_voucher_duration_hours ?? 2);
+        if ($durationDays === 0 && $durationHours === 0) {
+            $durationHours = 2;
         }
 
         $voucher = Voucher::create([
             'partner_id' => $partner->id,
-            'offer_id' => $offer->id,
-            'user_id' => $request->user()->id,
-            'status' => 'issued',
-            'expires_at' => now()
-                ->addDays($partner->default_voucher_duration_days ?? 0)
-                ->addHours($partner->default_voucher_duration_hours ?? 2),
+            'offer_id'   => $offer?->id,
+            'user_id'    => $request->user()->id,
+            'status'     => 'issued',
+            'expires_at' => now()->addDays($durationDays)->addHours($durationHours),
         ]);
 
         $voucher->load(['partner:id,company_name', 'offer']);
@@ -54,7 +66,8 @@ class VoucherController extends Controller
         return response()->json([
             'message' => 'Voucher generated!',
             'voucher' => $voucher,
-            'qr_url' => url("/v/{$voucher->code}"),
+            'qr_url'  => url("/v/{$voucher->code}"),
+            'existing' => false,
         ], 201);
     }
 

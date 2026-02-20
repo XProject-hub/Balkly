@@ -20,6 +20,7 @@ import {
   ChevronDown,
   Car,
   Globe,
+  Handshake,
 } from "lucide-react";
 import CurrencySwitcher from "@/components/CurrencySwitcher";
 import NotificationBell from "@/components/NotificationBell";
@@ -153,6 +154,10 @@ export default function Header() {
             <Link href="/car-rental" className="flex items-center text-sm font-medium hover:text-primary transition-colors whitespace-nowrap">
               <Car className="h-4 w-4 mr-1" />
               {t.nav.carRental}
+            </Link>
+            <Link href="/partners" className="flex items-center text-sm font-medium hover:text-primary transition-colors whitespace-nowrap">
+              <Handshake className="h-4 w-4 mr-1" />
+              Partneri
             </Link>
             {isLoggedIn && (
               <Link href="/dashboard" className="flex items-center text-sm font-medium hover:text-primary transition-colors whitespace-nowrap">
@@ -330,6 +335,10 @@ export default function Header() {
               <Link href="/car-rental" onClick={() => setIsMenuOpen(false)} className="flex items-center px-4 py-3 text-base font-medium hover:bg-accent rounded-xl transition-colors">
                 <Car className="h-5 w-5 mr-3" />
                 {t.nav.carRental}
+              </Link>
+              <Link href="/partners" onClick={() => setIsMenuOpen(false)} className="flex items-center px-4 py-3 text-base font-medium hover:bg-accent rounded-xl transition-colors">
+                <Handshake className="h-5 w-5 mr-3" />
+                Partneri
               </Link>
 
               <div className="border-t my-4 dark:border-gray-700" />

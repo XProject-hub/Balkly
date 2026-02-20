@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MousePointerClick, Ticket, DollarSign, TrendingUp, Loader2 } from "lucide-react";
+import { MousePointerClick, Ticket, DollarSign, TrendingUp, Loader2, ScanLine, QrCode } from "lucide-react";
 
 export default function PartnerDashboardPage() {
   const [data, setData] = useState<any>(null);
@@ -53,11 +54,19 @@ export default function PartnerDashboardPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Partner Dashboard</h1>
-        <p className="text-muted-foreground mt-1">
-          {data?.partner?.company_name} — Tracking code: <code className="bg-muted px-2 py-0.5 rounded text-sm">{data?.partner?.tracking_code}</code>
-        </p>
+      <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
+        <div>
+          <h1 className="text-3xl font-bold">Partner Dashboard</h1>
+          <p className="text-muted-foreground mt-1">
+            {data?.partner?.company_name}
+          </p>
+        </div>
+        <Link href="/partner/scan">
+          <Button size="lg" className="gap-2 shadow-lg">
+            <ScanLine className="h-5 w-5" />
+            Skeniraj QR kod
+          </Button>
+        </Link>
       </div>
 
       {/* Stats Grid */}

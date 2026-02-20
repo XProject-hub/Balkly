@@ -87,7 +87,9 @@ Route::prefix('v1')->group(function () {
     // Public voucher view (rate limited)
     Route::get('/vouchers/{code}', [\App\Http\Controllers\Api\VoucherController::class, 'show']);
     
-    // Public partner offers
+    // Public partner listing
+    Route::get('/partners', [\App\Http\Controllers\Api\PartnerController::class, 'publicIndex']);
+    Route::get('/partners/{id}', [\App\Http\Controllers\Api\PartnerController::class, 'publicShow']);
     Route::get('/partners/{id}/offers', [\App\Http\Controllers\Api\PartnerOfferController::class, 'publicOffers']);
     
     // Newsletter (public)
