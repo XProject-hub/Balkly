@@ -72,6 +72,11 @@ class Partner extends Model
         return $this->hasMany(PartnerClick::class);
     }
 
+    public function visits()
+    {
+        return $this->hasMany(PartnerVisit::class);
+    }
+
     public function conversions()
     {
         return $this->hasMany(PartnerConversion::class);

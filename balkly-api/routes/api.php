@@ -83,6 +83,9 @@ Route::prefix('v1')->group(function () {
     
     // Partner tracking redirect (public)
     Route::get('/go/{trackingCode}', [\App\Http\Controllers\Api\PartnerTrackingController::class, 'redirect']);
+
+    // Partner check-in info (public — shows partner name before login)
+    Route::get('/checkin/{trackingCode}', [\App\Http\Controllers\Api\CheckInController::class, 'info']);
     
     // Public voucher view (rate limited)
     Route::get('/vouchers/{code}', [\App\Http\Controllers\Api\VoucherController::class, 'show']);
@@ -232,6 +235,9 @@ Route::prefix('v1')->group(function () {
         Route::post('/vouchers', [\App\Http\Controllers\Api\VoucherController::class, 'store']);
         Route::get('/my-vouchers', [\App\Http\Controllers\Api\VoucherController::class, 'userVouchers']);
 
+        // Partner QR check-in (any authenticated user scans partner QR)
+        Route::post('/checkin/{trackingCode}', [\App\Http\Controllers\Api\CheckInController::class, 'checkin']);
+
         // Ramadan campaign confirm page (any authenticated user)
         Route::get('/ramadan/confirm', [\App\Http\Controllers\Api\RamadanController::class, 'confirm']);
         
@@ -239,6 +245,7 @@ Route::prefix('v1')->group(function () {
         Route::middleware('role:partner,staff')->prefix('partner')->group(function () {
             Route::get('/dashboard', [\App\Http\Controllers\Api\PartnerDashboardController::class, 'dashboard']);
             Route::get('/clicks', [\App\Http\Controllers\Api\PartnerDashboardController::class, 'clicks']);
+            Route::get('/visits', [\App\Http\Controllers\Api\PartnerDashboardController::class, 'visits']);
             Route::get('/conversions', [\App\Http\Controllers\Api\PartnerDashboardController::class, 'conversions']);
             Route::post('/conversions', [\App\Http\Controllers\Api\PartnerDashboardController::class, 'storeConversion']);
             Route::patch('/conversions/{id}', [\App\Http\Controllers\Api\PartnerDashboardController::class, 'updateConversion']);
@@ -295,6 +302,7 @@ Route::prefix('v1')->group(function () {
             Route::post('/partners', [\App\Http\Controllers\Api\PartnerController::class, 'store']);
             Route::patch('/partners/{id}', [\App\Http\Controllers\Api\PartnerController::class, 'update']);
             Route::delete('/partners/{id}', [\App\Http\Controllers\Api\PartnerController::class, 'destroy']);
+            Route::get('/partners/{id}/visits', [\App\Http\Controllers\Api\PartnerController::class, 'adminVisits']);
             
             // Ad Banner Management
             Route::get('/banners', [\App\Http\Controllers\Api\AdBannerController::class, 'index']);

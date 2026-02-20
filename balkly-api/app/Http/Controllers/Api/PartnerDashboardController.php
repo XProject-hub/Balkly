@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Partner;
 use App\Models\PartnerClick;
 use App\Models\PartnerConversion;
+use App\Models\PartnerVisit;
 use App\Models\Voucher;
 use App\Models\Redemption;
 use Illuminate\Http\Request;
@@ -30,21 +31,24 @@ class PartnerDashboardController extends Controller
         $period = max(1, min(365, (int) $request->get('period', 30)));
 
         $stats = [
-            'total_clicks' => $partner->clicks()->count(),
-            'clicks_today' => $partner->clicks()->whereDate('created_at', today())->count(),
-            'clicks_period' => $partner->clicks()->where('created_at', '>=', now()->subDays($period))->count(),
+            'total_clicks'   => $partner->clicks()->count(),
+            'clicks_today'   => $partner->clicks()->whereDate('created_at', today())->count(),
+            'clicks_period'  => $partner->clicks()->where('created_at', '>=', now()->subDays($period))->count(),
 
-            'total_vouchers' => $partner->vouchers()->count(),
-            'active_vouchers' => $partner->vouchers()->where('status', 'issued')->where('expires_at', '>', now())->count(),
+            'total_visits'   => $partner->visits()->count(),
+            'visits_today'   => $partner->visits()->whereDate('created_at', today())->count(),
+            'visits_period'  => $partner->visits()->where('created_at', '>=', now()->subDays($period))->count(),
+
+            'total_vouchers'    => $partner->vouchers()->count(),
             'redeemed_vouchers' => $partner->vouchers()->where('status', 'redeemed')->count(),
 
-            'total_conversions' => $partner->conversions()->count(),
-            'conversions_today' => $partner->conversions()->whereDate('created_at', today())->count(),
+            'total_conversions'     => $partner->conversions()->count(),
+            'conversions_today'     => $partner->conversions()->whereDate('created_at', today())->count(),
             'confirmed_conversions' => $partner->conversions()->where('status', 'confirmed')->count(),
 
-            'total_commission' => (float) $partner->conversions()->whereIn('status', ['confirmed', 'paid'])->sum('commission_amount'),
+            'total_commission'   => (float) $partner->conversions()->whereIn('status', ['confirmed', 'paid'])->sum('commission_amount'),
             'commission_pending' => (float) $partner->conversions()->where('status', 'pending')->sum('commission_amount'),
-            'commission_paid' => (float) $partner->conversions()->where('status', 'paid')->sum('commission_amount'),
+            'commission_paid'    => (float) $partner->conversions()->where('status', 'paid')->sum('commission_amount'),
         ];
 
         $clicksByDay = PartnerClick::where('partner_id', $partner->id)
@@ -67,11 +71,25 @@ class PartnerDashboardController extends Controller
             ->take(10)
             ->get();
 
+        $recentVisits = PartnerVisit::where('partner_id', $partner->id)
+            ->with('user:id,name,email')
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
+        $recentConversions = $partner->conversions()
+            ->with('user:id,name,email')
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
         return response()->json([
-            'stats' => $stats,
-            'clicks_by_day' => $clicksByDay,
-            'conversions_by_day' => $conversionsByDay,
-            'recent_redemptions' => $recentRedemptions,
+            'stats'               => $stats,
+            'clicks_by_day'       => $clicksByDay,
+            'conversions_by_day'  => $conversionsByDay,
+            'recent_redemptions'  => $recentRedemptions,
+            'recent_visits'       => $recentVisits,
+            'recent_conversions'  => $recentConversions,
             'partner' => $partner->only(['id', 'company_name', 'commission_type', 'commission_rate', 'tracking_code']),
         ]);
     }
@@ -86,6 +104,24 @@ class PartnerDashboardController extends Controller
             ->paginate(50);
 
         return response()->json($clicks);
+    }
+
+    public function visits(Request $request)
+    {
+        $partner = $this->getPartner($request);
+
+        $query = $partner->visits()->with('user:id,name,email');
+
+        if ($request->has('from')) {
+            $query->whereDate('created_at', '>=', $request->from);
+        }
+        if ($request->has('to')) {
+            $query->whereDate('created_at', '<=', $request->to);
+        }
+
+        $visits = $query->orderBy('created_at', 'desc')->paginate(50);
+
+        return response()->json($visits);
     }
 
     public function conversions(Request $request)
@@ -117,21 +153,25 @@ class PartnerDashboardController extends Controller
         $partner = $this->getPartner($request);
 
         $validated = $request->validate([
-            'type' => 'required|in:digital,physical',
-            'amount' => 'required|numeric|min:0',
-            'notes' => 'nullable|string',
+            'type'        => 'required|in:digital,physical',
+            'amount'      => 'required|numeric|min:0',
+            'description' => 'nullable|string|max:500',
+            'notes'       => 'nullable|string|max:1000',
+            'user_id'     => 'nullable|exists:users,id',
         ]);
 
         $commissionAmount = $partner->calculateCommission($validated['amount']);
 
         $conversion = PartnerConversion::create([
-            'partner_id' => $partner->id,
-            'type' => $validated['type'],
-            'amount' => $validated['amount'],
-            'commission_rate' => $partner->commission_rate,
-            'commission_amount' => $commissionAmount,
-            'status' => 'pending',
-            'notes' => $validated['notes'] ?? null,
+            'partner_id'       => $partner->id,
+            'user_id'          => $validated['user_id'] ?? null,
+            'type'             => $validated['type'],
+            'amount'           => $validated['amount'],
+            'description'      => $validated['description'] ?? null,
+            'commission_rate'  => $partner->commission_rate,
+            'commission_amount'=> $commissionAmount,
+            'status'           => 'pending',
+            'notes'            => $validated['notes'] ?? null,
         ]);
 
         return response()->json([

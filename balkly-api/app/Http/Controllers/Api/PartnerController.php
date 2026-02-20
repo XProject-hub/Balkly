@@ -68,7 +68,7 @@ class PartnerController extends Controller
     public function show($id)
     {
         $partner = Partner::with(['user.profile', 'staff.user', 'offers'])
-            ->withCount(['vouchers', 'clicks', 'conversions', 'redemptions'])
+            ->withCount(['vouchers', 'clicks', 'conversions', 'redemptions', 'visits'])
             ->findOrFail($id);
 
         $partner->total_commission = (float) $partner->conversions()
@@ -178,5 +178,23 @@ class PartnerController extends Controller
         });
 
         return response()->json(['message' => 'Partner deactivated successfully']);
+    }
+
+    public function adminVisits(Request $request, $id)
+    {
+        $partner = Partner::findOrFail($id);
+
+        $query = $partner->visits()->with('user:id,name,email');
+
+        if ($request->has('from')) {
+            $query->whereDate('created_at', '>=', $request->from);
+        }
+        if ($request->has('to')) {
+            $query->whereDate('created_at', '<=', $request->to);
+        }
+
+        $visits = $query->orderBy('created_at', 'desc')->paginate(50);
+
+        return response()->json($visits);
     }
 }
