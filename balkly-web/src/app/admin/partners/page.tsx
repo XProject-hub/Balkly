@@ -81,7 +81,10 @@ export default function AdminPartnersPage() {
       const params = new URLSearchParams();
       if (q) params.set("search", q);
       const res = await fetch(`/api/v1/admin/partners?${params}`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+          Accept: "application/json",
+        },
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
@@ -102,7 +105,7 @@ export default function AdminPartnersPage() {
     if (q.length < 2) { setUserResults([]); return; }
     try {
       const res = await fetch(`/api/v1/admin/users?search=${encodeURIComponent(q)}`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
+        headers: { Authorization: `Bearer ${getToken()}`, Accept: "application/json" },
       });
       if (res.ok) {
         const data = await res.json();
@@ -168,6 +171,7 @@ export default function AdminPartnersPage() {
         method: editingPartner ? "PATCH" : "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
           Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify(form),
@@ -194,7 +198,7 @@ export default function AdminPartnersPage() {
     try {
       const res = await fetch(`/api/v1/admin/partners/${id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${getToken()}` },
+        headers: { Authorization: `Bearer ${getToken()}`, Accept: "application/json" },
       });
       if (res.ok) {
         toast.success("Partner deaktiviran");
