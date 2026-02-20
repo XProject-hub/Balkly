@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -9,18 +10,27 @@ import {
 } from "lucide-react";
 
 export default function PartnersPage() {
+  const router = useRouter();
   const [partners, setPartners] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+      router.push("/auth/login?redirect=/partners");
+      return;
+    }
     loadPartners();
   }, []);
 
   const loadPartners = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/v1/partners");
+      const token = localStorage.getItem("auth_token");
+      const res = await fetch("/api/v1/partners", {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
       if (res.ok) {
         const data = await res.json();
         setPartners(data.data || data || []);

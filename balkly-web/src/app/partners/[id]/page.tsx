@@ -26,7 +26,11 @@ export default function PartnerVisitPage() {
 
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
-    setIsLoggedIn(!!token);
+    if (!token) {
+      router.push(`/auth/login?redirect=/partners/${id}`);
+      return;
+    }
+    setIsLoggedIn(true);
     loadPartner();
   }, [id]);
 
