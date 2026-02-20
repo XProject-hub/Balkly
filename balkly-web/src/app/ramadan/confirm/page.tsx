@@ -105,12 +105,13 @@ export default function RamadanConfirmPage() {
           {/* Top crescent decoration */}
           <div className="relative h-2 bg-gradient-to-r from-[#8b1c2d] via-[#c0392b] to-[#8b1c2d]" />
 
-          {/* Header */}
+          {/* Header - Balkly logo + title */}
           <div className="flex flex-col items-center pt-10 pb-6 px-8 gap-4">
-            <div className="relative w-44 h-16">
+            {/* Balkly logo */}
+            <div className="relative w-44 h-14">
               <Image
-                src="/images/marengo-logo.png"
-                alt="Bosnian Marengo"
+                src="/logo.png"
+                alt="Balkly"
                 fill
                 className="object-contain"
                 onError={(e) => {
@@ -168,6 +169,24 @@ export default function RamadanConfirmPage() {
               {/* Decorative dots */}
               <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-[#0f172a] border-2 border-[#1f2937]" />
               <div className="absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-[#0f172a] border-2 border-[#1f2937]" />
+            </div>
+          </div>
+
+          {/* After-code text + Marengo logo */}
+          <div className="flex flex-col items-center px-10 pb-6 gap-4 text-center">
+            <p className="text-[#cbd5e1] text-sm leading-relaxed">
+              Prikažite ovaj kod prilikom dolaska na iftar i uživajte u poklonu.
+            </p>
+            <div className="relative w-36 h-14">
+              <Image
+                src="/images/marengologo-copy.png"
+                alt="Bosnian Marengo Restaurant"
+                fill
+                className="object-contain"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                }}
+              />
             </div>
           </div>
 
