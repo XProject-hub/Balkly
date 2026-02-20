@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Calendar, User, Eye, Heart, Share2, Facebook, Twitter, Linkedin, Link2, MessageCircle, Send, Trash2 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/lib/toast";
-import { sanitizeHtml } from "@/lib/sanitize";
+import { sanitizeBlogHtml } from "@/lib/sanitize";
 
 export default function BlogPostPage() {
   const params = useParams();
@@ -269,7 +269,10 @@ export default function BlogPostPage() {
 
           {/* Content */}
           <div className="prose max-w-none mb-12">
-            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }} />
+            <div
+              className="blog-post-scope"
+              dangerouslySetInnerHTML={{ __html: sanitizeBlogHtml(post.content) }}
+            />
           </div>
 
           {/* Tags */}
