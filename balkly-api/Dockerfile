@@ -27,8 +27,9 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         exif \
         pcntl
 
-# Copy OPcache configuration for maximum performance
+# Copy PHP configuration
 COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY docker/php/upload.ini /usr/local/etc/php/conf.d/upload.ini
 
 # Install Redis extension
 RUN apk add --no-cache \

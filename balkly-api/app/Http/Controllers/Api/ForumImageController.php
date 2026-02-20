@@ -11,7 +11,7 @@ class ForumImageController extends Controller
     {
         $request->validate([
             'images' => 'required|array|max:5',
-            'images.*' => 'image|mimes:jpeg,jpg,png,gif,webp,bmp,tiff,tif,avif|max:10240', // 10MB
+            'images.*' => 'file|mimes:jpeg,jpg,png,gif,webp,bmp,tiff,tif,avif,heic,heif,svg|max:102400', // 100MB
         ]);
 
         $uploadedUrls = [];

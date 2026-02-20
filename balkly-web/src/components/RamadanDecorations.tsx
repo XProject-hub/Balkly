@@ -4,89 +4,110 @@ import { useEffect, useState } from "react";
 
 const RAMADAN_END = new Date("2026-03-20T00:00:00");
 
-// SVG crescent moon
-function Crescent({ size = 32, opacity = 0.18, color = "#f59e0b" }: { size?: number; opacity?: number; color?: string }) {
+// ── SVGs ────────────────────────────────────────────────────────────────────
+
+function CrescentMoon({ size = 40, color = "#f59e0b", opacity = 0.22 }: { size?: number; color?: string; opacity?: number }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 32 32"
-      fill="none"
-      style={{ opacity }}
-    >
+    <svg width={size} height={size} viewBox="0 0 50 50" fill="none" style={{ opacity }}>
       <path
-        d="M16 2C9.373 2 4 7.373 4 14s5.373 12 12 12c1.48 0 2.9-.267 4.207-.754C17.87 27.056 14.5 28 11 28 5.477 28 1 23.523 1 18S5.477 8 11 8c1.18 0 2.313.208 3.364.587A11.962 11.962 0 0116 2z"
+        d="M25 5 C14 5 5 14 5 25 S14 45 25 45 C31 45 36 42 40 37 C36 38 31 38 27 36 C18 33 12 24 14 15 C16 8 20 5 25 5Z"
         fill={color}
       />
     </svg>
   );
 }
 
-// SVG 4-point star / sparkle
-function Sparkle({ size = 12, opacity = 0.25, color = "#fbbf24" }: { size?: number; opacity?: number; color?: string }) {
+function StarFour({ size = 14, color = "#fbbf24", opacity = 0.5 }: { size?: number; color?: string; opacity?: number }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 16 16"
-      fill="none"
-      style={{ opacity }}
-    >
-      <path
-        d="M8 0 L9.2 6.8 L16 8 L9.2 9.2 L8 16 L6.8 9.2 L0 8 L6.8 6.8 Z"
-        fill={color}
-      />
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" style={{ opacity }}>
+      <path d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z" fill={color} />
     </svg>
   );
 }
 
-// Lantern SVG (simplified)
-function Lantern({ size = 28, opacity = 0.16, color = "#e05c72" }: { size?: number; opacity?: number; color?: string }) {
+function Lantern({ size = 36, color = "#c0392b", opacity = 0.22 }: { size?: number; color?: string; opacity?: number }) {
+  const glow = color === "#c0392b" ? "#f97316" : "#fbbf24";
   return (
-    <svg
-      width={size}
-      height={size * 1.4}
-      viewBox="0 0 28 38"
-      fill="none"
-      style={{ opacity }}
-    >
-      {/* Chain top */}
-      <rect x="12" y="0" width="4" height="5" rx="1" fill={color} />
+    <svg width={size} height={Math.round(size * 1.6)} viewBox="0 0 36 58" fill="none" style={{ opacity }}>
+      {/* Chain */}
+      <rect x="16" y="0" width="4" height="7" rx="2" fill={color} />
+      {/* Top cap */}
+      <rect x="8" y="6" width="20" height="5" rx="2" fill={color} />
       {/* Body */}
-      <rect x="4" y="5" width="20" height="24" rx="5" fill={color} />
-      {/* Center glow stripe */}
-      <rect x="10" y="9" width="8" height="16" rx="2" fill="rgba(255,200,100,0.3)" />
-      {/* Horizontal bands */}
-      <rect x="4" y="11" width="20" height="2" rx="1" fill="rgba(0,0,0,0.2)" />
-      <rect x="4" y="20" width="20" height="2" rx="1" fill="rgba(0,0,0,0.2)" />
+      <rect x="6" y="11" width="24" height="30" rx="6" fill={color} />
+      {/* Inner glow */}
+      <rect x="10" y="15" width="16" height="22" rx="4" fill={glow} opacity="0.35" />
+      {/* Ribs */}
+      <line x1="6" y1="20" x2="30" y2="20" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" />
+      <line x1="6" y1="28" x2="30" y2="28" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" />
+      <line x1="6" y1="36" x2="30" y2="36" stroke="rgba(0,0,0,0.2)" strokeWidth="1.5" />
+      {/* Bottom cap */}
+      <rect x="8" y="41" width="20" height="5" rx="2" fill={color} />
       {/* Tassel */}
-      <rect x="10" y="29" width="8" height="2" rx="1" fill={color} />
-      <rect x="11" y="31" width="2" height="5" rx="1" fill={color} />
-      <rect x="15" y="31" width="2" height="5" rx="1" fill={color} />
+      <rect x="15" y="46" width="6" height="3" rx="1" fill={color} />
+      <line x1="16" y1="49" x2="16" y2="56" stroke={color} strokeWidth="2" strokeLinecap="round" />
+      <line x1="20" y1="49" x2="20" y2="56" stroke={color} strokeWidth="2" strokeLinecap="round" />
+      <circle cx="16" cy="57" r="1.5" fill={color} />
+      <circle cx="20" cy="57" r="1.5" fill={color} />
     </svg>
   );
 }
 
-// Each decoration: position, animation, what to render
-const DECORATIONS = [
-  // Corners and edges - crescents
-  { id: 1, x: "2%",   y: "8vh",  type: "crescent", size: 40, opacity: 0.14, color: "#f59e0b", anim: "float-slow", delay: "0s" },
-  { id: 2, x: "93%",  y: "12vh", type: "crescent", size: 32, opacity: 0.12, color: "#fbbf24", anim: "float-med",  delay: "1.5s" },
-  { id: 3, x: "1%",   y: "55vh", type: "crescent", size: 28, opacity: 0.1,  color: "#f59e0b", anim: "float-slow", delay: "3s" },
-  { id: 4, x: "95%",  y: "60vh", type: "crescent", size: 36, opacity: 0.12, color: "#fbbf24", anim: "float-med",  delay: "0.8s" },
+function Mosque({ size = 48, color = "#8b1c2d", opacity = 0.12 }: { size?: number; color?: string; opacity?: number }) {
+  return (
+    <svg width={size} height={Math.round(size * 0.9)} viewBox="0 0 80 72" fill="none" style={{ opacity }}>
+      {/* Main dome */}
+      <path d="M40 4 C22 4 10 16 10 30 L10 42 L70 42 L70 30 C70 16 58 4 40 4Z" fill={color} />
+      {/* Crescent on top */}
+      <path d="M40 2 C36 2 33 5 33 9 S36 16 40 16 C43 16 45 14 46 12 C44 13 42 13 40 12 C37 11 35 9 35 7 C35 5 37 2 40 2Z" fill="#f59e0b" opacity="2" />
+      {/* Body */}
+      <rect x="10" y="42" width="60" height="28" rx="2" fill={color} />
+      {/* Door arch */}
+      <path d="M32 70 L32 52 Q40 44 48 52 L48 70 Z" fill="rgba(0,0,0,0.3)" />
+      {/* Windows */}
+      <path d="M15 50 Q20 44 25 50 L25 60 L15 60 Z" fill="rgba(0,0,0,0.25)" />
+      <path d="M55 50 Q60 44 65 50 L65 60 L55 60 Z" fill="rgba(0,0,0,0.25)" />
+      {/* Minarets */}
+      <rect x="2" y="28" width="8" height="42" rx="2" fill={color} />
+      <path d="M6 28 C3 22 9 22 6 28Z" fill={color} />
+      <rect x="70" y="28" width="8" height="42" rx="2" fill={color} />
+      <path d="M74 28 C71 22 77 22 74 28Z" fill={color} />
+    </svg>
+  );
+}
 
-  // Sparkle stars scattered
-  { id: 5, x: "8%",   y: "25vh", type: "sparkle",  size: 10, opacity: 0.3,  color: "#fbbf24", anim: "twinkle",    delay: "0.2s" },
-  { id: 6, x: "88%",  y: "30vh", type: "sparkle",  size: 8,  opacity: 0.25, color: "#fde68a", anim: "twinkle",    delay: "1.1s" },
-  { id: 7, x: "5%",   y: "75vh", type: "sparkle",  size: 12, opacity: 0.28, color: "#fbbf24", anim: "twinkle",    delay: "2.4s" },
-  { id: 8, x: "91%",  y: "45vh", type: "sparkle",  size: 9,  opacity: 0.22, color: "#fde68a", anim: "twinkle",    delay: "0.6s" },
-  { id: 9, x: "3%",   y: "40vh", type: "sparkle",  size: 7,  opacity: 0.2,  color: "#fbbf24", anim: "twinkle",    delay: "1.8s" },
-  { id: 10, x: "96%", y: "80vh", type: "sparkle",  size: 11, opacity: 0.26, color: "#fde68a", anim: "twinkle",    delay: "3.2s" },
+// ── Decoration definitions ───────────────────────────────────────────────────
 
-  // Lanterns
-  { id: 11, x: "1.5%", y: "15vh", type: "lantern",  size: 30, opacity: 0.14, color: "#e05c72", anim: "sway",       delay: "0.4s" },
-  { id: 12, x: "94%",  y: "72vh", type: "lantern",  size: 24, opacity: 0.12, color: "#c0392b", anim: "sway",       delay: "2s"   },
+const ITEMS = [
+  // Left side
+  { id: 1,  x: "0.5%",  y: "10vh", type: "lantern",  size: 42, color: "#c0392b", opacity: 0.28, anim: "sway",       dur: "5s",  delay: "0s"   },
+  { id: 2,  x: "1%",    y: "38vh", type: "crescent", size: 44, color: "#f59e0b", opacity: 0.22, anim: "floatSlow",  dur: "8s",  delay: "1s"   },
+  { id: 3,  x: "0%",    y: "63vh", type: "lantern",  size: 32, color: "#8b1c2d", opacity: 0.22, anim: "sway",       dur: "6s",  delay: "2.5s" },
+  { id: 4,  x: "2%",    y: "82vh", type: "crescent", size: 30, color: "#fbbf24", opacity: 0.18, anim: "floatMed",   dur: "7s",  delay: "0.5s" },
+  { id: 5,  x: "1.5%",  y: "88vh", type: "mosque",   size: 52, color: "#8b1c2d", opacity: 0.13, anim: "floatSlow",  dur: "10s", delay: "3s"   },
+
+  // Right side
+  { id: 6,  x: "94%",   y: "8vh",  type: "crescent", size: 50, color: "#f59e0b", opacity: 0.24, anim: "floatSlow",  dur: "9s",  delay: "0.8s" },
+  { id: 7,  x: "95.5%", y: "28vh", type: "lantern",  size: 40, color: "#e05c72", opacity: 0.26, anim: "sway",       dur: "5.5s",delay: "1.8s" },
+  { id: 8,  x: "94%",   y: "55vh", type: "crescent", size: 36, color: "#fde68a", opacity: 0.2,  anim: "floatMed",   dur: "7s",  delay: "2s"   },
+  { id: 9,  x: "96%",   y: "75vh", type: "lantern",  size: 28, color: "#c0392b", opacity: 0.2,  anim: "sway",       dur: "6.5s",delay: "0.3s" },
+  { id: 10, x: "93.5%", y: "88vh", type: "mosque",   size: 56, color: "#8b1c2d", opacity: 0.12, anim: "floatSlow",  dur: "11s", delay: "4s"   },
+
+  // Scattered sparkle stars
+  { id: 11, x: "6%",    y: "18vh", type: "star",     size: 12, color: "#fbbf24", opacity: 0.55, anim: "twinkle",    dur: "3s",  delay: "0.1s" },
+  { id: 12, x: "8%",    y: "50vh", type: "star",     size: 9,  color: "#fde68a", opacity: 0.45, anim: "twinkle",    dur: "4s",  delay: "1.2s" },
+  { id: 13, x: "5%",    y: "72vh", type: "star",     size: 11, color: "#fbbf24", opacity: 0.5,  anim: "twinkle",    dur: "3.5s",delay: "2.3s" },
+  { id: 14, x: "88%",   y: "20vh", type: "star",     size: 10, color: "#fde68a", opacity: 0.5,  anim: "twinkle",    dur: "3.8s",delay: "0.6s" },
+  { id: 15, x: "90%",   y: "46vh", type: "star",     size: 13, color: "#fbbf24", opacity: 0.55, anim: "twinkle",    dur: "2.8s",delay: "1.7s" },
+  { id: 16, x: "87%",   y: "68vh", type: "star",     size: 8,  color: "#fde68a", opacity: 0.4,  anim: "twinkle",    dur: "4.2s",delay: "3.1s" },
 ];
+
+const ANIM_MAP: Record<string, string> = {
+  sway:      "ramadan-sway",
+  floatSlow: "ramadan-float-slow",
+  floatMed:  "ramadan-float-med",
+  twinkle:   "ramadan-twinkle",
+};
 
 export default function RamadanDecorations() {
   const [active, setActive] = useState(false);
@@ -99,71 +120,80 @@ export default function RamadanDecorations() {
 
   return (
     <>
-      {/* Keyframe animations */}
       <style>{`
         @keyframes ramadan-float-slow {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          33% { transform: translateY(-14px) rotate(4deg); }
-          66% { transform: translateY(-6px) rotate(-3deg); }
+          0%,100% { transform: translateY(0px) rotate(0deg); }
+          33%      { transform: translateY(-16px) rotate(5deg); }
+          66%      { transform: translateY(-7px) rotate(-3deg); }
         }
         @keyframes ramadan-float-med {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-10px) rotate(-5deg); }
+          0%,100% { transform: translateY(0px) rotate(0deg); }
+          50%      { transform: translateY(-12px) rotate(-6deg); }
         }
         @keyframes ramadan-twinkle {
-          0%, 100% { opacity: 0.05; transform: scale(0.8) rotate(0deg); }
-          25% { opacity: 0.35; transform: scale(1.15) rotate(15deg); }
-          50% { opacity: 0.15; transform: scale(0.9) rotate(30deg); }
-          75% { opacity: 0.3; transform: scale(1.1) rotate(20deg); }
+          0%,100% { opacity: 0.08; transform: scale(0.7) rotate(0deg); }
+          20%      { opacity: 0.6;  transform: scale(1.2) rotate(20deg); }
+          50%      { opacity: 0.2;  transform: scale(0.85) rotate(45deg); }
+          75%      { opacity: 0.5;  transform: scale(1.1) rotate(30deg); }
         }
         @keyframes ramadan-sway {
-          0%, 100% { transform: rotate(-6deg); }
-          50% { transform: rotate(6deg); }
+          0%,100% { transform: rotate(-8deg) translateX(0px); }
+          50%      { transform: rotate(8deg)  translateX(2px); }
+        }
+        .ramadan-glow-left {
+          position: fixed;
+          left: -60px;
+          top: 30vh;
+          width: 180px;
+          height: 40vh;
+          background: radial-gradient(ellipse, rgba(139,28,45,0.12) 0%, transparent 70%);
+          pointer-events: none;
+          z-index: 9;
+        }
+        .ramadan-glow-right {
+          position: fixed;
+          right: -60px;
+          top: 20vh;
+          width: 180px;
+          height: 40vh;
+          background: radial-gradient(ellipse, rgba(245,158,11,0.08) 0%, transparent 70%);
+          pointer-events: none;
+          z-index: 9;
         }
       `}</style>
 
-      {/* Fixed container - pointer-events none so it never blocks clicks */}
+      {/* Soft ambient glows on sides */}
+      <div className="ramadan-glow-left" aria-hidden="true" />
+      <div className="ramadan-glow-right" aria-hidden="true" />
+
+      {/* Decorative elements */}
       <div
         className="fixed inset-0 pointer-events-none overflow-hidden"
         style={{ zIndex: 10 }}
         aria-hidden="true"
       >
-        {DECORATIONS.map((d) => {
-          const animName =
-            d.anim === "float-slow" ? "ramadan-float-slow" :
-            d.anim === "float-med"  ? "ramadan-float-med"  :
-            d.anim === "twinkle"    ? "ramadan-twinkle"    :
-            "ramadan-sway";
-
-          const duration =
-            d.anim === "float-slow" ? "7s" :
-            d.anim === "float-med"  ? "5s" :
-            d.anim === "twinkle"    ? "4s" :
-            "6s";
-
-          return (
-            <div
-              key={d.id}
-              style={{
-                position: "absolute",
-                left: d.x,
-                top: d.y,
-                animation: `${animName} ${duration} ease-in-out infinite`,
-                animationDelay: d.delay,
-              }}
-            >
-              {d.type === "crescent" && (
-                <Crescent size={d.size} opacity={d.opacity} color={d.color} />
-              )}
-              {d.type === "sparkle" && (
-                <Sparkle size={d.size} opacity={d.opacity} color={d.color} />
-              )}
-              {d.type === "lantern" && (
-                <Lantern size={d.size} opacity={d.opacity} color={d.color} />
-              )}
-            </div>
-          );
-        })}
+        {ITEMS.map((d) => (
+          <div
+            key={d.id}
+            style={{
+              position: "absolute",
+              left: d.x,
+              top: d.y,
+              animation: `${ANIM_MAP[d.anim]} ${d.dur} ease-in-out infinite`,
+              animationDelay: d.delay,
+              filter: d.type === "lantern"
+                ? `drop-shadow(0 0 6px ${d.color}60)`
+                : d.type === "crescent"
+                ? `drop-shadow(0 0 8px ${d.color}50)`
+                : "none",
+            }}
+          >
+            {d.type === "crescent" && <CrescentMoon size={d.size} color={d.color} opacity={d.opacity} />}
+            {d.type === "star"     && <StarFour     size={d.size} color={d.color} opacity={d.opacity} />}
+            {d.type === "lantern"  && <Lantern      size={d.size} color={d.color} opacity={d.opacity} />}
+            {d.type === "mosque"   && <Mosque       size={d.size} color={d.color} opacity={d.opacity} />}
+          </div>
+        ))}
       </div>
     </>
   );

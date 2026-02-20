@@ -156,7 +156,7 @@ class ListingController extends Controller
     {
         $request->validate([
             'images' => 'required|array|max:10',
-            'images.*' => 'image|mimes:jpeg,jpg,png,gif,webp,bmp,tiff,tif,avif|max:10240',
+            'images.*' => 'file|mimes:jpeg,jpg,png,gif,webp,bmp,tiff,tif,avif,heic,heif,svg,pdf|max:102400',
         ]);
 
         $uploadedMedia = [];
@@ -192,7 +192,7 @@ class ListingController extends Controller
 
         $request->validate([
             'images' => 'required|array|max:10',
-            'images.*' => 'image|mimes:jpeg,jpg,png,gif,webp,bmp,tiff,tif,avif|max:10240', // 10MB max
+            'images.*' => 'file|mimes:jpeg,jpg,png,gif,webp,bmp,tiff,tif,avif,heic,heif,svg,pdf|max:102400', // 10MB max
         ]);
 
         $uploadedMedia = [];
