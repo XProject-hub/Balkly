@@ -11,7 +11,7 @@ import {
   QrCode, Download, Users2, MapPin,
 } from "lucide-react";
 import { toast } from "@/lib/toast";
-import QRCode from "qrcode";
+import { generateBalklyQR } from "@/lib/balklyQr";
 
 const COMMISSION_LABELS: Record<string, string> = {
   percent_of_bill:          "% od računa",
@@ -52,13 +52,11 @@ export default function AdminPartnerDetailPage() {
   }, [id]);
 
   const generateQR = async (trackingCode: string) => {
-    const url = `${SITE_BASE}/checkin/${trackingCode}`;
     try {
-      const dataUrl = await QRCode.toDataURL(url, {
-        width: 300,
-        margin: 2,
-        color: { dark: "#000000", light: "#ffffff" },
-      });
+      const dataUrl = await generateBalklyQR(
+        `${SITE_BASE}/checkin/${trackingCode}`,
+        500
+      );
       setQrDataUrl(dataUrl);
     } catch {}
   };
@@ -243,19 +241,27 @@ export default function AdminPartnerDetailPage() {
             <CardContent className="flex flex-col items-center gap-4">
               {qrDataUrl ? (
                 <>
-                  <div className="p-3 bg-white rounded-xl border">
-                    <img ref={qrRef} src={qrDataUrl} alt="Check-in QR" className="w-48 h-48" />
+                  <div className="rounded-2xl p-2 bg-[#0f172a]"
+                    style={{ boxShadow: "0 0 24px 6px rgba(0,229,255,0.25), 0 0 60px 10px rgba(124,58,237,0.15)" }}>
+                    <img
+                      ref={qrRef}
+                      src={qrDataUrl}
+                      alt="Check-in QR"
+                      className="w-52 h-52 rounded-xl"
+                      style={{ filter: "drop-shadow(0 0 6px rgba(0,229,255,0.5))" }}
+                    />
                   </div>
-                  <p className="text-xs text-muted-foreground text-center">
-                    Partner štampa ovaj QR i stavlja u lokalu. Klijent skenira telefnom i posjet se automatski bilježi.
+                  <p className="text-xs text-muted-foreground text-center leading-relaxed">
+                    Partner štampa ovaj QR i izloži u lokalu.<br />
+                    Klijent skenira telefonom → posjet se automatski bilježi.
                   </p>
-                  <Button onClick={downloadQR} variant="outline" size="sm" className="w-full">
+                  <Button onClick={downloadQR} className="w-full bg-cyan-600 hover:bg-cyan-700 text-white" size="sm">
                     <Download className="mr-2 h-4 w-4" /> Preuzmi QR kod
                   </Button>
                 </>
               ) : (
-                <div className="h-48 w-48 bg-muted rounded-xl flex items-center justify-center">
-                  <QrCode className="h-10 w-10 text-muted-foreground" />
+                <div className="h-52 w-52 bg-[#0f172a] rounded-2xl flex items-center justify-center border border-cyan-900/40">
+                  <QrCode className="h-10 w-10 text-cyan-700" />
                 </div>
               )}
             </CardContent>

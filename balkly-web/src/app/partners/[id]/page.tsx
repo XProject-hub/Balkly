@@ -55,15 +55,12 @@ export default function PartnerVisitPage() {
 
   const generateQrImage = async (url: string) => {
     try {
-      const QRCode = (await import("qrcode")).default;
-      const dataUrl = await QRCode.toDataURL(url, {
-        width: 300,
-        margin: 2,
-        color: { dark: "#0f172a", light: "#ffffff" },
-      });
+      const { generateBalklyQR } = await import("@/lib/balklyQr");
+      const dataUrl = await generateBalklyQR(url, 500);
       setQrDataUrl(dataUrl);
     } catch {}
   };
+
 
   const handleGetCode = async () => {
     const token = localStorage.getItem("auth_token");
@@ -240,8 +237,14 @@ export default function PartnerVisitPage() {
               {/* QR Code */}
               {qrDataUrl ? (
                 <div className="flex justify-center">
-                  <div className="p-3 bg-white rounded-2xl shadow-lg">
-                    <img src={qrDataUrl} alt="QR kod" className="w-56 h-56" />
+                  <div className="rounded-2xl p-2 bg-[#0f172a]"
+                    style={{ boxShadow: "0 0 24px 6px rgba(0,229,255,0.25), 0 0 60px 10px rgba(124,58,237,0.15)" }}>
+                    <img
+                      src={qrDataUrl}
+                      alt="QR kod"
+                      className="w-56 h-56 rounded-xl"
+                      style={{ filter: "drop-shadow(0 0 6px rgba(0,229,255,0.5))" }}
+                    />
                   </div>
                 </div>
               ) : (
