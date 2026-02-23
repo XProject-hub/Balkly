@@ -194,90 +194,33 @@ export default function HomePage() {
               {t.home.findWhatLooking}
             </p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-            <Link href="/auto">
-              <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
-                <CardHeader className="text-center p-3 sm:p-4">
-                  <div className="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
-                    <Car className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-balkly-blue" />
-                  </div>
-                  <CardTitle className="text-sm sm:text-base">{t.home.catAuto}</CardTitle>
-                  <CardDescription className="text-[10px] sm:text-xs hidden sm:block">
-                    {t.home.catAutoDesc}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
-
-            <Link href="/real-estate">
-              <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
-                <CardHeader className="text-center p-3 sm:p-4">
-                  <div className="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
-                    <Home className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-balkly-blue" />
-                  </div>
-                  <CardTitle className="text-sm sm:text-base">{t.home.catRealEstate}</CardTitle>
-                  <CardDescription className="text-[10px] sm:text-xs hidden sm:block">
-                    {t.home.catRealEstateDesc}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
-
-            <Link href="/electronics">
-              <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
-                <CardHeader className="text-center p-3 sm:p-4">
-                  <div className="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
-                    <Package className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-balkly-blue" />
-                  </div>
-                  <CardTitle className="text-sm sm:text-base">{t.home.catElectronics}</CardTitle>
-                  <CardDescription className="text-[10px] sm:text-xs hidden sm:block">
-                    {t.home.catElectronicsDesc}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
-
-            <Link href="/fashion">
-              <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
-                <CardHeader className="text-center p-3 sm:p-4">
-                  <div className="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
-                    <Package className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-balkly-blue" />
-                  </div>
-                  <CardTitle className="text-sm sm:text-base">{t.home.catFashion}</CardTitle>
-                  <CardDescription className="text-[10px] sm:text-xs hidden sm:block">
-                    {t.home.catFashionDesc}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
-
-            <Link href="/jobs">
-              <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
-                <CardHeader className="text-center p-3 sm:p-4">
-                  <div className="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
-                    <Package className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-balkly-blue" />
-                  </div>
-                  <CardTitle className="text-sm sm:text-base">{t.home.catJobs}</CardTitle>
-                  <CardDescription className="text-[10px] sm:text-xs hidden sm:block">
-                    {t.home.catJobsDesc}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
-
-            <Link href="/forum">
-              <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
-                <CardHeader className="text-center p-3 sm:p-4">
-                  <div className="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
-                    <MessageCircle className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-balkly-blue" />
-                  </div>
-                  <CardTitle className="text-sm sm:text-base">{t.home.catForum}</CardTitle>
-                  <CardDescription className="text-[10px] sm:text-xs hidden sm:block">
-                    {t.home.catForumDesc}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4">
+            {[
+              { href: "/auto",        icon: <Car className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,         title: t.home.catAuto,        desc: t.home.catAutoDesc },
+              { href: "/real-estate", icon: <Home className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,        title: t.home.catRealEstate,  desc: t.home.catRealEstateDesc },
+              { href: "/electronics", icon: <Package className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,     title: t.home.catElectronics, desc: t.home.catElectronicsDesc },
+              { href: "/fashion",     icon: <Package className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,     title: t.home.catFashion,     desc: t.home.catFashionDesc },
+              { href: "/beauty",      icon: <Sparkles className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,    title: t.home.catBeauty,      desc: t.home.catBeautyDesc },
+              { href: "/sports",      icon: <Dumbbell className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,    title: t.home.catSports,      desc: t.home.catSportsDesc },
+              { href: "/home-garden", icon: <Sofa className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,        title: t.home.catHomeGarden,  desc: t.home.catHomeGardenDesc },
+              { href: "/services",    icon: <Wrench className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,      title: t.home.catServices,    desc: t.home.catServicesDesc },
+              { href: "/baby-kids",   icon: <Baby className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,        title: t.home.catBabyKids,    desc: t.home.catBabyKidsDesc },
+              { href: "/health",      icon: <HeartPulse className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,  title: t.home.catHealth,      desc: t.home.catHealthDesc },
+              { href: "/jobs",        icon: <Briefcase className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,   title: t.home.catJobs,        desc: t.home.catJobsDesc },
+              { href: "/forum",       icon: <MessageCircle className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />, title: t.home.catForum,     desc: t.home.catForumDesc },
+            ].map(({ href, icon, title, desc }) => (
+              <Link key={href} href={href}>
+                <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
+                  <CardHeader className="text-center p-3 sm:p-4">
+                    <div className="mx-auto mb-2 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-balkly-blue/20 to-teal-glow/10 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-balkly-blue/30 group-hover:to-teal-glow/20 transition-all">
+                      {icon}
+                    </div>
+                    <CardTitle className="text-sm sm:text-base">{title}</CardTitle>
+                    <CardDescription className="text-[10px] sm:text-xs hidden sm:block">{desc}</CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
