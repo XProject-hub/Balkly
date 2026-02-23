@@ -196,18 +196,18 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4">
             {[
-              { href: "/auto",        icon: <Car className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,         title: t.home.catAuto,        desc: t.home.catAutoDesc },
-              { href: "/real-estate", icon: <Home className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,        title: t.home.catRealEstate,  desc: t.home.catRealEstateDesc },
-              { href: "/electronics", icon: <Package className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,     title: t.home.catElectronics, desc: t.home.catElectronicsDesc },
-              { href: "/fashion",     icon: <Package className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,     title: t.home.catFashion,     desc: t.home.catFashionDesc },
-              { href: "/beauty",      icon: <Sparkles className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,    title: t.home.catBeauty,      desc: t.home.catBeautyDesc },
-              { href: "/sports",      icon: <Dumbbell className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,    title: t.home.catSports,      desc: t.home.catSportsDesc },
-              { href: "/home-garden", icon: <Sofa className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,        title: t.home.catHomeGarden,  desc: t.home.catHomeGardenDesc },
-              { href: "/services",    icon: <Wrench className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,      title: t.home.catServices,    desc: t.home.catServicesDesc },
-              { href: "/baby-kids",   icon: <Baby className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,        title: t.home.catBabyKids,    desc: t.home.catBabyKidsDesc },
-              { href: "/health",      icon: <HeartPulse className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,  title: t.home.catHealth,      desc: t.home.catHealthDesc },
-              { href: "/jobs",        icon: <Briefcase className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,   title: t.home.catJobs,        desc: t.home.catJobsDesc },
-              { href: "/forum",       icon: <MessageCircle className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />, title: t.home.catForum,     desc: t.home.catForumDesc },
+              { href: "/auto",        icon: <Car className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,           title: t.home.catAuto,        desc: t.home.catAutoDesc },
+              { href: "/real-estate", icon: <Home className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,          title: t.home.catRealEstate,  desc: t.home.catRealEstateDesc },
+              { href: "/electronics", icon: <Package className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,       title: t.home.catElectronics, desc: t.home.catElectronicsDesc },
+              { href: "/fashion",     icon: <ShoppingBag className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,   title: t.home.catFashion,     desc: t.home.catFashionDesc },
+              { href: "/beauty",      icon: <Scissors className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,      title: t.home.catBeauty,      desc: t.home.catBeautyDesc },
+              { href: "/sports",      icon: <Activity className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,      title: t.home.catSports,      desc: t.home.catSportsDesc },
+              { href: "/home-garden", icon: <Layers className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,        title: t.home.catHomeGarden,  desc: t.home.catHomeGardenDesc },
+              { href: "/services",    icon: <Settings className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,      title: t.home.catServices,    desc: t.home.catServicesDesc },
+              { href: "/baby-kids",   icon: <Users className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,         title: t.home.catBabyKids,    desc: t.home.catBabyKidsDesc },
+              { href: "/health",      icon: <Heart className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,         title: t.home.catHealth,      desc: t.home.catHealthDesc },
+              { href: "/jobs",        icon: <Briefcase className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />,     title: t.home.catJobs,        desc: t.home.catJobsDesc },
+              { href: "/forum",       icon: <MessageCircle className="h-6 w-6 sm:h-7 sm:w-7 text-balkly-blue" />, title: t.home.catForum,       desc: t.home.catForumDesc },
             ].map(({ href, icon, title, desc }) => (
               <Link key={href} href={href}>
                 <Card className="hover:shadow-lg hover:scale-105 transition-all cursor-pointer border-2 hover:border-primary group h-full">
