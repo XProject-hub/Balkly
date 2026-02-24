@@ -219,6 +219,21 @@ class ListingController extends Controller
         ]);
     }
 
+    public function deleteMedia(Request $request, $id, $mediaId)
+    {
+        $listing = Listing::where('user_id', auth()->id())->findOrFail($id);
+        $media = \App\Models\Media::where('owner_type', 'App\\Models\\Listing')
+            ->where('owner_id', $listing->id)
+            ->findOrFail($mediaId);
+
+        \Illuminate\Support\Facades\Storage::disk('public')->delete(
+            str_replace('/storage/', '', $media->url)
+        );
+        $media->delete();
+
+        return response()->json(['message' => 'Image deleted successfully']);
+    }
+
     public function update(Request $request, $id)
     {
         $listing = Listing::where('user_id', auth()->id())->findOrFail($id);

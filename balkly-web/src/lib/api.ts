@@ -54,6 +54,7 @@ export const listingsAPI = {
   update: (id: string, data: any) => api.patch(`/listings/${id}`, data),
   delete: (id: string) => api.delete(`/listings/${id}`),
   publish: (id: string) => api.post(`/listings/${id}/publish`),
+  deleteMedia: (listingId: string, mediaId: number) => api.delete(`/listings/${listingId}/media/${mediaId}`),
 };
 
 export const categoriesAPI = {

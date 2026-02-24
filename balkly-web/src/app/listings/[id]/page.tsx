@@ -286,17 +286,30 @@ export default function ListingDetailPage() {
             {t.listingDetail.backToListings}
           </Button>
           
-          {currentUser?.role === 'admin' && (
-            <Button 
-              variant="destructive" 
-              size="sm"
-              onClick={handleDeleteListing}
-              className="bg-red-600 hover:bg-red-700 text-xs sm:text-sm"
-            >
-              <Trash2 className="mr-1 sm:mr-2 h-4 w-4" />
-              {t.listingDetail.delete}
-            </Button>
-          )}
+          <div className="flex gap-2">
+            {(currentUser?.id === listing?.user_id || currentUser?.role === 'admin') && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => router.push(`/listings/${listingId}/edit`)}
+                className="text-xs sm:text-sm"
+              >
+                <Pencil className="mr-1 sm:mr-2 h-4 w-4" />
+                Edit
+              </Button>
+            )}
+            {currentUser?.role === 'admin' && (
+              <Button 
+                variant="destructive" 
+                size="sm"
+                onClick={handleDeleteListing}
+                className="bg-red-600 hover:bg-red-700 text-xs sm:text-sm"
+              >
+                <Trash2 className="mr-1 sm:mr-2 h-4 w-4" />
+                {t.listingDetail.delete}
+              </Button>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">

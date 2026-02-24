@@ -129,6 +129,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/listings/{id}/publish', [ListingController::class, 'publish']);
         Route::post('/listings/{id}/boost', [ListingController::class, 'boost']);
         Route::post('/listings/{id}/media', [ListingController::class, 'uploadMedia']);
+        Route::delete('/listings/{id}/media/{mediaId}', [ListingController::class, 'deleteMedia']);
         
         // Chats & Messages
         Route::get('/chats', [ChatController::class, 'index']);
