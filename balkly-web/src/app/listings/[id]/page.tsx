@@ -294,7 +294,7 @@ export default function ListingDetailPage() {
                 onClick={() => router.push(`/listings/${listingId}/edit`)}
                 className="text-xs sm:text-sm"
               >
-                <Pencil className="mr-1 sm:mr-2 h-4 w-4" />
+                <Edit2 className="mr-1 sm:mr-2 h-4 w-4" />
                 Edit
               </Button>
             )}
