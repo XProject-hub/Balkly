@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Save } from "lucide-react";
 import { listingsAPI, categoriesAPI } from "@/lib/api";
+import RichTextEditor from "@/components/RichTextEditor";
+import CurrencyConvert from "@/components/CurrencyConvert";
 
 export default function EditListingPage() {
   const params = useParams();
@@ -145,11 +147,11 @@ export default function EditListingPage() {
             {/* Description */}
             <div>
               <label className="block text-sm font-medium mb-2">Description *</label>
-              <textarea
+              <RichTextEditor
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2 border rounded-lg h-32 dark:bg-gray-800 dark:border-gray-700"
-                maxLength={2000}
+                onChange={(html) => setFormData({ ...formData, description: html })}
+                placeholder="Opisi oglas — stanje, detalji, kontakt..."
+                maxLength={5000}
               />
             </div>
 
@@ -209,6 +211,8 @@ export default function EditListingPage() {
                 </select>
               </div>
             </div>
+
+            <CurrencyConvert price={formData.price} currency={formData.currency} />
 
             {/* Location */}
             <div className="grid grid-cols-2 gap-4">
