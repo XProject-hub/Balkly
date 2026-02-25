@@ -230,7 +230,7 @@ class ListingController extends Controller
             'city' => 'sometimes|string|max:100',
             'country' => 'sometimes|string|size:2',
             'currency' => 'sometimes|string|size:3',
-            'status' => 'sometimes|in:active,paused',
+            'status' => 'sometimes|in:active,paused,sold',
             'attributes' => 'sometimes|array',
         ]);
 

@@ -301,7 +301,7 @@ export default function ListingDetailPage() {
                 Edit
               </Button>
             )}
-            {currentUser?.role === 'admin' && (
+            {(currentUser?.id === listing?.user_id || currentUser?.role === 'admin') && (
               <Button
                 variant="destructive"
                 size="sm"
@@ -309,7 +309,7 @@ export default function ListingDetailPage() {
                 className="bg-red-600 hover:bg-red-700 text-xs sm:text-sm"
               >
                 <Trash2 className="mr-1 sm:mr-2 h-4 w-4" />
-                {t.listingDetail.delete}
+                Delete
               </Button>
             )}
           </div>
