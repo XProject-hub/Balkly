@@ -315,11 +315,11 @@ export default function EditListingPage() {
             {/* Description */}
             <div>
               <label className="block text-sm font-medium mb-2">Description *</label>
-              <textarea
+              <RichTextEditor
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2 border rounded-lg h-32 dark:bg-gray-800 dark:border-gray-700"
-                maxLength={2000}
+                onChange={(html) => setFormData({ ...formData, description: html })}
+                placeholder="Describe what you are selling, condition, details..."
+                maxLength={5000}
               />
             </div>
 

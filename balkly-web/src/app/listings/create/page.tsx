@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import { listingsAPI, categoriesAPI } from "@/lib/api";
 import CurrencyConvert from "@/components/CurrencyConvert";
+import RichTextEditor from "@/components/RichTextEditor";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Icon mapping function
 const getIconComponent = (iconName: string) => {
@@ -41,13 +43,6 @@ const getIconComponent = (iconName: string) => {
   return <IconComponent className="h-16 w-16 mx-auto" />;
 };
 
-// Multi-step wizard steps
-const STEPS = [
-  { id: 1, name: "Category", description: "What do you want to post?" },
-  { id: 2, name: "Details", description: "Add basic details" },
-  { id: 3, name: "More Details", description: "Additional info (optional)" },
-  { id: 4, name: "Price", description: "Set price and choose a plan" },
-];
 
 export default function CreateListingPage() {
   const router = useRouter();
@@ -169,7 +164,7 @@ export default function CreateListingPage() {
       await loadCategoryAttributes(formData.category_id);
     }
     
-    if (currentStep < STEPS.length) {
+    if (currentStep < STEP_COUNT) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -327,49 +322,53 @@ export default function CreateListingPage() {
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Post an Ad</h1>
+          <h1 className="text-4xl font-bold mb-2">{t.createAd.title}</h1>
           <p className="text-muted-foreground">
-            Post your ad in just a few steps. AI will help you create the perfect ad.
+            {t.createAd.subtitle}
           </p>
         </div>
 
         {/* Progress Steps */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
-            {STEPS.map((step, index) => (
-              <div key={step.id} className="flex-1">
-                <div className="flex items-center">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                      currentStep >= step.id
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    {step.id}
-                  </div>
-                  {index < STEPS.length - 1 && (
+            {[1,2,3,4].map((stepId, index) => {
+              const stepNames = [t.createAd.step1, t.createAd.step2, t.createAd.step3, t.createAd.step4];
+              const stepDescs = [t.createAd.step1Desc, t.createAd.step2Desc, t.createAd.step3Desc, t.createAd.step4Desc];
+              return (
+                <div key={stepId} className="flex-1">
+                  <div className="flex items-center">
                     <div
-                      className={`flex-1 h-1 mx-2 ${
-                        currentStep > step.id ? "bg-primary" : "bg-muted"
+                      className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
+                        currentStep >= stepId
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground"
                       }`}
-                    />
-                  )}
+                    >
+                      {stepId}
+                    </div>
+                    {index < 3 && (
+                      <div
+                        className={`flex-1 h-1 mx-2 ${
+                          currentStep > stepId ? "bg-primary" : "bg-muted"
+                        }`}
+                      />
+                    )}
+                  </div>
+                  <div className="mt-2">
+                    <p className="text-sm font-medium">{stepNames[index]}</p>
+                    <p className="text-xs text-muted-foreground">{stepDescs[index]}</p>
+                  </div>
                 </div>
-                <div className="mt-2">
-                  <p className="text-sm font-medium">{step.name}</p>
-                  <p className="text-xs text-muted-foreground">{step.description}</p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
         {/* Step Content */}
         <Card>
           <CardHeader>
-            <CardTitle>{STEPS[currentStep - 1].name}</CardTitle>
-            <CardDescription>{STEPS[currentStep - 1].description}</CardDescription>
+            <CardTitle>{[t.createAd.step1,t.createAd.step2,t.createAd.step3,t.createAd.step4][currentStep-1]}</CardTitle>
+            <CardDescription>{[t.createAd.step1Desc,t.createAd.step2Desc,t.createAd.step3Desc,t.createAd.step4Desc][currentStep-1]}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Step 1: Category Selection */}
@@ -437,7 +436,7 @@ export default function CreateListingPage() {
                 )}
                 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Ad title *</label>
+                  <label className="block text-sm font-medium mb-2">{t.createAd.adTitle} *</label>
                   <input
                     type="text"
                     value={formData.title}
@@ -474,10 +473,10 @@ export default function CreateListingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Add photos (optional)</label>
+                  <label className="block text-sm font-medium mb-2">{t.createAd.addPhotos}</label>
                   <div className="border-2 border-dashed rounded-lg p-8 text-center hover:border-primary transition-colors">
                     <p className="text-muted-foreground mb-2">
-                      Drag & drop photos and videos here
+                      {t.createAd.addPhotosDesc}
                     </p>
                     <p className="text-xs text-muted-foreground mb-4">
                       Max 10 files • Images: JPG, PNG, WebP • Videos: MP4, MOV
@@ -653,7 +652,7 @@ export default function CreateListingPage() {
             {currentStep === 4 && (
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Price (optional)</label>
+                  <label className="block text-sm font-medium mb-2">{t.createAd.price}</label>
                   <div className="flex gap-2">
                     <input
                       type="text"
@@ -806,7 +805,7 @@ export default function CreateListingPage() {
             Back
           </Button>
 
-          {currentStep < STEPS.length ? (
+          {currentStep < STEP_COUNT ? (
             <Button
               onClick={handleNext}
               disabled={
@@ -823,7 +822,7 @@ export default function CreateListingPage() {
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading ? "Processing..." : "Post Ad"}
+              {loading ? "Processing..." : t.createAd.submit}
             </Button>
           )}
         </div>

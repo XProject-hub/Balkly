@@ -407,7 +407,7 @@ export default function ListingDetailPage() {
               <CardContent className="p-4 sm:p-6 pt-0">
                 <div className="prose max-w-none">
                   <h3 className="font-bold text-base sm:text-lg mb-2">{t.listingDetail.description}</h3>
-                  <p className="whitespace-pre-wrap text-sm sm:text-base">{listing.description}</p>
+                  <div className="prose prose-sm max-w-none dark:prose-invert text-sm sm:text-base" dangerouslySetInnerHTML={{ __html: listing.description }} />
                 </div>
 
                 {listing.listingAttributes?.length > 0 && (
