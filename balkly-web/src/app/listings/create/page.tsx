@@ -20,6 +20,7 @@ import {
   Package,
 } from "lucide-react";
 import { listingsAPI, categoriesAPI } from "@/lib/api";
+import CurrencyConvert from "@/components/CurrencyConvert";
 
 // Icon mapping function
 const getIconComponent = (iconName: string) => {
@@ -707,6 +708,7 @@ export default function CreateListingPage() {
                       <option value="EUR">EUR €</option>
                     </select>
                   </div>
+                  <CurrencyConvert price={formData.price} currency={formData.currency} />
                 </div>
 
                 <div>

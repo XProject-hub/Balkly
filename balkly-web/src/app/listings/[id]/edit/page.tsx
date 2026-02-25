@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Save, Trash2, Upload, X, ImagePlus } from "lucide-react";
 import { listingsAPI, categoriesAPI } from "@/lib/api";
+import CurrencyConvert from "@/components/CurrencyConvert";
 
 export default function EditListingPage() {
   const params = useParams();
@@ -367,6 +368,7 @@ export default function EditListingPage() {
                 </select>
               </div>
             </div>
+            <CurrencyConvert price={formData.price} currency={formData.currency} />
 
             {/* Location */}
             <div className="grid grid-cols-2 gap-4">
