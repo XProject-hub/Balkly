@@ -398,6 +398,11 @@ export default function AdminListingsPage() {
                             View
                           </Link>
                         </Button>
+                        <Button size="sm" variant="outline" asChild>
+                          <Link href={`/listings/${listing.id}/edit`}>
+                            ✏️ Edit
+                          </Link>
+                        </Button>
 
                         {/* Promote / Remove Promotion */}
                         {listing.is_promoted ? (

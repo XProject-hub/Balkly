@@ -41,6 +41,9 @@ Route::prefix('v1')->group(function () {
     // Categories
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{id}/attributes', [CategoryController::class, 'attributes']);
+
+    // Public reviews
+    Route::get('/reviews/user/{userId}', [\App\Http\Controllers\Api\ReviewController::class, 'getUserReviews']);
     
     // Listings
     Route::get('/listings', [ListingController::class, 'index']);
@@ -187,7 +190,6 @@ Route::prefix('v1')->group(function () {
         Route::post('/reports', [ListingController::class, 'report']);
         
         // Reviews
-        Route::get('/reviews/user/{userId}', [\App\Http\Controllers\Api\ReviewController::class, 'getUserReviews']);
         Route::post('/reviews', [\App\Http\Controllers\Api\ReviewController::class, 'store']);
         
         // Favorites
