@@ -47,7 +47,7 @@ export default function PartnerVisitPage() {
       const data = await res.json();
       setPartner(data.partner || data);
     } catch {
-      toast.error("Partner nije pronađen");
+      toast.error("Partner nije prona─æen");
     } finally {
       setLoadingPartner(false);
     }
@@ -55,15 +55,12 @@ export default function PartnerVisitPage() {
 
   const generateQrImage = async (url: string) => {
     try {
-      const QRCode = (await import("qrcode")).default;
-      const dataUrl = await QRCode.toDataURL(url, {
-        width: 300,
-        margin: 2,
-        color: { dark: "#0f172a", light: "#ffffff" },
-      });
+      const { generateBalklyQR } = await import("@/lib/balklyQr");
+      const dataUrl = await generateBalklyQR(url, 500);
       setQrDataUrl(dataUrl);
     } catch {}
   };
+
 
   const handleGetCode = async () => {
     const token = localStorage.getItem("auth_token");
@@ -90,13 +87,13 @@ export default function PartnerVisitPage() {
         if (data.existing) {
           toast.success("Tvoj aktivni kod je prikazan ispod.");
         } else {
-          toast.success("Kod generiran! Pokaži ga partneru.");
+          toast.success("Kod generiran! Poka┼¥i ga partneru.");
         }
       } else {
-        toast.error(data.message || "Greška pri generisanju koda");
+        toast.error(data.message || "Gre┼íka pri generisanju koda");
       }
     } catch {
-      toast.error("Mrežna greška");
+      toast.error("Mre┼¥na gre┼íka");
     } finally {
       setGeneratingQR(false);
     }
@@ -189,10 +186,10 @@ export default function PartnerVisitPage() {
                 <QrCode className="h-10 w-10 text-primary" />
               </div>
               <div>
-                <h2 className="text-xl font-bold mb-2">Generiši posjetni kod</h2>
+                <h2 className="text-xl font-bold mb-2">Generi┼íi posjetni kod</h2>
                 <p className="text-muted-foreground text-sm">
-                  Dobij QR kod koji ćeš pokazati kod partnera pri dolasku.
-                  Partner ga skenira i tvoja posjeta se bilježi.
+                  Dobij QR kod koji ─çe┼í pokazati kod partnera pri dolasku.
+                  Partner ga skenira i tvoja posjeta se bilje┼¥i.
                 </p>
               </div>
 
@@ -211,12 +208,12 @@ export default function PartnerVisitPage() {
               >
                 {generatingQR
                   ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Generisanje...</>
-                  : <><QrCode className="mr-2 h-5 w-5" /> Generiši QR kod</>
+                  : <><QrCode className="mr-2 h-5 w-5" /> Generi┼íi QR kod</>
                 }
               </Button>
 
               <p className="text-xs text-muted-foreground">
-                Besplatno · Jedan aktivni kod po partneru
+                Besplatno ┬À Jedan aktivni kod po partneru
               </p>
             </CardContent>
           </Card>
@@ -228,7 +225,7 @@ export default function PartnerVisitPage() {
                 <div>
                   <h2 className="font-bold text-lg">Tvoj posjetni kod</h2>
                   <p className="text-sm text-muted-foreground">
-                    {voucher.offer?.title || "Opći posjet"}
+                    {voucher.offer?.title || "Op─çi posjet"}
                   </p>
                 </div>
                 <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-semibold">
@@ -240,8 +237,14 @@ export default function PartnerVisitPage() {
               {/* QR Code */}
               {qrDataUrl ? (
                 <div className="flex justify-center">
-                  <div className="p-3 bg-white rounded-2xl shadow-lg">
-                    <img src={qrDataUrl} alt="QR kod" className="w-56 h-56" />
+                  <div className="rounded-2xl p-2 bg-[#0f172a]"
+                    style={{ boxShadow: "0 0 24px 6px rgba(0,229,255,0.25), 0 0 60px 10px rgba(124,58,237,0.15)" }}>
+                    <img
+                      src={qrDataUrl}
+                      alt="QR kod"
+                      className="w-56 h-56 rounded-xl"
+                      style={{ filter: "drop-shadow(0 0 6px rgba(0,229,255,0.5))" }}
+                    />
                   </div>
                 </div>
               ) : (
@@ -267,7 +270,7 @@ export default function PartnerVisitPage() {
               <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                 <Clock className="h-4 w-4" />
                 <span>
-                  Ističe za: <strong>{expiresIn(voucher.expires_at)}</strong>
+                  Isti─ìe za: <strong>{expiresIn(voucher.expires_at)}</strong>
                   {" "}({new Date(voucher.expires_at).toLocaleString("bs-BA")})
                 </span>
               </div>
@@ -277,8 +280,8 @@ export default function PartnerVisitPage() {
                 <p className="font-medium mb-1">Kako koristiti:</p>
                 <ol className="list-decimal list-inside space-y-0.5 text-xs">
                   <li>Idi kod partnera: <strong>{partner?.company_name}</strong></li>
-                  <li>Pokaži ovaj QR kod ili kod osoblju</li>
-                  <li>Osoblje skenira i potvrđuje tvoj dolazak</li>
+                  <li>Poka┼¥i ovaj QR kod ili kod osoblju</li>
+                  <li>Osoblje skenira i potvr─æuje tvoj dolazak</li>
                 </ol>
               </div>
 
@@ -294,7 +297,7 @@ export default function PartnerVisitPage() {
                   onClick={() => { setVoucher(null); setQrDataUrl(null); handleGetCode(); }}
                   className="gap-2"
                 >
-                  <RefreshCw className="h-4 w-4" /> Osvježi
+                  <RefreshCw className="h-4 w-4" /> Osvje┼¥i
                 </Button>
               </div>
             </CardContent>
