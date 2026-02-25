@@ -290,17 +290,29 @@ export default function ListingDetailPage() {
             {t.listingDetail.backToListings}
           </Button>
           
-          {currentUser?.role === 'admin' && (
-            <Button 
-              variant="destructive" 
-              size="sm"
-              onClick={handleDeleteListing}
-              className="bg-red-600 hover:bg-red-700 text-xs sm:text-sm"
-            >
-              <Trash2 className="mr-1 sm:mr-2 h-4 w-4" />
-              {t.listingDetail.delete}
-            </Button>
-          )}
+          <div className="flex gap-2">
+            {(currentUser?.id === listing?.user_id || currentUser?.role === 'admin') && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => router.push(`/listings/${listingId}/edit`)}
+                className="text-xs sm:text-sm"
+              >
+                Edit
+              </Button>
+            )}
+            {currentUser?.role === 'admin' && (
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleDeleteListing}
+                className="bg-red-600 hover:bg-red-700 text-xs sm:text-sm"
+              >
+                <Trash2 className="mr-1 sm:mr-2 h-4 w-4" />
+                {t.listingDetail.delete}
+              </Button>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -372,37 +384,22 @@ export default function ListingDetailPage() {
                     <Button size="sm" variant="outline" onClick={handleShare} className="w-8 h-8 sm:w-9 sm:h-9 p-0">
                       <Share2 className="h-4 w-4" />
                     </Button>
-                    <Button size="sm" variant="outline" className="w-8 h-8 sm:w-9 sm:h-9 p-0" onClick={() => {
-                      const token = localStorage.getItem("auth_token");
-                      if (!token) {
-                        alert(t.listingDetail.loginToReport);
-                        router.push("/auth/login");
-                        return;
-                      }
-                      const reason = prompt("Why are you reporting this listing?\n\nType one of:\n• spam\n• inappropriate\n• fraud\n• duplicate\n• other");
-                      if (reason) {
-                        const validReasons = ['spam', 'inappropriate', 'fraud', 'duplicate', 'copyright', 'other'];
-                        const normalizedReason = reason.toLowerCase().trim();
-                        const matchedReason = validReasons.find(r => normalizedReason.includes(r)) || 'other';
-                        fetch("/api/v1/reports", {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                          },
-                          body: JSON.stringify({ 
-                            target_type: 'listing', 
-                            target_id: parseInt(listingId), 
-                            reason: matchedReason,
-                            description: reason,
-                          }),
-                        }).then(res => {
-                          if (res.ok) alert(t.listingDetail.reportSubmitted);
-                          else alert(t.listingDetail.failedReport);
-                        }).catch(() => alert(t.listingDetail.failedReport));
-                      }
-                    }}>
-                      <Flag className="h-4 w-4" />
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="text-red-500 border-red-200 hover:bg-red-50 hover:border-red-400 gap-1 text-xs px-2"
+                      onClick={() => {
+                        const token = localStorage.getItem("auth_token");
+                        if (!token) {
+                          alert(t.listingDetail.loginToReport);
+                          router.push("/auth/login");
+                          return;
+                        }
+                        setShowReportModal(true);
+                      }}
+                    >
+                      <Flag className="h-3 w-3" />
+                      Report
                     </Button>
                   </div>
                 </div>
