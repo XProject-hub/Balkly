@@ -200,6 +200,8 @@ export default function AdminPartnersPage() {
       const data = await res.json();
 
       if (res.ok) {
+        const partnerId = data?.partner?.id || editingPartner?.id;
+        if (partnerId && logoFile) await uploadLogoForPartner(partnerId);
         toast.success(editingPartner ? "Partner ažuriran" : "Partner dodan");
         setShowModal(false);
         loadPartners("");
