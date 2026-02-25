@@ -188,7 +188,10 @@ class ListingController extends Controller
      */
     public function uploadMedia(Request $request, $id)
     {
-        $listing = Listing::where('user_id', auth()->id())->findOrFail($id);
+        $isAdmin = auth()->user() && auth()->user()->role === 'admin';
+        $listing = $isAdmin
+            ? Listing::findOrFail($id)
+            : Listing::where('user_id', auth()->id())->findOrFail($id);
 
         $request->validate([
             'images' => 'required|array|max:10',
@@ -221,7 +224,10 @@ class ListingController extends Controller
 
     public function update(Request $request, $id)
     {
-        $listing = Listing::where('user_id', auth()->id())->findOrFail($id);
+        $isAdmin = auth()->user() && auth()->user()->role === 'admin';
+        $listing = $isAdmin
+            ? Listing::findOrFail($id)
+            : Listing::where('user_id', auth()->id())->findOrFail($id);
 
         $validated = $request->validate([
             'title' => 'sometimes|string|max:255',

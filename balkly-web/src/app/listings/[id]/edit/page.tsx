@@ -1,22 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Upload, ImageIcon, X } from "lucide-react";
 import { listingsAPI, categoriesAPI } from "@/lib/api";
 import RichTextEditor from "@/components/RichTextEditor";
 import CurrencyConvert from "@/components/CurrencyConvert";
+import { toast } from "@/lib/toast";
+
+const API = "/api/v1";
 
 export default function EditListingPage() {
   const params = useParams();
   const router = useRouter();
   const listingId = params.id as string;
-  
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [listing, setListing] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -28,7 +33,22 @@ export default function EditListingPage() {
   });
   const [categoryAttributes, setCategoryAttributes] = useState<any[]>([]);
 
+  // Image management
+  const [existingMedia, setExistingMedia] = useState<any[]>([]);
+  const [newImages, setNewImages] = useState<File[]>([]);
+  const [newPreviews, setNewPreviews] = useState<string[]>([]);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [uploadingImages, setUploadingImages] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const getToken = () =>
+    typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
+
   useEffect(() => {
+    const stored = localStorage.getItem("user");
+    if (stored) {
+      try { setCurrentUser(JSON.parse(stored)); } catch {}
+    }
     loadListing();
   }, [listingId]);
 
@@ -36,8 +56,8 @@ export default function EditListingPage() {
     try {
       const response = await listingsAPI.getOne(listingId);
       const data = response.data.listing;
-      
       setListing(data);
+      setExistingMedia(data.media || []);
       setFormData({
         title: data.title || "",
         description: data.description || "",
@@ -48,12 +68,9 @@ export default function EditListingPage() {
         attributes: {},
       });
 
-      // Load category attributes
       if (data.category_id) {
         const attrResponse = await categoriesAPI.getAttributes(data.category_id);
         setCategoryAttributes(attrResponse.data.attributes || []);
-        
-        // Pre-fill attributes
         const attrs: Record<string, any> = {};
         data.listing_attributes?.forEach((la: any) => {
           attrs[la.attribute_id] = la.value;
@@ -61,42 +78,110 @@ export default function EditListingPage() {
         setFormData(prev => ({ ...prev, attributes: attrs }));
       }
     } catch (error) {
-      console.error("Failed to load listing:", error);
-      alert("Failed to load listing");
+      toast.error("Failed to load listing");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteMedia = async (mediaId: number) => {
+    if (!confirm("Obriši ovu sliku?")) return;
+    setDeletingId(mediaId);
+    try {
+      const res = await fetch(`${API}/media/${mediaId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+          Accept: "application/json",
+        },
+      });
+      if (res.ok) {
+        setExistingMedia(prev => prev.filter(m => m.id !== mediaId));
+        toast.success("Slika obrisana");
+      } else {
+        const d = await res.json().catch(() => ({}));
+        toast.error(d.error || "Greška pri brisanju");
+      }
+    } catch {
+      toast.error("Mrežna greška");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const total = existingMedia.length + newImages.length + files.length;
+    if (total > 10) {
+      toast.error("Max 10 slika ukupno");
+      return;
+    }
+    setNewImages(prev => [...prev, ...files]);
+    setNewPreviews(prev => [...prev, ...files.map(f => URL.createObjectURL(f))]);
+    e.target.value = "";
+  };
+
+  const removeNewImage = (idx: number) => {
+    setNewImages(prev => prev.filter((_, i) => i !== idx));
+    setNewPreviews(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const uploadNewImages = async () => {
+    if (newImages.length === 0) return;
+    setUploadingImages(true);
+    try {
+      const fd = new FormData();
+      newImages.forEach(f => fd.append("images[]", f));
+      const res = await fetch(`${API}/listings/${listingId}/media`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+          Accept: "application/json",
+        },
+        body: fd,
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setExistingMedia(prev => [...prev, ...(data.media || [])]);
+        setNewImages([]);
+        setNewPreviews([]);
+        toast.success("Slike uploadovane");
+      } else {
+        const d = await res.json().catch(() => ({}));
+        toast.error(d.message || "Greška pri uploadu slika");
+      }
+    } catch {
+      toast.error("Mrežna greška pri uploadu");
+    } finally {
+      setUploadingImages(false);
     }
   };
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Parse price properly: 15.000,00 → 15000.00
       let priceValue = 0;
       if (formData.price) {
-        const cleanedPrice = formData.price.toString().replaceAll('.', '').replace(',', '.');
-        priceValue = parseFloat(cleanedPrice) || 0;
+        const cleaned = formData.price.toString().replaceAll(".", "").replace(",", ".");
+        priceValue = parseFloat(cleaned) || 0;
       }
-      
-      console.log("Raw price:", formData.price);
-      console.log("Parsed price:", priceValue);
-      
+
       await listingsAPI.update(listingId, {
         title: formData.title,
         description: formData.description,
         price: priceValue,
         currency: formData.currency,
-        city: formData.city || '',
-        country: formData.country || 'AE',
+        city: formData.city || "",
+        country: formData.country || "AE",
         attributes: formData.attributes,
       });
 
-      alert("Listing updated successfully!");
+      if (newImages.length > 0) await uploadNewImages();
+
+      toast.success("Oglas ažuriran!");
       router.push(`/listings/${listingId}`);
     } catch (error: any) {
-      console.error("Failed to update listing:", error);
-      console.error("Error response:", error.response?.data);
-      alert("Failed to update listing: " + (error.response?.data?.message || error.message));
+      toast.error("Greška: " + (error.response?.data?.message || error.message));
     } finally {
       setSaving(false);
     }
@@ -118,23 +203,103 @@ export default function EditListingPage() {
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="container mx-auto px-4 max-w-3xl">
-        <Button
-          variant="ghost"
-          className="mb-4"
-          onClick={() => router.push(`/listings/${listingId}`)}
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Listing
+        <Button variant="ghost" className="mb-4" onClick={() => router.push(`/listings/${listingId}`)}>
+          <ArrowLeft className="mr-2 h-4 w-4" /> Nazad na oglas
         </Button>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-3xl">Edit Listing</CardTitle>
+            <CardTitle className="text-2xl">Uredi oglas</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Title */}
+
+            {/* ── IMAGES ── */}
             <div>
-              <label className="block text-sm font-medium mb-2">Title *</label>
+              <h3 className="font-semibold text-base mb-3 flex items-center gap-2">
+                <ImageIcon className="h-4 w-4" /> Fotografije
+              </h3>
+
+              {/* Existing images */}
+              {existingMedia.length > 0 && (
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-3">
+                  {existingMedia.map((m, idx) => (
+                    <div key={m.id} className="relative group aspect-square">
+                      <img
+                        src={m.url}
+                        alt={`Slika ${idx + 1}`}
+                        className="w-full h-full object-cover rounded-lg border"
+                      />
+                      {idx === 0 && (
+                        <span className="absolute top-1 left-1 bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded">
+                          COVER
+                        </span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteMedia(m.id)}
+                        disabled={deletingId === m.id}
+                        className="absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-50"
+                      >
+                        {deletingId === m.id ? (
+                          <span className="animate-spin text-[10px]">⟳</span>
+                        ) : (
+                          <Trash2 className="h-3 w-3" />
+                        )}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* New images to upload */}
+              {newPreviews.length > 0 && (
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-3">
+                  {newPreviews.map((url, idx) => (
+                    <div key={idx} className="relative group aspect-square">
+                      <img src={url} alt="" className="w-full h-full object-cover rounded-lg border border-dashed border-primary/50 opacity-70" />
+                      <span className="absolute top-1 left-1 bg-blue-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">NEW</span>
+                      <button
+                        type="button"
+                        onClick={() => removeNewImage(idx)}
+                        className="absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Upload button */}
+              <div className="flex items-center gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={existingMedia.length + newImages.length >= 10}
+                  className="gap-2"
+                >
+                  <Upload className="h-4 w-4" />
+                  Dodaj slike
+                </Button>
+                <span className="text-xs text-muted-foreground">
+                  {existingMedia.length + newImages.length}/10 slika
+                </span>
+              </div>
+            </div>
+
+            {/* ── TITLE ── */}
+            <div>
+              <label className="block text-sm font-medium mb-2">Naslov *</label>
               <input
                 type="text"
                 value={formData.title}
@@ -144,9 +309,9 @@ export default function EditListingPage() {
               />
             </div>
 
-            {/* Description */}
+            {/* ── DESCRIPTION (rich text) ── */}
             <div>
-              <label className="block text-sm font-medium mb-2">Description *</label>
+              <label className="block text-sm font-medium mb-2">Opis *</label>
               <RichTextEditor
                 value={formData.description}
                 onChange={(html) => setFormData({ ...formData, description: html })}
@@ -155,52 +320,30 @@ export default function EditListingPage() {
               />
             </div>
 
-            {/* Price */}
+            {/* ── PRICE ── */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Price *</label>
+                <label className="block text-sm font-medium mb-2">Cijena *</label>
                 <input
                   type="text"
                   value={formData.price}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    const filtered = value.replace(/[^\d,.]/g, '');
-                    setFormData({ ...formData, price: filtered });
-                  }}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value.replace(/[^\d,.]/g, "") })}
                   onBlur={(e) => {
-                    // Format on blur
-                    let value = e.target.value;
-                    if (!value) return;
-                    
-                    value = value.replace(/\./g, '').replace(',', '.');
-                    const num = parseFloat(value);
-                    
-                    if (!Number.isNaN(num)) {
-                      const formatted = num.toLocaleString('de-DE', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                      });
-                      setFormData({ ...formData, price: formatted });
-                    }
+                    const v = e.target.value.replace(/\./g, "").replace(",", ".");
+                    const n = parseFloat(v);
+                    if (!isNaN(n)) setFormData({ ...formData, price: n.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) });
                   }}
                   onFocus={(e) => {
-                    // Unformat on focus
-                    let value = e.target.value;
-                    if (!value) return;
-                    
-                    value = value.replace(/\./g, '').replace(',', '.');
-                    const num = parseFloat(value);
-                    
-                    if (!Number.isNaN(num)) {
-                      setFormData({ ...formData, price: num.toString() });
-                    }
+                    const v = e.target.value.replace(/\./g, "").replace(",", ".");
+                    const n = parseFloat(v);
+                    if (!isNaN(n)) setFormData({ ...formData, price: n.toString() });
                   }}
-                  placeholder="15000"
+                  placeholder="0"
                   className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Currency</label>
+                <label className="block text-sm font-medium mb-2">Valuta</label>
                 <select
                   value={formData.currency}
                   onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
@@ -211,13 +354,12 @@ export default function EditListingPage() {
                 </select>
               </div>
             </div>
-
             <CurrencyConvert price={formData.price} currency={formData.currency} />
 
-            {/* Location */}
+            {/* ── LOCATION ── */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">City *</label>
+                <label className="block text-sm font-medium mb-2">Grad *</label>
                 <input
                   type="text"
                   value={formData.city}
@@ -226,7 +368,7 @@ export default function EditListingPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Country</label>
+                <label className="block text-sm font-medium mb-2">Država</label>
                 <select
                   value={formData.country}
                   onChange={(e) => setFormData({ ...formData, country: e.target.value })}
@@ -236,14 +378,16 @@ export default function EditListingPage() {
                   <option value="BA">Bosnia and Herzegovina</option>
                   <option value="HR">Croatia</option>
                   <option value="RS">Serbia</option>
+                  <option value="DE">Germany</option>
+                  <option value="AT">Austria</option>
                 </select>
               </div>
             </div>
 
-            {/* Attributes */}
+            {/* ── ATTRIBUTES ── */}
             {categoryAttributes.length > 0 && (
               <div>
-                <h3 className="font-bold text-lg mb-4">Item Details</h3>
+                <h3 className="font-bold text-base mb-4">Detalji artikla</h3>
                 <div className="grid grid-cols-2 gap-4">
                   {categoryAttributes.map((attr: any) => (
                     <div key={attr.id}>
@@ -253,37 +397,19 @@ export default function EditListingPage() {
                       {attr.type === "select" ? (
                         <select
                           value={formData.attributes[attr.id] || ""}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              attributes: {
-                                ...formData.attributes,
-                                [attr.id]: e.target.value,
-                              },
-                            })
-                          }
+                          onChange={(e) => setFormData({ ...formData, attributes: { ...formData.attributes, [attr.id]: e.target.value } })}
                           className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                         >
-                          <option value="">Select...</option>
-                          {attr.options_json?.map((option: string) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
+                          <option value="">Odaberi...</option>
+                          {attr.options_json?.map((o: string) => (
+                            <option key={o} value={o}>{o}</option>
                           ))}
                         </select>
                       ) : (
                         <input
                           type={attr.type === "number" ? "number" : "text"}
                           value={formData.attributes[attr.id] || ""}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              attributes: {
-                                ...formData.attributes,
-                                [attr.id]: e.target.value,
-                              },
-                            })
-                          }
+                          onChange={(e) => setFormData({ ...formData, attributes: { ...formData.attributes, [attr.id]: e.target.value } })}
                           className="w-full px-4 py-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
                         />
                       )}
@@ -293,29 +419,20 @@ export default function EditListingPage() {
               </div>
             )}
 
-            {/* Actions */}
-            <div className="flex gap-4">
-              <Button
-                onClick={handleSave}
-                disabled={saving}
-                className="flex-1"
-                size="lg"
-              >
+            {/* ── ACTIONS ── */}
+            <div className="flex gap-3 pt-2">
+              <Button onClick={handleSave} disabled={saving} className="flex-1" size="lg">
                 <Save className="mr-2 h-5 w-5" />
-                {saving ? "Saving..." : "Save Changes"}
+                {saving ? "Snimam..." : "Spremi izmjene"}
               </Button>
-              <Button
-                variant="outline"
-                onClick={() => router.push(`/listings/${listingId}`)}
-                size="lg"
-              >
-                Cancel
+              <Button variant="outline" onClick={() => router.push(`/listings/${listingId}`)} size="lg">
+                Odustani
               </Button>
             </div>
+
           </CardContent>
         </Card>
       </div>
     </div>
   );
 }
-

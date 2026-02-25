@@ -116,8 +116,9 @@ class MediaController extends Controller
     {
         $media = Media::findOrFail($id);
 
-        // Check ownership
-        if ($media->owner_type === 'App\\Models\\Listing') {
+        // Check ownership — admin can delete any media
+        $isAdmin = auth()->user() && auth()->user()->role === 'admin';
+        if (!$isAdmin && $media->owner_type === 'App\\Models\\Listing') {
             $listing = \App\Models\Listing::find($media->owner_id);
             if ($listing && $listing->user_id !== auth()->id()) {
                 return response()->json(['error' => 'Unauthorized'], 403);
