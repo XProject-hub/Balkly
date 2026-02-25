@@ -21,34 +21,17 @@ export default function MyListingsPage() {
     setLoading(true);
     try {
       const token = localStorage.getItem("auth_token");
-      const userData = localStorage.getItem("user");
-      const user = userData && userData !== 'undefined' ? JSON.parse(userData) : {};
-      
-      console.log("Loading listings for user ID:", user.id);
-      
-      // WORKAROUND: Fetch ALL listings and filter client-side
-      const response = await fetch("/api/v1/listings", {
+
+      const response = await fetch("/api/v1/listings/my-listings?per_page=100", {
         headers: {
           "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
+          "Accept": "application/json",
         },
       });
-      
-      console.log("Listings response status:", response.status);
-      
+
       if (response.ok) {
         const data = await response.json();
-        console.log("All listings data:", data);
-        
-        // Filter to show only current user's listings
-        const allListings = data.data || [];
-        const myListings = allListings.filter((listing: any) => listing.user_id === user.id);
-        
-        console.log("Total listings:", allListings.length);
-        console.log("My listings:", myListings.length);
-        console.log("My listings data:", myListings);
-        
-        setListings(myListings);
+        setListings(data.data || []);
       } else {
         console.error("Failed to load listings, status:", response.status);
       }

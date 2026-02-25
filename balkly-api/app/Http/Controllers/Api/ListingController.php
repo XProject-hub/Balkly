@@ -219,21 +219,6 @@ class ListingController extends Controller
         ]);
     }
 
-    public function deleteMedia(Request $request, $id, $mediaId)
-    {
-        $listing = Listing::where('user_id', auth()->id())->findOrFail($id);
-        $media = \App\Models\Media::where('owner_type', 'App\\Models\\Listing')
-            ->where('owner_id', $listing->id)
-            ->findOrFail($mediaId);
-
-        \Illuminate\Support\Facades\Storage::disk('public')->delete(
-            str_replace('/storage/', '', $media->url)
-        );
-        $media->delete();
-
-        return response()->json(['message' => 'Image deleted successfully']);
-    }
-
     public function update(Request $request, $id)
     {
         $listing = Listing::where('user_id', auth()->id())->findOrFail($id);
@@ -244,9 +229,25 @@ class ListingController extends Controller
             'price' => 'sometimes|numeric|min:0',
             'city' => 'sometimes|string|max:100',
             'country' => 'sometimes|string|size:2',
+            'currency' => 'sometimes|string|size:3',
+            'status' => 'sometimes|in:active,paused',
+            'attributes' => 'sometimes|array',
         ]);
 
+        $attributes = $validated['attributes'] ?? null;
+        unset($validated['attributes']);
+
         $listing->update($validated);
+
+        if ($attributes !== null) {
+            $listing->listingAttributes()->delete();
+            foreach ($attributes as $attributeId => $value) {
+                $listing->listingAttributes()->create([
+                    'attribute_id' => $attributeId,
+                    'value' => $value,
+                ]);
+            }
+        }
 
         return response()->json([
             'listing' => $listing->fresh(['category', 'media']),
