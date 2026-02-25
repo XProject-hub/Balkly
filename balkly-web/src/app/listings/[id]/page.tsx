@@ -41,6 +41,10 @@ export default function ListingDetailPage() {
   const [avgRating, setAvgRating] = useState(0);
   const [similarListings, setSimilarListings] = useState<any[]>([]);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportDescription, setReportDescription] = useState("");
+  const [reportSubmitting, setReportSubmitting] = useState(false);
   const { t } = useLanguage();
 
   useEffect(() => {
