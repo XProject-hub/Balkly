@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   ArrowLeft, Plus, Search, Edit, Trash2, Users, MousePointerClick,
-  Euro, X, Loader2, ExternalLink, AlertCircle, BarChart2,
+  Euro, X, Loader2, ExternalLink, AlertCircle, BarChart2, Upload, ImageIcon,
 } from "lucide-react";
 import { toast } from "@/lib/toast";
 
@@ -48,6 +48,10 @@ export default function AdminPartnersPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
   const [saving, setSaving] = useState(false);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string>("");
+  const [logoUploading, setLogoUploading] = useState(false);
+  const logoInputRef = useRef<HTMLInputElement>(null);
   const [userSearch, setUserSearch] = useState("");
   const [userResults, setUserResults] = useState<any[]>([]);
   const [selectedUser, setSelectedUser] = useState<any>(null);
@@ -149,6 +153,22 @@ export default function AdminPartnersPage() {
     });
     setUserSearch(p.user ? `${p.user.name} (${p.user.email})` : "");
     setShowModal(true);
+  };
+
+  const uploadLogoForPartner = async (partnerId: number) => {
+    if (!logoFile) return;
+    setLogoUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("logo", logoFile);
+      const res = await fetch(`/api/v1/admin/partners/${partnerId}/logo`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${getToken()}`, Accept: "application/json" },
+        body: fd,
+      });
+      if (!res.ok) toast.error("Logo nije uploadovan");
+    } catch { toast.error("Greska pri uploadu loga"); }
+    finally { setLogoUploading(false); }
   };
 
   const handleSave = async () => {
@@ -375,6 +395,44 @@ export default function AdminPartnersPage() {
             </div>
 
             <div className="space-y-4">
+              {/* Logo Upload */}
+              <div>
+                <label className="block text-sm font-medium mb-2">Logo partnera</label>
+                <div className="flex items-center gap-4">
+                  <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-muted-foreground/30 flex items-center justify-center overflow-hidden bg-muted/30 shrink-0 cursor-pointer hover:border-primary/50 transition-colors"
+                    onClick={() => logoInputRef.current?.click()}>
+                    {logoPreview ? (
+                      <img src={logoPreview} alt="Logo" className="w-full h-full object-contain p-1" />
+                    ) : (
+                      <div className="text-center">
+                        <ImageIcon className="h-6 w-6 mx-auto text-muted-foreground/50 mb-1" />
+                        <p className="text-[10px] text-muted-foreground">Klikni</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <input
+                      ref={logoInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
+                      className="hidden"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) {
+                          setLogoFile(f);
+                          setLogoPreview(URL.createObjectURL(f));
+                        }
+                      }}
+                    />
+                    <Button type="button" variant="outline" size="sm" onClick={() => logoInputRef.current?.click()} className="gap-2 mb-1">
+                      <Upload className="h-3.5 w-3.5" /> Odaberi logo
+                    </Button>
+                    {logoFile && <p className="text-xs text-green-600 mt-1">âœ“ {logoFile.name}</p>}
+                    <p className="text-xs text-muted-foreground">JPG, PNG, WebP, SVG â€“ max 5MB</p>
+                  </div>
+                </div>
+              </div>
+
               {/* User search (only on create) */}
               {!editingPartner && (
                 <div>

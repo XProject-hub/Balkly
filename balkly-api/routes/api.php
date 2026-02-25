@@ -295,6 +295,7 @@ Route::prefix('v1')->group(function () {
             Route::post('/partners', [\App\Http\Controllers\Api\PartnerController::class, 'store']);
             Route::patch('/partners/{id}', [\App\Http\Controllers\Api\PartnerController::class, 'update']);
             Route::delete('/partners/{id}', [\App\Http\Controllers\Api\PartnerController::class, 'destroy']);
+            Route::post('/partners/{id}/logo', [\App\Http\Controllers\Api\PartnerController::class, 'uploadLogo']);
             
             // Ad Banner Management
             Route::get('/banners', [\App\Http\Controllers\Api\AdBannerController::class, 'index']);

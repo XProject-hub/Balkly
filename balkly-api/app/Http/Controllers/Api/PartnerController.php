@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class PartnerController extends Controller
 {
@@ -178,5 +179,28 @@ class PartnerController extends Controller
         });
 
         return response()->json(['message' => 'Partner deactivated successfully']);
+    }
+
+    public function uploadLogo(Request $request, $id)
+    {
+        $partner = Partner::findOrFail($id);
+
+        $request->validate([
+            'logo' => 'required|image|mimes:jpeg,jpg,png,gif,webp,svg|max:5120',
+        ]);
+
+        // Delete old logo if exists
+        if ($partner->company_logo && str_starts_with($partner->company_logo, '/storage/')) {
+            $oldPath = str_replace('/storage/', '', $partner->company_logo);
+            Storage::disk('public')->delete($oldPath);
+        }
+
+        $path = $request->file('logo')->store('partner-logos', 'public');
+        $partner->update(['company_logo' => '/storage/' . $path]);
+
+        return response()->json([
+            'message' => 'Logo uploaded successfully',
+            'logo_url' => '/storage/' . $path,
+        ]);
     }
 }
