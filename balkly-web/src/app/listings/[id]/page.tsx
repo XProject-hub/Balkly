@@ -310,7 +310,7 @@ export default function ListingDetailPage() {
                     <img
                       src={images[selectedImage].url}
                       alt={listing.title}
-                      className="w-full h-full object-cover rounded-t-lg"
+                      className="w-full h-full object-contain rounded-t-lg bg-black/5 dark:bg-black/40"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">

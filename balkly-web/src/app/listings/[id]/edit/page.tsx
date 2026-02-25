@@ -227,7 +227,7 @@ export default function EditListingPage() {
                       <img
                         src={m.url}
                         alt={`Slika ${idx + 1}`}
-                        className="w-full h-full object-cover rounded-lg border"
+                        className="w-full h-full object-contain rounded-lg border bg-muted/30"
                       />
                       {idx === 0 && (
                         <span className="absolute top-1 left-1 bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded">
