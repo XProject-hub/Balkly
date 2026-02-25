@@ -286,29 +286,17 @@ export default function ListingDetailPage() {
             {t.listingDetail.backToListings}
           </Button>
           
-          <div className="flex gap-2">
-            {(currentUser?.id === listing?.user_id || currentUser?.role === 'admin') && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => router.push(`/listings/${listingId}/edit`)}
-                className="text-xs sm:text-sm"
-              >
-                                Edit
-              </Button>
-            )}
-            {currentUser?.role === 'admin' && (
-              <Button 
-                variant="destructive" 
-                size="sm"
-                onClick={handleDeleteListing}
-                className="bg-red-600 hover:bg-red-700 text-xs sm:text-sm"
-              >
-                <Trash2 className="mr-1 sm:mr-2 h-4 w-4" />
-                {t.listingDetail.delete}
-              </Button>
-            )}
-          </div>
+          {currentUser?.role === 'admin' && (
+            <Button 
+              variant="destructive" 
+              size="sm"
+              onClick={handleDeleteListing}
+              className="bg-red-600 hover:bg-red-700 text-xs sm:text-sm"
+            >
+              <Trash2 className="mr-1 sm:mr-2 h-4 w-4" />
+              {t.listingDetail.delete}
+            </Button>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -687,6 +675,104 @@ export default function ListingDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Report Modal */}
+      {showReportModal && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-background rounded-xl shadow-xl max-w-md w-full p-6">
+            <h2 className="text-lg font-bold mb-1 flex items-center gap-2">
+              <Flag className="h-5 w-5 text-red-500" />
+              Report Listing
+            </h2>
+            <p className="text-sm text-muted-foreground mb-4">
+              Help us keep Balkly safe. Select a reason and describe the issue.
+            </p>
+
+            <div className="space-y-2 mb-4">
+              {[
+                { value: "spam", label: "Spam or duplicate" },
+                { value: "fraud", label: "Fraud or scam" },
+                { value: "inappropriate", label: "Inappropriate content" },
+                { value: "misleading", label: "Misleading or false information" },
+                { value: "illegal", label: "Illegal product or service" },
+                { value: "other", label: "Other" },
+              ].map((opt) => (
+                <label key={opt.value} className="flex items-center gap-3 cursor-pointer p-2 rounded-lg hover:bg-muted">
+                  <input
+                    type="radio"
+                    name="reportReason"
+                    value={opt.value}
+                    checked={reportReason === opt.value}
+                    onChange={() => setReportReason(opt.value)}
+                    className="accent-red-500"
+                  />
+                  <span className="text-sm">{opt.label}</span>
+                </label>
+              ))}
+            </div>
+
+            <textarea
+              value={reportDescription}
+              onChange={(e) => setReportDescription(e.target.value)}
+              placeholder="Additional details (optional)..."
+              className="w-full px-3 py-2 border rounded-lg text-sm dark:bg-gray-800 dark:border-gray-700 h-24 mb-4 resize-none"
+              maxLength={500}
+            />
+
+            <div className="flex gap-3">
+              <button
+                onClick={async () => {
+                  if (!reportReason) { alert("Please select a reason."); return; }
+                  setReportSubmitting(true);
+                  try {
+                    const token = localStorage.getItem("auth_token");
+                    const res = await fetch("/api/v1/reports", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                        Authorization: `Bearer ${token}`,
+                      },
+                      body: JSON.stringify({
+                        target_type: "listing",
+                        target_id: parseInt(listingId),
+                        reason: reportReason,
+                        description: reportDescription,
+                      }),
+                    });
+                    if (res.ok) {
+                      alert("Report submitted. Thank you for helping keep Balkly safe.");
+                      setShowReportModal(false);
+                      setReportReason("");
+                      setReportDescription("");
+                    } else {
+                      alert("Failed to submit report. Please try again.");
+                    }
+                  } catch {
+                    alert("Failed to submit report. Please try again.");
+                  } finally {
+                    setReportSubmitting(false);
+                  }
+                }}
+                disabled={reportSubmitting || !reportReason}
+                className="flex-1 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white font-semibold py-2 px-4 rounded-lg text-sm transition-colors"
+              >
+                {reportSubmitting ? "Submitting..." : "Submit Report"}
+              </button>
+              <button
+                onClick={() => { setShowReportModal(false); setReportReason(""); setReportDescription(""); }}
+                className="px-4 py-2 border rounded-lg text-sm hover:bg-muted transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+
+            <p className="text-xs text-muted-foreground mt-3 text-center">
+              Reports are reviewed by our team. For urgent legal matters: <a href="mailto:legal@balkly.live" className="text-red-500 hover:underline">legal@balkly.live</a>
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

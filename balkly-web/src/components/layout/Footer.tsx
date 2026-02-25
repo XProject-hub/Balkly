@@ -89,6 +89,7 @@ export default function Footer() {
             <ul className="space-y-2 text-xs sm:text-sm">
               <li><Link href="/terms" className="text-gray-400 hover:text-white transition-colors">{t.footer.termsOfService}</Link></li>
               <li><Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">{t.footer.privacyPolicy}</Link></li>
+              <li><Link href="/content-moderation" className="text-gray-400 hover:text-white transition-colors">Content Moderation</Link></li>
               <li><Link href="/cookies" className="text-gray-400 hover:text-white transition-colors">{t.footer.cookiePolicy}</Link></li>
               <li><Link href="/refund" className="text-gray-400 hover:text-white transition-colors">{t.footer.refundPolicy}</Link></li>
             </ul>

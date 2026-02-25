@@ -5,7 +5,7 @@ export default function TermsPage() {
       <div className="bg-gradient-to-r from-balkly-blue to-iris-purple text-white py-16">
         <div className="container mx-auto px-4 max-w-5xl">
           <h1 className="text-5xl font-bold mb-4">Terms of Service</h1>
-          <p className="text-xl text-white/90">Last Updated: November 6, 2025</p>
+          <p className="text-xl text-white/90">Last Updated: February 18, 2026</p>
           <p className="text-white/80 mt-4">NoLimitsDevelopments LLC • Dubai, UAE</p>
         </div>
       </div>
@@ -135,11 +135,58 @@ export default function TermsPage() {
               Support: <a href="mailto:support@balkly.live" className="text-balkly-blue hover:underline">support@balkly.live</a>
             </p>
 
+            <h2>12. Independent Advertisers & Legal Compliance</h2>
+            <p>
+              Balkly acts solely as an online intermediary platform that enables users to post listings and connect with other users.
+            </p>
+            <p>Balkly does not verify, guarantee, or warrant:</p>
+            <ul>
+              <li>The legal status of businesses or individuals posting listings</li>
+              <li>The existence of required trade licenses or permits</li>
+              <li>Compliance with UAE or international laws</li>
+            </ul>
+            <p>
+              Each user is solely responsible for ensuring that their activities, listings, and transactions comply with all applicable laws, licensing requirements, and regulations in their jurisdiction.
+            </p>
+            <p>
+              Balkly shall not be liable for any unlawful activity conducted by users through the platform.
+            </p>
+
+            <h2>13. Indemnification</h2>
+            <p>
+              You agree to indemnify, defend, and hold harmless <strong>NoLimitsDevelopments LLC</strong>, Balkly, its directors, employees, and affiliates from and against any claims, liabilities, damages, losses, costs, or expenses (including legal fees) arising out of:
+            </p>
+            <ul>
+              <li>Your violation of these Terms</li>
+              <li>Your breach of any applicable laws or regulations</li>
+              <li>Any claims made by third parties arising from your listings, services, or transactions</li>
+            </ul>
+
+            <h2>14. Notice and Takedown Procedure</h2>
+            <p>
+              If Balkly becomes aware of potentially unlawful content, we reserve the right to:
+            </p>
+            <ul>
+              <li>Immediately remove or disable access to such content</li>
+              <li>Suspend or terminate the associated account</li>
+              <li>Request documentation or proof of compliance</li>
+            </ul>
+            <p>
+              Users may report suspected violations via: <a href="mailto:legal@balkly.live" className="text-balkly-blue hover:underline">legal@balkly.live</a>
+            </p>
+            <p>
+              Balkly does not verify business licenses unless explicitly marked as <strong>Verified</strong>.
+            </p>
+            <p>
+              Payment for promotion does not guarantee approval or continued visibility. Balkly reserves the right to remove listings even after payment.
+            </p>
+
             <hr className="my-8" />
 
             <p className="text-sm text-gray-600">
               By using Balkly, you acknowledge that you have read, understood, and agree to be bound 
-              by these Terms of Service and our Privacy Policy.
+              by these Terms of Service and our <a href="/privacy" className="text-balkly-blue hover:underline">Privacy Policy</a>.
+              For questions regarding content moderation, see our <a href="/content-moderation" className="text-balkly-blue hover:underline">Content Moderation Policy</a>.
             </p>
           </div>
         </div>
